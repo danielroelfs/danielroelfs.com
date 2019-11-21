@@ -1,0 +1,9 @@
+{{ define "og-title" }}
+  {{ .Site.Title }}
+{{ end }}
+{{ define "title" }}
+  {{ .Site.Title }}
+{{ end }}
+{{ define "content" }}
+  {{ partial "post.html" . }}
+{{ end }}

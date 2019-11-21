@@ -1,0 +1,9 @@
+---
+description: "publications"
+slug: "publications"
+thumbnail: "images/tn.png"
+title: "Publications"
+author: "Daniel Roelfs"
+---
+
+First publication is on its way, I promise! :) 

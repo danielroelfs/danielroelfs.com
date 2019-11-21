@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Daniel Roelfs</title>
+    <link>/</link>
+    <description>Recent content on Daniel Roelfs</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 03 Aug 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>CoderPortfolioの特徴</title>
+      <link>/posts/featuresofcoderportfolio.ja/</link>
+      <pubDate>Fri, 03 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/featuresofcoderportfolio.ja/</guid>
+      <description>変更点 ShortCode &amp;ldquo;private content&amp;rdquo;を追加しました 綺麗なサイトを崩さずに、あなたの個人的なコンテンツ（趣味や感情）を簡単に伝えることができます。
+実際の動きについては、&amp;rdquo;テーマデモ&amp;rdquo;をご覧ください。
+リンクに赤い下線のアニメーションを追加しました サイトがよりカラフルに美しくなりました。
+SNSシェアのボタンを追加しました あなたの記事がより影響力を持つようになりました。
+コードのハイライトを変更しました 日本のサービス Qiita のハイライトを参照しました。
+とても優しく美しいハイライトです。
+ヘッダーに影を追加しました より境界線がはっきりしました。
+ShortCode &amp;ldquo;portfolio&amp;rdquo;を追加しました あなたの作品を綺麗に表示できるようになりました。 実際の動きについては、&amp;rdquo;テーマデモ&amp;rdquo;をご覧ください。</description>
+    </item>
+    
+    <item>
+      <title>Features Of CoderPortfolio</title>
+      <link>/posts/featuresofcoderportfolio/</link>
+      <pubDate>Fri, 03 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/featuresofcoderportfolio/</guid>
+      <description>Change Point &amp;ldquo;private content&amp;rdquo; short code added. It is now possible to communicate your personal hobby and your own content.
+You can use it easily. Please see &amp;ldquo;theme-demo&amp;rdquo; for details and demo.
+An animation of red underline was added to Anchor. The site became a little fun and colorful.
+The button of the SNS share was added. It became to have an influence when writing articles more.
+Changed the color scheme of code highlight.</description>
+    </item>
+    
+    <item>
+      <title>Theme Demo</title>
+      <link>/posts/theme-demo/</link>
+      <pubDate>Fri, 03 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/theme-demo/</guid>
+      <description>Style Demo h1 Heading h2 Heading h3 Heading h4 Heading h5 Heading h6 Heading This is bold text
+This is bold text
+This is italic text
+This is italic text
+Deleted text
+This is text with inline math $\sum_{n=1}^{\infty} 2^{-n} = 1$ and with math blocks:
+$$ \sum_{n=1}^{\infty} 2^{-n} = 1 $$
+   Heading Another heading     text text   text text   text text     Block quotes are written like so.</description>
+    </item>
+    
+    <item>
+      <title>テーマデモ</title>
+      <link>/posts/theme-demo.ja/</link>
+      <pubDate>Fri, 03 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/theme-demo.ja/</guid>
+      <description>Style Demo h1 Heading h2 Heading h3 Heading h4 Heading h5 Heading h6 Heading This is bold text
+This is bold text
+This is italic text
+This is italic text
+Deleted text
+This is text with inline math $\sum_{n=1}^{\infty} 2^{-n} = 1$ and with math blocks:
+$$ \sum_{n=1}^{\infty} 2^{-n} = 1 $$
+   Heading Another heading     text text   text text   text text     Block quotes are written like so.</description>
+    </item>
+    
+    <item>
+      <title>Creating a New Theme</title>
+      <link>/posts/creating-a-new-theme/</link>
+      <pubDate>Sun, 28 Sep 2014 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/creating-a-new-theme/</guid>
+      <description>Introduction This tutorial will show you how to create a simple theme in Hugo. I assume that you are familiar with HTML, the bash command line, and that you are comfortable using Markdown to format content. I&amp;rsquo;ll explain how Hugo uses templates and how you can organize your templates to create a theme. I won&amp;rsquo;t cover using CSS to style your theme.
+We&amp;rsquo;ll start with creating a new site with a very basic template.</description>
+    </item>
+    
+    <item>
+      <title>(Hu)go Template Primer</title>
+      <link>/posts/hugo-template-primer/</link>
+      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/hugo-template-primer/</guid>
+      <description>Hugo uses the excellent go html/template library for its template engine. It is an extremely lightweight engine that provides a very small amount of logic. In our experience that it is just the right amount of logic to be able to create a good static website. If you have used other template systems from different languages or frameworks you will find a lot of similarities in go templates.
+This document is a brief primer on using go templates.</description>
+    </item>
+    
+    <item>
+      <title>Getting Started with Hugo</title>
+      <link>/posts/hugoisforlovers/</link>
+      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/hugoisforlovers/</guid>
+      <description>Step 1. Install Hugo Goto hugo releases and download the appropriate version for your os and architecture.
+Save it somewhere specific as we will be using it in the next step.
+More complete instructions are available at installing hugo
+Step 2. Build the Docs Hugo has its own example site which happens to also be the documentation site you are reading right now.
+Follow the following steps:
+ Clone the hugo repository Go into the repo Run hugo in server mode and build the docs Open your browser to http://localhost:1313  Corresponding pseudo commands:</description>
+    </item>
+    
+    <item>
+      <title>Migrate to Hugo from Jekyll</title>
+      <link>/posts/migrate-from-jekyll/</link>
+      <pubDate>Mon, 10 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/migrate-from-jekyll/</guid>
+      <description>Move static content to static Jekyll has a rule that any directory not starting with _ will be copied as-is to the _site output. Hugo keeps all static content under static. You should therefore move it all there. With Jekyll, something that looked like
+▾ &amp;lt;root&amp;gt;/ ▾ images/ logo.png should become
+▾ &amp;lt;root&amp;gt;/ ▾ static/ ▾ images/ logo.png Additionally, you&amp;rsquo;ll want any files that should reside at the root (such as CNAME) to be moved to static.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/cv/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/cv/</guid>
+      <description>/* Copyright (c) 2009, Yahoo! Inc. All rights reserved. Code licensed under the BSD License: http://developer.yahoo.net/yui/license.txt version: 2.7.0 */ html { color: #000; background: #FFF; } body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, p, blockquote, th, td { margin: 0; padding: 0; } table { border-collapse: collapse; border-spacing: 0; } fieldset, img { border: 0; } address, caption, cite, code, dfn, em, strong, th, var, optgroup { font-style: inherit; font-weight: inherit; } del, ins { text-decoration: none; } li { list-style: none; } caption, th { text-align: left; } h1, h2, h3, h4, h5, h6 { font-size: 100%; font-weight: normal; } q:before, q:after { content: &#39;&#39;; } abbr, acronym { border: 0; font-variant: normal; } sup { vertical-align: baseline; } sub { vertical-align: baseline; } legend { color: #000; } input, button, textarea, select, optgroup, option { font-family: inherit; font-size: inherit; font-style: inherit; font-weight: inherit; } input, button, textarea, select { *font-size: 100%; } body { font: 13px/1.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/cv_page/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/cv_page/</guid>
+      <description>Curriculum Vitæ --   Daniel Roelfs
+PhD Candidate  Download PDF-- daniel.roelfs[a]medisin.uio.no danielroelfs.com  Profile  Progressively evolve cross-platform ideas before impactful infomediaries. Energistically visualize tactical initiatives before cross-media catalysts for change.  Skills  Neuroimaging Assertively exploit wireless initiatives rather than synergistic core competencies.	 Genetics Credibly streamline mission-critical value with multifunctional functionalities.	 Data science Proven ability to lead and manage a wide variety of design and development projects in team and independent situations.</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/about/</guid>
+      <description>Hi!</description>
+    </item>
+    
+    <item>
+      <title>Publications</title>
+      <link>/publications/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/publications/</guid>
+      <description>First publication is on its way, I promise! :)</description>
+    </item>
+    
+  </channel>
+</rss>

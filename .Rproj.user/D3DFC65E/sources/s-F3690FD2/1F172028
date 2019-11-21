@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1574325443714.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "195221089",
+    "id" : "1F172028",
+    "lastKnownWriteTime" : 1574106857,
+    "last_content_update" : 1574106857,
+    "path" : "~/Dropbox/Personal/R_Personal/danielroelfs/themes/hugo-coder-portfolio-edit/theme.toml",
+    "project_path" : "themes/hugo-coder-portfolio-edit/theme.toml",
+    "properties" : {
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "toml"
+}

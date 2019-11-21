@@ -1,9 +1,0 @@
----
-description: "about"
-slug: "about"
-thumbnail: "images/tn.png"
-title: "About"
-author: "Daniel Roelfs"
----
-
-Hi!

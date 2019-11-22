@@ -1,0 +1,20 @@
+---
+title: How I Create Manhattan Plots Using ggplot
+author: Daniel Roelfs
+date: '2019-04-24'
+slug: how-i-create-manhattan-plots-using-ggplot
+categories:
+  - coding
+tags:
+  - ggplot
+  - R
+description: 'How I Create Manhattan Plots Using ggplot '
+thumbnail: images/tn.png
+---
+
+
+
+<div id="introduction" class="section level3">
+<h3>Introduction</h3>
+<p>There are many ways to create a Manhattan plot. There’s a number of online tools that create Manhattan plots for you, it’s implemented in a number of toolboxes that are often used in genetics, and there’s a couple of packages for R that can create these plots. However, these options often don’t offer the customizability that some people (like me) would want. One of the most flexible ways to plot a Manhattan plot (I know of) is the <span class="lang:r highlight:0 decode:true crayon-inline">manhattan</span> package, but how nice would it be to have full control over the properties of the plot. Therefore, whenever I need to create a Manhattan plot, my preference is to go to the awesome <span class="lang:r highlight:0 decode:true crayon-inline">ggplot2</span> package. In my opinion, it gives me more control over the lay-out and properties of the Manhattan plot, so I thought I’d go through how I go about creating Manhattan plots in R using the <span class="lang:r highlight:0 decode:true crayon-inline">ggplot2</span> package. I’ve tried this code on GWAS summary statistics from several sources, and it works for a bunch of them. Because data can look somewhat different, I’ll describe the concept behind some of the code, as to show what my reasoning is behind each step. One thing I should point out is that it’s probably best to run this code on a computer that is a little bit powerful, since it will need to deal with an enormous amount of SNPs, that will create massive dataframes and plot objects.</p>
+</div>

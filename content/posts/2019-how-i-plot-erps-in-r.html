@@ -1,0 +1,109 @@
+---
+title: How I Plot ERPs in R
+author: Daniel Roelfs
+date: '2019-03-30'
+slug: how-i-plot-erps-in-r
+categories:
+  - coding
+tags:
+  - R
+  - ggplot
+  - ERP
+description: 'How I Plot ERPs in R'
+thumbnail: images/tn.png
+---
+
+
+
+<div id="introduction" class="section level3">
+<h3>Introduction</h3>
+<p>Plotting ERPs is one of the essential skills in EEG neuroscience. There are many possible ways of going about this task, some better than others. Myself, I use either MATLAB or R to plot ERPs. In my experience, MATLAB is by far the preferred method since most of the EEG analysis takes place in MATLAB already, but I believe that there’s some merit to using R. One of my main arguments is aesthetics. Using for instance the ggplot2 package for the ERP adds a more unified look if you’re using ggplot for the rest of the visualizations of the statistics as well. Another argument could be that it’s easier to add statistical information to the ERP. When I read EEG articles, I find that the ERP plots are sometimes difficult to read, and that they don’t supply any information about the statistical error in the grand averaged ERP. Of course, I have my own code for plotting grand averaged ERP in MATLAB showing the confidence interval for each ERP too, but I find it easier and prettier in R.
+However, MATLAB is the gold standard within EEG research and getting the data from MATLAB to R requires some trickery. I could not possibly claim that the code I use is the best way to do this. I’m 100% sure there are probably better, quicker, and more elegant ways available of going about this, but I could not find such code on the internet. That’s why I thought I’d share my method of going about it, but again please keep in mind that there are probably better ways of going about this.
+At this point I also feel the obligation to point out that a package called erp.easy exists that was purpose built for working with ERPs and ERP statistics in R. However, I couldn’t get it to work with my data, so that’s where the necessity for me came from to build my own code. I’ll share my code underneath and I’ll annotate the code where necessary.</p>
+</div>
+<div id="preparing-the-data" class="section level3">
+<h3>Preparing the data</h3>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ───────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ✔ ggplot2 3.2.1          ✔ purrr   0.3.3     
+## ✔ tibble  2.1.3          ✔ dplyr   0.8.3     
+## ✔ tidyr   1.0.0          ✔ stringr 1.4.0     
+## ✔ readr   1.3.1          ✔ forcats 0.4.0.9000</code></pre>
+<pre><code>## ── Conflicts ──────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(normentR)</code></pre>
+<pre><code>## Loading required package: png</code></pre>
+<pre class="r"><code>ERPdata &lt;- data %&gt;%
+  rename(Channel = V1,
+         ID = V2,
+         Condition = V3) %&gt;%
+  mutate(ID = factor(ID),
+         Condition = factor(Condition)) %&gt;%
+  select(-V824)
+times &lt;- read.table(&#39;/Users/danielroelfs/Dropbox/Personal/danielroelfs/Plot_ERPs_in_R/times.txt&#39;)
+
+oldnames &lt;- sprintf(&quot;V%s&quot;,1:ncol(times)+3)
+
+ERPdata &lt;- ERPdata %&gt;% 
+  rename_at(vars(oldnames), ~ as.character(times))</code></pre>
+<pre class="r"><code>coi &lt;- c(&quot;P1&quot;, &quot;P2&quot;, &quot;Pz&quot;, &quot;P3&quot;, &quot;P4&quot;, &quot;PO3&quot;, &quot;PO4&quot;, &quot;POz&quot;);</code></pre>
+<pre class="r"><code>ERPdata_mChan &lt;- ERPdata %&gt;%
+  filter(Channel %in% coi) %&gt;%
+  group_by(ID,Condition,Channel) %&gt;%
+  summarise_at(vars(names(.)[4:ncol(.)]), list(~ mean(., na.rm = TRUE))) %&gt;%
+  ungroup()
+
+ERPdata_mCond &lt;- ERPdata_mChan %&gt;%
+  group_by(ID,Condition) %&gt;%
+  summarise_at(vars(names(.)[4:ncol(.)]), list(~ mean(., na.rm = TRUE))) %&gt;%
+  ungroup()
+
+MeanERPs &lt;- ERPdata_mCond</code></pre>
+<pre class="r"><code>Conditions &lt;- unique(MeanERPs$Condition)
+
+ERPplot &lt;- tibble()
+CIl &lt;- tibble()
+CIu &lt;- tibble()
+for (i in 1:length(Conditions)){
+  ERPplot[i,&quot;Condition&quot;] &lt;- Conditions[i]
+  CIu[i,&quot;Condition&quot;] &lt;- Conditions[i]
+  CIl[i,&quot;Condition&quot;] &lt;- Conditions[i]
+  for (j in 1:ncol(times)) {
+    CI &lt;- Rmisc::CI(as.numeric(unlist(MeanERPs %&gt;% filter(Condition == Conditions[i]) %&gt;% select(as.character(times[1,j])))), ci = 0.95)
+    ERPplot[i,as.character(times[1,j])] &lt;- CI[&quot;mean&quot;]
+    CIu[i,as.character(times[1,j])] &lt;- CI[&quot;upper&quot;]
+    CIl[i,as.character(times[1,j])] &lt;- CI[&quot;lower&quot;]
+  }
+}
+rm(CI)
+
+ERPplot &lt;- gather(ERPplot, &quot;Time&quot;, &quot;Amplitude&quot;, -Condition)
+CIu &lt;- gather(CIu, &quot;Time&quot;, &quot;CIupper&quot;, -Condition)
+CIl &lt;- gather(CIl, &quot;Time&quot;, &quot;CIlower&quot;, -Condition)
+
+ERPplot &lt;- merge(ERPplot,CIu,by=c(&quot;Condition&quot;,&quot;Time&quot;))
+ERPplot &lt;- merge(ERPplot,CIl,by=c(&quot;Condition&quot;,&quot;Time&quot;))
+ERPplot$Time &lt;- as.numeric(as.character(ERPplot$Time))
+
+ERPplot$Condition &lt;- factor(ERPplot$Condition)</code></pre>
+<pre class="r"><code>colors &lt;- norment_pal(palette = &quot;logo&quot;)(2)
+
+ERP &lt;- ggplot(ERPplot, aes(x = Time, y = Amplitude, colour = Condition, group = Condition)) + 
+  geom_ribbon(aes(ymin = CIlower, ymax = CIupper, fill = Condition), alpha = 0.1, linetype = 0) + 
+  geom_line(size = 0.75) + 
+  scale_color_manual(values = colors) + 
+  scale_fill_manual(values = colors) + 
+  scale_x_continuous(breaks = c(seq(-2000,2000,500))) + 
+  scale_y_continuous(breaks = c(seq(-12,-1,2),seq(2,12,2))) + 
+  coord_cartesian() +
+  labs(x = &quot;Time (ms)&quot;, 
+       y = &quot;Amplitude (µV)&quot;) + 
+  theme_norment(ticks = TRUE, grid = FALSE) +
+  theme(
+    legend.position = c(0.9,0.1),
+    axis.text.x = element_text(vjust = -0.1)
+  )
+shift_axes(ERP, x = 0, y = 0)</code></pre>
+<p><img src="/posts/2019-how-i-plot-erps-in-r_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>

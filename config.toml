@@ -7,7 +7,7 @@ defaultContentLanguageInSubdir = true
 
 paginate = 20 # Default number of pages per page in pagination.
 
-pygmentsstyle = "h2" # Color-theme or style for syntax highlighting.
+pygmentsstyle = "monakai" # Color-theme or style for syntax highlighting.
 pygmentscodefences = true # Enable code fence background highlighting.
 pygmentscodefencesguesssyntax = true # Enable syntax guessing for code fences without specified language.
 pygmentsUseClasses = true # new add

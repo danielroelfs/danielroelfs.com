@@ -12,8 +12,8 @@ body{
     font-family:'Alegreya', serif;
     font-size:1.9em;
     font-weight:400;
-    letter-spacing:.0625em;
-    line-height:1.8em
+    /*letter-spacing:.0625em;*/
+    line-height:1.8em; /* was 1.8em */
 }
 @media only screen and (min-device-width:320px) and (max-device-width:480px){
     body{
@@ -261,7 +261,7 @@ img{
 .content{
     flex:1;
     margin-top:1.6rem;
-    margin-bottom:3.2rem
+    margin-bottom:3.2rem;
 }
 .content article header{
     margin-top:3.2rem;
@@ -491,7 +491,7 @@ a:hover:before,a:hover:after{
     height:65px
 }
 code{
-    background:#f2f2f2 !important /* was #364549 */
+    background:#f4f4f4 !important; /* was #364549 */
 }
 .social-list .social-item i{
     font-size:30px
@@ -775,7 +775,7 @@ h1cv,h2cv,h3cv,h4cv{
 h2cv { font-size: 152%; text-transform: lowercase; }
 h3cv, h4cv { font-size: 122%; }
 h1cv, h2cv, h3cv, h4cv { color: #333; }
-p { font-size: 100%; line-height: 18px; padding-right: 3em; }
+/*p { font-size: 100%; line-height: 18px; padding-right: 3em; }*/
 /*a { color: #990003 }*/
 a:hover { text-decoration: none; }
 strong { font-weight: bold; }

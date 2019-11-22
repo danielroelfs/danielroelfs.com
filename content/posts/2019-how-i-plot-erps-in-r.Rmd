@@ -1,0 +1,129 @@
+---
+title: How I Plot ERPs in R
+author: Daniel Roelfs
+date: '2019-03-30'
+slug: how-i-plot-erps-in-r
+categories:
+  - coding
+tags:
+  - R
+  - ggplot
+  - ERP
+description: 'How I Plot ERPs in R'
+thumbnail: images/tn.png
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(fig.retina = 2,
+                      fig.show='hold', 
+                      fig.align='center')
+```
+
+### Introduction
+
+Plotting ERPs is one of the essential skills in EEG neuroscience. There are many possible ways of going about this task, some better than others. Myself, I use either MATLAB or R to plot ERPs. In my experience, MATLAB is by far the preferred method since most of the EEG analysis takes place in MATLAB already, but I believe that there’s some merit to using R. One of my main arguments is aesthetics. Using for instance the ggplot2 package for the ERP adds a more unified look if you’re using ggplot for the rest of the visualizations of the statistics as well. Another argument could be that it’s easier to add statistical information to the ERP. When I read EEG articles, I find that the ERP plots are sometimes difficult to read, and that they don’t supply any information about the statistical error in the grand averaged ERP. Of course, I have my own code for plotting grand averaged ERP in MATLAB showing the confidence interval for each ERP too, but I find it easier and prettier in R.
+However, MATLAB is the gold standard within EEG research and getting the data from MATLAB to R requires some trickery. I could not possibly claim that the code I use is the best way to do this. I’m 100% sure there are probably better, quicker, and more elegant ways available of going about this, but I could not find such code on the internet. That’s why I thought I’d share my method of going about it, but again please keep in mind that there are probably better ways of going about this.
+At this point I also feel the obligation to point out that a package called erp.easy exists that was purpose built for working with ERPs and ERP statistics in R. However, I couldn’t get it to work with my data, so that’s where the necessity for me came from to build my own code. I’ll share my code underneath and I’ll annotate the code where necessary.
+
+### Preparing the data
+
+```{r}
+library(tidyverse)
+library(normentR)
+```
+
+```{r echo=FALSE, eval=FALSE}
+data <- read.table("/Users/danielroelfs/Dropbox/Personal/danielroelfs/Plot_ERPs_in_R/AllChannels_ERP.txt", sep = "\t", header = FALSE)
+save(file = "/Users/danielroelfs/Dropbox/Personal/danielroelfs/Plot_ERPs_in_R/data.Rdata", list = "data")
+```
+
+```{r echo=FALSE}
+load("/Users/danielroelfs/Dropbox/Personal/danielroelfs/Plot_ERPs_in_R/data.Rdata")
+```
+
+```{r}
+ERPdata <- data %>%
+  rename(Channel = V1,
+         ID = V2,
+         Condition = V3) %>%
+  mutate(ID = factor(ID),
+         Condition = factor(Condition)) %>%
+  select(-V824)
+times <- read.table('/Users/danielroelfs/Dropbox/Personal/danielroelfs/Plot_ERPs_in_R/times.txt')
+
+oldnames <- sprintf("V%s",1:ncol(times)+3)
+
+ERPdata <- ERPdata %>% 
+  rename_at(vars(oldnames), ~ as.character(times))
+```
+
+```{r}
+coi <- c("P1", "P2", "Pz", "P3", "P4", "PO3", "PO4", "POz");
+```
+
+```{r}
+ERPdata_mChan <- ERPdata %>%
+  filter(Channel %in% coi) %>%
+  group_by(ID,Condition,Channel) %>%
+  summarise_at(vars(names(.)[4:ncol(.)]), list(~ mean(., na.rm = TRUE))) %>%
+  ungroup()
+
+ERPdata_mCond <- ERPdata_mChan %>%
+  group_by(ID,Condition) %>%
+  summarise_at(vars(names(.)[4:ncol(.)]), list(~ mean(., na.rm = TRUE))) %>%
+  ungroup()
+
+MeanERPs <- ERPdata_mCond
+```
+
+```{r}
+Conditions <- unique(MeanERPs$Condition)
+
+ERPplot <- tibble()
+CIl <- tibble()
+CIu <- tibble()
+for (i in 1:length(Conditions)){
+  ERPplot[i,"Condition"] <- Conditions[i]
+  CIu[i,"Condition"] <- Conditions[i]
+  CIl[i,"Condition"] <- Conditions[i]
+  for (j in 1:ncol(times)) {
+    CI <- Rmisc::CI(as.numeric(unlist(MeanERPs %>% filter(Condition == Conditions[i]) %>% select(as.character(times[1,j])))), ci = 0.95)
+    ERPplot[i,as.character(times[1,j])] <- CI["mean"]
+    CIu[i,as.character(times[1,j])] <- CI["upper"]
+    CIl[i,as.character(times[1,j])] <- CI["lower"]
+  }
+}
+rm(CI)
+
+ERPplot <- gather(ERPplot, "Time", "Amplitude", -Condition)
+CIu <- gather(CIu, "Time", "CIupper", -Condition)
+CIl <- gather(CIl, "Time", "CIlower", -Condition)
+
+ERPplot <- merge(ERPplot,CIu,by=c("Condition","Time"))
+ERPplot <- merge(ERPplot,CIl,by=c("Condition","Time"))
+ERPplot$Time <- as.numeric(as.character(ERPplot$Time))
+
+ERPplot$Condition <- factor(ERPplot$Condition)
+```
+
+
+```{r}
+colors <- norment_pal(palette = "logo")(2)
+
+ERP <- ggplot(ERPplot, aes(x = Time, y = Amplitude, colour = Condition, group = Condition)) + 
+  geom_ribbon(aes(ymin = CIlower, ymax = CIupper, fill = Condition), alpha = 0.1, linetype = 0) + 
+  geom_line(size = 0.75) + 
+  scale_color_manual(values = colors) + 
+  scale_fill_manual(values = colors) + 
+  scale_x_continuous(breaks = c(seq(-2000,2000,500))) + 
+  scale_y_continuous(breaks = c(seq(-12,-1,2),seq(2,12,2))) + 
+  coord_cartesian() +
+  labs(x = "Time (ms)", 
+       y = "Amplitude (µV)") + 
+  theme_norment(ticks = TRUE, grid = FALSE) +
+  theme(
+    legend.position = c(0.9,0.1),
+    axis.text.x = element_text(vjust = -0.1)
+  )
+shift_axes(ERP, x = 0, y = 0)
+```

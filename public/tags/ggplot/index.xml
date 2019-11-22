@@ -17,7 +17,7 @@
       <pubDate>Wed, 24 Apr 2019 00:00:00 +0000</pubDate>
       
       <guid>/posts/how-i-create-manhattan-plots-using-ggplot/</guid>
-      <description>Introduction There are many ways to create a Manhattan plot. There’s a number of online tools that create Manhattan plots for you, it’s implemented in a number of toolboxes that are often used in genetics, and there’s a couple of packages for R that can create these plots. However, these options often don’t offer the customizability that some people (like me) would want. One of the most flexible ways to plot a Manhattan plot (I know of) is the manhattan package, but how nice would it be to have full control over the properties of the plot.</description>
+      <description>Introduction There are many ways to create a Manhattan plot. There’s a number of online tools that create Manhattan plots for you, it’s implemented in a number of toolboxes that are often used in genetics, and there’s a couple of packages for R that can create these plots. However, these options often don’t offer the customizability that some people (like me) would want. One of the most flexible ways to plot a Manhattan plot (I know of) is the {manhattan} package, but how nice would it be to have full control over the properties of the plot.</description>
     </item>
     
     <item>

@@ -17,7 +17,7 @@
       <pubDate>Wed, 24 Apr 2019 00:00:00 +0000</pubDate>
       
       <guid>/posts/how-i-create-manhattan-plots-using-ggplot/</guid>
-      <description>Introduction There are many ways to create a Manhattan plot. There’s a number of online tools that create Manhattan plots for you, it’s implemented in a number of toolboxes that are often used in genetics, and there’s a couple of packages for R that can create these plots. However, these options often don’t offer the customizability that some people (like me) would want. One of the most flexible ways to plot a Manhattan plot (I know of) is the manhattan package, but how nice would it be to have full control over the properties of the plot.</description>
+      <description>Introduction There are many ways to create a Manhattan plot. There’s a number of online tools that create Manhattan plots for you, it’s implemented in a number of toolboxes that are often used in genetics, and there’s a couple of packages for R that can create these plots. However, these options often don’t offer the customizability that some people (like me) would want. One of the most flexible ways to plot a Manhattan plot (I know of) is the {manhattan} package, but how nice would it be to have full control over the properties of the plot.</description>
     </item>
     
     <item>
@@ -27,15 +27,6 @@
       
       <guid>/posts/how-i-plot-erps-in-r/</guid>
       <description>Introduction Plotting ERPs is one of the essential skills in EEG neuroscience. There are many possible ways of going about this task, some better than others. Myself, I use either MATLAB or R to plot ERPs. In my experience, MATLAB is by far the preferred method since most of the EEG analysis takes place in MATLAB already, but I believe that there’s some merit to using R. One of my main arguments is aesthetics.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/cv/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/cv/</guid>
-      <description>/* Copyright (c) 2009, Yahoo! Inc. All rights reserved. Code licensed under the BSD License: http://developer.yahoo.net/yui/license.txt version: 2.7.0 */ html { color: #000; background: #FFF; } body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, p, blockquote, th, td { margin: 0; padding: 0; } table { border-collapse: collapse; border-spacing: 0; } fieldset, img { border: 0; } address, caption, cite, code, dfn, em, strong, th, var, optgroup { font-style: inherit; font-weight: inherit; } del, ins { text-decoration: none; } li { list-style: none; } caption, th { text-align: left; } h1, h2, h3, h4, h5, h6 { font-size: 100%; font-weight: normal; } q:before, q:after { content: &#39;&#39;; } abbr, acronym { border: 0; font-variant: normal; } sup { vertical-align: baseline; } sub { vertical-align: baseline; } legend { color: #000; } input, button, textarea, select, optgroup, option { font-family: inherit; font-size: inherit; font-style: inherit; font-weight: inherit; } input, button, textarea, select { *font-size: 100%; } body { font: 13px/1.</description>
     </item>
     
     <item>
@@ -55,6 +46,15 @@ PhD Candidate  Download PDF-- daniel.roelfs[a]medisin.uio.no danielroelfs.com  P
       
       <guid>/about/</guid>
       <description>Hi!</description>
+    </item>
+    
+    <item>
+      <title>Curriculum Vitæ</title>
+      <link>/cv/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/cv/</guid>
+      <description>h1 { color:#ffffff; font-family:&#39;Libre Baskerville&#39;, serif; letter-spacing:0em; margin:0 0 0 0; font-size:0rem; line-height:0rem }  /* Copyright (c) 2009, Yahoo! Inc. All rights reserved. Code licensed under the BSD License: http://developer.yahoo.net/yui/license.txt version: 2.7.0 */ html { color: #000; background: #FFF; } body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, p, blockquote, th, td { margin: 0; padding: 0; } table { border-collapse: collapse; border-spacing: 0; } fieldset, img { border: 0; } address, caption, cite, code, dfn, em, strong, th, var, optgroup { font-style: inherit; font-weight: inherit; } del, ins { text-decoration: none; } li { list-style: none; } caption, th { text-align: left; } h1, h2, h3, h4, h5, h6 { font-size: 100%; font-weight: normal; } q:before, q:after { content: &#39;&#39;; } abbr, acronym { border: 0; font-variant: normal; } sup { vertical-align: baseline; } sub { vertical-align: baseline; } legend { color: #000; } input, button, textarea, select, optgroup, option { font-family: inherit; font-size: inherit; font-style: inherit; font-weight: inherit; } input, button, textarea, select { *font-size: 100%; } body { font: 13px/1.</description>
     </item>
     
     <item>

@@ -10,7 +10,7 @@ tags:
   - ggplot
   - ERP
 description: 'How I Plot ERPs in R'
-thumbnail: images/tn.png
+thumbnail: images/avatar.png
 ---
 
 ```{r include=FALSE}

@@ -10,7 +10,7 @@ body{
     color:#323232;
     background-color:#fefefe;
     font-family:'Alegreya', serif;
-    font-size:1.9em;
+    font-size:2em;
     font-weight:400;
     /*letter-spacing:.0625em;*/
     line-height:1.8em; /* was 1.8em */
@@ -104,13 +104,21 @@ h6{
 pre{
     margin:1.6rem 0 1rem 0;
     padding:1.6rem;
-    overflow-x:auto
+    overflow-x:auto;
 }
 code{
     display:inline-block;
-    background-color:#000000;
+    font-size: 0.8em;
+    background: #f2f2f2 !important; /* was #364549 */
     color:#2e2e2e; /* was fefefe */
     padding:.4rem .8rem .4rem .8rem
+}
+pre code {
+    display: block;
+    background: #303030 !important;
+    color: #fefefe;
+    font-size: 1.6rem;
+    overflow-x: auto;
 }
 blockquote{
     border-left:2px solid #dcdcdc;
@@ -490,9 +498,6 @@ a:hover:before,a:hover:after{
     position:relative;
     height:65px
 }
-code{
-    background:#f4f4f4 !important; /* was #364549 */
-}
 .social-list .social-item i{
     font-size:30px
 }
@@ -741,7 +746,6 @@ code{
 .chroma .gu{
     color:#9dabae
 }
-
 
 /*-------------------------------*/
 /* CURRICULUM VITAE -------------*/

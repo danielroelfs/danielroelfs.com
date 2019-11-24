@@ -14,7 +14,7 @@ thumbnail: images/avatar.png
 
 ```{r include=FALSE}
 knitr::opts_chunk$set(fig.retina = 2,
-                      collapse = TRUE,
+                      collapse = FALSE,
                       fig.show='hold', 
                       fig.align='center')
 ```
@@ -68,7 +68,7 @@ When this is done, the next thing I want to do is to get a couple of parameters 
 ```{r}
 axis.set <- gwas.dat %>% 
   group_by(CHR) %>% 
-  summarize(center=(max(BPcum) + min(BPcum)) / 2)
+  summarize(center = (max(BPcum) + min(BPcum)) / 2)
 ylim <- abs(floor(log10(min(gwas.dat$P)))) + 2 
 sig <- 5e-8
 ```

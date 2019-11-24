@@ -34,7 +34,7 @@ p{
 }
 p a{
     font-weight:400;
-    color: #323232; /* was: #000 */
+    color: #323232;
     /*text-decoration:underline;*/
     text-underline-position:under
 }
@@ -102,23 +102,27 @@ h6{
     line-height:1.4rem
 }
 pre{
-    margin:1.6rem 0 1rem 0;
+    margin:0 0 0 0; /* was 1.6rem 0 1rem 0 */
     padding:1.6rem;
-    overflow-x:auto;
+    background: #f2f2f2;
+    overflow-x: auto;
+    border-radius: 0; /* try 3px */
 }
 code{
     display:inline-block;
     font-size: 0.8em;
     background: #f2f2f2 !important; /* was #364549 */
     color:#2e2e2e; /* was fefefe */
-    padding:.4rem .8rem .4rem .8rem
+    padding:0 .4rem 0 .4rem; /* was .4rem .8rem .4rem .8rem */
 }
 pre code {
     display: block;
     background: #303030 !important;
     color: #fefefe;
     font-size: 1.6rem;
+    padding: .2rem 1rem .2rem 1rem; /* was 0 */
     overflow-x: auto;
+    border-radius: 3px;
 }
 blockquote{
     border-left:2px solid #dcdcdc;

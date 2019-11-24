@@ -1,6 +1,5 @@
 ---
-draft: true
-title: Analyzing Bach
+title: (DRAFT) Analyzing Bach
 author: Daniel Roelfs
 date: '2019-11-24'
 slug: analyzing-bach
@@ -10,7 +9,7 @@ tags:
   - ggplot
   - R
   - Bach
-description: 'Analyzing Bach'
+description: '(DRAFT) Analyzing Bach'
 thumbnail: images/avatar.png
 ---
 

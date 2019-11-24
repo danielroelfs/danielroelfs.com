@@ -1,7 +1,7 @@
 <section class="container post">
   <article>
     <header>
-      <h1 class="title">{{ .Title }}</h1>
+      <h1 class="post-title">{{ .Title }}</h1> <!-- was class="title" -->
       <h2 class="date">{{ .Date.Format "January 2, 2006" }}</h2>
 
       {{ if eq .Params.math "true" }}

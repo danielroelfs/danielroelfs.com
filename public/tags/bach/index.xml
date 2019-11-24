@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Bach on Daniel Roelfs</title>
+    <link>/tags/bach/</link>
+    <description>Recent content in Bach on Daniel Roelfs</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 24 Nov 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/bach/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Analyzing Bach</title>
+      <link>/blog/analyzing-bach/</link>
+      <pubDate>Sun, 24 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/analyzing-bach/</guid>
+      <description>@import url(&#39;https://fonts.googleapis.com/css?family=IM+Fell+English|IM+Fell+English+SC&amp;display=swap&#39;); body{ background-color: #FFFFF0; } h1 { font-family: &#39;IM Fell English&#39;, serif; } h2,h3,h4,h5,h6 { font-family: &#39;IM Fell English&#39;, serif; } .post-title { font-family: &#39;IM Fell English SC&#39;, serif; font-size: 6rem; }  Introduction A little while ago I was watching a documentary series on Dutch television about one of the most beloved composers in the Netherlands: Johann Sebastian Bach. I had
+ Collecting the data In my search of a dataset, I found this old website, looking like it last got a major update in 2003, made by what appeared to be a Bach enthousiast called Bryen Travis.</description>
+    </item>
+    
+  </channel>
+</rss>

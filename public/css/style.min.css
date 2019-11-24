@@ -49,7 +49,7 @@ h1,h2,h3,h4,h5,h6{
 }
 h1{
     font-size:3.2rem;
-    line-height:3.2rem
+    line-height:3.2rem;
 }
 @media only screen and (min-device-width:320px) and (max-device-width:480px){
     h1{
@@ -100,6 +100,12 @@ h5{
 h6{
     font-size:1.4rem;
     line-height:1.4rem
+}
+.post-title {
+    text-align: center;
+}
+.date {
+  text-align: center;
 }
 pre{
     margin:0 0 0 0; /* was 1.6rem 0 1rem 0 */
@@ -277,7 +283,7 @@ img{
 }
 .content article header{
     margin-top:3.2rem;
-    margin-bottom:3.2rem
+    margin-bottom:3.2rem;
 }
 .content article header h1,.content article header h2{
     margin:0
@@ -771,7 +777,7 @@ h1cv,h2cv,h3cv,h4cv{
 /* //-- header, body, footer -- */
 #hd { margin: 2.5em 0 3em 0; padding-bottom: 1.5em; border-bottom: 1px solid #ccc }
 #hd h2cv { letter-spacing: 2px; }
-#bd, #ft { margin-bottom: 2em; }
+#bd, #ft { margin-bottom: 0; } /* was 2em */
 
 /* //-- footer -- */
 #ft { padding: 1em 0 5em 0; font-size: 92%; border-top: 1px solid #ccc; text-align: center; }
@@ -779,7 +785,8 @@ h1cv,h2cv,h3cv,h4cv{
 
 /* //-- core typography and style -- */
 #hd h1cv { font-size: 48px; text-transform: uppercase; letter-spacing: 3px; }
-h2cv { font-size: 152%; text-transform: lowercase; }
+h2item { font-size: 152%; text-transform: lowercase; }
+h2cv { font-size: 152%; text-transform: none; }
 h3cv, h4cv { font-size: 122%; }
 h1cv, h2cv, h3cv, h4cv { color: #333; }
 /*p { font-size: 100%; line-height: 18px; padding-right: 3em; }*/
@@ -805,8 +812,10 @@ a#pdf:hover { background: #222; }
 .skills-list {  }
 .skills-list ul { margin: 0; }
 .skills-list li { margin: 3px 0; padding: 3px 0; }
-.skills-list li span { font-size: 152%; display: block; margin-bottom: -2px; padding: 0 }
-.talent { width: 25%; float: left }
+.skills-list li span { font-size: 152%; display: block; margin-bottom: -2px; padding: 0; }
+.skill { width: 33%; float: left; padding: 2px; } /* was width: 25% */
+.skill h2cv { margin-bottom: 6px; }
+.talent { width: 25%; float: left; padding: 2px; }
 .talent h2cv { margin-bottom: 6px; }
 .lang { width: 16.7%; float: left }
 .lang h2cv { margin-bottom: 6px; }
@@ -815,5 +824,5 @@ a#pdf:hover { background: #222; }
 #srt-ttab img.last { margin-top: 20px }
 
 /* --// override to force 1/8th width grids -- */
-.yui-gf .yui-u{width:80.2%;}
-.yui-gf div.first{width:12.3%;}
+.yui-gf .yui-u{ width:80.2%; }
+.yui-gf div.first{ width:12.3%; }

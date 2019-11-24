@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Daniel Roelfs">
+    <meta name="description" content="/">
+    <meta name="keywords" content="blog,personal,coding">
+
+    <meta property="og:site_name" content="Daniel Roelfs">
+    <meta property="og:title" content="
+  How I Plot ERPs in R - Daniel Roelfs
+">
+    <meta property="og:description" content="How I Plot ERPs in R">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/blog/how-i-plot-erps-in-r/">
+    <meta property="og:image" content="/images/avatar.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="/blog/how-i-plot-erps-in-r/">
+    <meta name="twitter:image" content="/images/avatar.png">
+
+    <base href="/blog/how-i-plot-erps-in-r/">
+    <title>
+  How I Plot ERPs in R - Daniel Roelfs
+</title>
+
+    <link rel="canonical" href="/blog/how-i-plot-erps-in-r/">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Alegreya:400,400i,700|Libre+Baskerville:400,400i,700&display=swap">
+    <link rel="stylesheet" href="/css/normalize.min.css">
+    <link rel="stylesheet" href="/css/style.min.css">
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    
+      <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Daniel Roelfs">
+      <link href="/index.xml" rel="feed" type="application/rss+xml" title="Daniel Roelfs" />
+    
+
+    <meta name="generator" content="Hugo 0.59.1" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">Daniel Roelfs</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="/blog">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="/publications">Publications</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="/cv">Curriculum Vitæ</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="/about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="post-title">How I Plot ERPs in R</h1> 
+      <h2 class="date">March 30, 2019</h2>
+
+      
+    </header>
+
+    
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>Plotting ERPs is one of the essential skills in EEG neuroscience. There are many possible ways of going about this task, some better than others. Myself, I use either MATLAB or R to plot ERPs. In my experience, MATLAB is by far the preferred method since most of the EEG analysis takes place in MATLAB already, but I believe that there’s some merit to using R. One of my main arguments is aesthetics. Using for instance the <code>{ggplot2}</code> package for the ERP adds a more unified look if you’re using ggplot for the rest of the visualizations of the statistics as well. Another argument could be that it’s easier to add statistical information to the ERP. When I read EEG articles, I find that the ERP plots are sometimes difficult to read, and that they don’t supply any information about the statistical error in the grand averaged ERP. Of course, I have my own code for plotting grand averaged ERP in MATLAB showing the confidence interval for each ERP too, but I find it easier and prettier in R.
+However, MATLAB is the gold standard within EEG research and getting the data from MATLAB to R requires some trickery. I could not possibly claim that the code I use is the best way to do this. I’m 100% sure there are probably better, quicker, and more elegant ways available of going about this, but I could not find such code on the internet. That’s why I thought I’d share my method of going about it, but again please keep in mind that there are probably better ways of going about this.
+At this point I also feel the obligation to point out that a package called erp.easy exists that was purpose built for working with ERPs and ERP statistics in R. However, I couldn’t get it to work with my data, so that’s where the necessity for me came from to build my own code. I’ll share my code underneath and I’ll annotate the code where necessary.</p>
+</div>
+<div id="loading-the-data" class="section level2">
+<h2>Loading the data</h2>
+<p>Since I cannot share participants’ data, I used an open EEG dataset downloaded <a href="https://sccn.ucsd.edu/~arno/fam2data/publicly_available_EEG_data.html" target="_blank">here</a>, this data comes from a psychophysics group of 5 participants with 2 conditions. It came in the EEGLAB format, same as my own data. The first step is to take the data out of MATLAB and take it to a format that can be easily understood by R. The most convenient way I thought of was to take the <code>EEG.data</code> field, transform it into a two-dimensional metrix and store it in a .csv file.</p>
+<p>If you have a large amount of participants, I can recommend to only extract data from the channels of interest or the conditions of interest. One can make one file per channel or participant, or one large file that contains everything. I usually choose the latter, and that’s what I’ll work with here. So my file looks as follows: one column with the channel, one column with the ID, one with the condition (or trigger). If I’m doing a between-groups analysis, I’ll also have a column with the group. All the other columns are the amplitudes with across the timepoints.</p>
+<pre class="r"><code>data &lt;- read.table(&quot;AllChannels_ERP.txt&quot;, sep = &quot;\t&quot;, header = FALSE)</code></pre>
+<p>I also have a file with the timepoints for each value. i.e. with epoch of 500 milliseconds ranging from 100 milliseconds pre-stimulus to 400 milliseconds post-stimulus, all the timepoints according to the sampling rate are the values in this file. It is basically nothing more than a print of the values in the <code>EEG.times</code> field from the EEGLAB dataset.</p>
+<pre class="r"><code>times &lt;- read.table(&#39;times.txt&#39;)</code></pre>
+<p>Since I didn’t include any headers in my file, I rename them here. I give the the identifying columns their appropriate names, and for the amplitudes, I attach the values from the <code>times</code> variable as names to these columns, so -100 will be one column, -99 will be another, and so on.</p>
+<pre class="r"><code>ERPdata &lt;- data %&gt;%
+  rename(Channel = V1,
+         ID = V2,
+         Condition = V3) %&gt;%
+  mutate(ID = factor(ID),
+         Condition = factor(Condition))
+
+oldnames &lt;- sprintf(&quot;V%s&quot;,1:ncol(times)+3)
+
+ERPdata &lt;- ERPdata %&gt;% 
+  rename_at(vars(oldnames), ~ as.character(times))</code></pre>
+</div>
+<div id="preparing-the-data" class="section level2">
+<h2>Preparing the data</h2>
+<p>Then I specify a variable with the channels of interest. These will be the channels I’ll average across later.</p>
+<pre class="r"><code>coi &lt;- c(&quot;P1&quot;, &quot;P2&quot;, &quot;Pz&quot;, &quot;P3&quot;, &quot;P4&quot;, &quot;PO3&quot;, &quot;PO4&quot;, &quot;POz&quot;);</code></pre>
+<p>Then I calculate the means across channels and conditions. This goes in two steps. First I’ll select only the channels of interest, then I’ll group by ID, condition, and channel. And then calculate the average of every other column, in this case column 4 to the end of the file. Then I’ll do the same, except now I’ll group by ID and condition. So then we have one average ERP for every condition in all participants.</p>
+<pre class="r"><code>ERPdata_mChan &lt;- ERPdata %&gt;%
+  filter(Channel %in% coi) %&gt;%
+  group_by(ID,Condition,Channel) %&gt;%
+  summarise_at(vars(names(.)[4:ncol(.)]), list(~ mean(., na.rm = TRUE))) %&gt;%
+  ungroup()
+
+ERPdata_mCond &lt;- ERPdata_mChan %&gt;%
+  group_by(ID,Condition) %&gt;%
+  summarise_at(vars(names(.)[4:ncol(.)]), list(~ mean(., na.rm = TRUE))) %&gt;%
+  ungroup()
+
+MeanERPs &lt;- ERPdata_mCond</code></pre>
+</div>
+<div id="calculate-grand-average-and-confidence-interval" class="section level2">
+<h2>Calculate grand average and confidence interval</h2>
+<p>The next piece of code is probably a bit messy, but again, it works. Here I’m calculating the confidence interval and then transforming it from the interval relative to the mean to the ab- solute values representing the upper and lower boundaries of the confidence interval. Here a confidence interval of 95% is used.</p>
+<pre class="r"><code>Conditions &lt;- unique(MeanERPs$Condition)
+
+ERPplot &lt;- tibble()
+CIl &lt;- tibble()
+CIu &lt;- tibble()
+for (i in 1:length(Conditions)){
+  ERPplot[i,&quot;Condition&quot;] &lt;- Conditions[i]
+  CIu[i,&quot;Condition&quot;] &lt;- Conditions[i]
+  CIl[i,&quot;Condition&quot;] &lt;- Conditions[i]
+  for (j in 1:ncol(times)) {
+    CI &lt;- Rmisc::CI(as.numeric(unlist(MeanERPs %&gt;% 
+                                        filter(Condition == Conditions[i]) %&gt;%
+                                        select(as.character(times[1,j])))), 
+                    ci = 0.95)
+    ERPplot[i,as.character(times[1,j])] &lt;- CI[&quot;mean&quot;]
+    CIu[i,as.character(times[1,j])] &lt;- CI[&quot;upper&quot;]
+    CIl[i,as.character(times[1,j])] &lt;- CI[&quot;lower&quot;]
+  }
+}
+rm(CI)</code></pre>
+</div>
+<div id="transforming-the-data" class="section level2">
+<h2>Transforming the data</h2>
+<p>The last step before plotting is to transform the data into something that <code>ggplot</code> can understand. The <code>melt()</code> function works, but I prefer to use the <code>gather()</code> function from the <code>{tidyr}</code> package. In the future I might rewrite this to the new <code>pivot_longer()</code> function.</p>
+<pre class="r"><code>ERPplot &lt;- gather(ERPplot, &quot;Time&quot;, &quot;Amplitude&quot;, -Condition)
+CIu &lt;- gather(CIu, &quot;Time&quot;, &quot;CIupper&quot;, -Condition)
+CIl &lt;- gather(CIl, &quot;Time&quot;, &quot;CIlower&quot;, -Condition)
+
+ERPplot &lt;- merge(ERPplot,CIu,by=c(&quot;Condition&quot;,&quot;Time&quot;))
+ERPplot &lt;- merge(ERPplot,CIl,by=c(&quot;Condition&quot;,&quot;Time&quot;))
+ERPplot$Time &lt;- as.numeric(as.character(ERPplot$Time))
+
+ERPplot$Condition &lt;- factor(ERPplot$Condition)</code></pre>
+</div>
+<div id="preparing-to-plot" class="section level2">
+<h2>Preparing to plot</h2>
+<p>Before we can start plotting, I just wanted to share one piece of code I found on StackOverflow. The question there was to move the x-axis and y-axis line towards 0, rather than the edge of the plot. You can find the question (and answers) <a href="https://stackoverflow.com/questions/39071002/moving-x-or-y-axis-together-with-tick-labels-to-the-middle-of-a-single-ggplot-n" target="_blank">here</a>. I combined two answers into a function that moves both the y- and the x-axis to 0. It is my personal preference to have a line indicating 0. This makes the plots easier to read and looks prettier too, but of course this is subjective.
+I personally prefer to have a plot that is as clean as possible, to really put focus on the ERP curve. So I’d typically turn off the grid lines. I also remove one of the 0-ticks to avoid any awkward overlay with the axes, especially since the 0 is also indicated by the axis line already.</p>
+<p>I take the colors from our own <code>{normentR}</code> package. After running this chunk, we have a beautiful ERP with a nice confidence interval. I hope this was helpful and informative. Good luck!</p>
+<pre class="r"><code>colors &lt;- norment_pal(palette = &quot;logo&quot;)(2)
+
+ERP &lt;- ggplot(ERPplot, aes(x = Time, y = Amplitude, 
+                           colour = Condition, group = Condition)) + 
+  geom_ribbon(aes(ymin = CIlower, ymax = CIupper, fill = Condition), 
+              alpha = 0.1, linetype = 0) + 
+  geom_line(size = 0.75) + 
+  scale_color_manual(values = colors) + 
+  scale_fill_manual(values = colors) + 
+  scale_x_continuous(breaks = c(seq(-2000,2000,500))) + 
+  scale_y_continuous(breaks = c(seq(-12,-1,2), seq(2,12,2))) + 
+  coord_cartesian() +
+  labs(x = &quot;Time (ms)&quot;, 
+       y = &quot;Amplitude (µV)&quot;) + 
+  theme_norment(ticks = TRUE, grid = FALSE) +
+  theme(
+    legend.position = c(0.9,0.1),
+    axis.text.x = element_text(vjust = -0.1)
+  )
+shift_axes(ERP, x = 0, y = 0)</code></pre>
+<p><img src="/blog/2019-how-i-plot-erps-in-r_files/figure-html/unnamed-chunk-13-1.png" width="1152" style="display: block; margin: auto;" /></p>
+</div>
+
+  </article>
+
+  <br/>
+
+  
+  
+</section>
+
+      </div>
+      
+        
+      
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-26694895-2', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+  <script src="/js/app.js"></script>
+  
+  </body>
+</html>

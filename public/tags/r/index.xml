@@ -6,26 +6,36 @@
     <description>Recent content in R on Daniel Roelfs</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 24 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 24 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Analyzing Bach</title>
+      <link>/blog/analyzing-bach/</link>
+      <pubDate>Sun, 24 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/analyzing-bach/</guid>
+      <description>@import url(&#39;https://fonts.googleapis.com/css?family=IM+Fell+English|IM+Fell+English+SC&amp;display=swap&#39;); body{ background-color: #FFFFF0; } h1 { font-family: &#39;IM Fell English&#39;, serif; } h2,h3,h4,h5,h6 { font-family: &#39;IM Fell English&#39;, serif; } .post-title { font-family: &#39;IM Fell English SC&#39;, serif; font-size: 6rem; }  Introduction A little while ago I was watching a documentary series on Dutch television about one of the most beloved composers in the Netherlands: Johann Sebastian Bach. I had
+ Collecting the data In my search of a dataset, I found this old website, looking like it last got a major update in 2003, made by what appeared to be a Bach enthousiast called Bryen Travis.</description>
+    </item>
+    
+    <item>
       <title>How I Create Manhattan Plots Using ggplot</title>
-      <link>/posts/how-i-create-manhattan-plots-using-ggplot/</link>
+      <link>/blog/how-i-create-manhattan-plots-using-ggplot/</link>
       <pubDate>Wed, 24 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>/posts/how-i-create-manhattan-plots-using-ggplot/</guid>
+      <guid>/blog/how-i-create-manhattan-plots-using-ggplot/</guid>
       <description>Introduction There are many ways to create a Manhattan plot. There’s a number of online tools that create Manhattan plots for you, it’s implemented in a number of toolboxes that are often used in genetics, and there’s a couple of packages for R that can create these plots. However, these options often don’t offer the customizability that some people (like me) would want. One of the most flexible ways to plot a Manhattan plot (I know of) is the {manhattan} package, but how nice would it be to have full control over the properties of the plot.</description>
     </item>
     
     <item>
       <title>How I Plot ERPs in R</title>
-      <link>/posts/how-i-plot-erps-in-r/</link>
+      <link>/blog/how-i-plot-erps-in-r/</link>
       <pubDate>Sat, 30 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>/posts/how-i-plot-erps-in-r/</guid>
+      <guid>/blog/how-i-plot-erps-in-r/</guid>
       <description>Introduction Plotting ERPs is one of the essential skills in EEG neuroscience. There are many possible ways of going about this task, some better than others. Myself, I use either MATLAB or R to plot ERPs. In my experience, MATLAB is by far the preferred method since most of the EEG analysis takes place in MATLAB already, but I believe that there’s some merit to using R. One of my main arguments is aesthetics.</description>
     </item>
     

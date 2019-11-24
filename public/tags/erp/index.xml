@@ -13,10 +13,10 @@
     
     <item>
       <title>How I Plot ERPs in R</title>
-      <link>/posts/how-i-plot-erps-in-r/</link>
+      <link>/blog/how-i-plot-erps-in-r/</link>
       <pubDate>Sat, 30 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>/posts/how-i-plot-erps-in-r/</guid>
+      <guid>/blog/how-i-plot-erps-in-r/</guid>
       <description>Introduction Plotting ERPs is one of the essential skills in EEG neuroscience. There are many possible ways of going about this task, some better than others. Myself, I use either MATLAB or R to plot ERPs. In my experience, MATLAB is by far the preferred method since most of the EEG analysis takes place in MATLAB already, but I believe that there’s some merit to using R. One of my main arguments is aesthetics.</description>
     </item>
     

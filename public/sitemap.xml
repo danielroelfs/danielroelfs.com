@@ -3,42 +3,52 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/blog/analyzing-bach/</loc>
+    <lastmod>2019-11-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/bach/</loc>
+    <lastmod>2019-11-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/blog/</loc>
-    <lastmod>2019-04-24T00:00:00+00:00</lastmod>
+    <lastmod>2019-11-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/categories/</loc>
-    <lastmod>2019-04-24T00:00:00+00:00</lastmod>
+    <lastmod>2019-11-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/categories/coding/</loc>
-    <lastmod>2019-04-24T00:00:00+00:00</lastmod>
+    <lastmod>2019-11-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/</loc>
-    <lastmod>2019-04-24T00:00:00+00:00</lastmod>
+    <lastmod>2019-11-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/ggplot/</loc>
-    <lastmod>2019-04-24T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/blog/how-i-create-manhattan-plots-using-ggplot/</loc>
-    <lastmod>2019-04-24T00:00:00+00:00</lastmod>
+    <lastmod>2019-11-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/r/</loc>
-    <lastmod>2019-04-24T00:00:00+00:00</lastmod>
+    <lastmod>2019-11-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/</loc>
+    <lastmod>2019-11-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/how-i-create-manhattan-plots-using-ggplot/</loc>
     <lastmod>2019-04-24T00:00:00+00:00</lastmod>
   </url>
   

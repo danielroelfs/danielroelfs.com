@@ -6,10 +6,19 @@
     <description>Recent content on Daniel Roelfs</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 24 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 24 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Analyzing Bach</title>
+      <link>/blog/analyzing-bach/</link>
+      <pubDate>Sun, 24 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/analyzing-bach/</guid>
+      <description>@import url(&#39;https://fonts.googleapis.com/css?family=IM+Fell+English|IM+Fell+English+SC&amp;display=swap&#39;); body{ background-color: #FFFFF0; } h1 { font-family: &#39;IM Fell English&#39;, serif; } h2,h3,h4,h5,h6 { font-family: &#39;IM Fell English&#39;, serif; } .post-title { font-family: &#39;IM Fell English SC&#39;, serif; font-size: 6rem; }  Introduction A little while ago I was watching a documentary series on Dutch television about one of the most important composers in the Netherlands: Johann Sebastian Bach. The documentary discussed parts of Bach’s life and the music he wrote during it.</description>
+    </item>
     
     <item>
       <title>How I Create Manhattan Plots Using ggplot</title>
@@ -56,7 +65,7 @@ Originally from the Netherlands, I have also studied in France and Sweden before
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/cv/</guid>
-      <description>h1 { color:#ffffff; font-family:&#39;Libre Baskerville&#39;, serif; letter-spacing:0em; margin:0 0 0 0; font-size:0rem; line-height:0rem }  /* Copyright (c) 2009, Yahoo! Inc. All rights reserved. Code licensed under the BSD License: http://developer.yahoo.net/yui/license.txt version: 2.7.0 */ html { color: #000; background: #FFF; } body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, p, blockquote, th, td { margin: 0; padding: 0; } table { border-collapse: collapse; border-spacing: 0; } fieldset, img { border: 0; } address, caption, cite, code, dfn, em, strong, th, var, optgroup { font-style: inherit; font-weight: inherit; } del, ins { text-decoration: none; } li { list-style: none; } caption, th { text-align: left; } h1, h2, h3, h4, h5, h6 { font-size: 100%; font-weight: normal; } q:before, q:after { content: &#39;&#39;; } abbr, acronym { border: 0; font-variant: normal; } sup { vertical-align: baseline; } sub { vertical-align: baseline; } legend { color: #000; } input, button, textarea, select, optgroup, option { font-family: inherit; font-size: inherit; font-style: inherit; font-weight: inherit; } input, button, textarea, select { *font-size: 100%; } body { font: 13px/1.</description>
+      <description>/* Copyright (c) 2009, Yahoo! Inc. All rights reserved. Code licensed under the BSD License: http://developer.yahoo.net/yui/license.txt version: 2.7.0 */ html { color: #000; background: #FFF; } body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, p, blockquote, th, td { margin: 0; padding: 0; } table { border-collapse: collapse; border-spacing: 0; } fieldset, img { border: 0; } address, caption, cite, code, dfn, em, strong, th, var, optgroup { font-style: inherit; font-weight: inherit; } del, ins { text-decoration: none; } li { list-style: none; } caption, th { text-align: left; } h1, h2, h3, h4, h5, h6 { font-size: 100%; font-weight: normal; } q:before, q:after { content: &#39;&#39;; } abbr, acronym { border: 0; font-variant: normal; } sup { vertical-align: baseline; } sub { vertical-align: baseline; } legend { color: #000; } input, button, textarea, select, optgroup, option { font-family: inherit; font-size: inherit; font-style: inherit; font-weight: inherit; } input, button, textarea, select { *font-size: 100%; } body { font: 13px/1.</description>
     </item>
     
     <item>

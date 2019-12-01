@@ -6,10 +6,19 @@
     <description>Recent content in R on Daniel Roelfs</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 24 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 24 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Analyzing Bach</title>
+      <link>/blog/analyzing-bach/</link>
+      <pubDate>Sun, 24 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/analyzing-bach/</guid>
+      <description>@import url(&#39;https://fonts.googleapis.com/css?family=IM+Fell+English|IM+Fell+English+SC&amp;display=swap&#39;); body{ background-color: #FFFFF0; } h1 { font-family: &#39;IM Fell English&#39;, serif; } h2,h3,h4,h5,h6 { font-family: &#39;IM Fell English&#39;, serif; } .post-title { font-family: &#39;IM Fell English SC&#39;, serif; font-size: 6rem; }  Introduction A little while ago I was watching a documentary series on Dutch television about one of the most important composers in the Netherlands: Johann Sebastian Bach. The documentary discussed parts of Bach’s life and the music he wrote during it.</description>
+    </item>
     
     <item>
       <title>How I Create Manhattan Plots Using ggplot</title>

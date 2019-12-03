@@ -108,7 +108,7 @@ colnames(scraped_data) <- col_names
 ```
 
 ## Scraping the data
-We now have a variable of the same dimensions and column names as I'll scrape from the website. Now it's time to loop through the webpages and collect the data. Each webpage contains what looks like a table, but within the table it's bulleted lists (denoted as `ul`). This might just be how html builds up tables, but I thought it was a bit strange. Nonetheless, it provided me with an easy hook to grab the values. I remove all the white spaces (`\t`), and each new line was denoted by a `\n`, which I used to split the strings into separate values. The andvantage of this approach is that when a field is empty, it will still occupy an element in the character array. Then all I needed to do to obtain the values is take every second element and add it as a row to the data frame I created earlier. Now I have a dataset containing the values from all of the 1075 webpages, with which I was quite pleased.
+We now have a variable of the same dimensions and column names as I'll scrape from the website. Now it's time to loop through the webpages and collect the data. Each webpage contains what looks like a table, but within the table it's bulleted lists (denoted as `ul`). This might just be how html builds up tables, but I thought it was a bit strange. Nonetheless, it provided me with an easy hook to grab the values. I remove all the white spaces (`\t`), and each new line was denoted by a `\n`, which I used to split the strings into separate values. The advantage of this approach is that when a field is empty, it will still occupy an element in the character array. Then all I needed to do to obtain the values is take every second element and add it as a row to the data frame I created earlier. Now I have a dataset containing the values from all of the 1075 webpages, with which I was quite pleased.
 
 ```{r eval=FALSE}
 for (i in 1:length(BWVs)) {
@@ -166,7 +166,7 @@ Now we have this data, we can do some descriptive visualizations of the data. Ov
 
 The first descritive I wanted to see was what kind of work Bach wrote and in what numbers. First the main category, which differentiates between choral pieces and instrumental pieces.
 
-```{r echo=FALSE}
+```{r}
 data %>%
   group_by(category1) %>%
   summarise(n = n()) %>%
@@ -188,7 +188,7 @@ data %>%
 
 It seems Bach didn't have a strong preference for either instrumental or choral music. I suppose he didn't have infinite freedom with what to compose, since his employer might also request him to compose certain types of music. I wanted to see the same for the secondary category, which differentias between the type of composition (e.g. cantate, passions, organ pieces, symphonies, and so on).
 
-```{r echo=FALSE}
+```{r}
 data %>%
   group_by(category2) %>%
   summarise(n = n()) %>%
@@ -210,7 +210,7 @@ data %>%
 
 From this it seems that most of the intrumental pieces are made up by just solo pieces for organ and the harpsichord and that the choral pieces are made up mostly by cantates and chorales for four voices. While I appreciate the information dissemination qualities of a barplot (or lollipop plot) like this, in that it's good in communicating absolute quantities (while I admit that this could also be displayed in a table). One thing it is less good at, is communicating the subjective volume of the works. There's more than a thousand pieces in the BWV, and I feel that the plots above don't do a good enough job at communicating just how many pieces this is. Therefore, I created a tile plot (using `{ggwaffle}`), where every tile represents one piece. I colored again based on the secondary category. In order to still maintain the quantities of each category, I added the number of compositions to the legend.
 
-```{r echo=FALSE, fig.width=12}
+```{r fig.width=12}
 data %>%
   group_by(category2) %>%
   summarise(n = n()) %>%

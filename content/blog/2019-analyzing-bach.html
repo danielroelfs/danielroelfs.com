@@ -76,7 +76,7 @@ colnames(scraped_data) &lt;- col_names</code></pre>
 </div>
 <div id="scraping-the-data" class="section level2">
 <h2>Scraping the data</h2>
-<p>We now have a variable of the same dimensions and column names as I’ll scrape from the website. Now it’s time to loop through the webpages and collect the data. Each webpage contains what looks like a table, but within the table it’s bulleted lists (denoted as <code>ul</code>). This might just be how html builds up tables, but I thought it was a bit strange. Nonetheless, it provided me with an easy hook to grab the values. I remove all the white spaces (<code>\t</code>), and each new line was denoted by a <code>\n</code>, which I used to split the strings into separate values. The andvantage of this approach is that when a field is empty, it will still occupy an element in the character array. Then all I needed to do to obtain the values is take every second element and add it as a row to the data frame I created earlier. Now I have a dataset containing the values from all of the 1075 webpages, with which I was quite pleased.</p>
+<p>We now have a variable of the same dimensions and column names as I’ll scrape from the website. Now it’s time to loop through the webpages and collect the data. Each webpage contains what looks like a table, but within the table it’s bulleted lists (denoted as <code>ul</code>). This might just be how html builds up tables, but I thought it was a bit strange. Nonetheless, it provided me with an easy hook to grab the values. I remove all the white spaces (<code>\t</code>), and each new line was denoted by a <code>\n</code>, which I used to split the strings into separate values. The advantage of this approach is that when a field is empty, it will still occupy an element in the character array. Then all I needed to do to obtain the values is take every second element and add it as a row to the data frame I created earlier. Now I have a dataset containing the values from all of the 1075 webpages, with which I was quite pleased.</p>
 <pre class="r"><code>for (i in 1:length(BWVs)) {
   
   print(sprintf(&quot;Scraping data for BWV %s&quot;, BWVs[i]))
@@ -144,10 +144,57 @@ str(data)</code></pre>
 <div id="visualizations" class="section level2">
 <h2>Visualizations</h2>
 <p>The first descritive I wanted to see was what kind of work Bach wrote and in what numbers. First the main category, which differentiates between choral pieces and instrumental pieces.</p>
+<pre class="r"><code>data %&gt;%
+  group_by(category1) %&gt;%
+  summarise(n = n()) %&gt;%
+  ggplot(aes(x = category1, y = n, color = category1)) +
+  geom_segment(aes(xend = category1, yend = 0), size = 12, 
+               color = &quot;grey40&quot;, alpha = 0.9) +
+  geom_point(size = 20, shape = 16) + 
+  geom_text(aes(label = n, y = n + 5), color = &quot;white&quot;, size = 5, family = &quot;Alegreya&quot;) +
+  labs(x = NULL,
+       y = &quot;Number of compositions&quot;) +
+  scale_color_daniel(palette = &quot;staalmeesters&quot;) +
+  scale_y_continuous(limits = c(0,650)) + 
+  theme_bach(base_family = &quot;Alegreya&quot;, grid = &quot;y&quot;) +
+  theme(
+    legend.position = &quot;none&quot;,
+    aspect.ratio = 3/2,
+    axis.text.x = element_text(angle = 45, hjust = 1.1, vjust = 1.15))</code></pre>
 <p><img src="/blog/2019-analyzing-bach_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>It seems Bach didn’t have a strong preference for either instrumental or choral music. I suppose he didn’t have infinite freedom with what to compose, since his employer might also request him to compose certain types of music. I wanted to see the same for the secondary category, which differentias between the type of composition (e.g. cantate, passions, organ pieces, symphonies, and so on).</p>
+<pre class="r"><code>data %&gt;%
+  group_by(category2) %&gt;%
+  summarise(n = n()) %&gt;%
+  ggplot(aes(x = reorder(category2,-n), y = n, color = category2)) +
+  geom_segment(aes(xend = category2, yend = 0), size = 6, 
+               color = &quot;grey40&quot;, alpha = 0.9) +
+  geom_point(size = 10, shape = 16) + 
+  geom_text(aes(label = n, y = n + 3), color = &quot;white&quot;, size = 4, family = &quot;Alegreya&quot;) +
+  labs(x = NULL,
+       y = &quot;Number of compositions&quot;) +
+  scale_color_daniel(palette = &quot;staalmeesters&quot;) +
+  scale_y_continuous(limits = c(-5,300)) + 
+  theme_bach(base_family = &quot;Alegreya&quot;, grid = &quot;y&quot;) +
+  theme(
+    legend.position = &quot;none&quot;,
+    axis.text.x = element_text(angle = 45, hjust = 1.05, vjust = 1.025)
+    )</code></pre>
 <p><img src="/blog/2019-analyzing-bach_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>From this it seems that most of the intrumental pieces are made up by just solo pieces for organ and the harpsichord and that the choral pieces are made up mostly by cantates and chorales for four voices. While I appreciate the information dissemination qualities of a barplot (or lollipop plot) like this, in that it’s good in communicating absolute quantities (while I admit that this could also be displayed in a table). One thing it is less good at, is communicating the subjective volume of the works. There’s more than a thousand pieces in the BWV, and I feel that the plots above don’t do a good enough job at communicating just how many pieces this is. Therefore, I created a tile plot (using <code>{ggwaffle}</code>), where every tile represents one piece. I colored again based on the secondary category. In order to still maintain the quantities of each category, I added the number of compositions to the legend.</p>
+<pre class="r"><code>data %&gt;%
+  group_by(category2) %&gt;%
+  summarise(n = n()) %&gt;%
+  mutate(category2 = sprintf(&quot;%s (%s)&quot;, category2, n)) %&gt;%
+  ggplot(aes(fill = category2, values = n)) +
+  geom_waffle(n_rows = 17, size = 0.2, colour = &quot;#FFFFFC&quot;, flip = FALSE) +
+  scale_fill_daniel(palette = &quot;staalmeesters&quot;, name = NULL) +
+  coord_equal() +
+  theme_bach(base_family = &quot;Alegreya&quot;, base_size = 14) +
+  theme_enhance_waffle() +
+  theme(
+    legend.position = &quot;bottom&quot;
+  )</code></pre>
 <p><img src="/blog/2019-analyzing-bach_files/figure-html/unnamed-chunk-13-1.png" width="1152" style="display: block; margin: auto;" /></p>
 </div>
 <div id="scraping-wikipedia" class="section level2">

@@ -6,10 +6,19 @@
     <description>Recent content in coding on Daniel Roelfs</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 01 Dec 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 10 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/coding/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>How I make QQ Plots Using ggplot</title>
+      <link>/blog/how-i-make-qq-plots-using-ggplot/</link>
+      <pubDate>Fri, 10 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/how-i-make-qq-plots-using-ggplot/</guid>
+      <description>Introduction Whenever I show my colleagues in the genetics group my results, the first things they say are “can you show me the Manhattan plots?” and “can you show me the QQ plots?”. I covered how to make Manhattan plots in ggplot before (click here for a link. But now I want to go through how I make QQ plots. I’m aware that there’s a number of packages available that offer this funcionality, but I feel they’re for the most part a bit limiting compared to making the plot yourself using the {ggplot2} package.</description>
+    </item>
     
     <item>
       <title>Analyzing Bach</title>

@@ -11,4 +11,3 @@ author: "Daniel Roelfs"
 htmltools::includeCSS("cv.css")
 htmltools::includeHTML("cv_page.html")
 ```
-

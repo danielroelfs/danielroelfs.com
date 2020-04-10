@@ -98,6 +98,6 @@ manhplot <- ggplot(gwas.dat, aes(x = BPcum, y = -log10(P),
 
 I opt to include some white space on the x-axis around the Manhattan plot to give it some space to "breathe", but this is personal preference. This white space can be removed by adding `expand = c(0,0)` to the `scale_x_continuous()` function to get a more compact plot. I also added a size aesthetic. It is possible to render the plot once it's created, but due to the size of the object, in this instance I'd recommend to directly save it to a .png file instead of a pdf. It's possible to save it to a pdf anyway, but due to the size of the object, this will be an enormous file, but of course this depends on the resources at your disposal. If you do save it as an image, I personally like to save it in a ratio that is wider than it is tall. This is both for aesthetic reasons, and to prevent the labels on the x-axis to clash for the chromosomes of shorter length. Of course, this being a `ggplot()` object, it's possible to add onto this at will. One thing that you can do is to manually annotate the plot using the `annotate()`, `geom_text()`, or the `geom_label_repel()` function. The latter is implemented in the `{ggrepel}` package, and is actually quite a neat function. Do make sure to only annotate a selected number of SNPs, otherwise it will likely crash your session! I've included a Manhattan plot of some simulated data below to show how it turned out for me when I ran the code described above.
 
-```{r fig.width=12}
+```{r fig.width=12, dev.args = list(bg = 'transparent')}
 print(manhplot)
 ```

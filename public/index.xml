@@ -6,7 +6,7 @@
     <description>Recent content on Daniel Roelfs</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 16 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 17 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Plotting Star Destroyers in R</title>
       <link>/blog/plotting-star-destroyers-in-r/</link>
-      <pubDate>Thu, 16 Apr 2020 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 17 Apr 2020 00:00:00 +0000</pubDate>
       
       <guid>/blog/plotting-star-destroyers-in-r/</guid>
       <description>Introduction Most people in my environment know R as the quintessential tool for statistical analysis and data visualization. There’s plenty of tutorials and discussions online about how to go about either. But one important aspect that is noticeably lacking is a discussion about R’s ability to simulate scenes from Star Wars. Today, we’ll set this straight. At the same time we’ll also explore how to incorporate a mathematical formula with a set of simple rules into R.</description>

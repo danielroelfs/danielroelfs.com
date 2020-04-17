@@ -1,7 +1,7 @@
 ---
 title: Plotting Star Destroyers in R
 author: Daniel Roelfs
-date: '2020-04-16'
+date: '2020-04-17'
 slug: Plotting Star Destroyers in R
 categories:
   - coding

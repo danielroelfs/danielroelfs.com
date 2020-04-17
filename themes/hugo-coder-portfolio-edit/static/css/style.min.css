@@ -139,6 +139,9 @@ th,td{
     padding:1.6rem
 }
 table{
+    margin-left:auto; 
+    margin-right:auto; 
+    line-height: 0px;
     border-collapse:collapse
 }
 table td,table th{

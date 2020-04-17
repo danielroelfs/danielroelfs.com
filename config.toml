@@ -49,15 +49,15 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "\\.Rproj$"]
     
 # Social links
 [[params.social]]
-    name = "Github"
-    icon = "fab fa-github"
-    weight = 1
-    url = "https://github.com/danielroelfs/"
-[[params.social]]
     name = "Twitter"
     icon = "fab fa-twitter"
-    weight = 2
+    weight = 1
     url = "https://twitter.com/dthroelfs/"
+[[params.social]]
+    name = "Github"
+    icon = "fab fa-github"
+    weight = 2
+    url = "https://github.com/danielroelfs/"
 [[params.social]]
     name = "LinkedIn"
     icon = "fab fa-linkedin"

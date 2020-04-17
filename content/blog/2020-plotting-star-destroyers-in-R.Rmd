@@ -230,17 +230,22 @@ There is a range of values where the input of the balanced ternary enumeration i
 Anyway, the plot! It is cool and all, but let's make it look a bit more like Star Wars by changing some style elements. We'll also generate some stars. For fun's sake we'll also add a planet or moon.
 
 ```{r fig.width=12, fig.height=8}
-set.seed(1977)
+set.seed(1983)
 ggplot(data = NULL, aes(x = seq(starwars_seq), y = starwars_seq)) +
-  geom_point(aes(x = sample(seq(-1e4,length(starwars_seq)+1e4), 1e3),
-                 y = sample(seq(min(starwars_seq)-1e4,max(starwars_seq)+1e4), 1e3)), 
-            shape = 18, size = 1e-5, color = "yellow") +
+  geom_point(aes(x = sample(seq(-1e4,length(starwars_seq) + 1e4), 1e3),
+                 y = sample(seq(min(starwars_seq)-1e4,max(starwars_seq) + 1e4), 1e3),
+                 size = sample(runif(length(starwars_seq) + 1e4), 1e3)), 
+             shape = 18, color = "yellow") +
   geom_point(aes(x = sample(seq(starwars_seq), 1),
                  y = sample(starwars_seq, 1)), 
-            shape = 19, size = 12, color = "darkslategray") +
+             shape = 19, size = 12, color = "darkslategray") +
   geom_point(size = 4, color = "grey90") +
+  scale_size_continuous(range = c(1e-3,5e-1)) +
   theme_void() +
-  theme(panel.background = element_rect(fill = "black"))
+  theme(
+    legend.position = "none",
+    panel.background = element_rect(fill = "black")
+  )
 ```
 
 Hope you enjoyed reading about me rambling about maths and implementing these functions to R! I will certainly do another plot some time later!

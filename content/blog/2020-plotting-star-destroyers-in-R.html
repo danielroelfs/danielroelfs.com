@@ -242,17 +242,22 @@ map_dbl(example_vector, BTE)</code></pre>
 <pre><code>## [1] 59049</code></pre>
 <p>There is a range of values where the input of the balanced ternary enumeration is equal to the outcome (or where the outcome is equal to the input divided by two times -1 (<span class="math inline">\(\frac{-x}{2}\)</span>). There’s a clear pattern to these numbers, but I’ve done enough maths for today, so I’ll save it for another time.</p>
 <p>Anyway, the plot! It is cool and all, but let’s make it look a bit more like Star Wars by changing some style elements. We’ll also generate some stars. For fun’s sake we’ll also add a planet or moon.</p>
-<pre class="r"><code>set.seed(1977)
+<pre class="r"><code>set.seed(1983)
 ggplot(data = NULL, aes(x = seq(starwars_seq), y = starwars_seq)) +
-  geom_point(aes(x = sample(seq(-1e4,length(starwars_seq)+1e4), 1e3),
-                 y = sample(seq(min(starwars_seq)-1e4,max(starwars_seq)+1e4), 1e3)), 
-            shape = 18, size = 1e-5, color = &quot;yellow&quot;) +
+  geom_point(aes(x = sample(seq(-1e4,length(starwars_seq) + 1e4), 1e3),
+                 y = sample(seq(min(starwars_seq)-1e4,max(starwars_seq) + 1e4), 1e3),
+                 size = sample(runif(length(starwars_seq) + 1e4), 1e3)), 
+             shape = 18, color = &quot;yellow&quot;) +
   geom_point(aes(x = sample(seq(starwars_seq), 1),
                  y = sample(starwars_seq, 1)), 
-            shape = 19, size = 12, color = &quot;darkslategray&quot;) +
+             shape = 19, size = 12, color = &quot;darkslategray&quot;) +
   geom_point(size = 4, color = &quot;grey90&quot;) +
+  scale_size_continuous(range = c(1e-3,5e-1)) +
   theme_void() +
-  theme(panel.background = element_rect(fill = &quot;black&quot;))</code></pre>
+  theme(
+    legend.position = &quot;none&quot;,
+    panel.background = element_rect(fill = &quot;black&quot;)
+  )</code></pre>
 <p><img src="/blog/2020-plotting-star-destroyers-in-R_files/figure-html/unnamed-chunk-18-1.png" width="1152" style="display: block; margin: auto;" /></p>
 <p>Hope you enjoyed reading about me rambling about maths and implementing these functions to R! I will certainly do another plot some time later!
 <br><br></p>

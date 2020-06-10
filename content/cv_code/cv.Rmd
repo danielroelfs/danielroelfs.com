@@ -1,0 +1,16 @@
+---
+description: "cv"
+slug: "cv"
+thumbnail: "images/tn.png"
+author: "Daniel Roelfs"
+---
+
+```{r, echo=FALSE}
+htmltools::includeCSS("cv.css")
+htmltools::includeHTML("cv_page.html")
+```
+
+
+
+
+

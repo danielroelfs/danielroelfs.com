@@ -13,7 +13,13 @@ PygmentsCodeFences = true # Enable code fence background highlighting.
 PygmentsCodeFencesGuessSyntax = true # Enable syntax guessing for code fences without specified language.
 PygmentsUseClasses = true # new add
 
-ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "\\.Rproj$"]
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_cache$", "index\\.html", "about\\.html", "static/blog/\\*_files/", "README"] 
+
+[markup]
+  defaultMarkdownHandler = "blackfriday"
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
 
 [params] # theme parameters
     author = "Daniel Roelfs" # Author's name.

@@ -11,6 +11,6 @@ output:
 
 ```{r, echo=FALSE}
 htmltools::tags$iframe(src = "photography.html", 
-                       onload = "this.width='100%';this.height=screen.height/1.7;",
+                       onload = "this.width='100%';this.height=screen.height;",
                        frameBorder="0")
 ```

@@ -2,7 +2,7 @@
 
 loi <- list.files(here::here("content/photography/img/"))
 
-html_template <- '\t\t\t<img src="./img/%s">'
+html_template <- '\t\t\t\t\t<img src="./img/%s">'
 
 html_text <- sprintf(html_template, loi)                  
 

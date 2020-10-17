@@ -1,3 +1,3 @@
 # Personal website
 
-Repository for my personal website: [danielroelfs.com](danielroelfs.com)
+Repository for the source code of my personal website: [danielroelfs.com](https://danielroelfs.com)

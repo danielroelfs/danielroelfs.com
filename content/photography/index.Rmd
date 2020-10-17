@@ -1,0 +1,16 @@
+---
+description: "photography"
+slug: "photography"
+thumbnail: "images/avatar.png"
+title: "Photography"
+author: "Daniel Roelfs"
+output:
+  html_document:
+    keep_md: yes
+---
+
+```{r, echo=FALSE}
+htmltools::tags$iframe(src = "photography.html", 
+                       onload = "this.width='100%';this.height=screen.height/1.7;",
+                       frameBorder="0")
+```

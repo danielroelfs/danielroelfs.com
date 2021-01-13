@@ -5,6 +5,7 @@ languagecode = "en" # The site’s language code used to generate RSS.
 defaultcontentlanguage = "en" # The default content language.
 defaultContentLanguageInSubdir = true
 GoogleAnalytics = "UA-26694895-2"
+publishDir = "docs"
 
 paginate = 20 # Default number of pages per page in pagination.
 

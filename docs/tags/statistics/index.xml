@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>statistics on Daniel Roelfs</title>
+    <link>/tags/statistics/</link>
+    <description>Recent content in statistics on Daniel Roelfs</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 24 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="/tags/statistics/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Running an ICA on Questionnaires</title>
+      <link>/blog/running-an-ica-on-questionnaires/</link>
+      <pubDate>Sat, 24 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/running-an-ica-on-questionnaires/</guid>
+      <description>Introduction If there was a statistics magazine and it were to have ads, the ad for independent component analysis (commonly referred to as the ICA) might read something like this:
+ Do you ever find yourself with a large number of highly related variables? Are you interested in studying constructs rather than specific measures? Would you rather work with a small number of variables each capturing a large amount of variance instead of a large number of variables each capturing a small amount of variance?</description>
+    </item>
+    
+  </channel>
+</rss>

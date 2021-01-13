@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Daniel Roelfs">
+    <meta name="description" content="/">
+    <meta name="keywords" content="blog,personal,coding">
+
+    <meta property="og:site_name" content="Daniel Roelfs">
+    <meta property="og:title" content="
+  Running an ICA on Questionnaires - Daniel Roelfs
+">
+    <meta property="og:description" content="Running an ICA on Questionnaires">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/blog/running-an-ica-on-questionnaires/">
+    <meta property="og:image" content="/images/avatar.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="/blog/running-an-ica-on-questionnaires/">
+    <meta name="twitter:image" content="/images/avatar.png">
+
+    <base href="/blog/running-an-ica-on-questionnaires/">
+    <title>
+  Running an ICA on Questionnaires - Daniel Roelfs
+</title>
+
+    <link rel="canonical" href="/blog/running-an-ica-on-questionnaires/">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Alegreya:400,400i,700|Libre+Baskerville:400,400i,700&display=swap">
+    <link rel="stylesheet" href="/css/normalize.min.css">
+    <link rel="stylesheet" href="/css/style.min.css">
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    
+      <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Daniel Roelfs">
+      <link href="/index.xml" rel="feed" type="application/rss+xml" title="Daniel Roelfs" />
+    
+
+    <meta name="generator" content="Hugo 0.76.3" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">Daniel Roelfs</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="/blog">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="/photography">Photography</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="/publications">Publications</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="/cv">Curriculum Vitæ</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="/about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="post-title">Running an ICA on Questionnaires</h1> 
+      <h2 class="date">October 24, 2020</h2>
+
+      
+    </header>
+
+    
+
+<h3 id="introduction">Introduction</h3>
+
+<p>If there was a statistics magazine and it were to have ads, the ad for independent component analysis (commonly referred to as the ICA) might read something like this:</p>
+
+<blockquote>
+<p>Do you ever find yourself with a large number of highly related variables? Are you interested in studying constructs rather than specific measures? Would you rather work with a small number of variables each capturing a large amount of variance instead of a large number of variables each capturing a small amount of variance?</p>
+
+<p>Then ICA is for you!</p>
+</blockquote>
+
+<p>Obviously, there is more to it than this, but I don&rsquo;t have the time to talk about the statistical properties of ICA. There&rsquo;s many people who can explain this a hell of a lot better than I could anyway. I&rsquo;m going to assume you&rsquo;ve done your homework and already know that ICA is the right strategy to answer your research question and you just want to know how to implement it in R. That&rsquo;s what this tutorial is for. We&rsquo;ll run both a PCA and an ICA and visualize the results.</p>
+
+<h3 id="getting-the-data">Getting the data</h3>
+
+<p>We&rsquo;ll use a dataset called the <em>Nerdy Personality Attributes Scale</em> from the <a href="https://openpsychometrics.org/tests/OSRI/development/">Open-Source Psychometrics Project</a>. The dataset can be downloaded from <a href="https://www.kaggle.com/lucasgreenwell/nerdy-personality-attributes-scale-responses/version/1?select=data.csv">Kaggle</a>. In short, it&rsquo;s a questionnaire on &ldquo;nerdiness&rdquo;. It aims to measure attributes of ones personality that reflect the popular understanding of &ldquo;nerdiness&rdquo;. It is a series of questions to which participants are supposed to rank themselves on a Likert scale. The questionnaire has a high reliability, but the questionnaire isn&rsquo;t immune to valid criticisms. Here, we&rsquo;ll use this dataset to see if we can identify subtypes of the concept of &ldquo;nerdiness&rdquo; in our dataset.</p>
+
+<p>The dataset in question consists of almost 20.000 individuals from 149 different countries. Is there any reliable way to ensure that the tests are filled in correctly? No, definitely not. Does that make it a unreliable dataset for scientific analysis? Probably. Both issues are perhaps slightly confounded by its sheer size, but the dataset serves our goal well, which is to run an ICA in R. We&rsquo;ll use the <code>{tidyverse}</code> package and the <code>{fastICA}</code> package.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">fastICA</span><span class="p">)</span></code></pre></div>
+<p>There are two files we need, one with the actual data (we&rsquo;ll call this <code>loaddata</code>), and one with the list of questions (we&rsquo;ll call this <code>loadcodes</code>).</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="n">loaddata</span> <span class="o">&lt;-</span> <span class="nf">read_delim</span><span class="p">(</span><span class="s">&#34;data.csv&#34;</span><span class="p">,</span> <span class="n">delim</span> <span class="o">=</span> <span class="s">&#34;\t&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span> 
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">id</span> <span class="o">=</span> <span class="nf">row_number</span><span class="p">())</span>
+
+<span class="n">loadcodes</span> <span class="o">&lt;-</span> <span class="nf">read_delim</span><span class="p">(</span><span class="s">&#34;codebook_clean.txt&#34;</span><span class="p">,</span> <span class="n">delim</span> <span class="o">=</span> <span class="s">&#34;\t&#34;</span><span class="p">,</span> <span class="n">col_names</span> <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">rename</span><span class="p">(</span><span class="n">qnum</span> <span class="o">=</span> <span class="n">X1</span><span class="p">,</span>
+         <span class="n">question</span> <span class="o">=</span> <span class="n">X2</span><span class="p">)</span></code></pre></div>
+<p>After cleaning, we still have more than 250.000 individual records left. This is great! Now we&rsquo;re going to have to do some preprocessing before we run the ICA.</p>
+
+<h3 id="preprocessing-of-the-data">Preprocessing of the data</h3>
+
+<p>Next, we want to prune the data. We want to exclude questions that have a low degree of variance and we might want to remove or impute questions with a large number of <code>NA</code>s. Our first step is to get the data in a format that&rsquo;s easier to work with, in this case, the long format. We&rsquo;ll select all questions, and put the question number in a column called <code>question</code> and the values in a column called <code>score</code>.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="n">questdata</span> <span class="o">&lt;-</span> <span class="n">loaddata</span> <span class="o">%&gt;%</span>
+  <span class="nf">select</span><span class="p">(</span><span class="nf">starts_with</span><span class="p">(</span><span class="s">&#34;Q&#34;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="nf">pivot_longer</span><span class="p">(</span><span class="n">cols</span> <span class="o">=</span> <span class="nf">everything</span><span class="p">(),</span> <span class="n">names_to</span> <span class="o">=</span> <span class="s">&#34;question&#34;</span><span class="p">,</span> <span class="n">values_to</span> <span class="o">=</span> <span class="s">&#34;score&#34;</span><span class="p">)</span></code></pre></div>
+<p>We&rsquo;ll first find if there&rsquo;s any unanswered questions. These are rows where <code>score</code> is <code>NA</code>.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="n">questdata</span> <span class="o">%&gt;%</span>
+  <span class="nf">filter</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">score</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="nf">nrow</span><span class="p">(</span><span class="n">.)</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">## [1] 0</code></pre></div>
+<p>We find that there&rsquo;s no missing values (crazy, I know!). If there were any missing values we could possibly impute the scores in the original (wide) data (e.g. using k-nearest neighbor imputation) or we could remove these items (e.g. using <code>drop_na()</code>).</p>
+
+<p>The next step is to find if there are questions with insufficient variation in answers. For this we&rsquo;ll calculate the percentage that each answer on the Likert scale represents in the total variance of the dataset. We&rsquo;ll take our long-format data, group by the question and the answers on the question (<code>score</code>). Count the number of times that answer has been given to that question (using <code>count()</code>). Then we&rsquo;ll calculate the percentage that this answer represented within each question (using <code>perc = n / sum(n)</code>). Then we&rsquo;ll sort the answers within the questions on the percentage (with the answer that&rsquo;s been answered the most on top, and the answer that&rsquo;s answered the least on the bottom (<code>arrange(question, -perc)</code>)). Then we&rsquo;ll take the second-most common answer (<code>slice(2)</code>) and select the questions where the second-most answer represented less than 15% of the answers (<code>perc &lt; 0.15</code>). The threshold of 15% is fairly arbitrary. Usually I&rsquo;d go for 10%, but due to the source of the data, I&rsquo;m being a bit more stringent here. The output from these steps will give us the questions that we might want to exclude due to low variance.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="n">less15var</span> <span class="o">&lt;-</span> <span class="n">questdata</span> <span class="o">%&gt;%</span>
+  <span class="nf">group_by</span><span class="p">(</span><span class="n">question</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">count</span><span class="p">()</span> <span class="o">%&gt;%</span>
+  <span class="nf">group_by</span><span class="p">(</span><span class="n">question</span><span class="p">)</span> <span class="o">%&gt;%</span> 
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">perc</span> <span class="o">=</span> <span class="n">n</span> <span class="o">/</span> <span class="nf">sum</span><span class="p">(</span><span class="n">n</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="nf">arrange</span><span class="p">(</span><span class="n">question</span><span class="p">,</span> <span class="o">-</span><span class="n">perc</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">slice</span><span class="p">(</span><span class="m">2</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">filter</span><span class="p">(</span><span class="n">perc</span> <span class="o">&lt;</span> <span class="m">0.15</span><span class="p">)</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="n">less15var</span><span class="p">)</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">## # A tibble: 0 x 4
+## # Groups:   question [0]
+## # … with 4 variables: question &lt;chr&gt;, score &lt;dbl&gt;, n &lt;int&gt;, perc &lt;dbl&gt;</code></pre></div>
+<p>So no question has too little variance. If there was, I&rsquo;d remove that question like so:</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="n">data</span> <span class="o">&lt;-</span> <span class="n">loaddata</span> <span class="o">%&gt;%</span> 
+  <span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">less15var</span><span class="o">$</span><span class="n">question</span><span class="p">)</span></code></pre></div>
+<p>Next we want to normalize the data. Usually you&rsquo;d do this to ensure that all answers on a questionnaire are in the same domain. Let&rsquo;s imagine a scenario where some questions are scored from 0 to 10, others are scored from 0 to 5, and a third is scored from 80 to 120. The ICA is then biased towards questions that have larger values, like the third question in the example above. That&rsquo;s why we want to normalize the data. The statistical term for this is z-score normalization. The defining property of z-scored transformed data is that the mean is 0 and the standard deviation is one. The z-score transformation is obtained by subtracting the mean from each individual value and then dividing by the standard deviation. This is implemented in R with the <code>scale()</code> function. We&rsquo;ll also check if it worked afterwards.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="n">data</span> <span class="o">&lt;-</span> <span class="n">data</span> <span class="o">%&gt;%</span>
+  <span class="nf">pivot_longer</span><span class="p">(</span><span class="nf">starts_with</span><span class="p">(</span><span class="s">&#34;Q&#34;</span><span class="p">),</span> <span class="n">names_to</span> <span class="o">=</span> <span class="s">&#34;qnum&#34;</span><span class="p">,</span> <span class="n">values_to</span> <span class="o">=</span> <span class="s">&#34;score&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">group_by</span><span class="p">(</span><span class="n">qnum</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">score_z</span> <span class="o">=</span> <span class="nf">scale</span><span class="p">(</span><span class="n">score</span><span class="p">))</span>
+
+<span class="n">data</span> <span class="o">%&gt;%</span>
+  <span class="nf">ungroup</span><span class="p">()</span> <span class="o">%&gt;%</span>
+  <span class="nf">select</span><span class="p">(</span><span class="n">score_z</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">summarise</span><span class="p">(</span><span class="n">mean</span> <span class="o">=</span> <span class="nf">mean</span><span class="p">(</span><span class="n">score_z</span><span class="p">),</span> 
+            <span class="n">sd</span> <span class="o">=</span> <span class="nf">sd</span><span class="p">(</span><span class="n">score_z</span><span class="p">),</span> 
+            <span class="n">min</span> <span class="o">=</span> <span class="nf">min</span><span class="p">(</span><span class="n">score_z</span><span class="p">),</span>
+            <span class="n">max</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="n">score_z</span><span class="p">))</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">## # A tibble: 1 x 4
+##       mean    sd   min   max
+##      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 1.99e-17  1.00 -4.54  1.86</code></pre></div>
+<p>Great! Now we have a nice normalized dataset, without any missing values, and with questions that have a low degree of variance removed. All those preparations served to get us to a place where our clustering analyses are actually valid. Now it&rsquo;s time for the fun stuff!</p>
+
+<h3 id="run-pca">Run PCA</h3>
+
+<p>There&rsquo;s two clustering approaches we&rsquo;ll use. One will actually help us do the other. The ICA algorithm has is unsupervised, but does require us to tell it how many components we want to get out of the algorithm. It&rsquo;s complicated to calculate the ideal number of components up front, but we can use some standards. I usually use a combination of <a href="https://research.ics.aalto.fi/ica/icasso/">icasso</a> and PCA. We&rsquo;ll first do a principal component analysis (PCA). We can calculate the eigenvalue of each component in the PCA. PCA components are organized in decreasing order of variance explained. The threshold I use is an eigenvalue of 1. The number of PCA components with an eigenvalue larger than 1 is possibly a good number of components to give the ICA.</p>
+
+<p>The PCA is implemented in the <code>prcomp()</code> function. This function doesn&rsquo;t accept a data frame, but instead it requires a matrix. So we&rsquo;ll have to make that first. We&rsquo;ll transform the long-format data that we created earlier back into wide format (using <code>pivot_wider()</code>), then select only the columns that we want to include in the analysis (i.e. the questions (<code>select(starts_with(&quot;Q&quot;))</code>)), and then we&rsquo;ll turn it into a matrix (using <code>as.matrix()</code>). Then we&rsquo;ll put the resulting matrix into the <code>prcomp()</code> function.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="n">mat</span> <span class="o">&lt;-</span> <span class="n">data</span> <span class="o">%&gt;%</span>
+  <span class="nf">pivot_wider</span><span class="p">(</span><span class="n">names_from</span> <span class="o">=</span> <span class="s">&#34;qnum&#34;</span><span class="p">,</span> <span class="n">values_from</span> <span class="o">=</span> <span class="s">&#34;score_z&#34;</span><span class="p">,</span> <span class="n">id_cols</span> <span class="o">=</span> <span class="s">&#34;id&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">select</span><span class="p">(</span><span class="nf">starts_with</span><span class="p">(</span><span class="s">&#34;Q&#34;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="nf">as.matrix</span><span class="p">()</span>
+
+<span class="n">pca_data</span> <span class="o">&lt;-</span> <span class="nf">prcomp</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span></code></pre></div>
+<p>Then we can calculate a few other parameters. We want to calculate the variance that each component captures. The variance is the standard deviation squared. We can calculate the variance explained by each component by dividing the variance by the sum of the variance.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="n">pca_data</span><span class="o">$</span><span class="n">var</span> <span class="o">&lt;-</span> <span class="n">pca_data</span><span class="o">$</span><span class="n">sdev^2</span>
+<span class="n">pca_data</span><span class="o">$</span><span class="n">varexpl</span> <span class="o">&lt;-</span> <span class="n">pca_data</span><span class="o">$</span><span class="n">var</span> <span class="o">/</span> <span class="nf">sum</span><span class="p">(</span><span class="n">pca_data</span><span class="o">$</span><span class="n">var</span><span class="p">)</span>
+
+<span class="n">pca_stats</span> <span class="o">&lt;-</span> <span class="nf">tibble</span><span class="p">(</span><span class="n">sdev</span> <span class="o">=</span> <span class="n">pca_data</span><span class="o">$</span><span class="n">sdev</span><span class="p">,</span> 
+                    <span class="n">var</span> <span class="o">=</span> <span class="n">pca_data</span><span class="o">$</span><span class="n">var</span><span class="p">,</span> 
+                    <span class="n">varexpl</span> <span class="o">=</span> <span class="n">pca_data</span><span class="o">$</span><span class="n">varexpl</span><span class="p">)</span></code></pre></div>
+<p>We can visualize the variance captured in each component by creating a <a href="https://en.wikipedia.org/wiki/Scree_plot">scree plot</a>. This plot shows the components on the x-axis and the variance on the y-axis. Scree plots also typically include a horizontal line to indicate the eigenvalue of 1. Scree plots are typically interpreted based on the &ldquo;elbow&rdquo; in the plot, where the variance decreases. This can be a bit subjective. That&rsquo;s where the horizontal line comes in.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">ggplot</span><span class="p">(</span><span class="n">pca_stats</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="n">var</span><span class="p">),</span> <span class="n">y</span> <span class="o">=</span> <span class="n">var</span><span class="p">))</span> <span class="o">+</span> 
+  <span class="nf">geom_line</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="s">&#34;grey30&#34;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span> <span class="o">+</span> 
+  <span class="nf">geom_point</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="s">&#34;grey30&#34;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">2</span><span class="p">)</span> <span class="o">+</span> 
+  <span class="nf">geom_hline</span><span class="p">(</span><span class="n">yintercept</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> <span class="n">linetype</span> <span class="o">=</span> <span class="s">&#34;dashed&#34;</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">labs</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s">&#34;Principal component&#34;</span><span class="p">,</span>
+       <span class="n">y</span> <span class="o">=</span> <span class="s">&#34;Variance (eigenvalue)&#34;</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">theme_minimal</span><span class="p">()</span></code></pre></div>
+<p><img src="index_files/figure-html/plot-var-1.png" width="672" style="display: block; margin: auto;" /></p>
+
+<p>It can be a bit hard to see from the plot how many components have an eigenvalue larger than 1. But we can calulate it. The number of components with an eigenvalue larger than 1 will be the number of independent components we&rsquo;ll request from the ICA.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="n">nICs</span> <span class="o">&lt;-</span> <span class="n">pca_stats</span> <span class="o">%&gt;%</span>
+  <span class="nf">filter</span><span class="p">(</span><span class="n">var</span> <span class="o">&gt;</span> <span class="m">1</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">nrow</span><span class="p">()</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">nICs</span><span class="p">)</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">## [1] 6</code></pre></div>
+<h3 id="run-ica">Run ICA</h3>
+
+<p>Now we&rsquo;re ready to run the ICA! We&rsquo;ll use the <code>fastICA()</code> function. The function has a bunch of inputs. We&rsquo;ll pick the parallel algorithm (as opposed to the &ldquo;deflation&rdquo; algorithm). In the parallel algorithm the components are extracted simultaneously, with the deflation algorithm they&rsquo;re calculated one at a time. The &ldquo;fun&rdquo; option defines the form of the entropy function. I&rsquo;m not 100% sure what it does. Just set it to <code>&quot;exp&quot;</code> and move on. For the <code>&quot;method&quot;</code> option there are two options: <code>&quot;R&quot;</code> or <code>&quot;C&quot;</code>. In the first option, all analyses are run in R, in the second option, all code is run in C, which is slightly faster. I typically use the <code>&quot;C&quot;</code> option. The <code>maxit</code> option defines the maximum number of iterations to perform. The default is 200, but in complex datasets, it may take a larger number of iterations to converge. That&rsquo;s why I set it to 5000. This process may take a while. If you want to follow along with what the algorithm is doing, you can set the <code>verbose</code> option to <code>TRUE</code>.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">set.seed</span><span class="p">(</span><span class="m">2020</span><span class="p">)</span>
+<span class="n">ica_model</span> <span class="o">&lt;-</span> <span class="nf">fastICA</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">n.comp</span> <span class="o">=</span> <span class="n">nICs</span><span class="p">,</span> <span class="n">alg.typ</span> <span class="o">=</span> <span class="s">&#34;parallel&#34;</span><span class="p">,</span>
+                     <span class="n">fun</span> <span class="o">=</span> <span class="s">&#34;exp&#34;</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="s">&#34;C&#34;</span><span class="p">,</span> <span class="n">maxit</span> <span class="o">=</span> <span class="m">5000</span><span class="p">)</span></code></pre></div>
+<h3 id="create-weight-matrix">Create Weight Matrix</h3>
+
+<p>So now we have run the ICA decomposition. The function provides a few outputs:</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">glimpse</span><span class="p">(</span><span class="n">ica_model</span><span class="p">)</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">## List of 5
+##  $ X: num [1:19749, 1:26] -0.889 0.019 0.927 0.927 0.019 ...
+##  $ K: num [1:26, 1:6] -0.0851 -0.0786 -0.0766 -0.0874 -0.0961 ...
+##  $ W: num [1:6, 1:6] -0.2383 -0.5044 -0.3369 -0.0903 -0.6932 ...
+##  $ A: num [1:6, 1:26] 0.3789 -0.1428 -0.0568 -0.2787 -0.5879 ...
+##  $ S: num [1:19749, 1:6] -0.4788 0.9635 -0.0656 1.3909 -0.6898 ...</code></pre></div>
+<p>These names aren&rsquo;t very informative. In this function, <code>X</code> represens the pre-processed data matrix, <code>K</code> is the pre-whitening matrix, <code>W</code> is the estimated un-mixing matrix, <code>A</code> is the estimating mixing matrix (the loadings of the items on the independent components), and <code>S</code> is the source matrix (the individual IC loadings for all participants).</p>
+
+<p>One feature of independent component analysis, is that there&rsquo;s a high degree of correlation within the independent components, but by definition a very poor correlation between independent components. We can measure this by correlating the individual loadings with each other. The individual loadings are stored in <code>ica_data$S</code>. We can simply correlate that matrix by using the <code>cor()</code> function.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">cor</span><span class="p">(</span><span class="n">ica_model</span><span class="o">$</span><span class="n">S</span><span class="p">)</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">##               [,1]          [,2]          [,3]          [,4]          [,5]
+## [1,]  1.000000e+00  1.888905e-15 -2.652149e-14  3.212884e-14 -2.441280e-14
+## [2,]  1.888905e-15  1.000000e+00  4.436546e-15 -1.547357e-14 -9.641029e-15
+## [3,] -2.652149e-14  4.436546e-15  1.000000e+00 -1.641527e-14 -1.367762e-14
+## [4,]  3.212884e-14 -1.547357e-14 -1.641527e-14  1.000000e+00 -3.903378e-15
+## [5,] -2.441280e-14 -9.641029e-15 -1.367762e-14 -3.903378e-15  1.000000e+00
+## [6,] -2.954430e-14  1.124645e-14  2.703347e-14  1.423373e-14 -6.088813e-16
+##               [,6]
+## [1,] -2.954430e-14
+## [2,]  1.124645e-14
+## [3,]  2.703347e-14
+## [4,]  1.423373e-14
+## [5,] -6.088813e-16
+## [6,]  1.000000e+00</code></pre></div>
+<p>The data we&rsquo;re interested in for now is the estimated mixing matrix (stored in <code>ica_model$A</code>). This is the loadings of the individual questions (i.e. the columns of the matrix) that we put in the ICA algorithm on the independent components. For any further analyses with individual data, you&rsquo;d take the estimated source matrix, which is the loading of each independent component on each individual (i.e. the rows of the matrix).</p>
+
+<p>We take the data in <code>ica_model$A</code>, rotate it (rows become columns, and columns become rows) using the <code>t()</code> function for &ldquo;transpose&rdquo;, and save it in a data frame.</p>
+
+<p>Then we can also have a quick look at hierarchical clustering. This is a process where data is separated based on the closeness (or dissimilarity) of the datapoints. In this example we transform the weight matrix into a distance matrix (a matrix representing the degree of similarity between datapoints) using the <code>dist()</code> function. Then we simply provide the hierarchical clustering function <code>hclust()</code> with the distance matrix and we have our hierarchical clustering. We can then plot a simple dendrogram using R&rsquo;s basic <code>plot()</code> function.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="n">weight_matrix</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="nf">t</span><span class="p">(</span><span class="n">ica_model</span><span class="o">$</span><span class="n">A</span><span class="p">))</span>
+<span class="nf">names</span><span class="p">(</span><span class="n">weight_matrix</span><span class="p">)</span> <span class="o">&lt;-</span> <span class="nf">paste0</span><span class="p">(</span><span class="s">&#34;IC&#34;</span><span class="p">,</span><span class="nf">seq</span><span class="p">(</span><span class="n">weight_matrix</span><span class="p">))</span>
+
+<span class="n">dist_matrix</span> <span class="o">&lt;-</span> <span class="nf">dist</span><span class="p">(</span><span class="nf">as.matrix</span><span class="p">(</span><span class="n">weight_matrix</span><span class="p">))</span>
+<span class="n">clust</span> <span class="o">&lt;-</span> <span class="nf">hclust</span><span class="p">(</span><span class="n">dist_matrix</span><span class="p">)</span>
+<span class="nf">plot</span><span class="p">(</span><span class="n">clust</span><span class="p">)</span></code></pre></div>
+<p><img src="index_files/figure-html/show-hclust-1.png" width="672" style="display: block; margin: auto;" /></p>
+
+<p>What we can see from the dendrogram is that for instance question 16 (<em>&ldquo;I gravitate towards introspection&rdquo;</em>) and question 17 (<em>&ldquo;I am more comfortable interacting online than in person&rdquo;</em>) on the left are very similar. Question 3 (<em>&ldquo;I like to play RPGs. (Ex. D&amp;D)&rdquo;</em>) is somewhat similar, but not as much as question 16 and 17. The same goes for question 1 and 4, question 11 and 19, and so on.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="n">codes</span> <span class="o">&lt;-</span> <span class="n">loadcodes</span> <span class="o">%&gt;%</span>
+  <span class="nf">filter</span><span class="p">(</span><span class="nf">str_detect</span><span class="p">(</span><span class="n">qnum</span><span class="p">,</span> <span class="s">&#34;Q&#34;</span><span class="p">))</span></code></pre></div>
+<p>Next we&rsquo;ll plot the weight matrix. For that we first create a column with the question number, we&rsquo;ll then merge the matrix with the list of questions so we can plot the actual question asked instead of the question number. Next, we&rsquo;ll put the data frame in a long format. Finally, we&rsquo;ll also reorder the questions to match the order determined by the hierarchical clustering.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="n">weight_matrix_long</span> <span class="o">&lt;-</span> <span class="n">weight_matrix</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">qnum</span> <span class="o">=</span> <span class="nf">sprintf</span><span class="p">(</span><span class="s">&#34;Q%s&#34;</span><span class="p">,</span><span class="nf">row_number</span><span class="p">()))</span> <span class="o">%&gt;%</span>
+  <span class="nf">inner_join</span><span class="p">(</span><span class="n">codes</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="s">&#34;qnum&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">pivot_longer</span><span class="p">(</span><span class="n">cols</span> <span class="o">=</span> <span class="nf">starts_with</span><span class="p">(</span><span class="s">&#34;IC&#34;</span><span class="p">),</span> <span class="n">names_to</span> <span class="o">=</span> <span class="s">&#34;IC&#34;</span><span class="p">,</span> <span class="n">values_to</span> <span class="o">=</span> <span class="s">&#34;loading&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">question</span> <span class="o">=</span> <span class="nf">as_factor</span><span class="p">(</span><span class="n">question</span><span class="p">),</span>
+         <span class="n">question</span> <span class="o">=</span> <span class="nf">fct_relevel</span><span class="p">(</span><span class="n">question</span><span class="p">,</span> <span class="nf">unique</span><span class="p">(</span><span class="n">.$question</span><span class="p">)</span><span class="n">[clust</span><span class="o">$</span><span class="n">order]</span><span class="p">))</span></code></pre></div>
+<p>So let&rsquo;s see what the ICA spit out. We&rsquo;ll make a plot where the questions are shown along the y-axis and where the x-axis shows their loading onto the different independent components. The orientation of the loading between the components does not have meaning, but within the components it can indicate that some questions have opposing effects. We&rsquo;ll reorder the x- and y-axis to order it based on the loading strength.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">ggplot</span><span class="p">(</span><span class="n">weight_matrix_long</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">IC</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">question</span><span class="p">,</span> <span class="n">fill</span> <span class="o">=</span> <span class="n">loading</span><span class="p">))</span> <span class="o">+</span>
+  <span class="nf">geom_tile</span><span class="p">()</span> <span class="o">+</span> 
+  <span class="nf">labs</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+       <span class="n">y</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+       <span class="n">fill</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">scale_fill_gradient2</span><span class="p">(</span><span class="n">low</span> <span class="o">=</span> <span class="s">&#34;#7EE8FA&#34;</span><span class="p">,</span> <span class="n">mid</span> <span class="o">=</span> <span class="s">&#34;black&#34;</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="s">&#34;#FF729F&#34;</span><span class="p">,</span> <span class="n">limits</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span> <span class="m">1</span><span class="p">),</span> 
+                       <span class="n">guide</span> <span class="o">=</span> <span class="nf">guide_colorbar</span><span class="p">(</span><span class="n">barwidth</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> <span class="n">barheight</span> <span class="o">=</span> <span class="m">15</span><span class="p">,</span> <span class="n">ticks</span> <span class="o">=</span> <span class="kc">FALSE</span><span class="p">))</span> <span class="o">+</span>
+  <span class="nf">theme_minimal</span><span class="p">(</span><span class="n">base_size</span> <span class="o">=</span> <span class="m">8</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">theme</span><span class="p">(</span>
+    <span class="n">legend.position</span> <span class="o">=</span> <span class="s">&#34;right&#34;</span><span class="p">,</span>
+    <span class="n">panel.grid</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
+    <span class="n">axis.text.x</span> <span class="o">=</span> <span class="nf">element_text</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">6</span><span class="p">),</span>
+  <span class="p">)</span></code></pre></div>
+<p><img src="index_files/figure-html/plot-wmatrix-nolabs-1.png" width="100%" style="display: block; margin: auto;" /></p>
+
+<p>So what do we have? It looks quite interesting, but what does this figure mean? We&rsquo;ve established using the PCA that the 26 questions from the original dataset can be clustered into 6 independent components. With this plot we can see what these components are made of, how these questions are reflected in the independent components. What this can do is identify subgroups within the data. Individuals (hopefully) answer questions in a non-random way. So people that score high on one question might tend to score high on similar questions also, and low on others. That&rsquo;s what this ICA identifies. What questions tend to be answered in a similar fashion by a certain group of individuals. In this case, there&rsquo;s 6 groups, or clusters, of questions that tend to tend to get answered in a similar way.</p>
+
+<p>While the questions measure a more specific construct, the independent components instead capture a more general concept. So if we look at for instance IC2, we find that it captures mainly 2 questions about video games and hobbies. IC1 instead doesn&rsquo;t capture questions on video games, but instead captures more variance related to &ldquo;book smart-ness&rdquo;. Other ICs capture more topics related to academic proficiency or extra-/introversion. The interpretation of the independent components is a very subjective task that is prone to interpretation bias. So look at the data, and make your own interpretation, but also give the data to others and see what they read in this figure.</p>
+
+<h2 id="conclusions">Conclusions</h2>
+
+<p>Independent component analysis is a powerful technique when applied in the right context. If you apply the method we discussed here to variables that share no common source, then you might end up just up with messier data and less interpretable variables. The gain in power we get from clustering questions has the drawback that we lose specificity. But in a good dataset, ICA might be very informative and help further analyses down the line. It deals with the issue of intercorrelation between variables, it captures larger variance than individual questions, and it will capture larger constructs than the individual questions. These advantages make it very useful in many different contexts. Again, if we want to proceed with analyses on an individual level, then take the individual loadings of the independent components (stored in <code>ica_model$S</code>). Perhaps in the future we&rsquo;ll go over how we could proceed with further analyses using the independent component loadings, possibly in a machine learning context.</p>
+
+  </article>
+
+  <br/>
+
+  
+  
+</section>
+
+      </div>
+      
+        
+      
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-26694895-2', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+  <script src="/js/app.js"></script>
+  
+  </body>
+</html>

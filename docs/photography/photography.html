@@ -1,0 +1,59 @@
+
+<style type="text/css">
+.galleria {
+    position: absolute;
+    top: 0px;
+    bottom: 60px;
+    left: 0px;
+    right: 10px;
+    overflow: hidden;
+}
+.galleria-thumbnails .galleria-image { width:200px }
+</style>
+
+<!-- Based on https://galleriajs.github.io -->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+        <meta name="keywords" content="photography" />
+        <meta name="description" content="photography" />
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/galleria/1.6.1/galleria.min.js"></script>
+    </head>
+    <body>
+        <div class="galleria">
+					<img src="./img/GOPR2922e.jpg">
+					<img src="./img/GOPR3328e.jpg">
+					<img src="./img/GOPR3338e.jpg">
+					<img src="./img/IMG_2042e.jpg">
+					<img src="./img/IMG_2187e.jpg">
+					<img src="./img/IMG_2189e.jpg">
+					<img src="./img/IMG_2238e.jpg">
+					<img src="./img/IMG_2749e.jpg">
+					<img src="./img/IMG_3134e.jpg">
+					<img src="./img/IMG_3596e.jpg">
+					<img src="./img/IMG_3833e.jpg">
+					<img src="./img/IMG_4176e.jpg">
+					<img src="./img/IMG_4262e.jpg">
+					<img src="./img/IMG_4541e.jpg">
+					<img src="./img/IMG_4658e.jpg">
+					<img src="./img/IMG_4727e.jpg">
+					<img src="./img/IMG_4894e.jpg">
+					<img src="./img/IMG_4897e.jpg">
+					<img src="./img/IMG_4968e.jpg">
+					<img src="./img/IMG_5325e.jpg">
+					<img src="./img/IMG_5327e.jpg">
+        </div>
+        <script>
+            (function() {
+                Galleria.loadTheme('https://cdnjs.cloudflare.com/ajax/libs/galleria/1.6.1/themes/folio/galleria.folio.min.js');
+                Galleria.configure({clicknext: true, lightbox: true})
+                Galleria.run('.galleria');
+            }());
+        </script>
+    </body>
+</html>

@@ -1,7 +1,7 @@
 
 [build] 
-  publish = "public"
   command = "hugo"
+  publish = "docs"
 
 [context.production.environment]
   command = "hugo --buildFuture -b $DEPLOY_PRIME_URL"
@@ -20,4 +20,3 @@
   for = "/*"
   [headers.values]
     Access-Control-Allow-Origin = "*"
-

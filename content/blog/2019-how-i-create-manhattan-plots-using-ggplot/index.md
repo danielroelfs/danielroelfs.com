@@ -10,6 +10,8 @@ tags:
   - R
 description: 'How I Create Manhattan Plots Using ggplot '
 thumbnail: images/avatar.png
+editor_options:
+  chunk_output_type: console
 output:
   html_document:
     keep_md: yes
@@ -23,12 +25,21 @@ output:
 There are many ways to create a Manhattan plot. There's a number of online tools that create Manhattan plots for you, it's implemented in a number of toolboxes that are often used in genetics, and there's a couple of packages for R that can create these plots. However, these options often don't offer the customizability that some people (like me) would want. One of the most flexible ways to plot a Manhattan plot (I know of) is the `{manhattan}` package, but how nice would it be to have full control over the properties of the plot. Therefore, whenever I need to create a Manhattan plot, my preference is to go to the awesome `{ggplot2}` package. In my opinion, it gives me more control over the lay-out and properties of the Manhattan plot, so I thought I'd go through how I go about creating Manhattan plots in R using the `{ggplot2}` package. I've tried this code on GWAS summary statistics from several sources, and it works for a bunch of them. Because data can look somewhat different, I'll describe the concept behind some of the code, as to show what my reasoning is behind each step. One thing I should point out is that it's probably best to run this code on a computer that is a little bit powerful, since it will need to deal with an enormous amount of SNPs, that will create massive dataframes and plot objects.
 
 ### Import data into R
-The first step, as always, is to load the packages we need. I personally prefer to use as little packages as possible and write most of the code myself, because that gives me total control over what happens to my data. However, there are some packages (in particular some of the packages developed by Hadley Wickham) that are very powerful. So, all code described below depends on one of two packages, the `{tidyverse}` package, which includes the `{ggplot2}` and `{dplyr}` package. Next, I load the file that contains the GWAS summary statistics. Different tools use different file formats. The file I use is the output from PLINK with the `--meta-analysis` flag. This file can simple be loaded as a table. Here I use a function from our own `{normentR}` package, called `simulateGWAS()`, which does as the name suggest, and simulate the outpur from a GWAS analysis.
+The first step, as always, is to load the packages we need. I personally prefer to use as little packages as possible and write most of the code myself, because that gives me total control over what happens to my data. However, there are some packages (in particular some of the packages developed by Hadley Wickham) that are very powerful. So, all code described below depends on one of two packages, the `{tidyverse}` package, which includes the `{ggplot2}` and `{dplyr}` package. Next, I load the file that contains the GWAS summary statistics. Different tools use different file formats. The file I use is the output from PLINK with the `--meta-analysis` flag. This file can simple be loaded as a table. Here I use a function from our own `{normentR}` package, called `simulateGWAS()`, which does as the name suggest, and simulate the output from a GWAS analysis.
+
+
+```r
+library(tidyverse)
+library(normentR)
+```
+
 
 
 ```r
 set.seed(2404)
-gwas.dat <- simulateGWAS(nSNPs = 1e6, nSigCols = 3)
+
+gwas_data_load <- simulateGWAS(nSNPs = 1e6, nSigCols = 3) %>% 
+  janitor::clean_names()
 ```
 
 ```
@@ -50,39 +61,41 @@ This will create a dataframe with as many rows as there are SNPs in the summary 
 
 
 ```r
-sig.dat <- gwas.dat %>% 
-  subset(P < 0.05)
-notsig.dat <- gwas.dat %>% 
-  subset(P >= 0.05) %>%
-  slice(sample(nrow(.), nrow(.) / 5))
-gwas.dat <- rbind(sig.dat,notsig.dat)
+sig_data <- gwas_data_load %>% 
+  subset(p < 0.05)
+notsig_data <- gwas_data_load %>% 
+  subset(p >= 0.05) %>%
+  group_by(chr) %>% 
+  sample_frac(0.1)
+gwas_data <- bind_rows(sig_data, notsig_data)
 ```
 
 ### Preparing the data
-
 Since the only columns we have indicating position are the chromosome number and the base pair position of the SNP on that chromosome, we want to combine those so that we have one column with position that we can use for the x-axis. So, what we want to do is to create a column with cumulative base pair position in a way that puts the SNPs on the first chromosome first, and the SNPs on chromosome 22 last. This code works also if your chromosome column contains a lettered sex chromosome. Just make sure that the sex chromosome is indeed the last one in the file. You can check this by typing `unique(gwas.dat$CHR)`. In the data I've seen, I didn't have to make any changes, so I just proceed by getting the cumulative base pair position. What I do is to loop through the chromosomes and add to each base pair position the latest position from the previous chromosome. This will create a column in which the relative base pair position is the position as if it was stitched together. For each chromosome, I extract the largest base pair position, put it in a list, and then in a temporary variable, I add the length of the previous chromosomes together and add them to the relative base pair position in the current chromosome and save it in a column called `BPcum`. This code is shown below:
 
 
 ```r
-nCHR <- length(unique(gwas.dat$CHR))
-gwas.dat$BPcum <- NA
-s <- 0
-nbp <- c()
-for (i in unique(gwas.dat$CHR)){
-  nbp[i] <- max(gwas.dat[gwas.dat$CHR == i,]$BP)
-  gwas.dat[gwas.dat$CHR == i,"BPcum"] <- gwas.dat[gwas.dat$CHR == i,"BP"] + s
-  s <- s + nbp[i]
-}
+data_cum <- gwas_data %>% 
+  group_by(chr) %>% 
+  summarise(max_bp = max(bp)) %>% 
+  mutate(bp_add = lag(cumsum(max_bp), default = 0)) %>% 
+  select(chr, bp_add)
+
+gwas_data <- gwas_data %>% 
+  inner_join(data_cum, by = "chr") %>% 
+  mutate(bp_cum = bp + bp_add)
 ```
 
 When this is done, the next thing I want to do is to get a couple of parameters that I'll use for the plot later. First, I want the centre position of each chromosome. This position I'll use later to place the labels on the x-axis of the Manhattan plot neatly in the middle of each chromosome. In order to get this position, I'll pipe the `gwas.dat` dataframe into this powerful `{dplyr}` function which I then ask to calculate the difference between the maximum and minimum cumulative base pair position for each chromosome and divide it by two to get the middle of each chromosome. I also want to set the limit of the y-axis, as not to cut off any highly significant SNPs. If you want to compare multiple GWAS statistics, then I highly recommend to hard code the limit of the y-axis, and then explore the data beforehand to make sure your chosen limit does not cut off any SNPs. Since the y-axis will be log transformed, we need an integer that is lower than the largest negative exponent. But since the y-axis will be linear and positive, I transform the largest exponent to positive and add 2, to give some extra space on the top edge of the plot. When plotting, I actually convert it back to a log scale, but it's a bit easier to add a constant to it by transforming it to a regular integer first. Then, we also want to indicate the significance threshold, I prefer to save this in a variable. Here, I choose to get a Bonferroni-corrected threshold, which is 0.05 divided by the number of SNPs in the summary statistics. I believe many scientists will use the "standard" threshold of 0.05 divided by 1e-6, which is 5e-8. However, in the data I had I believed it to be best to use the Bonferroni-corrected threshold since the sample encompassed different populations, and because it contained less than a million SNPs were used in the association testing, which would make a standard correction overly conservative. These three parameters were calculated as follows:
 
 
 ```r
-axis.set <- gwas.dat %>% 
-  group_by(CHR) %>% 
-  summarize(center = (max(BPcum) + min(BPcum)) / 2)
-ylim <- abs(floor(log10(min(gwas.dat$P)))) + 2 
+axis_set <- gwas_data %>% 
+  group_by(chr) %>% 
+  summarize(center = mean(bp_cum))
+
+ylim <- abs(floor(log10(min(gwas_data$p)))) + 2 
+
 sig <- 5e-8
 ```
 
@@ -91,13 +104,13 @@ Finally, we're ready to plot the data. As promised, I use the `ggplot()` functio
 
 
 ```r
-manhplot <- ggplot(gwas.dat, aes(x = BPcum, y = -log10(P), 
-                                 color = as.factor(CHR), size = -log10(P))) +
+manhplot <- ggplot(gwas_data, aes(x = bp_cum, y = -log10(p), 
+                                  color = as_factor(chr), size = -log10(p))) +
   geom_point(alpha = 0.75) +
   geom_hline(yintercept = -log10(sig), color = "grey40", linetype = "dashed") + 
-  scale_x_continuous(label = axis.set$CHR, breaks = axis.set$center) +
+  scale_x_continuous(label = axis_set$chr, breaks = axis_set$center) +
   scale_y_continuous(expand = c(0,0), limits = c(0, ylim)) +
-  scale_color_manual(values = rep(c("#276FBF", "#183059"), nCHR)) +
+  scale_color_manual(values = rep(c("#276FBF", "#183059"), unique(length(axis_set$chr)))) +
   scale_size_continuous(range = c(0.5,3)) +
   labs(x = NULL, 
        y = "-log10(p)") + 
@@ -119,3 +132,5 @@ print(manhplot)
 ```
 
 <img src="index_files/figure-html/print-plot-1.png" width="1152" style="display: block; margin: auto;" />
+
+**EDIT (2021-03-26)**: Had to revisit some old code because I have now adopted better practices in both naming conventions and coding style. I moved away from using periods in variable names. I practically always use `janitor::clean_names()` to turn messy/ugly variable names into clean variable names. I also removed the (rather slow) for-loop in favor of a more elegant (_I think_) tidyverse solution. Biggest change that'll actually affect the result is in first section, where we remove superfluous datapoints with a high p-value. Here I now added the simple `group_by(chr)` line that'll make the split in the final plot less visible (try it both with and without that line to see what the difference is). It's kinda fun to revisit older code and see how my process has improved, hope it'll help you too!

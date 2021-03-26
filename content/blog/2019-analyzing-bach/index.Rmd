@@ -19,7 +19,7 @@ output:
 <style>
 @import url('https://fonts.googleapis.com/css?family=IM+Fell+English|IM+Fell+English+SC&display=swap');
 body{
-  background-color: #FFFFF0;
+  background-color: #F2EECB;
 }
 
 h1 {

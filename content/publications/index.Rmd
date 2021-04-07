@@ -10,7 +10,7 @@ output:
 ---
 
 <ul style="list-style-type: circle;">
-  <li>**D Roelfs**, D Alnæs, O Frei, D van der Meer, OB Smeland, OA Andreassen, LT Westlye, T Kaufmann (2020) [***Phenotypically independent profiles relevant to mental health are genetically correlated***](https://doi.org/10.1038/s41398-021-01313-x). _Translational Psychiatry_. doi: [10.1038/s41398-021-01313-x](https://doi.org/10.1038/s41398-021-01313-x)</li>
+  <li>**D Roelfs**, D Alnæs, O Frei, D van der Meer, OB Smeland, OA Andreassen, LT Westlye, T Kaufmann (2021) [***Phenotypically independent profiles relevant to mental health are genetically correlated***](https://doi.org/10.1038/s41398-021-01313-x). _Translational Psychiatry_. doi: [10.1038/s41398-021-01313-x](https://doi.org/10.1038/s41398-021-01313-x)</li>
 
   <li>**PREPRINT** D van der Meer, T Kaufmann, AA Shadrin, C Makowski, O Frei, **D Roelfs**, J Monereo Sanchez, DEJ Linden, Jaroslav Rokicki, C de Leeuw, WK Thompson, TJ Loughnan, CC Fan, PM Thompson, LT Westlye, OA Andreassen, AM Dale (2021) [***The genetic architecture of human cortical folding***](https://doi.org/10.1101/2021.01.13.426555). _bioRxiv_. doi: [10.1101/ 2021.01.13.426555](https://doi.org/10.1101/2021.01.13.426555)</li>
 

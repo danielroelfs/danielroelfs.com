@@ -61,15 +61,30 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_cache$", "index\\.html", "about\\.h
     weight = 1
     url = "https://twitter.com/dthroelfs/"
 [[params.social]]
-    name = "Github"
+    name = "GitHub"
     icon = "fab fa-github"
     weight = 2
     url = "https://github.com/danielroelfs/"
 [[params.social]]
+    name = "ORCID"
+    icon = "fab fa-orcid"
+    weight = 3
+    url = "https://orcid.org/0000-0002-1083-002X"
+[[params.social]]
+    name = "Google Scholar"
+    icon = "fas fa-graduation-cap"
+    weight = 4
+    url = "https://scholar.google.com/citations?user=QmVQcsAAAAAJ&hl=en"
+[[params.social]]
     name = "LinkedIn"
     icon = "fab fa-linkedin"
-    weight = 3
+    weight = 5
     url = "https://www.linkedin.com/in/danielroelfs/"
+[[params.social]]
+    name = "Mail"
+    icon = "fas fa-envelope"
+    weight = 6
+    url = "mailto:daniel.roelfs@medisin.uio.no"
 
 # Menu links
 [[menu.main]]

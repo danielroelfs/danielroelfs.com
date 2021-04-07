@@ -20,4 +20,4 @@ I'm Daniel Roelfs, I'm a PhD candidate working at the Norwegian Centre for Menta
 
 Originally from the Netherlands, I have also studied in France and Sweden before moving to Norway. In my free time I ski, photograph, and make music. And this blog serves as a way to share some of the weird code I write for R.
 
-If you have any questions or want to keep in touch, please send me an e-mail at <a href="mailto:daniel.roelfs@medisin.uio.no">daniel.roelfs[a]medisin.uio.no</a>.
+If you have any questions or comments about the tutorials and posts here, or just want to get in touch, please send me an e-mail at <a href="mailto:daniel.roelfs@medisin.uio.no">daniel.roelfs[a]medisin.uio.no</a>.

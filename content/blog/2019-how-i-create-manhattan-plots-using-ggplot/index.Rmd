@@ -95,8 +95,8 @@ Finally, we're ready to plot the data. As promised, I use the `ggplot()` functio
 ```{r create-plot}
 manhplot <- ggplot(gwas_data, aes(x = bp_cum, y = -log10(p), 
                                   color = as_factor(chr), size = -log10(p))) +
-  geom_point(alpha = 0.75) +
   geom_hline(yintercept = -log10(sig), color = "grey40", linetype = "dashed") + 
+  geom_point(alpha = 0.75) +
   scale_x_continuous(label = axis_set$chr, breaks = axis_set$center) +
   scale_y_continuous(expand = c(0,0), limits = c(0, ylim)) +
   scale_color_manual(values = rep(c("#276FBF", "#183059"), unique(length(axis_set$chr)))) +

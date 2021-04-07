@@ -78,7 +78,7 @@ Originally from the Netherlands, I have also studied in France and Sweden before
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/cv/</guid>
-      <description>/* Copyright (c) 2009, Yahoo! Inc. All rights reserved. Code licensed under the BSD License: http://developer.yahoo.net/yui/license.txt version: 2.7.0 */ html { color: #000; background: #FFF; } body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, p, blockquote, th, td { margin: 0; padding: 0; } table { border-collapse: collapse; border-spacing: 0; } fieldset, img { border: 0; } address, caption, cite, code, dfn, em, strong, th, var, optgroup { font-style: inherit; font-weight: inherit; } del, ins { text-decoration: none; } li { list-style: none; } caption, th { text-align: left; } h1, h2, h3, h4, h5, h6 { font-size: 100%; font-weight: normal; } q:before, q:after { content: &#39;&#39;; } abbr, acronym { border: 0; font-variant: normal; } sup { vertical-align: baseline; } sub { vertical-align: baseline; } legend { color: #000; } input, button, textarea, select, optgroup, option { font-family: inherit; font-size: inherit; font-style: inherit; font-weight: inherit; } input, button, textarea, select { *font-size: 100%; } body { font: 13px/1.</description>
+      <description></description>
     </item>
     
     <item>
@@ -96,8 +96,8 @@ Originally from the Netherlands, I have also studied in France and Sweden before
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/publications/</guid>
-      <description>PREPRINT D van der Meer, T KAufmann, AA Shadrin, C Makowski, O Frei, D Roelfs, J Monereo Sanchez, DEJ Linden, Jaroslav Rokicki, C de Leeuw, WK Thompson, TJ Loughnan, CC Fan, PM Thompson, LT Westlye, OA Andreassen, AM Dale (2021) The genetic architecture of human cortical folding. bioRxiv. doi: 10.1101&amp;frasl;2021.01.13.426555
-I Voldsbekk, I Groote, N Zak, D Roelfs, O Geier, P Due-Tønnesen, LL Løkken, M Strømstad, TY Blakstvedt, YS Kuiper, T Elvsåshagen, LT Westlye, A Bjørnerud, II Maximov (2020) Sleep and sleep deprivation differentially alter white matter microstructure: A mixed model design utilising advanced diffusion modelling.</description>
+      <description>D Roelfs, D Alnæs, O Frei, D van der Meer, OB Smeland, OA Andreassen, LT Westlye, T Kaufmann (2020) Phenotypically independent profiles relevant to mental health are genetically correlated. Translational Psychiatry. doi: 10.1038/s41398-021-01313-x
+PREPRINT D van der Meer, T Kaufmann, AA Shadrin, C Makowski, O Frei, D Roelfs, J Monereo Sanchez, DEJ Linden, Jaroslav Rokicki, C de Leeuw, WK Thompson, TJ Loughnan, CC Fan, PM Thompson, LT Westlye, OA Andreassen, AM Dale (2021) The genetic architecture of human cortical folding.</description>
     </item>
     
   </channel>

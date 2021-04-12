@@ -11,7 +11,7 @@ paginate = 20 # Default number of pages per page in pagination.
 
 PygmentsStyle = "monokai" # Color-theme or style for syntax highlighting.
 PygmentsCodeFences = true # Enable code fence background highlighting.
-PygmentsCodeFencesGuessSyntax = true # Enable syntax guessing for code fences without specified language.
+PygmentsCodeFencesGuessSyntax = false # Enable syntax guessing for code fences without specified language.
 PygmentsUseClasses = true # new add
 
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_cache$", "index\\.html", "about\\.html", "static/blog/\\*_files/", "README"] 

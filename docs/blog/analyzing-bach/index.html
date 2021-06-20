@@ -30,8 +30,8 @@
     
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
     
-    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Alegreya:400,400i,700|Libre+Baskerville:400,400i,700&display=swap">
-    <link rel="stylesheet" href="/css/normalize.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com"> 
+    <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400;1,700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700;1,800;1,900&display=swap" rel="stylesheet">    <link rel="stylesheet" href="/css/normalize.min.css">
     <link rel="stylesheet" href="/css/style.min.css">
 
     
@@ -152,7 +152,7 @@ h2,h3,h4,h5,h6 {
   <span class="nf">unique</span><span class="p">()</span> <span class="o">%&gt;%</span>
   <span class="nf">str_extract_all</span><span class="p">(</span><span class="s">&#34;[0-9]+&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">as.character</span><span class="p">()</span>
-<span class="nf">str</span><span class="p">(</span><span class="n">BWVs</span><span class="p">)</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">##  chr [1:1075] &#34;1&#34; &#34;2&#34; &#34;3&#34; &#34;4&#34; &#34;5&#34; &#34;6&#34; &#34;7&#34; &#34;8&#34; &#34;9&#34; &#34;10&#34; &#34;11&#34; &#34;12&#34; &#34;13&#34; &#34;14&#34; ...</code></pre></div>
+<span class="nf">str</span><span class="p">(</span><span class="n">BWVs</span><span class="p">)</span></code></pre></div><pre><code>##  chr [1:1075] &#34;1&#34; &#34;2&#34; &#34;3&#34; &#34;4&#34; &#34;5&#34; &#34;6&#34; &#34;7&#34; &#34;8&#34; &#34;9&#34; &#34;10&#34; &#34;11&#34; &#34;12&#34; &#34;13&#34; &#34;14&#34; ...</code></pre>
 <p>I now have a list of 1075 numbers, corresponding to BWV numbers of which this website has an entry. The next thing I needed to do now was loop over these numbers, navigate to each of the webpages corresponding to that link, and scrape all 1075 webpages individually. This takes a little bit of time, but luckily the author of the pages was very consistent in the setup, so I didn&rsquo;t need to build in fail-safes or condititions to account for irregularities. Before we&rsquo;ll do that, I first initialized a data frame with the correct size for speed. I added the column names for convenience too.</p>
 <div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="n">col_names</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="s">&#34;Title&#34;</span><span class="p">,</span> <span class="s">&#34;Subtitle_and_notes&#34;</span><span class="p">,</span> 
                <span class="s">&#34;BWV&#34;</span><span class="p">,</span> <span class="s">&#34;BWV_epifix&#34;</span><span class="p">,</span> <span class="s">&#34;CLC_BWV_w_epifix&#34;</span><span class="p">,</span> <span class="s">&#34;belongs after&#34;</span><span class="p">,</span> 
@@ -185,7 +185,7 @@ h2,h3,h4,h5,h6 {
   
 <span class="p">}</span></code></pre></div>
 <p>With this, I achieved the first goal I had for this little project, which was to find or create a dataset on Bach. Let&rsquo;s see what it looks like:</p>
-<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">str</span><span class="p">(</span><span class="n">scraped_data</span><span class="p">)</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">## &#39;data.frame&#39;:	1075 obs. of  12 variables:
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">str</span><span class="p">(</span><span class="n">scraped_data</span><span class="p">)</span></code></pre></div><pre><code>## &#39;data.frame&#39;:	1075 obs. of  12 variables:
 ##  $ Title             : chr  &#34;Wie schön leuchtet der Morgenstern&#34; &#34;Ach Gott, von Himmel sieh darein&#34; &#34;Ach Gott, wie manches Herzeleid&#34; &#34;Christ lag in Todes Banden&#34; ...
 ##  $ Subtitle_and_notes: chr  &#34;Kantate am Fest Mariae Verkündigung (Festo annuntiationis Mariae)&#34; &#34;Kantate am zweiten Sonntag nach Trinitatis (Dominica 2 post Trinitatis)&#34; &#34;Kantate am zweiten Sonntag nach Epiphanias (Dominica 2 post Epiphanias)&#34; &#34;Kantate am Osterfest (Feria Paschatos)&#34; ...
 ##  $ BWV               : chr  &#34;1&#34; &#34;2&#34; &#34;3&#34; &#34;4&#34; ...
@@ -197,7 +197,7 @@ h2,h3,h4,h5,h6 {
 ##  $ category2         : chr  &#34;Kantaten&#34; &#34;Kantaten&#34; &#34;Kantaten&#34; &#34;Kantaten&#34; ...
 ##  $ category3         : chr  &#34;&#34; &#34;&#34; &#34;&#34; &#34;&#34; ...
 ##  $ cantate_cat1      : chr  &#34;A. Geistliche Kantaten an der Sonn- und Festtagen des Kirchenjahres&#34; &#34;A. Geistliche Kantaten an der Sonn- und Festtagen des Kirchenjahres&#34; &#34;A. Geistliche Kantaten an der Sonn- und Festtagen des Kirchenjahres&#34; &#34;A. Geistliche Kantaten an der Sonn- und Festtagen des Kirchenjahres&#34; ...
-##  $ cantate_cat2      : chr  &#34;Mariae Verkundigung&#34; &#34;2. Sonntag nach Trinitatis&#34; &#34;2. Sonntag nach Epiphanias&#34; &#34;1. Osterfesttag&#34; ...</code></pre></div>
+##  $ cantate_cat2      : chr  &#34;Mariae Verkundigung&#34; &#34;2. Sonntag nach Trinitatis&#34; &#34;2. Sonntag nach Epiphanias&#34; &#34;1. Osterfesttag&#34; ...</code></pre>
 <p>All columns are currently character arrays, and this is appropriate for most of them. Although I think the BWV number alone could be a numeric array. Also, some columns are still a bit awkward. This is why I moved on to do another important and satisfying part, cleaning the data.</p>
 
 <h2 id="cleaning-the-data">Cleaning the data</h2>
@@ -212,7 +212,7 @@ h2,h3,h4,h5,h6 {
          <span class="n">CLC_BWV_w_epifix</span> <span class="o">=</span> <span class="nf">str_replace</span><span class="p">(</span><span class="n">CLC_BWV_w_epifix</span><span class="p">,</span> <span class="s">&#34; &#34;</span><span class="p">,</span> <span class="s">&#34;&#34;</span><span class="p">))</span> <span class="o">%&gt;%</span>
   <span class="nf">rename</span><span class="p">(</span><span class="n">BWV_w_epifix</span> <span class="o">=</span> <span class="n">CLC_BWV_w_epifix</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">select</span><span class="p">(</span><span class="n">BWV</span><span class="p">,</span> <span class="n">BWV_epifix</span><span class="p">,</span> <span class="n">BWV_w_epifix</span><span class="p">,</span> <span class="nf">everything</span><span class="p">())</span>
-<span class="nf">str</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">## &#39;data.frame&#39;:	1075 obs. of  12 variables:
+<span class="nf">str</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></code></pre></div><pre><code>## &#39;data.frame&#39;:	1075 obs. of  12 variables:
 ##  $ BWV               : num  1 2 3 4 5 6 7 8 9 10 ...
 ##  $ BWV_epifix        : chr  &#34;&#34; &#34;&#34; &#34;&#34; &#34;&#34; ...
 ##  $ BWV_w_epifix      : chr  &#34;1&#34; &#34;2&#34; &#34;3&#34; &#34;4&#34; ...
@@ -224,7 +224,7 @@ h2,h3,h4,h5,h6 {
 ##  $ category2         : Factor w/ 15 levels &#34;Kammermusik&#34;,..: 3 3 3 3 3 3 3 3 3 3 ...
 ##  $ category3         : Factor w/ 26 levels &#34;&#34;,&#34;Choralbearbeitungen&#34;,..: 1 1 1 1 1 1 1 1 1 1 ...
 ##  $ cantate_cat1      : chr  &#34;Geistliche Kantaten an der Sonn- und Festtagen des Kirchenjahres&#34; &#34;Geistliche Kantaten an der Sonn- und Festtagen des Kirchenjahres&#34; &#34;Geistliche Kantaten an der Sonn- und Festtagen des Kirchenjahres&#34; &#34;Geistliche Kantaten an der Sonn- und Festtagen des Kirchenjahres&#34; ...
-##  $ cantate_cat2      : chr  &#34;Mariae Verkundigung&#34; &#34;2. Sonntag nach Trinitatis&#34; &#34;2. Sonntag nach Epiphanias&#34; &#34;1. Osterfesttag&#34; ...</code></pre></div>
+##  $ cantate_cat2      : chr  &#34;Mariae Verkundigung&#34; &#34;2. Sonntag nach Trinitatis&#34; &#34;2. Sonntag nach Epiphanias&#34; &#34;1. Osterfesttag&#34; ...</code></pre>
 <p>Now we have this data, we can do some descriptive visualizations of the data. Over time I hope I can dive into the setting (<code>voices_instruments</code>) and disect that, but for now I&rsquo;ll keep it simple and just do some descriptives.</p>
 
 <h2 id="visualizations">Visualizations</h2>
@@ -433,7 +433,7 @@ h2,h3,h4,h5,h6 {
   <span class="nf">mutate_geocode</span><span class="p">(</span><span class="n">city</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">mutate</span><span class="p">(</span><span class="n">duration</span> <span class="o">=</span> <span class="n">year_to</span> <span class="o">-</span> <span class="n">year_from</span><span class="p">)</span></code></pre></div>
 <p>Since this time I wanted to visualize whether Bach was more productive in certain places, I recreated the plot from earlier, shaded the background with the city Bach inhabited at the time, and transformed the bars into a density plot, which smoothed over the data and removed the high outliers.</p>
-<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">## Warning: Removed 1 rows containing non-finite values (stat_smooth).</code></pre></div>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre><pre><code>## Warning: Removed 1 rows containing non-finite values (stat_smooth).</code></pre>
 <p><img src="index_files/figure-html/plot-with-city-1.png" width="1152" style="display: block; margin: auto;" /></p>
 
 <p>It&rsquo;s obvious that Bach lived in Leipzich the longest. He had a few productive periods, the last one perhaps being due to the publication of the song book mentioned before.</p>

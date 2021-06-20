@@ -30,8 +30,8 @@
     
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
     
-    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Alegreya:400,400i,700|Libre+Baskerville:400,400i,700&display=swap">
-    <link rel="stylesheet" href="/css/normalize.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com"> 
+    <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400;1,700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700;1,800;1,900&display=swap" rel="stylesheet">    <link rel="stylesheet" href="/css/normalize.min.css">
     <link rel="stylesheet" href="/css/style.min.css">
 
     
@@ -138,7 +138,7 @@
 <p>We&rsquo;ll first find if there&rsquo;s any unanswered questions. These are rows where <code>score</code> is <code>NA</code>.</p>
 <div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="n">questdata</span> <span class="o">%&gt;%</span>
   <span class="nf">filter</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">score</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="nf">nrow</span><span class="p">(</span><span class="n">.)</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">## [1] 0</code></pre></div>
+  <span class="nf">nrow</span><span class="p">(</span><span class="n">.)</span></code></pre></div><pre><code>## [1] 0</code></pre>
 <p>We find that there&rsquo;s no missing values (crazy, I know!). If there were any missing values we could possibly impute the scores in the original (wide) data (e.g. using k-nearest neighbor imputation) or we could remove these items (e.g. using <code>drop_na()</code>).</p>
 
 <p>The next step is to find if there are questions with insufficient variation in answers. For this we&rsquo;ll calculate the percentage that each answer on the Likert scale represents in the total variance of the dataset. We&rsquo;ll take our long-format data, group by the question and the answers on the question (<code>score</code>). Count the number of times that answer has been given to that question (using <code>count()</code>). Then we&rsquo;ll calculate the percentage that this answer represented within each question (using <code>perc = n / sum(n)</code>). Then we&rsquo;ll sort the answers within the questions on the percentage (with the answer that&rsquo;s been answered the most on top, and the answer that&rsquo;s answered the least on the bottom (<code>arrange(question, -perc)</code>)). Then we&rsquo;ll take the second-most common answer (<code>slice(2)</code>) and select the questions where the second-most answer represented less than 15% of the answers (<code>perc &lt; 0.15</code>). The threshold of 15% is fairly arbitrary. Usually I&rsquo;d go for 10%, but due to the source of the data, I&rsquo;m being a bit more stringent here. The output from these steps will give us the questions that we might want to exclude due to low variance.</p>
@@ -151,9 +151,9 @@
   <span class="nf">slice</span><span class="p">(</span><span class="m">2</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">filter</span><span class="p">(</span><span class="n">perc</span> <span class="o">&lt;</span> <span class="m">0.15</span><span class="p">)</span>
 
-<span class="nf">print</span><span class="p">(</span><span class="n">less15var</span><span class="p">)</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">## # A tibble: 0 x 4
+<span class="nf">print</span><span class="p">(</span><span class="n">less15var</span><span class="p">)</span></code></pre></div><pre><code>## # A tibble: 0 x 4
 ## # Groups:   question [0]
-## # … with 4 variables: question &lt;chr&gt;, score &lt;dbl&gt;, n &lt;int&gt;, perc &lt;dbl&gt;</code></pre></div>
+## # … with 4 variables: question &lt;chr&gt;, score &lt;dbl&gt;, n &lt;int&gt;, perc &lt;dbl&gt;</code></pre>
 <p>So no question has too little variance. If there was, I&rsquo;d remove that question like so:</p>
 <div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="n">data</span> <span class="o">&lt;-</span> <span class="n">loaddata</span> <span class="o">%&gt;%</span> 
   <span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">less15var</span><span class="o">$</span><span class="n">question</span><span class="p">)</span></code></pre></div>
@@ -169,10 +169,10 @@
   <span class="nf">summarise</span><span class="p">(</span><span class="n">mean</span> <span class="o">=</span> <span class="nf">mean</span><span class="p">(</span><span class="n">score_z</span><span class="p">),</span> 
             <span class="n">sd</span> <span class="o">=</span> <span class="nf">sd</span><span class="p">(</span><span class="n">score_z</span><span class="p">),</span> 
             <span class="n">min</span> <span class="o">=</span> <span class="nf">min</span><span class="p">(</span><span class="n">score_z</span><span class="p">),</span>
-            <span class="n">max</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="n">score_z</span><span class="p">))</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">## # A tibble: 1 x 4
+            <span class="n">max</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="n">score_z</span><span class="p">))</span></code></pre></div><pre><code>## # A tibble: 1 x 4
 ##       mean    sd   min   max
 ##      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 1.99e-17  1.00 -4.54  1.86</code></pre></div>
+## 1 1.99e-17  1.00 -4.54  1.86</code></pre>
 <p>Great! Now we have a nice normalized dataset, without any missing values, and with questions that have a low degree of variance removed. All those preparations served to get us to a place where our clustering analyses are actually valid. Now it&rsquo;s time for the fun stuff!</p>
 
 <h3 id="run-pca">Run PCA</h3>
@@ -207,7 +207,7 @@
 <div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="n">nICs</span> <span class="o">&lt;-</span> <span class="n">pca_stats</span> <span class="o">%&gt;%</span>
   <span class="nf">filter</span><span class="p">(</span><span class="n">var</span> <span class="o">&gt;</span> <span class="m">1</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">nrow</span><span class="p">()</span>
-<span class="nf">print</span><span class="p">(</span><span class="n">nICs</span><span class="p">)</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">## [1] 6</code></pre></div>
+<span class="nf">print</span><span class="p">(</span><span class="n">nICs</span><span class="p">)</span></code></pre></div><pre><code>## [1] 6</code></pre>
 <h3 id="run-ica">Run ICA</h3>
 
 <p>Now we&rsquo;re ready to run the ICA! We&rsquo;ll use the <code>fastICA()</code> function. The function has a bunch of inputs. We&rsquo;ll pick the parallel algorithm (as opposed to the &ldquo;deflation&rdquo; algorithm). In the parallel algorithm the components are extracted simultaneously, with the deflation algorithm they&rsquo;re calculated one at a time. The &ldquo;fun&rdquo; option defines the form of the entropy function. I&rsquo;m not 100% sure what it does. Just set it to <code>&quot;exp&quot;</code> and move on. For the <code>&quot;method&quot;</code> option there are two options: <code>&quot;R&quot;</code> or <code>&quot;C&quot;</code>. In the first option, all analyses are run in R, in the second option, all code is run in C, which is slightly faster. I typically use the <code>&quot;C&quot;</code> option. The <code>maxit</code> option defines the maximum number of iterations to perform. The default is 200, but in complex datasets, it may take a larger number of iterations to converge. That&rsquo;s why I set it to 5000. This process may take a while. If you want to follow along with what the algorithm is doing, you can set the <code>verbose</code> option to <code>TRUE</code>.</p>
@@ -217,16 +217,16 @@
 <h3 id="create-weight-matrix">Create Weight Matrix</h3>
 
 <p>So now we have run the ICA decomposition. The function provides a few outputs:</p>
-<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">glimpse</span><span class="p">(</span><span class="n">ica_model</span><span class="p">)</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">## List of 5
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">glimpse</span><span class="p">(</span><span class="n">ica_model</span><span class="p">)</span></code></pre></div><pre><code>## List of 5
 ##  $ X: num [1:19749, 1:26] -0.889 0.019 0.927 0.927 0.019 ...
 ##  $ K: num [1:26, 1:6] -0.0851 -0.0786 -0.0766 -0.0874 -0.0961 ...
 ##  $ W: num [1:6, 1:6] -0.2383 -0.5044 -0.3369 -0.0903 -0.6932 ...
 ##  $ A: num [1:6, 1:26] 0.3789 -0.1428 -0.0568 -0.2787 -0.5879 ...
-##  $ S: num [1:19749, 1:6] -0.4788 0.9635 -0.0656 1.3909 -0.6898 ...</code></pre></div>
+##  $ S: num [1:19749, 1:6] -0.4788 0.9635 -0.0656 1.3909 -0.6898 ...</code></pre>
 <p>These names aren&rsquo;t very informative. In this function, <code>X</code> represens the pre-processed data matrix, <code>K</code> is the pre-whitening matrix, <code>W</code> is the estimated un-mixing matrix, <code>A</code> is the estimating mixing matrix (the loadings of the items on the independent components), and <code>S</code> is the source matrix (the individual IC loadings for all participants).</p>
 
 <p>One feature of independent component analysis, is that there&rsquo;s a high degree of correlation within the independent components, but by definition a very poor correlation between independent components. We can measure this by correlating the individual loadings with each other. The individual loadings are stored in <code>ica_data$S</code>. We can simply correlate that matrix by using the <code>cor()</code> function.</p>
-<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">cor</span><span class="p">(</span><span class="n">ica_model</span><span class="o">$</span><span class="n">S</span><span class="p">)</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">##               [,1]          [,2]          [,3]          [,4]          [,5]
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">cor</span><span class="p">(</span><span class="n">ica_model</span><span class="o">$</span><span class="n">S</span><span class="p">)</span></code></pre></div><pre><code>##               [,1]          [,2]          [,3]          [,4]          [,5]
 ## [1,]  1.000000e+00  1.888905e-15 -2.652149e-14  3.212884e-14 -2.441280e-14
 ## [2,]  1.888905e-15  1.000000e+00  4.436546e-15 -1.547357e-14 -9.641029e-15
 ## [3,] -2.652149e-14  4.436546e-15  1.000000e+00 -1.641527e-14 -1.367762e-14
@@ -239,7 +239,7 @@
 ## [3,]  2.703347e-14
 ## [4,]  1.423373e-14
 ## [5,] -6.088813e-16
-## [6,]  1.000000e+00</code></pre></div>
+## [6,]  1.000000e+00</code></pre>
 <p>The data we&rsquo;re interested in for now is the estimated mixing matrix (stored in <code>ica_model$A</code>). This is the loadings of the individual questions (i.e. the columns of the matrix) that we put in the ICA algorithm on the independent components. For any further analyses with individual data, you&rsquo;d take the estimated source matrix, which is the loading of each independent component on each individual (i.e. the rows of the matrix).</p>
 
 <p>We take the data in <code>ica_model$A</code>, rotate it (rows become columns, and columns become rows) using the <code>t()</code> function for &ldquo;transpose&rdquo;, and save it in a data frame.</p>

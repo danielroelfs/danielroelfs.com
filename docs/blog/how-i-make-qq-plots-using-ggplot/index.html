@@ -30,8 +30,8 @@
     
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
     
-    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Alegreya:400,400i,700|Libre+Baskerville:400,400i,700&display=swap">
-    <link rel="stylesheet" href="/css/normalize.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com"> 
+    <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400;1,700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700;1,800;1,900&display=swap" rel="stylesheet">    <link rel="stylesheet" href="/css/normalize.min.css">
     <link rel="stylesheet" href="/css/style.min.css">
 
     
@@ -114,7 +114,7 @@ src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM
 
 <p>First we&rsquo;ll simulate some summary statistics data. We can do this using the <code>simulateGWAS()</code> function in the <code>{normentR}</code> package for now. If you have summary statistics ready, you can load it in and use that instead.</p>
 <div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">set.seed</span><span class="p">(</span><span class="m">1994</span><span class="p">)</span>
-<span class="n">sumstats.data</span> <span class="o">&lt;-</span> <span class="nf">simulateGWAS</span><span class="p">(</span><span class="n">nSNPs</span> <span class="o">=</span> <span class="m">1e6</span><span class="p">,</span> <span class="n">nSigCols</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">## GENERATING SIMULATED GWAS DATASET
+<span class="n">sumstats.data</span> <span class="o">&lt;-</span> <span class="nf">simulateGWAS</span><span class="p">(</span><span class="n">nSNPs</span> <span class="o">=</span> <span class="m">1e6</span><span class="p">,</span> <span class="n">nSigCols</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span></code></pre></div><pre><code>## GENERATING SIMULATED GWAS DATASET
 ## 1. Generating random rs IDs
 ## 2. Generate list of N per SNP
 ## 3. Generating BETA
@@ -123,7 +123,7 @@ src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM
 ## 6. Generating T-values
 ## 7. Generating P-values
 ## 8. Adding significant column in chromosome 8
-## DONE!</code></pre></div>
+## DONE!</code></pre>
 <p>Now we have a data frame called <code>sumstats.data</code> that contains a simulated GWAS summary statistic dataset. Note that I only generated a small number of SNPs. The QQ plot can take quite a while to generate if there&rsquo;s a lot of SNPs in the file. QQ plots require only the p-values, but we&rsquo;ll keep the entire data frame because you might need this data frame at some point later on.</p>
 
 <h3 id="preparing-the-data">Preparing the data</h3>

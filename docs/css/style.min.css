@@ -23,7 +23,7 @@ body{
 }
 a{
     font-weight:700;
-    color:#000;
+    color:#000000; /* was #323232 */
     text-decoration:none
 }
 a:focus,a:hover{
@@ -34,22 +34,24 @@ p{
 }
 p a{
     font-weight:400;
-    color: #323232;
+    font-style: italic;
+    color: #5C5C5C;
     /*text-decoration:underline;*/
     text-underline-position:under
 }
 p a:focus,p a:hover{
-    color: #323232 /* was: #36c */
+    color: #5C5C5C /* was: #36c */
 }
 h1,h2,h3,h4,h5,h6{
     color:#000;
-    font-family:'Libre Baskerville', serif;
+    font-family:'Nunito Sans', sans-serif; /* was Libre Baskerville */
+    font-weight: 800; /* was default */
     letter-spacing:.0625em;
     margin:3.2rem 0 1.6rem 0
 }
 h1{
-    font-size:3.2rem;
-    line-height:3.2rem;
+    font-size: 4rem; /* was 3.2rem */
+    line-height: 4rem; /* was 3.2rem */
 }
 @media only screen and (min-device-width:320px) and (max-device-width:480px){
     h1{
@@ -108,25 +110,27 @@ h6{
   text-align: center;
 }
 pre{
-    margin:0 0 0 0; /* was 1.6rem 0 1rem 0 */
-    padding:1.6rem;
-    background: #f2f2f2;
+    margin: 0rem 1.6rem 0rem 1.6rem; /* was 1.6rem 0 1rem 0 */
+    padding: 1.6rem;
+    background: #525252;/* was #f2f2f2 */
+    border-radius: 3px;
     overflow-x: auto;
-    border-radius: 0; /* try 3px */
 }
 code{
     display:inline-block;
     font-size: 0.8em;
-    background: #f2f2f2 !important; /* was #364549 */
+    background: #f2f2f2; /* was #364549 */
     color:#2e2e2e; /* was fefefe */
     padding:0 .4rem 0 .4rem; /* was .4rem .8rem .4rem .8rem */
 }
 pre code {
     display: block;
-    background: #303030 !important;
+    background: initial !important; /* was #303030 */
+    line-height: 2;
     color: #fefefe;
-    font-size: 1.6rem;
-    padding: .2rem 1rem .2rem 1rem; /* was 0 */
+    font-size: 1.4rem;
+    margin: 0;
+    padding: 0.8rem 1rem 1rem 1.5rem; /* was 0 */
     overflow-x: auto;
     border-radius: 3px;
 }
@@ -294,7 +298,7 @@ img{
 .content article header h2{
     margin-top:1rem;
     font-size:1.8rem;
-    color:#323232
+    color:#000000 /* was #323232 */
 }
 @media only screen and (min-device-width:320px) and (max-device-width:480px){
     .content article header h2{
@@ -437,7 +441,7 @@ img{
     float:left
 }
 .title{
-    font-weight:bold
+    font-weight: 800; /* was bold */
 }
 a{
     position:relative;
@@ -569,7 +573,9 @@ a:hover:before,a:hover:after{
 }
 .chroma{
     color:#2e2e2e; /* was e3e3e3 */
-    background-color:#f2f2f2 /* was #364549 */
+    background-color: #333333; /* was #f2f2f2 */
+    border-radius: 3px;
+    margin-top: 1rem;
 }
 .chroma .err{
     color:#ddd;
@@ -761,6 +767,20 @@ a:hover:before,a:hover:after{
 }
 
 /*-------------------------------*/
+/* CUSTOM -----------------------*/
+/*-------------------------------*/
+
+.home-name {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.6em;
+    line-height: 1em;
+}
+
+.home-info {
+    font-family: 'Libre Baskerville', serif;
+}
+
+/*-------------------------------*/
 /* CURRICULUM VITAE -------------*/
 /*-------------------------------*/
 h1cv,h2cv,h3cv,h4cv{
@@ -812,7 +832,7 @@ a#pdf:hover { background: #222; }
 .job p { margin: 0.75em 0 3em 0; }
 
 .last { border: none; }
-.skills-list {  }
+/*.skills-list {  } */ /* DR: was uncommented */
 .skills-list ul { margin: 0; }
 .skills-list li { margin: 3px 0; padding: 3px 0; }
 .skills-list li span { font-size: 152%; display: block; margin-bottom: -2px; padding: 0; }
@@ -829,3 +849,4 @@ a#pdf:hover { background: #222; }
 /* --// override to force 1/8th width grids -- */
 .yui-gf .yui-u{ width:80.2%; }
 .yui-gf div.first{ width:12.3%; }
+

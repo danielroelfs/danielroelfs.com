@@ -548,7 +548,7 @@ house_mutations %>%
 
 So what's the result of all these phenomena? The figure below shows the housing price index for Amsterdam. The first quarter of 2012 was taken as the reference point (100%). In the past 8(!) years, properties had on average nearly doubled in price.
 
-```{r plot-asking, message=FALSE, warning=FALSE, fig.width=10, fig.height=6}
+```{r plot-asking-index-increase, message=FALSE, warning=FALSE, fig.width=10, fig.height=6}
 asking_start <- data %>% 
   filter(type != "Total",
          date == min(date)) %>% 

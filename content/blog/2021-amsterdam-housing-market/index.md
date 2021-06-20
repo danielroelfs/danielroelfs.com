@@ -176,7 +176,7 @@ So in 2017 nearly 90 000 houses were mutated from sale to rental properties. In 
 
 So what's the result of all these phenomena? The figure below shows the housing price index for Amsterdam. The first quarter of 2012 was taken as the reference point (100%). In the past 8(!) years, properties had on average nearly doubled in price.
 
-<img src="index_files/figure-html/plot-asking-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="index_files/figure-html/plot-asking-index-increase-1.png" width="80%" style="display: block; margin: auto;" />
 
 Adjusted for the number of properties offered, the average asking price in Amsterdam has increased by 107%. That means that prices since 2012 have (on average) doubled. For apartments, this increase was 110%. Inflation on the other hand was only about 8.5% since 2012. So young people wanting to buy a house in Amsterdam need to bring nearly twice as much money to the table as they did just a decade ago. The money they saved and the salaries they earned have by no means kept up with the increasing price though.
 

@@ -1,3 +1,6 @@
 # Domain-level redirects
-http://cv.danielroelfs.com/ https://danielroelfs.github.io/cv/:splat 301!
-https://cv.danielroelfs.com/ https://danielroelfs.github.io/cv/:splat 301!
+http://photography.danielroelfs.com/* https://danielroelfs.github.io/photography-site/:splat 200!
+https://photography.danielroelfs.com/* https://danielroelfs.github.io/photography-site/:splat 200!
+
+http://cv.danielroelfs.com/* https://danielroelfs.github.io/cv/:splat 200!
+https://cv.danielroelfs.com/* https://danielroelfs.github.io/cv/:splat 200!

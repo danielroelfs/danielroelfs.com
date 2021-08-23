@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>norway on Daniel Roelfs</title>
+    <link>/tags/norway/</link>
+    <description>Recent content in norway on Daniel Roelfs</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 23 Aug 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/norway/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The easier way to create a map of Norway using {fhimaps}</title>
+      <link>/blog/the-easier-way-to-create-a-map-of-norway-using-fhimaps/</link>
+      <pubDate>Mon, 23 Aug 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/the-easier-way-to-create-a-map-of-norway-using-fhimaps/</guid>
+      <description>Every now and then you discover a discover a much simpler solution to a problem you spent a lot of time solving. This recently happened to me on the topic of creating a map of Norway in R. In this post, I want to go through the process of what I learned.
+Previously, I used a JSON file and the {geojsonio} package to create a map of Norway and its fylker (counties) in particular.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,361 @@
+---
+title: The easier way to create a map of Norway using {fhimaps}
+author: Daniel Roelfs
+date: "`r Sys.Date()`"
+slug: The easier way to create a map of Norway using {fhimaps}
+categories:
+  - ggplot
+tags:
+  - ggplot
+  - map
+  - norway
+description: "The easier way to create a map of Norway using {fhimaps}"
+thumbnail: images/avatar.png
+output:
+  html_document:
+    keep_md: yes
+editor_options:
+  chunk_output_type: console
+---
+
+```{r knitr-opts, include=FALSE}
+knitr::opts_chunk$set(fig.retina = 2,
+                      fig.show = "hold", 
+                      fig.align = "center",
+                      results = "hold",
+                      out.width = "80%")
+
+options(width = 999)
+```
+
+```{r setup, include=FALSE, cache=FALSE}
+# Setup of the environment
+library(tidyverse)
+library(ggtext)
+library(ggmap)
+```
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+   
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+
+Every now and then you discover a discover a much simpler solution to a problem you spent a lot of time solving. This recently happened to me on the topic of creating a map of Norway in R. In this post, I want to go through the process of what I learned.
+
+Previously, I used a JSON file and the `{geojsonio}` package to create a map of Norway and its fylker (counties) in particular. This was a very flexible and robust way of going about this, but also quite cumbersome. This method relies on a high-quality JSON file, meaning, a file that is detailed enough to display everything nicely, but not too detailed that it takes a ton of time and computing power to create a single plot. While I'll still use this method if I need to create a map for places other than Norway, I think I've found a better and easier solution for plotting Norway and the fylker and kommuner in the  [`{fhimaps}`](https://folkehelseinstituttet.github.io/fhimaps/) package. 
+
+The `{fhimaps}` package is created by the Norwegian Institute for Public Health ([Folkehelseinstuttet, FHI](https://folkehelseinstituttet.github.io/fhimaps/articles/fhimaps.html)). It's part of a series of packages (which FHI refer to as the "fhiverse"), which includes a package containing basic FHI data ([`{fhidata}`](https://folkehelseinstituttet.github.io/fhidata/)), one with different disease spread models ([`{spread}`](https://folkehelseinstituttet.github.io/spread/)) and a few more. Here I'll dive into the `{fhimaps}` package with some help from the `{fhidata}` package. I'll also use the `{ggmap}` package to help with some other data and plotting. It's perhaps important to note that `{ggmap}` does contain a map of Norway as a whole, but not of the fylker and kommuner (municipalities), hence the usefulness of the `{fhimaps}` package, which contains both. I'll also use `{tidyverse}` and `{ggtext}` as I always do. I won't load `{fhimaps}` with the `library()` function, but will use the `::` operator instead since it'll make it easier to navigate the different datasets included.
+
+```{r pkgs, eval=FALSE}
+library(tidyverse)
+library(ggtext)
+library(ggmap)
+```
+
+So let's have a look at what's included. You'll see that nearly all maps come in either a `data.table` format or an `sf` format. Here I'll use only the data frames, since they're a lot easier to work with. The maps in `sf` format can be useful elsewhere, but I think for most purposes it's easier and more intuitive to work with data frames.
+
+```{r print-map-list}
+data(package = "fhimaps") %>% 
+  pluck("results") %>% 
+  as_tibble() %>% 
+  select(Item,Title) %>% 
+  print(n = 18)
+```
+
+A comprehensive version of this list is also included in the [reference](https://folkehelseinstituttet.github.io/fhimaps/reference/index.html) for this package.
+
+So let's have a look at one of those maps. For instance the one with the new fylker from 2020 with an inset of Oslo.
+
+```{r load-map}
+map_df <- fhimaps::norway_nuts3_map_b2020_insert_oslo_dt %>% 
+  glimpse()
+```
+
+Immediately you can see that there's a lot of rows, each representing a point on the map. A data frame with a larger number of rows would be more detailed (i.e. less straight lines, more detail in curvatures of borders etc.). Let's create a very simple map. We'll use the `geom_polygon` to turn our data frame into a map. The location of the points are given in longitudes and latitudes (like x- and y-coordinates), the group serves to make sure lines are drawn correctly (try running the code below without `group = group` and see what happens). The `location_code` denotes the county number (which isn't from 1 to 11, but instead uses some other standard format matching numbers in other government datasets). Let's see the simplest map:
+
+```{r minimal-plot}
+ggplot(map_df, aes(x = long, y = lat, group = group, fill = location_code)) + 
+  geom_polygon()
+```
+
+Now let's convert the awkward county numbers to the actual names of the fylker. The `{fhidata}` package has a data frame with codes and names for all the kommuner, fylker, and even regions (Øst, Vest, Nord-Norge etc.). We're only interested in the fylker here, so we'll select the unique county codes and the corresponding county names.
+
+```{r fylke-names}
+county_names <- fhidata::norway_locations_b2020 %>% 
+  distinct(county_code, county_name)
+
+print(county_names)
+```
+
+Now let's also create a nice color palette to give each fylke a nicer color than the default ggplot colors. We'll create a named vector to match each fylke with a color from the _batlow_ palette by [Fabio Crameri](https://www.fabiocrameri.ch/colourmaps/).
+
+```{r fylke-colors, message=FALSE}
+county_colors <- setNames(normentR::norment_pal("batlow")(nrow(county_names)),
+                          nm = county_names$county_name)
+```
+
+Let's see what we can make now. We'll add the county names to the large data frame containing the longitudes and latitudes and then create a plot again. I'll also add some other style elements, such as a labels to the x- and y-axes, circles instead of squares for the legend and a map projection. For Norway especially I think a conic map projection works well since the northern fylker are so massive and the southern fylker are more dense, so adding a conic projection with a cone tangent of 60 degrees makes it a bit more perceptionally balanced (`lat0` refers to the cone tangent, the details are complicated but a higher cone tangent results a greater distortion in favor of southern points).
+
+```{r simple-plot}
+map_df %>% 
+  left_join(county_names, by = c("location_code" = "county_code")) %>% 
+  ggplot(aes(x = long, y = lat, fill = county_name, group = group)) + 
+  geom_polygon(key_glyph = "point") + 
+  labs(x = NULL,
+       y = NULL,
+       fill = NULL) +
+  scale_x_continuous(labels = scales::label_number(suffix = "\u00b0W")) +
+  scale_y_continuous(labels = scales::label_number(suffix = "\u00b0N")) + 
+  scale_fill_manual(values = county_colors,
+                    guide = guide_legend(override.aes = list(shape = 21, size = 4))) +
+  coord_map(projection = "conic", lat0 = 40) + 
+  theme_minimal() +
+  theme(legend.position = c(0.9,0.2),
+        legend.text = element_text(size = 5),
+        legend.key.height = unit(10,"pt"),
+        legend.background = element_rect(fill = "white", color = "transparent"))
+```
+
+## Norway with Scandinavia
+
+Sometimes it's useful to plot Norway in geographical context. We can overlay Norway on a map of Scandinavia or Europe to create a more aesthetically pleasing figure that is less scientific but easier to read. For that we'll first extract the longitude and latitude extremities of Norway, so we can easily center Norway on our new map.
+
+```{r print-limits, results='hold'}
+str_glue("Range across longitude: {str_c(range(map_df$long), collapse = ', ')}")
+str_glue("Range across latitude: {str_c(range(map_df$lat), collapse = ', ')}")
+```
+
+Let's also combine the map with some actual data. The `{fhidata}` package contains some simple data on vacciations in kommuner and fylker. Let's take the data from the different fylker in the last available year for HPV vaccinations.
+
+```{r get-vax-data}
+vax_data <- fhidata::norway_childhood_vax_b2020 %>% 
+  filter(str_detect(location_code, "^county"), 
+         year == max(year),
+         vax == "hpv")
+```
+
+Let's create a map without the Oslo inset, combine it with the vaccination data and plot it on top of a map of the world cropped to just Scandinavia. So for this we load another data frame and use `left_join` to merge the vaccination data into one data frame. The `{ggmap}` package has a map of the entire world, which we'll use. To avoid awkward overlap, we'll plot everything except Norway from that world map (since we'll have our own better map to use instead). We'll set the `fill` to proportion of the population vaccinated and set similar style elements to make the figure look nicer. I used the extremities we extracted earlier as a guideline, but we can play around with the crop of the map to get something that works best.
+
+```{r vax-plot}
+fhimaps::norway_nuts3_map_b2020_default_dt %>% 
+  left_join(vax_data, by = "location_code") %>% 
+  ggplot(aes(x = long, y = lat, group = group)) +
+  geom_polygon(data = map_data("world") %>% filter(region != "Norway"), 
+               fill = "grey80", color = "grey80", size  = 1) +
+  geom_polygon(aes(fill = proportion), key_glyph = "point") + 
+  labs(fill = "Proportion vaccinated against HPV") +
+  normentR::scale_fill_norment(palette = "bamako", reverse = TRUE,
+                               limits = c(0.75,0.9), labels = scales::percent_format(accuracy = 1),
+                               guide = guide_colorbar(title.position = "top", title.hjust = 0.5,
+                                                      barwidth = 10, barheight = 0.5, ticks = FALSE)) +
+  coord_map(projection = "conic", lat0 = 60, 
+            xlim = c(-8,40), ylim = c(57, 70)) + 
+  theme_void() +
+  theme(plot.background = element_rect(fill = "#A2C0F4", color = "transparent"),
+        legend.direction = "horizontal",
+        legend.position = c(0.8, 0.1),
+        legend.title = element_text(size = 8),
+        legend.text = element_text(size = 6))
+```
+
+## Geocoding
+
+The `{ggmap}` package also has an incredibly useful function called `mutate_geocode()` which transforms a string with an address or description in character format to longitude and latitude. Since `{ggmap}` uses the Google Maps API, it works similarly to typing in a description in Google Maps. So an approximation of the location will (most likely) get you the right result (e.g. with "Hospital Lillehammer"). Note that `mutate_geocode` uses `lon` instead of `long` as column name for longitude. Just to avoid confusion, I'll rename the column to `long`.
+
+```{r get-cities-locations, eval=FALSE}
+hospitals_df <- tibble(location = c("Ullevål Sykehus, Oslo","Haukeland universitetssjukehus, Bergen","St. Olav, Trondheim",
+                                 "Universitetssykehuset Nord-Norge, Tromsø","Stavanger Universitetssjukehus","Sørlandet Hospital Kristiansand", "Hospital Lillehammer")) %>% 
+  mutate_geocode(location) %>% 
+  rename(long = lon)
+```
+
+```{r save-cities-geo, echo=FALSE, eval=FALSE}
+write_rds(hospitals_df, "norway_hospitals.rds")
+```
+
+```{r load-cities-geo, echo=FALSE}
+hospitals_df <- read_rds("norway_hospitals.rds")
+```
+
+This is the list of coordinates it gave us:
+
+```{r glimpse-locs}
+print(hospitals_df)
+```
+
+Now let's put these on top of the map. We'll use the same map we used earlier. We'll add the locations using a simple `geom_point`. This time I'll also add a line from the inset to Oslo's location on the map. The `xend` and `yend` coordinates takes some trial-and-error but I think it's worth it. I'll also add labels to each of the points with the help of the `{ggrepel}` package to illustrate what the points stand for. I suppose usually this is obvious from context, but I just wanted to show how it can be done anyway.
+
+```{r plot-w-cities}
+set.seed(21)
+
+map_df %>% 
+  left_join(county_names, by = c("location_code" = "county_code")) %>% 
+  ggplot(aes(x = long, y = lat, fill = county_name, group = group)) + 
+  geom_polygon(key_glyph = "point") + 
+  geom_segment(data = hospitals_df %>% filter(str_detect(location, "Oslo")), 
+               aes(x = long, y = lat, xend = 19.5, yend = 62), inherit.aes = FALSE) +
+  geom_point(data = hospitals_df, aes(x = long, y = lat), inherit.aes = FALSE,
+             shape = 18, color = "firebrick", size = 4, show.legend = FALSE) +
+  ggrepel::geom_label_repel(data = hospitals_df, aes(x = long, y = lat, label = location),
+                            size = 2, alpha = 0.75, label.size = 0, inherit.aes = FALSE) +
+  labs(x = NULL,
+       y = NULL,
+       fill = NULL) +
+  scale_fill_manual(values = county_colors,
+                    guide = guide_legend(override.aes = list(size = 4, shape = 21, 
+                                                             color = "transparent"))) +
+  coord_map(projection = "conic", lat0 = 60) + 
+  theme_void() +
+  theme(legend.position = c(0.2,0.7),
+        legend.text = element_text(size = 5),
+        legend.key.height = unit(10,"pt"))
+```
+
+
+## Combine the map with other data
+
+Let's take it a step further and now look at how we can combine our map with data that didn't come directly from the FHI. Instead I downloaded some data from the Norwegian Statistics Bureau ([Statistisk sentralbyrå, SSB](https://www.ssb.no)) on land use in the kommuner ([link](https://www.ssb.no/en/natur-og-miljo/areal/statistikk/arealbruk-og-arealressurser)). This came in the form of a semi-colon separated .csv file.
+
+```{r load-area-use, message=FALSE}
+area_use <- read_delim("Areal.csv", delim = ";", skip = 2) %>%
+  janitor::clean_names()
+
+print(area_use)
+```
+
+You can see there's 356 rows, each representing a different kommune in Norway. The columns here represent the surface area (in km<sup>2</sup>) with different designations (e.g. forest, health services, agriculture etc.). All data here is from 2021. Now, kommunes have different sizes, so I want to get the designations of interest as percentages of total area in the kommune. Here I assumed that the sum of all designations is equal to the total size of each kommune. I also want to extract the kommune number, since we'll use that to merge this data frame with the map later. The kommune number needs to be 4 digits, so we need to add a leading 0 in some instances. Then we'll create the `location_code` column which will match the `location_code` column in the data frame from `{fhimaps}`. Then we'll calculate the percentage land use for different designations. Here I'm just interested in _"bare rock, gravel, and blockfields"_, _"wetland_, _"forest"_, and _"Open firm ground"_.
+
+```{r wrangle-area-use}
+area_use <- area_use %>% 
+  mutate(total_area = rowSums(across(where(is.numeric))),
+         kommune_code = parse_number(region),
+         kommune_code = format(kommune_code, digits = 4),
+         kommune_code = str_replace_all(kommune_code, " ", "0"),
+         location_code = str_glue("municip{kommune_code}"),
+         perc_rocks = area_2021_bare_rock_gravel_and_blockfields / total_area,
+         perc_wetland = area_2021_wetland / total_area,
+         perc_forest = area_2021_forest / total_area,
+         perc_open_ground = area_2021_open_firm_ground / total_area) %>% 
+  arrange(kommune_code) %>% 
+  glimpse()
+```
+
+Then the next step is very similar to what we've done before. We'll use `left_join` to merge the data frame containing the land use variables with the data frame containing the map with the kommune borders. I want to plot the four designations of interest in one figure, so I'll transform the plot to a long format using `pivot_longer`. Then I'll create a new label with nicer descriptions of the designations, and then the rest is similar to before. We'll facet the plot based on the designation:
+
+```{r plot-kommune-faceted}
+fhimaps::norway_lau2_map_b2020_split_dt %>% 
+  left_join(area_use, by = "location_code") %>% 
+  pivot_longer(cols = starts_with("perc"), names_to = "land_type", values_to = "percentage") %>% 
+  mutate(land_type_label = case_when(str_detect(land_type, "rocks") ~ "Bare rock, gravel and rockfields",
+                                     str_detect(land_type, "wetland") ~ "Wetland",
+                                     str_detect(land_type, "forest") ~ "Forest",
+                                     str_detect(land_type, "open_ground") ~ "Open firm ground")) %>% 
+  ggplot(aes(x = long, y = lat, group = group, fill = percentage)) +
+  geom_polygon() + 
+  labs(fill = "Percentage") +
+  normentR::scale_fill_norment(palette = "acton", labels = scales::label_percent(), limits = c(0,1),
+                               guide = guide_colorbar(barheight = 0.5, barwidth = 12, 
+                                                      ticks = FALSE, direction = "horizontal",
+                                                      title.position = "top", title.hjust = 0.5)) + 
+  facet_wrap(~ land_type_label) +
+  coord_map(projection = "conic", lat0 = 60) + 
+  theme_void() +
+  theme(legend.position = "bottom",
+        strip.text.x = element_textbox_simple(size = rel(1.25), halign = 0.5,
+                                              margin = margin(10,0,10,0, "pt")))
+```
+
+## Oslo
+
+The last thing I want to show is a map of Oslo! I haven't been able to find a JSON file of the bydeler (boroughs) of Oslo. `{fhimaps}` does contain a detailed map of the bydeler at higher resolution than the large map of the municipalities or counties. Now, these bydeler are again coded and `{fhidata}` doesn't contain a data frame with the corresponding names, so we'll have to find it ourselves. Luckily there's a Wikipedia page with Oslo's bydeler which contains a table with the bydel numbers, the names, and some data we can use for visualization. We'll extract the table from the website using `{rvest}`, do some data wrangling and prepare it for merging into the data frame with the map. I won't go into the wrangling much here, we're interested mainly in the plotting of the data right now.
+
+```{r scrape-bydel-names}
+bydel_data <- "https://en.wikipedia.org/wiki/List_of_boroughs_of_Oslo" %>% 
+  rvest::read_html() %>% 
+  rvest::html_table() %>% 
+  pluck(1) %>% 
+  janitor::clean_names() %>% 
+  mutate(inhabitants = str_remove_all(residents, "[[:blank:]]"),
+         inhabitants = as.numeric(inhabitants),
+         area = str_remove_all(area, "km2"),
+         area = str_replace_all(area, ",", "."),
+         area = str_squish(area),
+         area = as.numeric(area),
+         pop_density = inhabitants / area) %>% 
+  arrange(number) %>% 
+  mutate(bydel_nr = format(number, digits = 2),
+         bydel_nr = str_replace_all(bydel_nr, " ", "0"),
+         location_code = str_glue("wardoslo0301{bydel_nr}"))
+
+print(bydel_data)
+```
+
+`{fhimaps}` also provides a very useful data frame containing the geographical center or best location to put a label to avoid overlap and make it as clear as possible which label corresponds to which bydel. So we'll merge those two together.
+
+```{r merge-bydel-labels}
+bydel_centres <- fhimaps::oslo_ward_position_geolabels_b2020_default_dt %>% 
+  inner_join(bydel_data, by = "location_code")
+```
+
+Then we'll create the final plot. This will be more-or-less identical to what we did before.
+
+```{r plot-oslo}
+fhimaps::oslo_ward_map_b2020_default_dt %>%
+  left_join(bydel_data, by = "location_code") %>% 
+  ggplot(aes(x = long, y = lat, group = group)) +
+  geom_polygon(aes(color = pop_density, fill = pop_density), size = 1.5) + 
+  geom_label(data = bydel_centres, aes(label = borough, group = 1), alpha = 0.5, label.size = 0) + 
+  labs(fill = "N<sup>o</sup> of inhabitants per km<sup>2</sup>") + 
+  normentR::scale_color_norment(palette = "turku", limits = c(0,1.5e4), guide = "none") +
+  normentR::scale_fill_norment(palette = "turku", limits = c(0,1.5e4), labels = scales::number_format(),
+                               guide = guide_colorbar(title.position = "top", title.hjust = 0.5,
+                                                      barwidth = 15, barheight = 0.75, ticks = FALSE)) +
+  theme_void() + 
+  theme(legend.position = "bottom",
+        legend.title = element_markdown(),
+        legend.direction = "horizontal")
+```
+
+
+BONUS
+
+An example of when you might use the `sf` data format is in interactive maps. Here's a short example of what that might look like. Here we'll use the `{leaflet}` package (which is an R wrapper for the homonymous JavaScript library) to create an interactive map where we can zoom and hover on the different fylker. This won't work on printed media, but it might be nice to include in a digital format. You could possibly extract the corresponding HTML and JavaScript code and embed it on a webpage separately.
+
+```{r leaflet, eval=FALSE}
+library(leaflet)
+
+map_sf <- fhimaps::norway_nuts3_map_b2020_default_sf %>%
+  sf::st_as_sf() %>% 
+  left_join(county_names, by = c("location_code" = "county_code"))
+
+map_sf %>% 
+  leaflet() %>% 
+  addProviderTiles(providers$Esri.WorldStreetMap) %>%
+  addPolygons(
+    fillColor = unname(county_colors),
+    weight = 0.1,
+    opacity = 1,
+    fillOpacity = 0.75,
+    highlightOptions = highlightOptions(
+      color = "#333", bringToFront = TRUE,
+      weight = 2, opacity = 1)
+  )
+```
+
+```{r show-leaflet-widget, echo=FALSE, eval=FALSE}
+map <- map_sf %>% 
+  leaflet() %>% 
+  addProviderTiles(providers$Esri.WorldStreetMap) %>%
+  addPolygons(
+    fillColor = unname(county_colors),
+    weight = 0.1,
+    opacity = 1,
+    fillOpacity = 0.75,
+    highlightOptions = highlightOptions(
+      color = "#333", bringToFront = TRUE,
+      weight = 2, opacity = 1)
+  )
+
+htmlwidgets::saveWidget(map, str_glue("{here::here('content','blog','2021-easy-map-norway')}/leafMap.html"))
+```
+
+<div style="text-align:center"><iframe seamless src="leafMap.html" width="80%" height="500" frameBorder="0" style="padding-top: 1em;"></iframe></div>

@@ -6,7 +6,17 @@
     <description>Recent content in ggplot on Daniel Roelfs</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 20 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/ggplot/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 23 Aug 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/ggplot/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The easier way to create a map of Norway using {fhimaps}</title>
+      <link>/blog/the-easier-way-to-create-a-map-of-norway-using-fhimaps/</link>
+      <pubDate>Mon, 23 Aug 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/the-easier-way-to-create-a-map-of-norway-using-fhimaps/</guid>
+      <description>Every now and then you discover a discover a much simpler solution to a problem you spent a lot of time solving. This recently happened to me on the topic of creating a map of Norway in R. In this post, I want to go through the process of what I learned.
+Previously, I used a JSON file and the {geojsonio} package to create a map of Norway and its fylker (counties) in particular.</description>
+    </item>
+    
     <item>
       <title>Visualizing the State of the Amsterdam Housing Market</title>
       <link>/blog/visualizing-the-state-of-the-amsterdam-housing-market/</link>

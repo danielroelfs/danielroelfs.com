@@ -270,7 +270,7 @@ tibble(eigenvalues) %>%
 
 Looks identical to the previous one. Let's also look at the correlation matrix between the principal components.
 
-```{r pca-manual-individual-loadings, eval=FALSE}
+```{r pca-manual-individual-loadings, echo=FALSE, eval=FALSE}
 data.frame(pc_manual) %>% 
   rename_with(~ str_glue("PC{parse_number(.x)}")) %>% 
   rownames_to_column("participant") %>% 

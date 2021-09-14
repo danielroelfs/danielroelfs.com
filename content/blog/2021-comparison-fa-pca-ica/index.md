@@ -423,21 +423,6 @@ tibble(eigenvalues) %>%
 Looks identical to the previous one. Let's also look at the correlation matrix between the principal components.
 
 
-```r
-data.frame(pc_manual) %>% 
-  rename_with(~ str_glue("PC{parse_number(.x)}")) %>% 
-  rownames_to_column("participant") %>% 
-  pivot_longer(starts_with("PC"), names_to = "prin_comp", values_to = "loading") %>% 
-  filter(parse_number(prin_comp) <= n_comps) %>% 
-  ggplot(aes(x = reorder(prin_comp, parse_number(prin_comp)), 
-             y = parse_number(participant), fill = loading)) +
-  geom_tile() + 
-  labs(title = "Individual loadings",
-       x = NULL,
-       y = NULL) +
-  scico::scale_fill_scico(palette = "berlin") + 
-  coord_fixed(1/5)
-```
 
 
 ```r

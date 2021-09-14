@@ -11,7 +11,7 @@
 
 <meta name="author" content="Daniel Roelfs" />
 
-<meta name="date" content="2021-08-23" />
+<meta name="date" content="2021-08-24" />
 
 <title>The easier way to create a map of Norway using {fhimaps}</title>
 
@@ -167,7 +167,7 @@ pre code {
 
 <h1 class="title toc-ignore">The easier way to create a map of Norway using {fhimaps}</h1>
 <h4 class="author">Daniel Roelfs</h4>
-<h4 class="date">2021-08-23</h4>
+<h4 class="date">2021-08-24</h4>
 
 </div>
 
@@ -243,7 +243,7 @@ print(county_names)</code></pre>
 <p>Now let’s also create a nice color palette to give each fylke a nicer color than the default ggplot colors. We’ll create a named vector to match each fylke with a color from the <em>batlow</em> palette by <a href="https://www.fabiocrameri.ch/colourmaps/">Fabio Crameri</a>.</p>
 <pre class="r"><code>county_colors &lt;- setNames(normentR::norment_pal(&quot;batlow&quot;)(nrow(county_names)),
                           nm = county_names$county_name)</code></pre>
-<p>Let’s see what we can make now. We’ll add the county names to the large data frame containing the longitudes and latitudes and then create a plot again. I’ll also add some other style elements, such as a labels to the x- and y-axes, circles instead of squares for the legend and a map projection. For Norway especially I think a conic map projection works well since the northern fylker are so massive and the southern fylker are more dense, so adding a conic projection with a cone tangent of 60 degrees makes it a bit more perceptionally balanced (<code>lat0</code> refers to the cone tangent, the details are complicated but a higher cone tangent results a greater distortion in favor of southern points).</p>
+<p>Let’s see what we can make now. We’ll add the county names to the large data frame containing the longitudes and latitudes and then create a plot again. I’ll also add some other style elements, such as a labels to the x- and y-axes, circles instead of squares for the legend and a map projection. For Norway especially I think a conic map projection works well since the northern fylker are so massive and the southern fylker are more dense, so adding a conic projection with a cone tangent of 40 degrees makes it a bit more perceptionally balanced (<code>lat0</code> refers to the cone tangent, the details are complicated but a higher cone tangent results a greater distortion in favor of southern points).</p>
 <pre class="r"><code>map_df %&gt;% 
   left_join(county_names, by = c(&quot;location_code&quot; = &quot;county_code&quot;)) %&gt;% 
   ggplot(aes(x = long, y = lat, fill = county_name, group = group)) + 

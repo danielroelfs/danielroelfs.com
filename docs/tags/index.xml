@@ -6,11 +6,29 @@
     <description>Recent content in Tags on Daniel Roelfs</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 23 Aug 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 14 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>R</title>
+      <link>/tags/r/</link>
+      <pubDate>Tue, 14 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/r/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>statistics</title>
+      <link>/tags/statistics/</link>
+      <pubDate>Tue, 14 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/statistics/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>ggplot</title>
       <link>/tags/ggplot/</link>
-      <pubDate>Mon, 23 Aug 2021 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 24 Aug 2021 00:00:00 +0000</pubDate>
       
       <guid>/tags/ggplot/</guid>
       <description></description>
@@ -19,7 +37,7 @@
     <item>
       <title>map</title>
       <link>/tags/map/</link>
-      <pubDate>Mon, 23 Aug 2021 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 24 Aug 2021 00:00:00 +0000</pubDate>
       
       <guid>/tags/map/</guid>
       <description></description>
@@ -28,7 +46,7 @@
     <item>
       <title>norway</title>
       <link>/tags/norway/</link>
-      <pubDate>Mon, 23 Aug 2021 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 24 Aug 2021 00:00:00 +0000</pubDate>
       
       <guid>/tags/norway/</guid>
       <description></description>
@@ -49,24 +67,6 @@
       <pubDate>Sat, 24 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/ica/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>R</title>
-      <link>/tags/r/</link>
-      <pubDate>Sat, 24 Oct 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/r/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>statistics</title>
-      <link>/tags/statistics/</link>
-      <pubDate>Sat, 24 Oct 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/statistics/</guid>
       <description></description>
     </item>
     

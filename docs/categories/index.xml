@@ -6,11 +6,20 @@
     <description>Recent content in Categories on Daniel Roelfs</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 23 Aug 2021 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 14 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>statistics</title>
+      <link>/categories/statistics/</link>
+      <pubDate>Tue, 14 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/statistics/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>ggplot</title>
       <link>/categories/ggplot/</link>
-      <pubDate>Mon, 23 Aug 2021 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 24 Aug 2021 00:00:00 +0000</pubDate>
       
       <guid>/categories/ggplot/</guid>
       <description></description>

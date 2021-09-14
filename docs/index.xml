@@ -6,11 +6,20 @@
     <description>Recent content on Daniel Roelfs</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 23 Aug 2021 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 14 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>A Basic Comparison Between Factor Analysis, PCA, and ICA</title>
+      <link>/blog/a-basic-comparison-between-factor-analysis-pca-and-ica/</link>
+      <pubDate>Tue, 14 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/a-basic-comparison-between-factor-analysis-pca-and-ica/</guid>
+      <description>This is just a very quick blog post outlining some of the commonalities and differences between factor analysis (FA), principal component analysis (PCA), and independent component analysis (ICA). I was inspired to write some of this down through some confusion caused in the lab by SPSS&amp;rsquo; apparent dual usage of the term &amp;ldquo;factor analysis&amp;rdquo; and &amp;ldquo;principal components&amp;rdquo;. A few of my colleagues who (are required by their supervisors) to use SPSS showed me the following screen:</description>
+    </item>
+    
     <item>
       <title>The easier way to create a map of Norway using {fhimaps}</title>
       <link>/blog/the-easier-way-to-create-a-map-of-norway-using-fhimaps/</link>
-      <pubDate>Mon, 23 Aug 2021 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 24 Aug 2021 00:00:00 +0000</pubDate>
       
       <guid>/blog/the-easier-way-to-create-a-map-of-norway-using-fhimaps/</guid>
       <description>Every now and then you discover a discover a much simpler solution to a problem you spent a lot of time solving. This recently happened to me on the topic of creating a map of Norway in R. In this post, I want to go through the process of what I learned.

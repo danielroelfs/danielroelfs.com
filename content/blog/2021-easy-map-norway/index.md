@@ -1,7 +1,7 @@
 ---
 title: The easier way to create a map of Norway using {fhimaps}
 author: Daniel Roelfs
-date: "2021-08-23"
+date: "2021-08-24"
 slug: The easier way to create a map of Norway using {fhimaps}
 categories:
   - ggplot
@@ -138,7 +138,7 @@ county_colors <- setNames(normentR::norment_pal("batlow")(nrow(county_names)),
                           nm = county_names$county_name)
 ```
 
-Let's see what we can make now. We'll add the county names to the large data frame containing the longitudes and latitudes and then create a plot again. I'll also add some other style elements, such as a labels to the x- and y-axes, circles instead of squares for the legend and a map projection. For Norway especially I think a conic map projection works well since the northern fylker are so massive and the southern fylker are more dense, so adding a conic projection with a cone tangent of 60 degrees makes it a bit more perceptionally balanced (`lat0` refers to the cone tangent, the details are complicated but a higher cone tangent results a greater distortion in favor of southern points).
+Let's see what we can make now. We'll add the county names to the large data frame containing the longitudes and latitudes and then create a plot again. I'll also add some other style elements, such as a labels to the x- and y-axes, circles instead of squares for the legend and a map projection. For Norway especially I think a conic map projection works well since the northern fylker are so massive and the southern fylker are more dense, so adding a conic projection with a cone tangent of 40 degrees makes it a bit more perceptionally balanced (`lat0` refers to the cone tangent, the details are complicated but a higher cone tangent results a greater distortion in favor of southern points).
 
 
 ```r

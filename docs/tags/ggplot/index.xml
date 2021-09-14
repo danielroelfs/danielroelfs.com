@@ -6,11 +6,11 @@
     <description>Recent content in ggplot on Daniel Roelfs</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 23 Aug 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/ggplot/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 24 Aug 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/ggplot/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>The easier way to create a map of Norway using {fhimaps}</title>
       <link>/blog/the-easier-way-to-create-a-map-of-norway-using-fhimaps/</link>
-      <pubDate>Mon, 23 Aug 2021 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 24 Aug 2021 00:00:00 +0000</pubDate>
       
       <guid>/blog/the-easier-way-to-create-a-map-of-norway-using-fhimaps/</guid>
       <description>Every now and then you discover a discover a much simpler solution to a problem you spent a lot of time solving. This recently happened to me on the topic of creating a map of Norway in R. In this post, I want to go through the process of what I learned.

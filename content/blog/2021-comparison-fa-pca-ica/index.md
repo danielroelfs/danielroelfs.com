@@ -24,7 +24,7 @@ editor_options:
 This is just a very quick blog post outlining some of the commonalities and differences between factor analysis (FA), principal component analysis (PCA), and independent component analysis (ICA). I was inspired to write some of this down through some confusion caused in the lab by SPSS' apparent dual usage of the term "factor analysis" and "principal components". A few of my colleagues who (are required by their supervisors) to use SPSS showed me the following screen:
 
 <p align="center">
-  <img src="https://stats.idre.ucla.edu/wp-content/uploads/2018/05/fig4-2b4.png"/>
+  <img src="spss-screenshot.png"/>
 </p>
 
 This screen shows up when you click `Analyze` -> `Dimension Reduction` -> `Factor`, which then opens a window called "Factor Analysis: Extraction" which lets you pick "Principal components" as a method. To put the (apparent) PCA method as a sub-section of factor analysis is misleading at best, and straight-up erronious at worst. The other options for the method here is "Principal axis factoring" (which is closer to traditional factor analysis) and "Maximum likelihood" ([source for screenshot and SPSS interface](https://stats.idre.ucla.edu/spss/seminars/efa-spss/)). If you're wondering if you're the first one to be confused by SPSS' choice to present this in such a way, you're not the first ([link](https://stats.stackexchange.com/questions/1576/what-are-the-differences-between-factor-analysis-and-principal-component-analysi), [link](https://stats.stackexchange.com/questions/24781/interpreting-discrepancies-between-r-and-spss-with-exploratory-factor-analysis)). 

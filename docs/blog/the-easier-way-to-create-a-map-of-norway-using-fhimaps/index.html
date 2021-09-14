@@ -118,7 +118,7 @@
   <span class="nf">pluck</span><span class="p">(</span><span class="s">&#34;results&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span> 
   <span class="nf">as_tibble</span><span class="p">()</span> <span class="o">%&gt;%</span> 
   <span class="nf">select</span><span class="p">(</span><span class="n">Item</span><span class="p">,</span><span class="n">Title</span><span class="p">)</span> <span class="o">%&gt;%</span> 
-  <span class="nf">print</span><span class="p">(</span><span class="n">n</span> <span class="o">=</span> <span class="m">18</span><span class="p">)</span></code></pre></div><pre><code>## # A tibble: 31 x 2
+  <span class="nf">print</span><span class="p">(</span><span class="n">n</span> <span class="o">=</span> <span class="m">18</span><span class="p">)</span></code></pre></div><pre><code>## # A tibble: 31 × 2
 ##    Item                                                Title                                                                                                    
 ##    &lt;chr&gt;                                               &lt;chr&gt;                                                                                                    
 ##  1 norway_lau2_map_b2019_default_dt                    Map of Norwegian municipalities (2019 borders)                                                           
@@ -236,7 +236,7 @@
   <span class="nf">mutate_geocode</span><span class="p">(</span><span class="n">location</span><span class="p">)</span> <span class="o">%&gt;%</span> 
   <span class="nf">rename</span><span class="p">(</span><span class="n">long</span> <span class="o">=</span> <span class="n">lon</span><span class="p">)</span></code></pre></div>
 <p>This is the list of coordinates it gave us:</p>
-<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">print</span><span class="p">(</span><span class="n">hospitals_df</span><span class="p">)</span></code></pre></div><pre><code>## # A tibble: 7 x 3
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">print</span><span class="p">(</span><span class="n">hospitals_df</span><span class="p">)</span></code></pre></div><pre><code>## # A tibble: 7 × 3
 ##   location                                  long   lat
 ##   &lt;chr&gt;                                    &lt;dbl&gt; &lt;dbl&gt;
 ## 1 Ullevål Sykehus, Oslo                    10.7   59.9
@@ -278,7 +278,7 @@
 <div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="n">area_use</span> <span class="o">&lt;-</span> <span class="nf">read_delim</span><span class="p">(</span><span class="s">&#34;Areal.csv&#34;</span><span class="p">,</span> <span class="n">delim</span> <span class="o">=</span> <span class="s">&#34;;&#34;</span><span class="p">,</span> <span class="n">skip</span> <span class="o">=</span> <span class="m">2</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="n">janitor</span><span class="o">::</span><span class="nf">clean_names</span><span class="p">()</span>
 
-<span class="nf">print</span><span class="p">(</span><span class="n">area_use</span><span class="p">)</span></code></pre></div><pre><code>## # A tibble: 356 x 20
+<span class="nf">print</span><span class="p">(</span><span class="n">area_use</span><span class="p">)</span></code></pre></div><pre><code>## # A tibble: 356 × 20
 ##    region           area_2021_residential_areas area_2021_recreational_facilities area_2021_built_up_areas_for_agriculture_and_fishing area_2021_industrial_commercial_and_service_areas area_2021_education_and_day_care_facilities area_2021_health_and_social_welfare_institutions area_2021_cultural_and_religious_activities area_2021_transport_telecommunications_and_technical_infrastructure area_2021_emergency_and_defence_services area_2021_green_areas_and_sports_facilities area_2021_unclassified_built_up_areas_and_related_land area_2021_agricultural_land area_2021_forest area_2021_open_firm_ground area_2021_wetland area_2021_bare_rock_gravel_and_blockfields area_2021_permanent_snow_and_glaciers area_2021_inland_waters area_2021_unclassified_undeveloped_areas
 ##    &lt;chr&gt;                                  &lt;dbl&gt;                             &lt;dbl&gt;                                                &lt;dbl&gt;                                             &lt;dbl&gt;                                       &lt;dbl&gt;                                            &lt;dbl&gt;                                       &lt;dbl&gt;                                                               &lt;dbl&gt;                                    &lt;dbl&gt;                                       &lt;dbl&gt;                                                  &lt;dbl&gt;                       &lt;dbl&gt;            &lt;dbl&gt;                      &lt;dbl&gt;             &lt;dbl&gt;                                      &lt;dbl&gt;                                 &lt;dbl&gt;                   &lt;dbl&gt;                                    &lt;dbl&gt;
 ##  1 3001 Halden                             9.61                              1.85                                                 2.51                                              2.89                                        0.29                                             0.21                                        0.22                                                               11.4                                      0.03                                        0.84                                                   1.51                       61.6             480.                        2.88             16.2                                        1.3                                      0                   48.7                                         0
@@ -376,7 +376,7 @@
          <span class="n">bydel_nr</span> <span class="o">=</span> <span class="nf">str_replace_all</span><span class="p">(</span><span class="n">bydel_nr</span><span class="p">,</span> <span class="s">&#34; &#34;</span><span class="p">,</span> <span class="s">&#34;0&#34;</span><span class="p">),</span>
          <span class="n">location_code</span> <span class="o">=</span> <span class="nf">str_glue</span><span class="p">(</span><span class="s">&#34;wardoslo0301{bydel_nr}&#34;</span><span class="p">))</span>
 
-<span class="nf">print</span><span class="p">(</span><span class="n">bydel_data</span><span class="p">)</span></code></pre></div><pre><code>## # A tibble: 15 x 8
+<span class="nf">print</span><span class="p">(</span><span class="n">bydel_data</span><span class="p">)</span></code></pre></div><pre><code>## # A tibble: 15 × 8
 ##    borough           residents  area number inhabitants pop_density bydel_nr location_code 
 ##    &lt;chr&gt;             &lt;chr&gt;     &lt;dbl&gt;  &lt;int&gt;       &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;    &lt;glue&gt;        
 ##  1 Gamle Oslo        58 671      7.5      1       58671       7823. 01       wardoslo030101

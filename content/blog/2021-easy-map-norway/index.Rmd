@@ -1,7 +1,7 @@
 ---
 title: The easier way to create a map of Norway using {fhimaps}
 author: Daniel Roelfs
-date: "`r Sys.Date()`"
+date: "2021-08-24"
 slug: The easier way to create a map of Norway using {fhimaps}
 categories:
   - ggplot

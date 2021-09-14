@@ -51,7 +51,7 @@ data(package = "fhimaps") %>%
 ```
 
 ```
-## # A tibble: 31 x 2
+## # A tibble: 31 × 2
 ##    Item                                                Title                                                                                                    
 ##    <chr>                                               <chr>                                                                                                    
 ##  1 norway_lau2_map_b2019_default_dt                    Map of Norwegian municipalities (2019 borders)                                                           
@@ -239,7 +239,7 @@ print(hospitals_df)
 ```
 
 ```
-## # A tibble: 7 x 3
+## # A tibble: 7 × 3
 ##   location                                  long   lat
 ##   <chr>                                    <dbl> <dbl>
 ## 1 Ullevål Sykehus, Oslo                    10.7   59.9
@@ -296,7 +296,7 @@ print(area_use)
 ```
 
 ```
-## # A tibble: 356 x 20
+## # A tibble: 356 × 20
 ##    region           area_2021_residential_areas area_2021_recreational_facilities area_2021_built_up_areas_for_agriculture_and_fishing area_2021_industrial_commercial_and_service_areas area_2021_education_and_day_care_facilities area_2021_health_and_social_welfare_institutions area_2021_cultural_and_religious_activities area_2021_transport_telecommunications_and_technical_infrastructure area_2021_emergency_and_defence_services area_2021_green_areas_and_sports_facilities area_2021_unclassified_built_up_areas_and_related_land area_2021_agricultural_land area_2021_forest area_2021_open_firm_ground area_2021_wetland area_2021_bare_rock_gravel_and_blockfields area_2021_permanent_snow_and_glaciers area_2021_inland_waters area_2021_unclassified_undeveloped_areas
 ##    <chr>                                  <dbl>                             <dbl>                                                <dbl>                                             <dbl>                                       <dbl>                                            <dbl>                                       <dbl>                                                               <dbl>                                    <dbl>                                       <dbl>                                                  <dbl>                       <dbl>            <dbl>                      <dbl>             <dbl>                                      <dbl>                                 <dbl>                   <dbl>                                    <dbl>
 ##  1 3001 Halden                             9.61                              1.85                                                 2.51                                              2.89                                        0.29                                             0.21                                        0.22                                                               11.4                                      0.03                                        0.84                                                   1.51                       61.6             480.                        2.88             16.2                                        1.3                                      0                   48.7                                         0
@@ -417,7 +417,7 @@ print(bydel_data)
 ```
 
 ```
-## # A tibble: 15 x 8
+## # A tibble: 15 × 8
 ##    borough           residents  area number inhabitants pop_density bydel_nr location_code 
 ##    <chr>             <chr>     <dbl>  <int>       <dbl>       <dbl> <chr>    <glue>        
 ##  1 Gamle Oslo        58 671      7.5      1       58671       7823. 01       wardoslo030101

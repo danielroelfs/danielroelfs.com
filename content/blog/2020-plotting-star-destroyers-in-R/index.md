@@ -30,35 +30,128 @@ Most people in my environment know R as the quintessential tool for statistical 
 We'll use a formula called the _balanced ternary enumeration_. The game is to convert a decimal number to base 3, or the ternary. The best way to describe the ternary is to put it next to the binary. Binary (or base 2) is perhaps more widely understood. I don't actually know of any use of the ternary outside of these hypothetical mathematical problems. Octadecimal and hexadecimal are used sometimes. The latter is used for instance in defining colors in computers.
 
 ### Let's start with counting
-Let's start at the very basics. Like primary school basic. In the decimal system, we could from 1 to 9 and then add a digit and start from 1 again ([1 2 3 ... 8 9 10 11 12 ... 20 21 ...]) This system likely comes from the fact that humans have 10 fingers. (Interestingly, the Maya used a system with base 20, because they used their toes to count also, and there's a Native American tribe in California that uses base 8 because they use the space between fingers to count.) Computers use binary (base 2) because a pin or electrical signal can either be on or off. This means that there's two values available to denote a number, either 0 or 1. In this system each digit represents the double of the previous, starting from 1. So the first digit represents 1, the second 2, the third 4, the fourth 8 and so on. So the number 5 is made from adding 4 and 1 together, so the binary representation of the number 4 is 100, and 5 is 101. The number 6 is denoted as 110, and so on.
+<details><summary>Click to unfold</summary>Let's start at the very basics. Like primary school basic. In the decimal system, we could from 1 to 9 and then add a digit and start from 1 again ([1 2 3 ... 8 9 10 11 12 ... 20 21 ...]) This system likely comes from the fact that humans have 10 fingers. (Interestingly, the Maya used a system with base 20, because they used their toes to count also, and there's a Native American tribe in California that uses base 8 because they use the space between fingers to count.) Computers use binary (base 2) because a pin or electrical signal can either be on or off. This means that there's two values available to denote a number, either 0 or 1. In this system each digit represents the double of the previous, starting from 1. So the first digit represents 1, the second 2, the third 4, the fourth 8 and so on. So the number 5 is made from adding 4 and 1 together, so the binary representation of the number 4 is 100, and 5 is 101. The number 6 is denoted as 110, and so on.
+</details>
 In a ternary system, this same principle applies as in the binary system, except digits now increase by a factor of 3. The first digit represents 1, the second 3, the third9 and so on. This also means that there's three possible values to denote a number, 0, 1, or 2. To illustrate how decimal numbers are represented in the binary and ternary system, look at the table below.
 
 
 
-
- Decimal    Binary    Ternary 
----------  --------  ---------
-    1         1          1    
-    2         10         2    
-    3         11        10    
-    4        100        11    
-    5        101        12    
-    6        110        20    
-    7        111        21    
-    8        1000       22    
-    9        1001       100   
-   10        1010       101   
-   11        1011       102   
-   12        1100       110   
-   13        1101       111   
-   14        1110       112   
-   15        1111       120   
-   16       10000       121   
-   17       10001       122   
-   18       10010       200   
-   19       10011       201   
-   20       10100       202   
-   21       10101       210   
+<table class="table" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:center;"> Decimal </th>
+   <th style="text-align:center;"> Binary </th>
+   <th style="text-align:center;"> Ternary </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 2 </td>
+   <td style="text-align:center;"> 10 </td>
+   <td style="text-align:center;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 3 </td>
+   <td style="text-align:center;"> 11 </td>
+   <td style="text-align:center;"> 10 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 4 </td>
+   <td style="text-align:center;"> 100 </td>
+   <td style="text-align:center;"> 11 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 5 </td>
+   <td style="text-align:center;"> 101 </td>
+   <td style="text-align:center;"> 12 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 6 </td>
+   <td style="text-align:center;"> 110 </td>
+   <td style="text-align:center;"> 20 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 7 </td>
+   <td style="text-align:center;"> 111 </td>
+   <td style="text-align:center;"> 21 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 8 </td>
+   <td style="text-align:center;"> 1000 </td>
+   <td style="text-align:center;"> 22 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 9 </td>
+   <td style="text-align:center;"> 1001 </td>
+   <td style="text-align:center;"> 100 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 10 </td>
+   <td style="text-align:center;"> 1010 </td>
+   <td style="text-align:center;"> 101 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 11 </td>
+   <td style="text-align:center;"> 1011 </td>
+   <td style="text-align:center;"> 102 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 12 </td>
+   <td style="text-align:center;"> 1100 </td>
+   <td style="text-align:center;"> 110 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 13 </td>
+   <td style="text-align:center;"> 1101 </td>
+   <td style="text-align:center;"> 111 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 14 </td>
+   <td style="text-align:center;"> 1110 </td>
+   <td style="text-align:center;"> 112 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 15 </td>
+   <td style="text-align:center;"> 1111 </td>
+   <td style="text-align:center;"> 120 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 16 </td>
+   <td style="text-align:center;"> 10000 </td>
+   <td style="text-align:center;"> 121 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 17 </td>
+   <td style="text-align:center;"> 10001 </td>
+   <td style="text-align:center;"> 122 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 18 </td>
+   <td style="text-align:center;"> 10010 </td>
+   <td style="text-align:center;"> 200 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 19 </td>
+   <td style="text-align:center;"> 10011 </td>
+   <td style="text-align:center;"> 201 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 20 </td>
+   <td style="text-align:center;"> 10100 </td>
+   <td style="text-align:center;"> 202 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 21 </td>
+   <td style="text-align:center;"> 10101 </td>
+   <td style="text-align:center;"> 210 </td>
+  </tr>
+</tbody>
+</table>
 
 ### Moving numbers between systems
 

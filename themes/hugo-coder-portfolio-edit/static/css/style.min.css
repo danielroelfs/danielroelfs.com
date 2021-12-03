@@ -850,3 +850,7 @@ a#pdf:hover { background: #222; }
 .yui-gf .yui-u{ width:80.2%; }
 .yui-gf div.first{ width:12.3%; }
 
+/* 2021-12-03 - Add details/summary style */
+summary:hover {
+  cursor: pointer
+}

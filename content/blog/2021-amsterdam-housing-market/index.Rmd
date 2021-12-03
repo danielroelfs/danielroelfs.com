@@ -18,8 +18,7 @@ editor_options:
 ---
 
 ```{r knitr-opts, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE,
-                      fig.retina = 2,
+knitr::opts_chunk$set(fig.retina = 2,
                       fig.show = "hold", 
                       fig.align = "center",
                       out.width = "80%",
@@ -70,7 +69,7 @@ theme_set(ggthemes::theme_economist(base_family = "nunito-sans") +
                   legend.text = element_text(size = 10)))
 ```
 
-<p style="border-radius: 5px; background-color: #acc8d4; padding: 1em;">For this post, I decided to hide most of the code chuncks to improve legibility. All figures and tables were created with the <span style="font-family: monospace">{ggplot}</span> and <span style="font-family: monospace">{gt}</span> packages. If you want to see how I created these plots, look at the <a href="https://github.com/danielroelfs/danielroelfs.com/blob/main/content/blog/2021-amsterdam-housing-market/index.Rmd">Rmarkdown file</a></p>
+<p style="border-radius: 5px; background-color: #acc8d4; padding: 1em;">For this post, I decided to hide the code chunks by default to improve legibility. You can click the <em>Show code</em>-button to expand the code.</p>
 
 ### Introduction
 
@@ -90,6 +89,8 @@ library(gt)
 ### Getting the data
 
 The first piece of data I'll use comes from the Amsterdam Real Estate Association. They publish quarterly data on a number of variables about the Amsterdam housing market ([link](https://www.mva.nl/over-de-mva/mva/kwartaalcijfers)), inclusing asking price, final price paid, number of properties put on the market, number of properties sold and a few more back to the first quarter of 2012. _Obviously_, these numbers all come in pdf-format, because the people writing quarterly reports apparently have a _massive hatred_ towards people that want to analyze this data. I downloaded the reports, used the online tool [PDFTables](https://pdftables.com) to convert them to Excel, and then stitched the tables together manually. Of course (remember the authors have a _massive hatred_ towards us), the formatting of the numbers in the tables weren't consistent between different quarterly reports, so I had to do some cleaning in R. I put each table in a separate sheet and then used functionality from the `{readxl}` package to load each table into a different variable and then do the cleaning per table. This was a bit cumbersome. Since this will probably be a very long post, I'll hide the code, but you can see it in the [Rmarkdown file](https://github.com/danielroelfs/danielroelfs.com/blob/main/content/blog/2020-running-an-ica-on-questionnaires/index.Rmd) (at least until I figure out how to get code folding to work on my laptop).
+
+You can look at the code I used to load and merge the files. It's a bit of a mess:
 
 ```{r load-data, eval=FALSE}
 asking_price <- readxl::read_xlsx("MVA_kwartaalcijfers.xlsx", sheet = 2) %>% 
@@ -135,9 +136,7 @@ tightness_index <- readxl::read_xlsx("MVA_kwartaalcijfers.xlsx", sheet = 8) %>%
   mutate(type_woning = as_factor(type_woning),
          across(where(is.character), ~ parse_number(str_replace_all(.x, ",", ".")))) %>% 
   pivot_longer(starts_with("x"), names_to = "date", values_to = "tightness_index")
-```
 
-```{r merge-data-frames, eval=FALSE}
 data_merged <- inner_join(asking_price, transaction_price) %>% 
   inner_join(price_per_m2) %>% 
   inner_join(n_offered) %>% 
@@ -151,19 +150,17 @@ data_merged <- inner_join(asking_price, transaction_price) %>%
 write_rds(data_merged, "data_merged.rds")
 ```
 
-```{r load-rds, include=FALSE}
-data_merged <- read_rds("data_merged.rds")
-```
-
 Let's have a look at the dataset.
 
-```{r glimpse-data, echo=TRUE}
+```{r load-glimpse-data}
+data_merged <- read_rds("data_merged.rds")
+
 glimpse(data_merged)
 ```
 
 From this dataset, I want to create a few new variables. I want to create a date format from the quarterly date. Currently it's in the format `"x1e_kw_2012"`. We'll extract the year and the quarter. Since there's 4 quarters in the 12 months, we'll multiply the quarter by 3 and then create a date format. We'll also calculate the percentage difference between the asking price and the price paid, and the percentage difference between the houses offered and the houses sold. I'll also translate the character string from Dutch to English using the `case_when()` function.
 
-```{r clean-data, echo=TRUE}
+```{r clean-data}
 data <- data_merged %>% 
   rename(type = type_woning) %>% 
   mutate(quarter = str_extract(date, pattern = "x(.*?)e"),
@@ -191,7 +188,7 @@ data <- data_merged %>%
 
 The first thing that seems interesting to do is to plot the percentage difference between the asking price and the price paid. This will give us an indication of the trend in overpaying on different types of properties. I'll use a color palette and legend design I again shamelessly stole from Cédric Scherer ([@CedScherer](https://twitter.com/CedScherer)). I'll use a simple line graph to visualize the percentage overpay.
 
-```{r plot-overpay, warning=FALSE, fig.width=8, fig.height=6}
+```{r plot-overpay, warning=FALSE}
 colors <- c("#019868","#9dd292","#ec0b88","#651eac","#e18a1e","#2b7de5")
 
 data %>% 
@@ -381,7 +378,7 @@ The figure displays data from from the CBS through the `{cbsodataR}` package. It
 
 It's also important to mention that between the 60s and 70s, the Netherlands started building entire cities from scratch on newly-reclaimed land from the sea. The province of [Flevoland](https://en.wikipedia.org/wiki/Flevoland) is currently home to about 415 000 people, and until the early 50s this province was non-existent, the current land was at the bottom of a bay of the North sea (called the Zuiderzee or "Southern Sea" in English). Other than a general enthusiasm for building, I think this contributed considerably to the increase in the number of homes added in the 60s and 70s. This new province has good access to Amsterdam, and if it weren't for this new piece of land, the shortage might have peaked earlier.
 
-But that's not all, there's a few other features that contribute to the gridlock. See, not only young people are on the market to buy apartments in Amsterdam. There's a thriving market for investors looking to take advantage of the rising prices in the Amsterdam housing market (source: [Algemeen Dagblad](https://www.ad.nl/wonen/beleggers-verwerven-massaal-koophuizen-voor-verhuur-in-amsterdam~afedc50c6/)). According to the Dutch central bank, about 1 in 5 properties are sold to investors, who are mostly looking to convert it to a rental property or flip it for a profit. I couldn't find the data the Dutch central bank relied on, but I found something else. The Central Bureau for Statistics collects data on the number of "mutations" among properties. The "mutation" in this case refers to the change of purpose of a property, e.g. if a house meant for sale is bought and then transformed to a rental property by either private individuals or corporations, or vice versa. I collected this data from the governmental yearly report on the housing market of 2020 ("_Staat van de Woningmarkt - Jaarrapportage 2020_", [link](https://www.rijksoverheid.nl/documenten/rapporten/2020/06/15/staat-van-de-woningmarkt-jaarrapportage-2020)). Instead of per quarter, this data is reported per year. Unfortunately, the data on housing mutations in the report (from 2020 mind you) only goes until 2017. It's important to note that these numbers are country-wide, not specific for Amsterdam. That means there could be some other factors in play. Many of these trends are present across the country, but they're massively amplified in the larger cities.
+But that's not all, there's a few other features that contribute to the gridlock. See, not only young people are on the market to buy apartments in Amsterdam. There's a thriving market for investors looking to take advantage of the rising prices in the Amsterdam housing market (source: [Algemeen Dagblad](https://www.ad.nl/wonen/beleggers-verwerven-massaal-koophuizen-voor-verhuur-in-amsterdam~afedc50c6/)). According to the Dutch central bank, about 1 in 5 properties are sold to investors, who are mostly looking to convert it to a rental property or flip it for a profit. I couldn't find the data the Dutch central bank relied on, but I found something else. The Central Bureau for Statistics collects data on the number of "mutations" among properties. The "mutation" in this case refers to the change of purpose of a property, e.g. if a house meant for sale is bought and then transformed to a rental property by either private individuals or corporations, or vice versa. I collected this data from the governmental yearly report on the housing market of 2020 ("_Staat van de Woningmarkt - Jaarrapportage 2020_", [link](https://www.rijksoverheid.nl/documenten/rapporten/2020/06/15/staat-van-de-woningmarkt-jaarrapportage-2020)). Instead of per quarter, this data is reported per year. Unfortunately, the data on housing mutations in the report (from 2020 mind you) only goes until 2017. It's important to note that these numbers are country-wide, not specific for Amsterdam. That means there could be some other factors in play. Many of these trends are present across the country, but they're massively amplified in the larger cities. The data was contained in a pdf that wasn't easily machine-readable, so I had to manually copy the numbers into a tibble, which was great...
 
 ```{r load-housing-mutations}
 house_mutations_in <- tribble(
@@ -593,3 +590,27 @@ I cannot know this for sure, because the data I presented here doesn't contain t
 1. **Increased socialized housing for poor and low-income families**
 
 Perhaps if we implement a few of these strategies we can make the housing market a little fairer and perhaps ensure that future generations will have the same opportunities current home-owners have.
+
+<br>
+**EDIT (2021-12-03)**: Reintroduce the code to wrangle the data, generate the figures and tables etc. to the main document and put the code inside unfoldable tags to make it easier to see the code associated with a particular step while maintaining legibility.
+
+```{js, echo=FALSE}
+// From: https://bookdown.org/yihui/rmarkdown-cookbook/details-tag.html
+(function() {
+  var codes = document.querySelectorAll('div.highlight');
+  console.log(codes)
+  var code, i, d, s, p;
+  for (i = 0; i < codes.length; i++) {
+    code = codes[i];
+    p = code.parentNode;
+    d = document.createElement('details');
+    s = document.createElement('summary');
+    s.innerText = 'Show code';
+    // <details><summary>Details</summary></details>
+    d.appendChild(s);
+    // move the code into <details>
+    p.replaceChild(d, code);
+    d.appendChild(code);
+  }
+})();
+```

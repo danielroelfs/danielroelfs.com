@@ -46,7 +46,7 @@
       <link href="/index.xml" rel="feed" type="application/rss+xml" title="Daniel Roelfs" />
     
 
-    <meta name="generator" content="Hugo 0.76.3" />
+    <meta name="generator" content="Hugo 0.88.1" />
   </head>
 
   <body class="">
@@ -131,7 +131,7 @@ code {
 <p>The first piece of data I&rsquo;ll use comes from the Amsterdam Real Estate Association. They publish quarterly data on a number of variables about the Amsterdam housing market (<a href="https://www.mva.nl/over-de-mva/mva/kwartaalcijfers">link</a>), inclusing asking price, final price paid, number of properties put on the market, number of properties sold and a few more back to the first quarter of 2012. <em>Obviously</em>, these numbers all come in pdf-format, because the people writing quarterly reports apparently have a <em>massive hatred</em> towards people that want to analyze this data. I downloaded the reports, used the online tool <a href="https://pdftables.com">PDFTables</a> to convert them to Excel, and then stitched the tables together manually. Of course (remember the authors have a <em>massive hatred</em> towards us), the formatting of the numbers in the tables weren&rsquo;t consistent between different quarterly reports, so I had to do some cleaning in R. I put each table in a separate sheet and then used functionality from the <code>{readxl}</code> package to load each table into a different variable and then do the cleaning per table. This was a bit cumbersome. Since this will probably be a very long post, I&rsquo;ll hide the code, but you can see it in the <a href="https://github.com/danielroelfs/danielroelfs.com/blob/main/content/blog/2020-running-an-ica-on-questionnaires/index.Rmd">Rmarkdown file</a> (at least until I figure out how to get code folding to work on my laptop).</p>
 
 <p>Let&rsquo;s have a look at the dataset.</p>
-<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">glimpse</span><span class="p">(</span><span class="n">data_merged</span><span class="p">)</span></code></pre></div><pre><code>## Rows: 259
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">glimpse</span><span class="p">(</span><span class="n">data_merged</span><span class="p">)</span></code></pre></div><pre tabindex="0"><code>## Rows: 259
 ## Columns: 9
 ## $ type_woning       &lt;fct&gt; Tussenwoning, Tussenwoning, Tussenwoning, Tussenwoni…
 ## $ date              &lt;chr&gt; &#34;x1e_kw_2012&#34;, &#34;x2e_kw_2012&#34;, &#34;x3e_kw_2012&#34;, &#34;x4e_kw…
@@ -143,7 +143,7 @@ code {
 ## $ mortgage_months   &lt;dbl&gt; 126, 103, 85, 125, 147, 113, 135, 85, 121, 57, 74, 6…
 ## $ tightness_index   &lt;dbl&gt; 19.8, 18.5, 20.1, 14.1, 21.8, 23.6, 17.4, 12.5, 13.3…</code></pre>
 <p>From this dataset, I want to create a few new variables. I want to create a date format from the quarterly date. Currently it&rsquo;s in the format <code>&quot;x1e_kw_2012&quot;</code>. We&rsquo;ll extract the year and the quarter. Since there&rsquo;s 4 quarters in the 12 months, we&rsquo;ll multiply the quarter by 3 and then create a date format. We&rsquo;ll also calculate the percentage difference between the asking price and the price paid, and the percentage difference between the houses offered and the houses sold. I&rsquo;ll also translate the character string from Dutch to English using the <code>case_when()</code> function.</p>
-<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="n">data</span> <span class="o">&lt;-</span> <span class="n">data_merged</span> <span class="o">%&gt;%</span> 
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">data</span> <span class="o">&lt;-</span> <span class="n">data_merged</span> <span class="o">%&gt;%</span> 
   <span class="nf">rename</span><span class="p">(</span><span class="n">type</span> <span class="o">=</span> <span class="n">type_woning</span><span class="p">)</span> <span class="o">%&gt;%</span> 
   <span class="nf">mutate</span><span class="p">(</span><span class="n">quarter</span> <span class="o">=</span> <span class="nf">str_extract</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">pattern</span> <span class="o">=</span> <span class="s">&#34;x(.*?)e&#34;</span><span class="p">),</span>
          <span class="n">quarter</span> <span class="o">=</span> <span class="nf">parse_number</span><span class="p">(</span><span class="n">quarter</span><span class="p">),</span>
@@ -165,7 +165,7 @@ code {
          <span class="n">type</span> <span class="o">=</span> <span class="nf">factor</span><span class="p">(</span><span class="n">type</span><span class="p">,</span> <span class="n">levels</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&#34;Apartments (pre-1970)&#34;</span><span class="p">,</span><span class="s">&#34;Apartments (post-1970)&#34;</span><span class="p">,</span>
                                         <span class="s">&#34;Terraced house&#34;</span><span class="p">,</span><span class="s">&#34;Corner house&#34;</span><span class="p">,</span><span class="s">&#34;Detached house&#34;</span><span class="p">,</span>
                                         <span class="s">&#34;Semi-detached house&#34;</span><span class="p">,</span><span class="s">&#34;Total&#34;</span><span class="p">)))</span> <span class="o">%&gt;%</span> 
-  <span class="nf">glimpse</span><span class="p">()</span></code></pre></div><pre><code>## Rows: 259
+  <span class="nf">glimpse</span><span class="p">()</span></code></pre></div><pre tabindex="0"><code>## Rows: 259
 ## Columns: 16
 ## $ type                   &lt;fct&gt; Terraced house, Terraced house, Terraced house,…
 ## $ date                   &lt;date&gt; 2012-03-01, 2012-06-01, 2012-09-01, 2012-12-01…
@@ -270,7 +270,6 @@ if (!doNotTrack) {
 	ga('send', 'pageview');
 }
 </script>
-
 
   <script src="/js/app.js"></script>
   

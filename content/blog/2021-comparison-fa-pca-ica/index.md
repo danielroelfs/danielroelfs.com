@@ -271,7 +271,7 @@ print(fa_loading_plot)
 
 <img src="index_files/figure-html/fa-weight-matrix-1.png" width="80%" style="display: block; margin: auto;" />
 
-Here we can more easily see that there's two strong clusters in Factor 1 and Factor 2. Factor 3 captures three or 4 variables to a lesser degree and Factor 4 captures just one variable (`"behavior_eating"`). Interpretation of these factors is subjective, so it is perhaps best done in collaboration with others.
+Here we can more easily see that there's two strong clusters in Factor 1 and Factor 2. Factor 3 captures three or four variables to a lesser degree and Factor 4 captures mostly just a single variable (`"behavior_eating"`). Interpretation of these factors is subjective, so it is perhaps best done in collaboration with others.
 
 Lastly, I think it would be interesting to see how the different factors relate to each other. We'll take the Bartlett's scores and correlate them with each other much like before and create a correlation matrix like before.
 

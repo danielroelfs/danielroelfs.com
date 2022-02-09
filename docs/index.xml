@@ -6,14 +6,23 @@
     <description>Recent content on Daniel Roelfs</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 14 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 09 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Dutch performance at Olympic speed skating</title>
+      <link>/blog/dutch-performance-at-olympic-speed-skating/</link>
+      <pubDate>Wed, 09 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/dutch-performance-at-olympic-speed-skating/</guid>
+      <description>The 2022 Winter Olympics started last week. I&amp;rsquo;m don&amp;rsquo;t usually follow sports (of any kind) religiously during a regular year, but I make an exception for the Winter Olympics. In particular the speed skating events I&amp;rsquo;ll watch live as much as time allows me. It&amp;rsquo;s no secret the Netherlands is a speed skating nation (although some international TV commentators don&amp;rsquo;t quite grasp why). Is it fun to watch a sport where you have a high chance of winning?</description>
+    </item>
+    
     <item>
       <title>A Basic Comparison Between Factor Analysis, PCA, and ICA</title>
       <link>/blog/a-basic-comparison-between-factor-analysis-pca-and-ica/</link>
       <pubDate>Tue, 14 Sep 2021 00:00:00 +0000</pubDate>
       
       <guid>/blog/a-basic-comparison-between-factor-analysis-pca-and-ica/</guid>
-      <description>This is just a very quick blog post outlining some of the commonalities and differences between factor analysis (FA), principal component analysis (PCA), and independent component analysis (ICA). I was inspired to write some of this down through some confusion caused in the lab by SPSS&amp;rsquo; apparent dual usage of the term &amp;ldquo;factor analysis&amp;rdquo; and &amp;ldquo;principal components&amp;rdquo;. A few of my colleagues who use SPSS showed me the following screen:</description>
+      <description>This is just a very quick blog post outlining some of the commonalities and differences between factor analysis (FA), principal component analysis (PCA), and independent component analysis (ICA). I was inspired to write some of this down through some confusion caused in the lab by SPSS&#39; apparent dual usage of the term &amp;ldquo;factor analysis&amp;rdquo; and &amp;ldquo;principal components&amp;rdquo;. A few of my colleagues who use SPSS showed me the following screen:</description>
     </item>
     
     <item>
@@ -97,8 +106,9 @@ Introduction I&amp;rsquo;m at the age where a lot of my peers start thinking abo
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/about/</guid>
-      <description>I&amp;rsquo;m Daniel Roelfs, I&amp;rsquo;m a PhD candidate working at the Norwegian Centre for Mental Disorders Research (NORMENT) in Oslo. My research focuses on the intersection between neuroimaging and genetics to discover more about the human brain and schizophrenia in particular. I&amp;rsquo;m enrolled in a doctoral education programme at the University of Oslo.
-Originally from the Netherlands, I have also studied in France and Sweden before moving to Norway. In my free time I ski, photograph, and make music.</description>
+      <description>&amp;lt;img style=&amp;ldquo;position: relative; top: 15px; padding: 0 15px; float: right;&amp;rdquo; src=&amp;ldquo;avatar.png&amp;rdquo; width=&amp;ldquo;33%&amp;rdquo; /&amp;gt;
+I&amp;rsquo;m Daniel Roelfs, I&amp;rsquo;m a PhD candidate working at the Norwegian Centre for Mental Disorders Research (NORMENT) in Oslo. My research focuses on the intersection between neuroimaging and genetics to discover more about the human brain and schizophrenia in particular. I&amp;rsquo;m enrolled in a doctoral education programme at the University of Oslo.
+Originally from the Netherlands, I have also studied in France and Sweden before moving to Norway.</description>
     </item>
     
     <item>
@@ -107,7 +117,7 @@ Originally from the Netherlands, I have also studied in France and Sweden before
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/cv/</guid>
-      <description></description>
+      <description> </description>
     </item>
     
     <item>
@@ -127,8 +137,7 @@ See the website for my photography here: photography.danielroelfs.com
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/publications/</guid>
-      <description>PREPRINT D Roelfs, D van der Meer, D Alnæs, O Frei, R Loughnan, CC Fan, AM Dale, OA Andreassen, LT Westlye, T Kaufmann (2021) Genetic overlap between multivariate measures of human functional brain connectivity and psychiatric disorders. medRxiv. doi: 10.1101&amp;frasl;2021.06.15.21258954
-D Roelfs, D Alnæs, O Frei, D van der Meer, OB Smeland, OA Andreassen, LT Westlye, T Kaufmann (2021) Phenotypically independent profiles relevant to mental health are genetically correlated. Translational Psychiatry.</description>
+      <description>**PREPRINT** **D Roelfs**, D van der Meer, D Alnæs, O Frei, R Loughnan, CC Fan, AM Dale, OA Andreassen, LT Westlye, T Kaufmann (2021) [***Genetic overlap between multivariate measures of human functional brain connectivity and psychiatric disorders***](https://doi.org/10.1101/2021.06.15.21258954). _medRxiv_. doi: [10.1101/2021.06.15.21258954](https://doi.org/10.1101/2021.06.15.21258954) **D Roelfs**, D Alnæs, O Frei, D van der Meer, OB Smeland, OA Andreassen, LT Westlye, T Kaufmann (2021) [***Phenotypically independent profiles relevant to mental health are genetically correlated***](https://doi.org/10.1038/s41398-021-01313-x). _Translational Psychiatry_.</description>
     </item>
     
   </channel>

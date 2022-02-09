@@ -2,28 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>/blog/a-basic-comparison-between-factor-analysis-pca-and-ica/</loc>
-    <lastmod>2021-09-14T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>/blog/</loc>
-    <lastmod>2021-09-14T00:00:00+00:00</lastmod>
+    <lastmod>2022-02-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/categories/</loc>
-    <lastmod>2021-09-14T00:00:00+00:00</lastmod>
+    <lastmod>2022-02-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/</loc>
-    <lastmod>2021-09-14T00:00:00+00:00</lastmod>
+    <lastmod>2022-02-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/data-visualization/</loc>
+    <lastmod>2022-02-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/blog/dutch-performance-at-olympic-speed-skating/</loc>
+    <lastmod>2022-02-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/categories/miscellaneous/</loc>
+    <lastmod>2022-02-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/tags/r/</loc>
+    <lastmod>2022-02-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/</loc>
+    <lastmod>2022-02-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/blog/a-basic-comparison-between-factor-analysis-pca-and-ica/</loc>
     <lastmod>2021-09-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/tags/statistics/</loc>
     <lastmod>2021-09-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/categories/statistics/</loc>
-    <lastmod>2021-09-14T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/tags/</loc>
     <lastmod>2021-09-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/tags/ggplot/</loc>

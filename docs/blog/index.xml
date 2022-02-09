@@ -6,14 +6,23 @@
     <description>Recent content in Blogs on Daniel Roelfs</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 14 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 09 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Dutch performance at Olympic speed skating</title>
+      <link>/blog/dutch-performance-at-olympic-speed-skating/</link>
+      <pubDate>Wed, 09 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/dutch-performance-at-olympic-speed-skating/</guid>
+      <description>The 2022 Winter Olympics started last week. I&amp;rsquo;m don&amp;rsquo;t usually follow sports (of any kind) religiously during a regular year, but I make an exception for the Winter Olympics. In particular the speed skating events I&amp;rsquo;ll watch live as much as time allows me. It&amp;rsquo;s no secret the Netherlands is a speed skating nation (although some international TV commentators don&amp;rsquo;t quite grasp why). Is it fun to watch a sport where you have a high chance of winning?</description>
+    </item>
+    
     <item>
       <title>A Basic Comparison Between Factor Analysis, PCA, and ICA</title>
       <link>/blog/a-basic-comparison-between-factor-analysis-pca-and-ica/</link>
       <pubDate>Tue, 14 Sep 2021 00:00:00 +0000</pubDate>
       
       <guid>/blog/a-basic-comparison-between-factor-analysis-pca-and-ica/</guid>
-      <description>This is just a very quick blog post outlining some of the commonalities and differences between factor analysis (FA), principal component analysis (PCA), and independent component analysis (ICA). I was inspired to write some of this down through some confusion caused in the lab by SPSS&amp;rsquo; apparent dual usage of the term &amp;ldquo;factor analysis&amp;rdquo; and &amp;ldquo;principal components&amp;rdquo;. A few of my colleagues who use SPSS showed me the following screen:</description>
+      <description>This is just a very quick blog post outlining some of the commonalities and differences between factor analysis (FA), principal component analysis (PCA), and independent component analysis (ICA). I was inspired to write some of this down through some confusion caused in the lab by SPSS&#39; apparent dual usage of the term &amp;ldquo;factor analysis&amp;rdquo; and &amp;ldquo;principal components&amp;rdquo;. A few of my colleagues who use SPSS showed me the following screen:</description>
     </item>
     
     <item>

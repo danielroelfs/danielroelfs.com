@@ -17,7 +17,7 @@ verbose = True
 base_url = 'https://www.olympiandatabase.com'
 parent_url = f'{base_url}/index.php?id=6934&L=1'
 
-out_path = './individual_files'
+out_path = './event_files'
 
 # -- Get website ------------------------
 

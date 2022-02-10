@@ -208,7 +208,7 @@ data %>%
   geom_vline(xintercept = 0, size = 1) + 
   geom_richtext(data = tibble(), aes(x = 24, y = 15, 
                                      label = "Total number of medals won per country since 1960"),
-                family = "custom", size = 8, fontface = "bold", hjust = 0, 
+                family = "custom", size = 7, fontface = "bold", hjust = 0, 
                 label.padding = unit(0.75,"lines"), label.color = NA) + 
   geom_richtext(data = tibble(), aes(x = 24, y = 13, 
                                      label = "The Netherlands has won more than twice as many medals as the runner-up"),

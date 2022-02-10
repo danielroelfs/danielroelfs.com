@@ -383,7 +383,7 @@ data %>%
   geom_text(aes(label = perc_label), family = "custom", 
             size = 2, hjust = 0, nudge_x = 0.01) +
   labs(title = "**Most medals won per country per Olympic Game**",
-       subtitle = "The Netherlands has won the largest proportion of speed skating medals **every Game since 1994**",
+       subtitle = "The Netherlands has won the largest proportion (shared in 1994 and 2002) of speed skating medals **every Game since 1994**",
        x = "Percentage of all medals won",
        y = NULL) + 
   tidytext::scale_y_reordered() +
@@ -393,7 +393,7 @@ data %>%
   facet_wrap(~ year, scales = "free_y") + 
   theme_minimal(base_family = "custom") +
   theme(plot.title = element_markdown(size = 26),
-        plot.subtitle = element_markdown(size = 13),
+        plot.subtitle = element_markdown(size = 12),
         strip.text = element_text(size = 16, face = "bold"),
         panel.grid.major.y = element_blank())
 ```
@@ -464,7 +464,7 @@ data %>%
   ggplot(aes(x = year, y = sweeps, fill = country)) + 
   geom_col(key_glyph = "point") + 
   geom_hline(yintercept = 0) +
-  labs(title = "Podium sweeps since 1960",
+  labs(title = "**Podium sweeps since 1960**",
        subtitle = "The Netherlands had 7 out 13 podium sweeps (winning gold, silver, **and** bronze in a single event),<br> including 4 at the 2014 Olympics in Sochi",
        x = NULL,
        y = "Number of podium sweeps",
@@ -582,7 +582,7 @@ data_wust %>%
                size = 10, lineend = "round", color = "#FF9B00") + 
   geom_text(aes(label = perc_won_label), size = 4, family = "custom", hjust = 1) +
   labs(title = "**Will Ireen win a medal if she shows up?**",
-       subtitle = "Of all the events Ireen Wüst participated in, how often did she win a medal (of any color)<br>2022 Olympics is still ongoing, shown is win rate **so far***",
+       subtitle = "Of all the events Ireen Wüst participated in, how often did she win a medal (of any color)?<br>2022 Olympics is still ongoing, shown is win rate **so far***",
        caption = "*As of time of writing (09/02/2022)",
        x = NULL,
        y = NULL) + 

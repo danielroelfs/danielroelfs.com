@@ -6,7 +6,16 @@
     <description>Recent content in statistics on Daniel Roelfs</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 14 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/statistics/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 18 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="/tags/statistics/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Everything is a Linear Model</title>
+      <link>/blog/everything-is-a-linear-model/</link>
+      <pubDate>Fri, 18 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/everything-is-a-linear-model/</guid>
+      <description>Let&amp;rsquo;s imagine you&amp;rsquo;re incredibly lazy and you want to learn R, but you only want to learn one function to do statistics. What function do you learn? I&amp;rsquo;d recommend to learn to use the lm() function. Why? Because most common statistical tests are in fact nothing more than some variation of a linear model, from the simplest One-Sample T-test to a repeated-measures ANOVA. I think most people that have Googled for this question have found Jonas Lindeløv&amp;rsquo;s post on how common statistical tests are linear models (as they should, it&amp;rsquo;s an amazing post).</description>
+    </item>
+    
     <item>
       <title>A Basic Comparison Between Factor Analysis, PCA, and ICA</title>
       <link>/blog/a-basic-comparison-between-factor-analysis-pca-and-ica/</link>

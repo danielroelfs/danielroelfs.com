@@ -4,6 +4,9 @@
 {{ define "title" }}
   {{ .Title }} - {{ .Site.Title }}
 {{ end }}
+{{ if .Params.toc }}
+  {{ .TableOfContents }}
+{{ end }}
 {{ define "content" }}
   {{ partial "page.html" . }}
 {{ end }}

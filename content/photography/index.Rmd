@@ -18,5 +18,3 @@ htmltools::tags$iframe(src = "https://photography.danielroelfs.com/",
                        onload = "this.width='105%';this.height=screen.height*1.1;",
                        frameBorder="0")
 ```
-
-<!--<font size="3">All photos are available as high-resolution images and print. Send me an e-mail at [daniel.roelfs[at]medisin.uio.no](daniel.roelfs@medisin.uio.no) for the details!</font>-->

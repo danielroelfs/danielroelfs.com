@@ -68,6 +68,8 @@
     {{ template "_internal/google_analytics.html" . }}
 
   <script src="{{ "js/app.js" | absURL }}"></script>
+  <script>$("img").parents('p').css("text-align", "center");</script>
+
   {{ with .Site.Params.fixedbarContentAfter }}
   <script>
   (function($) {

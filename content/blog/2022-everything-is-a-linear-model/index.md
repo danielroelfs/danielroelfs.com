@@ -31,7 +31,7 @@ statistical tests are in fact variations of a linear model.
 Don't believe me? Fine, I'll show you.
 
 Let's load the packages we'll use today and set a seed so it's
-reproducable.
+reproducible.
 
 ``` r
 library(tidyverse)
@@ -48,7 +48,7 @@ number. Throughout this page, I'll throw around a bunch of formulas,
 which, dependending on your background, can either be informative or
 confusing. The formula for a One-Sample T-test is:
 
-![t = \\frac{\\overline{x} - \\mu}{\\frac{\\sigma}{\\sqrt{n}}} = \\frac{sample\~mean - population\~mean}{\\frac{standard\~deviation}{\\sqrt{sample\~size}}}](https://latex.codecogs.com/svg.latex?t%20%3D%20%5Cfrac%7B%5Coverline%7Bx%7D%20-%20%5Cmu%7D%7B%5Cfrac%7B%5Csigma%7D%7B%5Csqrt%7Bn%7D%7D%7D%20%3D%20%5Cfrac%7Bsample~mean%20-%20population~mean%7D%7B%5Cfrac%7Bstandard~deviation%7D%7B%5Csqrt%7Bsample~size%7D%7D%7D "t = \frac{\overline{x} - \mu}{\frac{\sigma}{\sqrt{n}}} = \frac{sample~mean - population~mean}{\frac{standard~deviation}{\sqrt{sample~size}}}")
+`$$t = \frac{\overline{x} - \mu}{\frac{\sigma}{\sqrt{n}}} = \frac{sample~mean - population~mean}{\frac{standard~deviation}{\sqrt{sample~size}}}$$`
 
 What this says is that the effect size (*t*) is equal to the sample mean
 minus the population mean (or reference number) and you divide it by the
@@ -57,7 +57,7 @@ sample size. This formula will output the *t*-value that you would
 usually report when doing a T-test. The formula requires the standard
 deviation (`$\sigma$`) of the sample values, which is:
 
-![\\sigma = \\sqrt{\\frac{\\sum\\limits\_{i=1}^n{(x\_{i} - \\overline{x})^2}}{n - 1}}](https://latex.codecogs.com/svg.latex?%5Csigma%20%3D%20%5Csqrt%7B%5Cfrac%7B%5Csum%5Climits_%7Bi%3D1%7D%5En%7B%28x_%7Bi%7D%20-%20%5Coverline%7Bx%7D%29%5E2%7D%7D%7Bn%20-%201%7D%7D "\sigma = \sqrt{\frac{\sum\limits_{i=1}^n{(x_{i} - \overline{x})^2}}{n - 1}}")
+`$$\sigma = \sqrt{\frac{\sum\limits_{i=1}^n{(x_{i} - \overline{x})^2}}{n - 1}}$$`
 
 In this formula, you'd subtract the average across the sample values
 from each individual value, square it, and sum all these resulting
@@ -83,11 +83,7 @@ concentration <- rnorm(n, mean = 3, sd = 1.25)
 If we then implement these values in the formulas earlier, we get the
 following result for the standard deviation:
 
-![
-\\sigma = \\sqrt{\\frac{\\sum\\limits\_{i=1}^n{\|x\_{i} - \\overline{x}\|^2}}{n - 1}} = \\sqrt{\\frac{\\sum\\limits\_{i=1}^{30}{\|concentration\_{i} - 2.855\|^2}}{30 - 1}} = 1.157
-](https://latex.codecogs.com/svg.latex?%0A%5Csigma%20%3D%20%5Csqrt%7B%5Cfrac%7B%5Csum%5Climits_%7Bi%3D1%7D%5En%7B%7Cx_%7Bi%7D%20-%20%5Coverline%7Bx%7D%7C%5E2%7D%7D%7Bn%20-%201%7D%7D%20%3D%20%5Csqrt%7B%5Cfrac%7B%5Csum%5Climits_%7Bi%3D1%7D%5E%7B30%7D%7B%7Cconcentration_%7Bi%7D%20-%202.855%7C%5E2%7D%7D%7B30%20-%201%7D%7D%20%3D%201.157%0A "
-\sigma = \sqrt{\frac{\sum\limits_{i=1}^n{|x_{i} - \overline{x}|^2}}{n - 1}} = \sqrt{\frac{\sum\limits_{i=1}^{30}{|concentration_{i} - 2.855|^2}}{30 - 1}} = 1.157
-")
+`$$\sigma = \sqrt{\frac{\sum\limits_{i=1}^n{|x_{i} - \overline{x}|^2}}{n - 1}} = \sqrt{\frac{\sum\limits_{i=1}^{30}{|concentration_{i} - 2.855|^2}}{30 - 1}} = 1.157$$`
 
 this formula would like like this when implemented in R:
 
@@ -103,11 +99,7 @@ show it for illustrative purposes. Anywhere else I'll use the `sd()`
 function. Now let's calculate the *t*-value. In formula form this would
 look like this:
 
-![
-t = \\frac{\\overline{x} - \\mu}{\\frac{\\sigma}{\\sqrt{n}}} = \\frac{2.855 - 2.5}{\\frac{1.157}{\\sqrt{30}}} = 1.681
-](https://latex.codecogs.com/svg.latex?%0At%20%3D%20%5Cfrac%7B%5Coverline%7Bx%7D%20-%20%5Cmu%7D%7B%5Cfrac%7B%5Csigma%7D%7B%5Csqrt%7Bn%7D%7D%7D%20%3D%20%5Cfrac%7B2.855%20-%202.5%7D%7B%5Cfrac%7B1.157%7D%7B%5Csqrt%7B30%7D%7D%7D%20%3D%201.681%0A "
-t = \frac{\overline{x} - \mu}{\frac{\sigma}{\sqrt{n}}} = \frac{2.855 - 2.5}{\frac{1.157}{\sqrt{30}}} = 1.681
-")
+`$$t = \frac{\overline{x} - \mu}{\frac{\sigma}{\sqrt{n}}} = \frac{2.855 - 2.5}{\frac{1.157}{\sqrt{30}}} = 1.681$$`
 
 So just to over this formula again, you take the mean of your sample,
 subtract the reference number, and you divide this number by the
@@ -169,11 +161,7 @@ from high-school mathematics that the formula for a straight line is
 always some form of `$y = ax + c$`, the linear model formula is somewhat
 similar:
 
-![
-Y\_{i} = \\beta\_{0} + \\beta\_{1}x + \\epsilon\_{i}
-](https://latex.codecogs.com/svg.latex?%0AY_%7Bi%7D%20%3D%20%5Cbeta_%7B0%7D%20%2B%20%5Cbeta_%7B1%7Dx%20%2B%20%5Cepsilon_%7Bi%7D%0A "
-Y_{i} = \beta_{0} + \beta_{1}x + \epsilon_{i}
-")
+`$$Y_{i} = \beta_{0} + \beta_{1}x + \epsilon_{i}$$`
 
 In this formula `$Y_{i}$` is the dependent variable, `$x$` is the
 independent variable. `$\beta_{0}$` is equivalent to the intercept at
@@ -238,11 +226,7 @@ The formula for an Two-Sample T-test is very similar to that of the
 One-Sample T-test, with the added factor of the second set of sample
 values. The formula for an Two-Sample T-test is as follows:
 
-![
-t = \\frac{(\\overline{x_1} - \\overline{x_2})}{\\sqrt{\\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2}}} = \\frac{(3.838073 - 5.455809)}{\\sqrt{\\frac{1.343565^2}{30} + \\frac{1.69711^2}{30}}} = -4.093524
-](https://latex.codecogs.com/svg.latex?%0At%20%3D%20%5Cfrac%7B%28%5Coverline%7Bx_1%7D%20-%20%5Coverline%7Bx_2%7D%29%7D%7B%5Csqrt%7B%5Cfrac%7B%5Csigma_1%5E2%7D%7Bn_1%7D%20%2B%20%5Cfrac%7B%5Csigma_2%5E2%7D%7Bn_2%7D%7D%7D%20%3D%20%5Cfrac%7B%283.838073%20-%205.455809%29%7D%7B%5Csqrt%7B%5Cfrac%7B1.343565%5E2%7D%7B30%7D%20%2B%20%5Cfrac%7B1.69711%5E2%7D%7B30%7D%7D%7D%20%3D%20-4.093524%0A "
-t = \frac{(\overline{x_1} - \overline{x_2})}{\sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{n_2}}} = \frac{(3.838073 - 5.455809)}{\sqrt{\frac{1.343565^2}{30} + \frac{1.69711^2}{30}}} = -4.093524
-")
+`$$t = \frac{(\overline{x_1} - \overline{x_2})}{\sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{n_2}}} = \frac{(3.838073 - 5.455809)}{\sqrt{\frac{1.343565^2}{30} + \frac{1.69711^2}{30}}} = -4.093524$$`
 
 It's a bit too complex to describe in a sentence, but the definitions
 are perhaps familiar: `$\overline{x}$` for group means, `$\sigma$` for
@@ -296,8 +280,7 @@ ggplot(data, aes(x = group, y = concentration, fill = group)) +
 ```
 
 <img src="index_files/figure-gfm/tst-boxplot-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+data-fig-align="center" style="width:80.0%" />
 
 Great! Now we have a visual representation of the data. Now, since the
 T-test compares means, we can might also add a point indicating the mean
@@ -319,7 +302,7 @@ ggplot(data, aes(x = group)) +
 ```
 
 <img src="index_files/figure-gfm/tst-plot-1.png" data-fig-align="center"
-style="display:block; margin:auto;" style="width:80.0%" />
+style="width:80.0%" />
 
 You might see where we are going with this. The parameters from the
 linear model will describe the angle of the diagonal line and I'll
@@ -393,11 +376,7 @@ observed slope, or the slope of the alternative hypothesis
 divide that by the standard error of the sampling distribution, which is
 given by the `lm()` function as the `Std. Error` of the `groupPAT` row:
 
-![
-t = \\frac{slope\\ of\\ regression\\ line\\ at\\ H\_{a} - slope\\ of\\ regression\\ line\\ at\\ H\_{0}}{standard\\ error\\ of\\ sampling\\ distribution} = \\frac{1.6177 - 0}{0.3952} = 4.093
-](https://latex.codecogs.com/svg.latex?%0At%20%3D%20%5Cfrac%7Bslope%5C%20of%5C%20regression%5C%20line%5C%20at%5C%20H_%7Ba%7D%20-%20slope%5C%20of%5C%20regression%5C%20line%5C%20at%5C%20H_%7B0%7D%7D%7Bstandard%5C%20error%5C%20of%5C%20sampling%5C%20distribution%7D%20%3D%20%5Cfrac%7B1.6177%20-%200%7D%7B0.3952%7D%20%3D%204.093%0A "
-t = \frac{slope\ of\ regression\ line\ at\ H_{a} - slope\ of\ regression\ line\ at\ H_{0}}{standard\ error\ of\ sampling\ distribution} = \frac{1.6177 - 0}{0.3952} = 4.093
-")
+`$$t = \frac{slope\ of\ regression\ line\ at\ H_{a} - slope\ of\ regression\ line\ at\ H_{0}}{standard\ error\ of\ sampling\ distribution} = \frac{1.6177 - 0}{0.3952} = 4.093$$`
 
 Which as you'll notice is one thousandths-decimal place off, which is
 due to rounding errors. `lm()` reports up to 4 decimal points while it
@@ -408,8 +387,7 @@ Now we can go back to the figure we made earlier and see how all these
 values relate:
 
 <img src="index_files/figure-gfm/tst-plot-w-annot-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+data-fig-align="center" style="width:80.0%" />
 
 And that's how a Two-Sample T-test is basically a linear model!
 
@@ -504,7 +482,7 @@ ggplot(data, aes(x = group, y = score - ref_mean)) +
 ```
 
 <img src="index_files/figure-gfm/aov-plot-1.png" data-fig-align="center"
-style="display:block; margin:auto;" style="width:80.0%" />
+style="width:80.0%" />
 
 Oh, would you look at that! The differences between the group means and
 the reference mean (in this case SCZ) correspond with the `Estimate` of
@@ -619,7 +597,7 @@ ggplot(data, aes(x = age, y = measure)) +
     `geom_smooth()` using formula 'y ~ x'
 
 <img src="index_files/figure-gfm/lm-plot-1.png" data-fig-align="center"
-style="display:block; margin:auto;" style="width:80.0%" />
+style="width:80.0%" />
 
 The line in the figure above shows the line that best fits the points
 with a ribbon indicating the standard error.
@@ -647,7 +625,7 @@ With that we can quickly calculate the residual standard error
 (oversimplified, it's a measure of how well a regression model fits a
 dataset). The formula for the residual standard error is this:
 
-![Residual\~standard\~error = \\sqrt{\\frac{\\sum(observed - predicted)^2}{degrees\~of\~freedom}}](https://latex.codecogs.com/svg.latex?Residual~standard~error%20%3D%20%5Csqrt%7B%5Cfrac%7B%5Csum%28observed%20-%20predicted%29%5E2%7D%7Bdegrees~of~freedom%7D%7D "Residual~standard~error = \sqrt{\frac{\sum(observed - predicted)^2}{degrees~of~freedom}}")
+`$$Residual~standard~error = \sqrt{\frac{\sum(observed - predicted)^2}{degrees~of~freedom}}$$`
 
 or in R terms (the degrees of freedom is 18 here, too complicated to
 explain for now):
@@ -699,8 +677,7 @@ point will move to, and an arrow to indicate the size and the direction
 of the difference between the observed and the predicted value:
 
 <img src="index_files/figure-gfm/lm-plot-error-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+data-fig-align="center" style="width:80.0%" />
 
 You might have noticed now that the size of the arrow is defined as the
 difference between the observed and predicted value, i.e. the residual!
@@ -713,18 +690,13 @@ it! That's where the "squared error" part of that comes from. Perhaps
 the figure below helps illustrate it:
 
 <img src="index_files/figure-gfm/lm-plot-squares-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+data-fig-align="center" style="width:80.0%" />
 
 The "sum" part of "sum of squared error" refers to the sum of the areas
 of those squares. Simply, you sum the square of the sides. You can also
 look at it in mathematical form:
 
-![
-\\sum(residual\~or\~difference\~with\~regression\~line^2)
-](https://latex.codecogs.com/svg.latex?%0A%5Csum%28residual~or~difference~with~regression~line%5E2%29%0A "
-\sum(residual~or~difference~with~regression~line^2)
-")
+`$$\sum(residual~or~difference~with~regression~line^2)$$`
 
 We'll use this formula again a bit later to calculate the R<sup>2</sup>.
 
@@ -734,11 +706,7 @@ necessary because the squared regression coefficient is defined as a
 perfect correlation (i.e. a correlation coefficient of 1) minus the
 explained variance divided by the total variance, or in formula form:
 
-![
-R^2 = perfect\~correlation - \\frac{explained\~variance}{total\~variance} = 1 - \\frac{\\sum(difference\~with\~regression\~line^2)}{\\sum(difference\~with\~mean\~value^2)}
-](https://latex.codecogs.com/svg.latex?%0AR%5E2%20%3D%20perfect~correlation%20-%20%5Cfrac%7Bexplained~variance%7D%7Btotal~variance%7D%20%3D%201%20-%20%5Cfrac%7B%5Csum%28difference~with~regression~line%5E2%29%7D%7B%5Csum%28difference~with~mean~value%5E2%29%7D%0A "
-R^2 = perfect~correlation - \frac{explained~variance}{total~variance} = 1 - \frac{\sum(difference~with~regression~line^2)}{\sum(difference~with~mean~value^2)}
-")
+`$$R^2 = perfect~correlation - \frac{explained~variance}{total~variance} = 1 - \frac{\sum(difference~with~regression~line^2)}{\sum(difference~with~mean~value^2)}$$`
 
 Explained variance is defined here as the sum of squared error. You
 might notice the sum symbols and the squares, so you might guess that
@@ -761,8 +729,7 @@ value. I'll also add the original regression line in the background to
 show the difference with the sum of squared error.
 
 <img src="index_files/figure-gfm/lm-plot-mean-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+data-fig-align="center" style="width:80.0%" />
 
 We already calculated the difference with the regression line, then to
 calculate the difference with the mean is simple:
@@ -776,11 +743,7 @@ data <- data %>%
 Sidenote, if you wanted to calculate the total variance the formula for
 that would look like this:
 
-![
-S^2 = \\frac{\\sum(x\_{i} - \\overline{x})^2}{n - 1}
-](https://latex.codecogs.com/svg.latex?%0AS%5E2%20%3D%20%5Cfrac%7B%5Csum%28x_%7Bi%7D%20-%20%5Coverline%7Bx%7D%29%5E2%7D%7Bn%20-%201%7D%0A "
-S^2 = \frac{\sum(x_{i} - \overline{x})^2}{n - 1}
-")
+`$$S^2 = \frac{\sum(x_{i} - \overline{x})^2}{n - 1}$$`
 
 Notice how the numerator is the same calculation as the sum of squared
 total, then divided by the sample size minus 1 (like the degrees of

@@ -116,7 +116,7 @@ depth into the mathematics behind this statement to show how common
 statistical tests are in fact variations of a linear model.</p>
 <p>Don&rsquo;t believe me? Fine, I&rsquo;ll show you.</p>
 <p>Let&rsquo;s load the packages we&rsquo;ll use today and set a seed so it&rsquo;s
-reproducable.</p>
+reproducible.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">patchwork</span><span class="p">)</span>
 
@@ -127,14 +127,14 @@ test how the mean value of your sample measure differs from a reference
 number. Throughout this page, I&rsquo;ll throw around a bunch of formulas,
 which, dependending on your background, can either be informative or
 confusing. The formula for a One-Sample T-test is:</p>
-<p><img src="https://latex.codecogs.com/svg.latex?t%20%3D%20%5Cfrac%7B%5Coverline%7Bx%7D%20-%20%5Cmu%7D%7B%5Cfrac%7B%5Csigma%7D%7B%5Csqrt%7Bn%7D%7D%7D%20%3D%20%5Cfrac%7Bsample~mean%20-%20population~mean%7D%7B%5Cfrac%7Bstandard~deviation%7D%7B%5Csqrt%7Bsample~size%7D%7D%7D" alt="t = \\frac{\\overline{x} - \\mu}{\\frac{\\sigma}{\\sqrt{n}}} = \\frac{sample\~mean - population\~mean}{\\frac{standard\~deviation}{\\sqrt{sample\~size}}}" title="t = \frac{\overline{x} - \mu}{\frac{\sigma}{\sqrt{n}}} = \frac{sample~mean - population~mean}{\frac{standard~deviation}{\sqrt{sample~size}}}"></p>
+<p><code>$$t = \frac{\overline{x} - \mu}{\frac{\sigma}{\sqrt{n}}} = \frac{sample~mean - population~mean}{\frac{standard~deviation}{\sqrt{sample~size}}}$$</code></p>
 <p>What this says is that the effect size (<em>t</em>) is equal to the sample mean
 minus the population mean (or reference number) and you divide it by the
 standard deviation of the sample divided by the square root of the
 sample size. This formula will output the <em>t</em>-value that you would
 usually report when doing a T-test. The formula requires the standard
 deviation (<code>$\sigma$</code>) of the sample values, which is:</p>
-<p><img src="https://latex.codecogs.com/svg.latex?%5Csigma%20%3D%20%5Csqrt%7B%5Cfrac%7B%5Csum%5Climits_%7Bi%3D1%7D%5En%7B%28x_%7Bi%7D%20-%20%5Coverline%7Bx%7D%29%5E2%7D%7D%7Bn%20-%201%7D%7D" alt="\\sigma = \\sqrt{\\frac{\\sum\\limits\_{i=1}^n{(x\_{i} - \\overline{x})^2}}{n - 1}}" title="\sigma = \sqrt{\frac{\sum\limits_{i=1}^n{(x_{i} - \overline{x})^2}}{n - 1}}"></p>
+<p><code>$$\sigma = \sqrt{\frac{\sum\limits_{i=1}^n{(x_{i} - \overline{x})^2}}{n - 1}}$$</code></p>
 <p>In this formula, you&rsquo;d subtract the average across the sample values
 from each individual value, square it, and sum all these resulting
 values. This sum you would then divide by the size of the sample minus
@@ -154,9 +154,7 @@ of 3 and a standard deviation of 1.2.</p>
 <span class="n">concentration</span> <span class="o">&lt;-</span> <span class="nf">rnorm</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">mean</span> <span class="o">=</span> <span class="m">3</span><span class="p">,</span> <span class="n">sd</span> <span class="o">=</span> <span class="m">1.25</span><span class="p">)</span>
 </code></pre></div><p>If we then implement these values in the formulas earlier, we get the
 following result for the standard deviation:</p>
-<p><img src="https://latex.codecogs.com/svg.latex?%0A%5Csigma%20%3D%20%5Csqrt%7B%5Cfrac%7B%5Csum%5Climits_%7Bi%3D1%7D%5En%7B%7Cx_%7Bi%7D%20-%20%5Coverline%7Bx%7D%7C%5E2%7D%7D%7Bn%20-%201%7D%7D%20%3D%20%5Csqrt%7B%5Cfrac%7B%5Csum%5Climits_%7Bi%3D1%7D%5E%7B30%7D%7B%7Cconcentration_%7Bi%7D%20-%202.855%7C%5E2%7D%7D%7B30%20-%201%7D%7D%20%3D%201.157%0A" alt="\\sigma = \\sqrt{\\frac{\\sum\\limits\_{i=1}^n{\|x\_{i} - \\overline{x}\|^2}}{n - 1}} = \\sqrt{\\frac{\\sum\\limits\_{i=1}^{30}{\|concentration\_{i} - 2.855\|^2}}{30 - 1}} = 1.157" title="
-\sigma = \sqrt{\frac{\sum\limits_{i=1}^n{|x_{i} - \overline{x}|^2}}{n - 1}} = \sqrt{\frac{\sum\limits_{i=1}^{30}{|concentration_{i} - 2.855|^2}}{30 - 1}} = 1.157
-"></p>
+<p><code>$$\sigma = \sqrt{\frac{\sum\limits_{i=1}^n{|x_{i} - \overline{x}|^2}}{n - 1}} = \sqrt{\frac{\sum\limits_{i=1}^{30}{|concentration_{i} - 2.855|^2}}{30 - 1}} = 1.157$$</code></p>
 <p>this formula would like like this when implemented in R:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">sqrt</span><span class="p">(</span> <span class="nf">sum</span><span class="p">(</span><span class="nf">abs</span><span class="p">(</span><span class="n">concentration</span> <span class="o">-</span> <span class="nf">mean</span><span class="p">(</span><span class="n">concentration</span><span class="p">))</span><span class="n">^2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="m">1</span><span class="p">)</span> <span class="p">)</span>
 </code></pre></div><pre><code>[1] 1.157324
@@ -166,9 +164,7 @@ which will give the same result as the code above, but I just wanted to
 show it for illustrative purposes. Anywhere else I&rsquo;ll use the <code>sd()</code>
 function. Now let&rsquo;s calculate the <em>t</em>-value. In formula form this would
 look like this:</p>
-<p><img src="https://latex.codecogs.com/svg.latex?%0At%20%3D%20%5Cfrac%7B%5Coverline%7Bx%7D%20-%20%5Cmu%7D%7B%5Cfrac%7B%5Csigma%7D%7B%5Csqrt%7Bn%7D%7D%7D%20%3D%20%5Cfrac%7B2.855%20-%202.5%7D%7B%5Cfrac%7B1.157%7D%7B%5Csqrt%7B30%7D%7D%7D%20%3D%201.681%0A" alt="t = \\frac{\\overline{x} - \\mu}{\\frac{\\sigma}{\\sqrt{n}}} = \\frac{2.855 - 2.5}{\\frac{1.157}{\\sqrt{30}}} = 1.681" title="
-t = \frac{\overline{x} - \mu}{\frac{\sigma}{\sqrt{n}}} = \frac{2.855 - 2.5}{\frac{1.157}{\sqrt{30}}} = 1.681
-"></p>
+<p><code>$$t = \frac{\overline{x} - \mu}{\frac{\sigma}{\sqrt{n}}} = \frac{2.855 - 2.5}{\frac{1.157}{\sqrt{30}}} = 1.681$$</code></p>
 <p>So just to over this formula again, you take the mean of your sample,
 subtract the reference number, and you divide this number by the
 standard deviation of your sample divided by the square root of the
@@ -219,9 +215,7 @@ value. Now let&rsquo;s consider what a linear model does. You might recall
 from high-school mathematics that the formula for a straight line is
 always some form of <code>$y = ax + c$</code>, the linear model formula is somewhat
 similar:</p>
-<p><img src="https://latex.codecogs.com/svg.latex?%0AY_%7Bi%7D%20%3D%20%5Cbeta_%7B0%7D%20%2B%20%5Cbeta_%7B1%7Dx%20%2B%20%5Cepsilon_%7Bi%7D%0A" alt="Y\_{i} = \\beta\_{0} + \\beta\_{1}x + \\epsilon\_{i}" title="
-Y_{i} = \beta_{0} + \beta_{1}x + \epsilon_{i}
-"></p>
+<p><code>$$Y_{i} = \beta_{0} + \beta_{1}x + \epsilon_{i}$$</code></p>
 <p>In this formula <code>$Y_{i}$</code> is the dependent variable, <code>$x$</code> is the
 independent variable. <code>$\beta_{0}$</code> is equivalent to the intercept at
 the y-axis, similar to <code>$c$</code> in the formula for a straight line.
@@ -272,9 +266,7 @@ samples. Let&rsquo;s generate some random data:</p>
 </code></pre></div><p>The formula for an Two-Sample T-test is very similar to that of the
 One-Sample T-test, with the added factor of the second set of sample
 values. The formula for an Two-Sample T-test is as follows:</p>
-<p><img src="https://latex.codecogs.com/svg.latex?%0At%20%3D%20%5Cfrac%7B%28%5Coverline%7Bx_1%7D%20-%20%5Coverline%7Bx_2%7D%29%7D%7B%5Csqrt%7B%5Cfrac%7B%5Csigma_1%5E2%7D%7Bn_1%7D%20%2B%20%5Cfrac%7B%5Csigma_2%5E2%7D%7Bn_2%7D%7D%7D%20%3D%20%5Cfrac%7B%283.838073%20-%205.455809%29%7D%7B%5Csqrt%7B%5Cfrac%7B1.343565%5E2%7D%7B30%7D%20%2B%20%5Cfrac%7B1.69711%5E2%7D%7B30%7D%7D%7D%20%3D%20-4.093524%0A" alt="t = \\frac{(\\overline{x_1} - \\overline{x_2})}{\\sqrt{\\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2}}} = \\frac{(3.838073 - 5.455809)}{\\sqrt{\\frac{1.343565^2}{30} + \\frac{1.69711^2}{30}}} = -4.093524" title="
-t = \frac{(\overline{x_1} - \overline{x_2})}{\sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{n_2}}} = \frac{(3.838073 - 5.455809)}{\sqrt{\frac{1.343565^2}{30} + \frac{1.69711^2}{30}}} = -4.093524
-"></p>
+<p><code>$$t = \frac{(\overline{x_1} - \overline{x_2})}{\sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{n_2}}} = \frac{(3.838073 - 5.455809)}{\sqrt{\frac{1.343565^2}{30} + \frac{1.69711^2}{30}}} = -4.093524$$</code></p>
 <p>It&rsquo;s a bit too complex to describe in a sentence, but the definitions
 are perhaps familiar: <code>$\overline{x}$</code> for group means, <code>$\sigma$</code> for
 group standard deviations, and <code>$n$</code> for group size. I find that the
@@ -314,8 +306,7 @@ visualize how the linear model applies here later. Let&rsquo;s make a boxplot:</
   <span class="nf">theme_minimal</span><span class="p">()</span> <span class="o">+</span> 
   <span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span> <span class="o">=</span> <span class="s">&#34;none&#34;</span><span class="p">)</span>
 </code></pre></div><p><img src="index_files/figure-gfm/tst-boxplot-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+data-fig-align="center" style="width:80.0%" /></p>
 <p>Great! Now we have a visual representation of the data. Now, since the
 T-test compares means, we can might also add a point indicating the mean
 for both groups. Let&rsquo;s look just at the jittered points and add a line
@@ -332,7 +323,7 @@ connecting the two mean values.</p>
             <span class="n">size</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&#34;violet&#34;</span><span class="p">)</span> <span class="o">+</span>
   <span class="nf">theme_minimal</span><span class="p">()</span>
 </code></pre></div><p><img src="index_files/figure-gfm/tst-plot-1.png" data-fig-align="center"
-style="display:block; margin:auto;" style="width:80.0%" /></p>
+style="width:80.0%" /></p>
 <p>You might see where we are going with this. The parameters from the
 linear model will describe the angle of the diagonal line and I&rsquo;ll
 illustrative this a further down. Let&rsquo;s get the values from the linear
@@ -393,9 +384,7 @@ observed slope, or the slope of the alternative hypothesis
 (H<sub>0</sub>), and the slope of the null hypothesis, which is 0, and
 divide that by the standard error of the sampling distribution, which is
 given by the <code>lm()</code> function as the <code>Std. Error</code> of the <code>groupPAT</code> row:</p>
-<p><img src="https://latex.codecogs.com/svg.latex?%0At%20%3D%20%5Cfrac%7Bslope%5C%20of%5C%20regression%5C%20line%5C%20at%5C%20H_%7Ba%7D%20-%20slope%5C%20of%5C%20regression%5C%20line%5C%20at%5C%20H_%7B0%7D%7D%7Bstandard%5C%20error%5C%20of%5C%20sampling%5C%20distribution%7D%20%3D%20%5Cfrac%7B1.6177%20-%200%7D%7B0.3952%7D%20%3D%204.093%0A" alt="t = \\frac{slope\\ of\\ regression\\ line\\ at\\ H\_{a} - slope\\ of\\ regression\\ line\\ at\\ H\_{0}}{standard\\ error\\ of\\ sampling\\ distribution} = \\frac{1.6177 - 0}{0.3952} = 4.093" title="
-t = \frac{slope\ of\ regression\ line\ at\ H_{a} - slope\ of\ regression\ line\ at\ H_{0}}{standard\ error\ of\ sampling\ distribution} = \frac{1.6177 - 0}{0.3952} = 4.093
-"></p>
+<p><code>$$t = \frac{slope\ of\ regression\ line\ at\ H_{a} - slope\ of\ regression\ line\ at\ H_{0}}{standard\ error\ of\ sampling\ distribution} = \frac{1.6177 - 0}{0.3952} = 4.093$$</code></p>
 <p>Which as you&rsquo;ll notice is one thousandths-decimal place off, which is
 due to rounding errors. <code>lm()</code> reports up to 4 decimal points while it
 uses more for the calculation. And now we&rsquo;ve come full circle, because
@@ -404,8 +393,7 @@ between the mean of the second group minor the mean of the first group.
 Now we can go back to the figure we made earlier and see how all these
 values relate:</p>
 <p><img src="index_files/figure-gfm/tst-plot-w-annot-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+data-fig-align="center" style="width:80.0%" /></p>
 <p>And that&rsquo;s how a Two-Sample T-test is basically a linear model!</p>
 <h1 id="anova">ANOVA</h1>
 <p>Based on what we did in the previous section, you may already predict
@@ -480,7 +468,7 @@ F-statistic: 17.79 on 3 and 116 DF,  p-value: 1.448e-09
                         <span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;#ffffff80&#34;</span><span class="p">,</span> <span class="n">nudge_x</span> <span class="o">=</span> <span class="m">1</span><span class="o">/</span><span class="m">3</span><span class="p">)</span> <span class="o">+</span> 
   <span class="nf">theme_minimal</span><span class="p">()</span>
 </code></pre></div><p><img src="index_files/figure-gfm/aov-plot-1.png" data-fig-align="center"
-style="display:block; margin:auto;" style="width:80.0%" /></p>
+style="width:80.0%" /></p>
 <p>Oh, would you look at that! The differences between the group means and
 the reference mean (in this case SCZ) correspond with the <code>Estimate</code> of
 the linear model! Let&rsquo;s also see if we can reproduce the sum of squares
@@ -571,7 +559,7 @@ function, and then setting the <code>method</code> to <code>&quot;lm&quot;</code
 </code></pre></div><pre><code>`geom_smooth()` using formula 'y ~ x'
 </code></pre>
 <p><img src="index_files/figure-gfm/lm-plot-1.png" data-fig-align="center"
-style="display:block; margin:auto;" style="width:80.0%" /></p>
+style="width:80.0%" /></p>
 <p>The line in the figure above shows the line that best fits the points
 with a ribbon indicating the standard error.</p>
 <p>Back to our data. We know that a linear models fits a line that
@@ -592,7 +580,7 @@ with the predicted values based on the model.</p>
 </code></pre></div><p>With that we can quickly calculate the residual standard error
 (oversimplified, it&rsquo;s a measure of how well a regression model fits a
 dataset). The formula for the residual standard error is this:</p>
-<p><img src="https://latex.codecogs.com/svg.latex?Residual~standard~error%20%3D%20%5Csqrt%7B%5Cfrac%7B%5Csum%28observed%20-%20predicted%29%5E2%7D%7Bdegrees~of~freedom%7D%7D" alt="Residual\~standard\~error = \\sqrt{\\frac{\\sum(observed - predicted)^2}{degrees\~of\~freedom}}" title="Residual~standard~error = \sqrt{\frac{\sum(observed - predicted)^2}{degrees~of~freedom}}"></p>
+<p><code>$$Residual~standard~error = \sqrt{\frac{\sum(observed - predicted)^2}{degrees~of~freedom}}$$</code></p>
 <p>or in R terms (the degrees of freedom is 18 here, too complicated to
 explain for now):</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">sqrt</span><span class="p">(</span><span class="nf">sum</span><span class="p">((</span><span class="n">data</span><span class="o">$</span><span class="n">measure</span> <span class="o">-</span> <span class="n">data</span><span class="o">$</span><span class="n">measure_pred</span><span class="p">)</span><span class="n">^2</span><span class="p">)</span> <span class="o">/</span> <span class="m">18</span><span class="p">)</span>
@@ -626,8 +614,7 @@ before. I added points along the regression line to indicate where each
 point will move to, and an arrow to indicate the size and the direction
 of the difference between the observed and the predicted value:</p>
 <p><img src="index_files/figure-gfm/lm-plot-error-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+data-fig-align="center" style="width:80.0%" /></p>
 <p>You might have noticed now that the size of the arrow is defined as the
 difference between the observed and predicted value, i.e. the residual!
 Now, you might have come across the term &ldquo;sum of squared error&rdquo; in
@@ -638,23 +625,18 @@ multiply the length of one side of the square by itself, i.e. you square
 it! That&rsquo;s where the &ldquo;squared error&rdquo; part of that comes from. Perhaps
 the figure below helps illustrate it:</p>
 <p><img src="index_files/figure-gfm/lm-plot-squares-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+data-fig-align="center" style="width:80.0%" /></p>
 <p>The &ldquo;sum&rdquo; part of &ldquo;sum of squared error&rdquo; refers to the sum of the areas
 of those squares. Simply, you sum the square of the sides. You can also
 look at it in mathematical form:</p>
-<p><img src="https://latex.codecogs.com/svg.latex?%0A%5Csum%28residual~or~difference~with~regression~line%5E2%29%0A" alt="\\sum(residual\~or\~difference\~with\~regression\~line^2)" title="
-\sum(residual~or~difference~with~regression~line^2)
-"></p>
+<p><code>$$\sum(residual~or~difference~with~regression~line^2)$$</code></p>
 <p>We&rsquo;ll use this formula again a bit later to calculate the R<sup>2</sup>.</p>
 <p>In order to calculate the squared regression coefficient, we should also
 calculate the mean value of the measure across all points. This is
 necessary because the squared regression coefficient is defined as a
 perfect correlation (i.e. a correlation coefficient of 1) minus the
 explained variance divided by the total variance, or in formula form:</p>
-<p><img src="https://latex.codecogs.com/svg.latex?%0AR%5E2%20%3D%20perfect~correlation%20-%20%5Cfrac%7Bexplained~variance%7D%7Btotal~variance%7D%20%3D%201%20-%20%5Cfrac%7B%5Csum%28difference~with~regression~line%5E2%29%7D%7B%5Csum%28difference~with~mean~value%5E2%29%7D%0A" alt="R^2 = perfect\~correlation - \\frac{explained\~variance}{total\~variance} = 1 - \\frac{\\sum(difference\~with\~regression\~line^2)}{\\sum(difference\~with\~mean\~value^2)}" title="
-R^2 = perfect~correlation - \frac{explained~variance}{total~variance} = 1 - \frac{\sum(difference~with~regression~line^2)}{\sum(difference~with~mean~value^2)}
-"></p>
+<p><code>$$R^2 = perfect~correlation - \frac{explained~variance}{total~variance} = 1 - \frac{\sum(difference~with~regression~line^2)}{\sum(difference~with~mean~value^2)}$$</code></p>
 <p>Explained variance is defined here as the sum of squared error. You
 might notice the sum symbols and the squares, so you might guess that
 this formula is also some kind of sum of squares, and it is! As we
@@ -673,8 +655,7 @@ the sum of squared differences between the observed values and the mean
 value. I&rsquo;ll also add the original regression line in the background to
 show the difference with the sum of squared error.</p>
 <p><img src="index_files/figure-gfm/lm-plot-mean-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+data-fig-align="center" style="width:80.0%" /></p>
 <p>We already calculated the difference with the regression line, then to
 calculate the difference with the mean is simple:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">data</span> <span class="o">&lt;-</span> <span class="n">data</span> <span class="o">%&gt;%</span> 
@@ -682,9 +663,7 @@ calculate the difference with the mean is simple:</p>
          <span class="n">difference_mean</span> <span class="o">=</span> <span class="n">measure</span> <span class="o">-</span> <span class="n">measure_mean</span><span class="p">)</span>
 </code></pre></div><p>Sidenote, if you wanted to calculate the total variance the formula for
 that would look like this:</p>
-<p><img src="https://latex.codecogs.com/svg.latex?%0AS%5E2%20%3D%20%5Cfrac%7B%5Csum%28x_%7Bi%7D%20-%20%5Coverline%7Bx%7D%29%5E2%7D%7Bn%20-%201%7D%0A" alt="S^2 = \\frac{\\sum(x\_{i} - \\overline{x})^2}{n - 1}" title="
-S^2 = \frac{\sum(x_{i} - \overline{x})^2}{n - 1}
-"></p>
+<p><code>$$S^2 = \frac{\sum(x_{i} - \overline{x})^2}{n - 1}$$</code></p>
 <p>Notice how the numerator is the same calculation as the sum of squared
 total, then divided by the sample size minus 1 (like the degrees of
 freedom).</p>
@@ -792,6 +771,8 @@ loaded via a namespace (and not attached):
     
 
   <script src="/js/app.js"></script>
+  <script>$("img").parents('p').css("text-align", "center");</script>
+
   
   </body>
 </html>

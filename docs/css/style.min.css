@@ -164,7 +164,7 @@ table tr td:last-child,table tr th:last-child{
     border-right:0
 }
 img{
-    max-width:100%
+    max-width: 80%; /* was 100% */
 }
 .wrapper{
     display:flex;

@@ -117,18 +117,77 @@ code {
 }
 
 </style>
-<p style="border-radius: 5px; background-color: #acc8d4; padding: 1em;">For this post, I decided to hide the code chunks by default to improve legibility. You can click the <em>Show code</em>-button to expand the code.</p>
+<p style="border-radius: 5px; background-color: #acc8d4; padding: 1em;">
+For this post, I decided to hide the code chunks by default to improve
+legibility. You can click the <em>Show code</em>-button to expand the
+code.
+</p>
 <h3 id="introduction">Introduction</h3>
-<p>I&rsquo;m at the age where a lot of my peers start thinking about buying a home. It is a major conversation topic around the office, and these conversations are not often filled with optimism and excitement. Oslo is a notoriously expensive city to live in, and the housing market is very tough.</p>
-<p>Of all the worrying events in 2020, Millenials and Gen Z kids ranked financial instability as the second most common driver of stress, the most common being the welfare of their family (<a href="https://www2.deloitte.com/global/en/pages/about-deloitte/articles/millennialsurvey.html">link</a>). Today I want to dissect one of the possible causes of this <em>economic anxiety</em>: <strong>the housing market</strong>. Now, I&rsquo;m not an economist nor a financial expert. Nonetheless, I believe I can leverage some of my knowledge of data wrangling and analysis to contribute a small piece to this topic. My insight into the Oslo housing market is fairly limited to so far and there&rsquo;s many nuances I don&rsquo;t fully understand yet, but I do think I have some relevant knowledge of the Dutch housing market. So today I&rsquo;ll dive into some data on the Dutch market, and particularly the Amsterdam housing market. There&rsquo;s countless stories about the Amsterdam housing market and how terrible it is for new buyers, similar to the Oslo housing market. However, in my opinion the Amsterdam housing market is already a few steps ahead of the Oslo market, and hopefully the Amsterdam market can offer some warnings about what the Oslo housing market might look like in a few years without some policy corrections.</p>
-<p>This will be a fairly basic data analysis and visualization post, I can&rsquo;t claim that this is an exhaustive list and that I didn&rsquo;t miss some nuances, but I&rsquo;ll give it . I collected some data from the Amsterdam Real Estate Association (<a href="https://www.mva.nl">Makelaars Vereniging Amsterdam; MVA</a>) and statistics from the Central Bureau for Statistics (<a href="https://www.cbs.nl">Centraal Bureau for de Statistiek; CBS</a>). As usual, I&rsquo;ll be using <code>{tidyverse}</code> <em>a lot</em>. I&rsquo;ve also recently started using the <code>{ggtext}</code> package to manage the text elements in my plots, inspired by Cédric Scherer (<a href="https://twitter.com/CedScherer">@CedScherer</a>). I&rsquo;ll use the <code>{gt}</code> package to spice up some of the tables, and <code>{patchwork}</code> for arranging plots. I&rsquo;ll use the <code>{cbsodataR}</code> to download data from the Central Bureau for Statistics (<a href="https://www.cbs.nl">CBS</a>).</p>
+<p>I&rsquo;m at the age where a lot of my peers start thinking about buying a
+home. It is a major conversation topic around the office, and these
+conversations are not often filled with optimism and excitement. Oslo is
+a notoriously expensive city to live in, and the housing market is very
+tough.</p>
+<p>Of all the worrying events in 2020, Millenials and Gen Z kids ranked
+financial instability as the second most common driver of stress, the
+most common being the welfare of their family
+(<a href="https://www2.deloitte.com/global/en/pages/about-deloitte/articles/millennialsurvey.html">link</a>).
+Today I want to dissect one of the possible causes of this <em>economic
+anxiety</em>: <strong>the housing market</strong>. Now, I&rsquo;m not an economist nor a
+financial expert. Nonetheless, I believe I can leverage some of my
+knowledge of data wrangling and analysis to contribute a small piece to
+this topic. My insight into the Oslo housing market is fairly limited to
+so far and there&rsquo;s many nuances I don&rsquo;t fully understand yet, but I do
+think I have some relevant knowledge of the Dutch housing market. So
+today I&rsquo;ll dive into some data on the Dutch market, and particularly the
+Amsterdam housing market. There&rsquo;s countless stories about the Amsterdam
+housing market and how terrible it is for new buyers, similar to the
+Oslo housing market. However, in my opinion the Amsterdam housing market
+is already a few steps ahead of the Oslo market, and hopefully the
+Amsterdam market can offer some warnings about what the Oslo housing
+market might look like in a few years without some policy corrections.</p>
+<p>This will be a fairly basic data analysis and visualization post, I
+can&rsquo;t claim that this is an exhaustive list and that I didn&rsquo;t miss some
+nuances, but I&rsquo;ll give it . I collected some data from the Amsterdam
+Real Estate Association (<a href="https://www.mva.nl">Makelaars Vereniging Amsterdam;
+MVA</a>) and statistics from the Central Bureau for
+Statistics (<a href="https://www.cbs.nl">Centraal Bureau for de Statistiek;
+CBS</a>). As usual, I&rsquo;ll be using <code>{tidyverse}</code> <em>a
+lot</em>. I&rsquo;ve also recently started using the <code>{ggtext}</code> package to manage
+the text elements in my plots, inspired by Cédric Scherer
+(<a href="https://twitter.com/CedScherer">@CedScherer</a>). I&rsquo;ll use the <code>{gt}</code>
+package to spice up some of the tables, and <code>{patchwork}</code> for arranging
+plots. I&rsquo;ll use the <code>{cbsodataR}</code> to download data from the Central
+Bureau for Statistics (<a href="https://www.cbs.nl">CBS</a>).</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">ggtext</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">patchwork</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">gt</span><span class="p">)</span>
 </code></pre></div><h3 id="getting-the-data">Getting the data</h3>
-<p>The first piece of data I&rsquo;ll use comes from the Amsterdam Real Estate Association. They publish quarterly data on a number of variables about the Amsterdam housing market (<a href="https://www.mva.nl/over-de-mva/mva/kwartaalcijfers">link</a>), inclusing asking price, final price paid, number of properties put on the market, number of properties sold and a few more back to the first quarter of 2012. <em>Obviously</em>, these numbers all come in pdf-format, because the people writing quarterly reports apparently have a <em>massive hatred</em> towards people that want to analyze this data. I downloaded the reports, used the online tool <a href="https://pdftables.com">PDFTables</a> to convert them to Excel, and then stitched the tables together manually. Of course (remember the authors have a <em>massive hatred</em> towards us), the formatting of the numbers in the tables weren&rsquo;t consistent between different quarterly reports, so I had to do some cleaning in R. I put each table in a separate sheet and then used functionality from the <code>{readxl}</code> package to load each table into a different variable and then do the cleaning per table. This was a bit cumbersome. Since this will probably be a very long post, I&rsquo;ll hide the code, but you can see it in the <a href="https://github.com/danielroelfs/danielroelfs.com/blob/main/content/blog/2020-running-an-ica-on-questionnaires/index.Rmd">Rmarkdown file</a> (at least until I figure out how to get code folding to work on my laptop).</p>
-<p>You can look at the code I used to load and merge the files. It&rsquo;s a bit of a mess:</p>
+<p>The first piece of data I&rsquo;ll use comes from the Amsterdam Real Estate
+Association. They publish quarterly data on a number of variables about
+the Amsterdam housing market
+(<a href="https://www.mva.nl/over-de-mva/mva/kwartaalcijfers">link</a>), inclusing
+asking price, final price paid, number of properties put on the market,
+number of properties sold and a few more back to the first quarter of
+2012. <em>Obviously</em>, these numbers all come in pdf-format, because the
+people writing quarterly reports apparently have a <em>massive hatred</em>
+towards people that want to analyze this data. I downloaded the reports,
+used the online tool <a href="https://pdftables.com">PDFTables</a> to convert them
+to Excel, and then stitched the tables together manually. Of course
+(remember the authors have a <em>massive hatred</em> towards us), the
+formatting of the numbers in the tables weren&rsquo;t consistent between
+different quarterly reports, so I had to do some cleaning in R. I put
+each table in a separate sheet and then used functionality from the
+<code>{readxl}</code> package to load each table into a different variable and then
+do the cleaning per table. This was a bit cumbersome. Since this will
+probably be a very long post, I&rsquo;ll hide the code, but you can see it in
+the <a href="https://github.com/danielroelfs/danielroelfs.com/blob/main/content/blog/2020-running-an-ica-on-questionnaires/index.Rmd">Rmarkdown
+file</a>
+(at least until I figure out how to get code folding to work on my
+laptop).</p>
+<p>You can look at the code I used to load and merge the files. It&rsquo;s a bit
+of a mess:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">asking_price</span> <span class="o">&lt;-</span> <span class="n">readxl</span><span class="o">::</span><span class="nf">read_xlsx</span><span class="p">(</span><span class="s">&#34;MVA_kwartaalcijfers.xlsx&#34;</span><span class="p">,</span> <span class="n">sheet</span> <span class="o">=</span> <span class="m">2</span><span class="p">)</span> <span class="o">%&gt;%</span> 
   <span class="n">janitor</span><span class="o">::</span><span class="nf">clean_names</span><span class="p">()</span> <span class="o">%&gt;%</span> 
   <span class="nf">mutate</span><span class="p">(</span><span class="n">type_woning</span> <span class="o">=</span> <span class="nf">as_factor</span><span class="p">(</span><span class="n">type_woning</span><span class="p">),</span>
@@ -188,18 +247,27 @@ code {
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">data_merged</span> <span class="o">&lt;-</span> <span class="nf">read_rds</span><span class="p">(</span><span class="s">&#34;data_merged.rds&#34;</span><span class="p">)</span>
 
 <span class="nf">glimpse</span><span class="p">(</span><span class="n">data_merged</span><span class="p">)</span>
-</code></pre></div><pre tabindex="0"><code>## Rows: 259
-## Columns: 9
-## $ type_woning       &lt;fct&gt; Tussenwoning, Tussenwoning, Tussenwoning, Tussenwoni…
-## $ date              &lt;chr&gt; &quot;x1e_kw_2012&quot;, &quot;x2e_kw_2012&quot;, &quot;x3e_kw_2012&quot;, &quot;x4e_kw…
-## $ asking_price      &lt;dbl&gt; 298444, 269778, 241000, 270500, 354056, 305611, 3478…
-## $ transaction_price &lt;dbl&gt; 278911, 252278, 230111, 256667, 334472, 281528, 3230…
-## $ price_per_m2      &lt;dbl&gt; 2492, 2370, 2308, 2291, 2648, 2203, 2412, 2344, 3002…
-## $ n_offered         &lt;dbl&gt; 655, 732, 717, 717, 676, 732, 715, 617, 534, 573, 51…
-## $ n_sold            &lt;dbl&gt; 99, 119, 107, 153, 93, 93, 123, 148, 121, 178, 158, …
-## $ mortgage_months   &lt;dbl&gt; 126, 103, 85, 125, 147, 113, 135, 85, 121, 57, 74, 6…
-## $ tightness_index   &lt;dbl&gt; 19.8, 18.5, 20.1, 14.1, 21.8, 23.6, 17.4, 12.5, 13.3…
-</code></pre><p>From this dataset, I want to create a few new variables. I want to create a date format from the quarterly date. Currently it&rsquo;s in the format <code>&quot;x1e_kw_2012&quot;</code>. We&rsquo;ll extract the year and the quarter. Since there&rsquo;s 4 quarters in the 12 months, we&rsquo;ll multiply the quarter by 3 and then create a date format. We&rsquo;ll also calculate the percentage difference between the asking price and the price paid, and the percentage difference between the houses offered and the houses sold. I&rsquo;ll also translate the character string from Dutch to English using the <code>case_when()</code> function.</p>
+</code></pre></div><pre><code>Rows: 259
+Columns: 9
+$ type_woning       &lt;fct&gt; Tussenwoning, Tussenwoning, Tussenwoning, Tussenwoni…
+$ date              &lt;chr&gt; &quot;x1e_kw_2012&quot;, &quot;x2e_kw_2012&quot;, &quot;x3e_kw_2012&quot;, &quot;x4e_kw…
+$ asking_price      &lt;dbl&gt; 298444, 269778, 241000, 270500, 354056, 305611, 3478…
+$ transaction_price &lt;dbl&gt; 278911, 252278, 230111, 256667, 334472, 281528, 3230…
+$ price_per_m2      &lt;dbl&gt; 2492, 2370, 2308, 2291, 2648, 2203, 2412, 2344, 3002…
+$ n_offered         &lt;dbl&gt; 655, 732, 717, 717, 676, 732, 715, 617, 534, 573, 51…
+$ n_sold            &lt;dbl&gt; 99, 119, 107, 153, 93, 93, 123, 148, 121, 178, 158, …
+$ mortgage_months   &lt;dbl&gt; 126, 103, 85, 125, 147, 113, 135, 85, 121, 57, 74, 6…
+$ tightness_index   &lt;dbl&gt; 19.8, 18.5, 20.1, 14.1, 21.8, 23.6, 17.4, 12.5, 13.3…
+</code></pre>
+<p>From this dataset, I want to create a few new variables. I want to
+create a date format from the quarterly date. Currently it&rsquo;s in the
+format <code>&quot;x1e_kw_2012&quot;</code>. We&rsquo;ll extract the year and the quarter. Since
+there&rsquo;s 4 quarters in the 12 months, we&rsquo;ll multiply the quarter by 3 and
+then create a date format. We&rsquo;ll also calculate the percentage
+difference between the asking price and the price paid, and the
+percentage difference between the houses offered and the houses sold.
+I&rsquo;ll also translate the character string from Dutch to English using the
+<code>case_when()</code> function.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">data</span> <span class="o">&lt;-</span> <span class="n">data_merged</span> <span class="o">%&gt;%</span> 
   <span class="nf">rename</span><span class="p">(</span><span class="n">type</span> <span class="o">=</span> <span class="n">type_woning</span><span class="p">)</span> <span class="o">%&gt;%</span> 
   <span class="nf">mutate</span><span class="p">(</span><span class="n">quarter</span> <span class="o">=</span> <span class="nf">str_extract</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">pattern</span> <span class="o">=</span> <span class="s">&#34;x(.*?)e&#34;</span><span class="p">),</span>
@@ -223,25 +291,32 @@ code {
                                         <span class="s">&#34;Terraced house&#34;</span><span class="p">,</span><span class="s">&#34;Corner house&#34;</span><span class="p">,</span><span class="s">&#34;Detached house&#34;</span><span class="p">,</span>
                                         <span class="s">&#34;Semi-detached house&#34;</span><span class="p">,</span><span class="s">&#34;Total&#34;</span><span class="p">)))</span> <span class="o">%&gt;%</span> 
   <span class="nf">glimpse</span><span class="p">()</span>
-</code></pre></div><pre tabindex="0"><code>## Rows: 259
-## Columns: 16
-## $ type                   &lt;fct&gt; Terraced house, Terraced house, Terraced house,…
-## $ date                   &lt;date&gt; 2012-03-01, 2012-06-01, 2012-09-01, 2012-12-01…
-## $ asking_price           &lt;dbl&gt; 298444, 269778, 241000, 270500, 354056, 305611,…
-## $ transaction_price      &lt;dbl&gt; 278911, 252278, 230111, 256667, 334472, 281528,…
-## $ price_per_m2           &lt;dbl&gt; 2492, 2370, 2308, 2291, 2648, 2203, 2412, 2344,…
-## $ n_offered              &lt;dbl&gt; 655, 732, 717, 717, 676, 732, 715, 617, 534, 57…
-## $ n_sold                 &lt;dbl&gt; 99, 119, 107, 153, 93, 93, 123, 148, 121, 178, …
-## $ mortgage_months        &lt;dbl&gt; 126, 103, 85, 125, 147, 113, 135, 85, 121, 57, …
-## $ tightness_index        &lt;dbl&gt; 19.8, 18.5, 20.1, 14.1, 21.8, 23.6, 17.4, 12.5,…
-## $ quarter                &lt;dbl&gt; 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4,…
-## $ year                   &lt;dbl&gt; 2012, 2012, 2012, 2012, 2013, 2013, 2013, 2013,…
-## $ diff_ask_paid          &lt;dbl&gt; -19533, -17500, -10889, -13833, -19584, -24083,…
-## $ diff_ask_paid_perc     &lt;dbl&gt; -0.065449465, -0.064868151, -0.045182573, -0.05…
-## $ diff_offered_sold      &lt;dbl&gt; 556, 613, 610, 564, 583, 639, 592, 469, 413, 39…
-## $ diff_offered_sold_perc &lt;dbl&gt; 0.848854962, 0.837431694, 0.850767085, 0.786610…
-## $ perc_sold              &lt;dbl&gt; 0.1511450, 0.1625683, 0.1492329, 0.2133891, 0.1…
-</code></pre><p>The first thing that seems interesting to do is to plot the percentage difference between the asking price and the price paid. This will give us an indication of the trend in overpaying on different types of properties. I&rsquo;ll use a color palette and legend design I again shamelessly stole from Cédric Scherer (<a href="https://twitter.com/CedScherer">@CedScherer</a>). I&rsquo;ll use a simple line graph to visualize the percentage overpay.</p>
+</code></pre></div><pre><code>Rows: 259
+Columns: 16
+$ type                   &lt;fct&gt; Terraced house, Terraced house, Terraced house,…
+$ date                   &lt;date&gt; 2012-03-01, 2012-06-01, 2012-09-01, 2012-12-01…
+$ asking_price           &lt;dbl&gt; 298444, 269778, 241000, 270500, 354056, 305611,…
+$ transaction_price      &lt;dbl&gt; 278911, 252278, 230111, 256667, 334472, 281528,…
+$ price_per_m2           &lt;dbl&gt; 2492, 2370, 2308, 2291, 2648, 2203, 2412, 2344,…
+$ n_offered              &lt;dbl&gt; 655, 732, 717, 717, 676, 732, 715, 617, 534, 57…
+$ n_sold                 &lt;dbl&gt; 99, 119, 107, 153, 93, 93, 123, 148, 121, 178, …
+$ mortgage_months        &lt;dbl&gt; 126, 103, 85, 125, 147, 113, 135, 85, 121, 57, …
+$ tightness_index        &lt;dbl&gt; 19.8, 18.5, 20.1, 14.1, 21.8, 23.6, 17.4, 12.5,…
+$ quarter                &lt;dbl&gt; 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4,…
+$ year                   &lt;dbl&gt; 2012, 2012, 2012, 2012, 2013, 2013, 2013, 2013,…
+$ diff_ask_paid          &lt;dbl&gt; -19533, -17500, -10889, -13833, -19584, -24083,…
+$ diff_ask_paid_perc     &lt;dbl&gt; -0.065449465, -0.064868151, -0.045182573, -0.05…
+$ diff_offered_sold      &lt;dbl&gt; 556, 613, 610, 564, 583, 639, 592, 469, 413, 39…
+$ diff_offered_sold_perc &lt;dbl&gt; 0.848854962, 0.837431694, 0.850767085, 0.786610…
+$ perc_sold              &lt;dbl&gt; 0.1511450, 0.1625683, 0.1492329, 0.2133891, 0.1…
+</code></pre>
+<p>The first thing that seems interesting to do is to plot the percentage
+difference between the asking price and the price paid. This will give
+us an indication of the trend in overpaying on different types of
+properties. I&rsquo;ll use a color palette and legend design I again
+shamelessly stole from Cédric Scherer
+(<a href="https://twitter.com/CedScherer">@CedScherer</a>). I&rsquo;ll use a simple line
+graph to visualize the percentage overpay.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">colors</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="s">&#34;#019868&#34;</span><span class="p">,</span><span class="s">&#34;#9dd292&#34;</span><span class="p">,</span><span class="s">&#34;#ec0b88&#34;</span><span class="p">,</span><span class="s">&#34;#651eac&#34;</span><span class="p">,</span><span class="s">&#34;#e18a1e&#34;</span><span class="p">,</span><span class="s">&#34;#2b7de5&#34;</span><span class="p">)</span>
 
 <span class="n">data</span> <span class="o">%&gt;%</span> 
@@ -269,8 +344,22 @@ code {
   <span class="nf">theme</span><span class="p">(</span><span class="n">plot.title</span> <span class="o">=</span> <span class="nf">element_textbox</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">20</span><span class="p">),</span>
         <span class="n">axis.title.y</span> <span class="o">=</span> <span class="nf">element_textbox</span><span class="p">(</span><span class="n">width</span> <span class="o">=</span> <span class="n">grid</span><span class="o">::</span><span class="nf">unit</span><span class="p">(</span><span class="m">2.5</span><span class="p">,</span> <span class="s">&#34;in&#34;</span><span class="p">)),</span>
         <span class="n">legend.key</span> <span class="o">=</span> <span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;transparent&#34;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&#34;transparent&#34;</span><span class="p">))</span>
-</code></pre></div><img src="index_files/figure-html/plot-overpay-1.png" width="80%" style="display: block; margin: auto;" />
-<p>Prior to 2014, most properties in Amsterdam were sold at about 6% below asking price, in the last quarter of 2020, that trend had changed to more than 3.5% above asking. The variance is obviously larger for detached and semi-detached houses, since those are both expensive and scarce in Amsterdam, and are thus also bought and sold less often. The table below shows the stats for the first quarter of 2021. Apart from semi-detached houses, most other properties were sold at 4% over asking or more. The types of properties most accessible to first-time buyers are obviously the apartments. Either the older type in the inner city, or the newer apartments in the suburbs. People buying pre-1970 apartments spent more than €28 000 over the asking price and people buying apartments built after 1970 spent on average more than €18 000 over the asking price.</p>
+</code></pre></div><p><img src="index_files/figure-gfm/plot-overpay-1.png"
+data-fig-align="center" style="display:block; margin:auto;"
+style="width:80.0%" /></p>
+<p>Prior to 2014, most properties in Amsterdam were sold at about 6% below
+asking price, in the last quarter of 2020, that trend had changed to
+more than 3.5% above asking. The variance is obviously larger for
+detached and semi-detached houses, since those are both expensive and
+scarce in Amsterdam, and are thus also bought and sold less often. The
+table below shows the stats for the first quarter of 2021. Apart from
+semi-detached houses, most other properties were sold at 4% over asking
+or more. The types of properties most accessible to first-time buyers
+are obviously the apartments. Either the older type in the inner city,
+or the newer apartments in the suburbs. People buying pre-1970
+apartments spent more than €28 000 over the asking price and people
+buying apartments built after 1970 spent on average more than €18 000
+over the asking price.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">data</span> <span class="o">%&gt;%</span> 
   <span class="nf">filter</span><span class="p">(</span><span class="n">type</span> <span class="o">!=</span> <span class="s">&#34;Total&#34;</span><span class="p">,</span>
          <span class="n">date</span> <span class="o">==</span> <span class="nf">max</span><span class="p">(</span><span class="n">date</span><span class="p">))</span> <span class="o">%&gt;%</span> 
@@ -294,8 +383,30 @@ code {
   <span class="nf">tab_source_note</span><span class="p">(</span><span class="n">source_note</span> <span class="o">=</span> <span class="nf">md</span><span class="p">(</span><span class="s">&#34;_**Data**: MVA_&#34;</span><span class="p">))</span> <span class="o">%&gt;%</span> 
   <span class="nf">tab_options</span><span class="p">(</span><span class="n">table.background.color</span> <span class="o">=</span> <span class="s">&#34;#EBEBEB&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">gtsave</span><span class="p">(</span><span class="s">&#34;overpay-table.png&#34;</span><span class="p">,</span> <span class="n">expand</span> <span class="o">=</span> <span class="m">0</span><span class="p">)</span>
-</code></pre></div><img src="index_files/figure-html/overpay-table-1.png" width="50%" style="display: block; margin: auto;" />
-<p>What contributed to this price increase? A simple supply-and-demand plays a part. The figure below shows the &ldquo;tightness index&rdquo; (Dutch: &ldquo;krapte indicator&rdquo;) over time. This number represents the number of choices a potential buyer has. This number is calculated per quarter by dividing the number of properties on the market halfway through the quarter divided by the number of transactions over the entire quarter. This number is then multiplied by 3 to correct for the fact that the number is calculated per quarter instead of per month. When the &ldquo;tightness index&rdquo; is below 5, it&rsquo;s considered a &ldquo;sellers market&rdquo; (source: <a href="https://www.nvm.nl/wonen/marktinformatie/">NVM</a>). A larger number is good for buyers, a smaller number is good for sellers. In the first quarter of 2021, the number was exactly 2. It varies a bit per property type, but for apartments specifically it hasn&rsquo;t been higher than 3 since 2016. This means that first-time buyers often don&rsquo;t have a choice between more than 2 or 3 apartments per month. I tried to find some data on how many people currently are interested in buying a home in Amsterdam, but I couldn&rsquo;t find anything solid. There&rsquo;s only anecdotal evidence from viewings where within a year, the number of people interested in viewing a property has increased to 80 in 2020, compared to about 55 a year earlier (source: <a href="https://www.parool.nl/amsterdam/huizenmarkt-is-gekkenhuis-kopers-profiteren-voor-1-april-nog-van-voordelige-belastingregel~bcadc579/">Parool</a>).</p>
+</code></pre></div><p><img src="index_files/figure-gfm/overpay-table-1.png"
+data-fig-align="center" style="display:block; margin:auto;"
+style="width:50.0%" /></p>
+<p>What contributed to this price increase? A simple supply-and-demand
+plays a part. The figure below shows the &ldquo;tightness index&rdquo; (Dutch:
+&ldquo;krapte indicator&rdquo;) over time. This number represents the number of
+choices a potential buyer has. This number is calculated per quarter by
+dividing the number of properties on the market halfway through the
+quarter divided by the number of transactions over the entire quarter.
+This number is then multiplied by 3 to correct for the fact that the
+number is calculated per quarter instead of per month. When the
+&ldquo;tightness index&rdquo; is below 5, it&rsquo;s considered a &ldquo;sellers market&rdquo;
+(source: <a href="https://www.nvm.nl/wonen/marktinformatie/">NVM</a>). A larger
+number is good for buyers, a smaller number is good for sellers. In the
+first quarter of 2021, the number was exactly 2. It varies a bit per
+property type, but for apartments specifically it hasn&rsquo;t been higher
+than 3 since 2016. This means that first-time buyers often don&rsquo;t have a
+choice between more than 2 or 3 apartments per month. I tried to find
+some data on how many people currently are interested in buying a home
+in Amsterdam, but I couldn&rsquo;t find anything solid. There&rsquo;s only anecdotal
+evidence from viewings where within a year, the number of people
+interested in viewing a property has increased to 80 in 2020, compared
+to about 55 a year earlier (source:
+<a href="https://www.parool.nl/amsterdam/huizenmarkt-is-gekkenhuis-kopers-profiteren-voor-1-april-nog-van-voordelige-belastingregel~bcadc579/">Parool</a>).</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">data</span> <span class="o">%&gt;%</span> 
   <span class="nf">filter</span><span class="p">(</span><span class="n">type</span> <span class="o">!=</span> <span class="s">&#34;Total&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span> 
   <span class="nf">group_by</span><span class="p">(</span><span class="n">type</span><span class="p">)</span> <span class="o">%&gt;%</span> 
@@ -332,9 +443,31 @@ code {
         <span class="n">axis.title.y</span> <span class="o">=</span> <span class="nf">element_textbox</span><span class="p">(</span><span class="n">orientation</span> <span class="o">=</span> <span class="s">&#34;left-rotated&#34;</span><span class="p">,</span>
                                        <span class="n">width</span> <span class="o">=</span> <span class="n">grid</span><span class="o">::</span><span class="nf">unit</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="s">&#34;in&#34;</span><span class="p">)),</span>
         <span class="n">legend.key</span> <span class="o">=</span> <span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;transparent&#34;</span><span class="p">))</span>
-</code></pre></div><img src="index_files/figure-html/plot-tightness-1.png" width="80%" style="display: block; margin: auto;" />
-<p>So, there&rsquo;s a lot of competition among buyers, and people looking to sell their houses can expect to be paid more than they anticipated. Dozens of buyers compete for the same properties, driving up the price. The figure below shows the percentage of properties sold compared to the number of properties offered. It&rsquo;s clear that after the 2008 housing bubble crisis, the housing market was still recovering in 2012 and 2013. However, since 2016, more apartments were sold than were put on the market. This means that the number of properties available for the growing number of people wanting to move to Amsterdam is decreasing. This decreases supply in a time with increasing demand, thus pushing the prices higher twice over.</p>
-<p style="border-radius: 5px; background-color: #acc8d4; padding: 1em;">A new phenomenon that entered the scene a little while ago may indicate how skewed the market is. People wanting to buy a house in a certain neighborhood will put notes and letters in the mailboxes of people living in that area saying <em>"Nice house! Are you interested in selling it to me?"</em>. This is now not an uncommon strategy to find a house. Some people living in popular neighborshoods are inundated with notes from agencies facilitating these practices. See also a <a href="https://www.rtlnieuws.nl/geld-en-werk/artikel/19001/droomhuis-gezien-maar-niet-te-koop-stop-dan-een-briefje-de-bus">news item by RTL</a>.</p>
+</code></pre></div><p><img src="index_files/figure-gfm/plot-tightness-1.png"
+data-fig-align="center" style="display:block; margin:auto;"
+style="width:80.0%" /></p>
+<p>So, there&rsquo;s a lot of competition among buyers, and people looking to
+sell their houses can expect to be paid more than they anticipated.
+Dozens of buyers compete for the same properties, driving up the price.
+The figure below shows the percentage of properties sold compared to the
+number of properties offered. It&rsquo;s clear that after the 2008 housing
+bubble crisis, the housing market was still recovering in 2012 and 2013.
+However, since 2016, more apartments were sold than were put on the
+market. This means that the number of properties available for the
+growing number of people wanting to move to Amsterdam is decreasing.
+This decreases supply in a time with increasing demand, thus pushing the
+prices higher twice over.</p>
+<p style="border-radius: 5px; background-color: #acc8d4; padding: 1em;">
+A new phenomenon that entered the scene a little while ago may indicate
+how skewed the market is. People wanting to buy a house in a certain
+neighborhood will put notes and letters in the mailboxes of people
+living in that area saying <em>"Nice house! Are you interested in
+selling it to me?"</em>. This is now not an uncommon strategy to find a
+house. Some people living in popular neighborshoods are inundated with
+notes from agencies facilitating these practices. See also a
+<a href="https://www.rtlnieuws.nl/geld-en-werk/artikel/19001/droomhuis-gezien-maar-niet-te-koop-stop-dan-een-briefje-de-bus">news
+item by RTL</a>.
+</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">data</span> <span class="o">%&gt;%</span> 
   <span class="nf">filter</span><span class="p">(</span><span class="n">type</span> <span class="o">!=</span> <span class="s">&#34;Total&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span> 
   <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">date</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">perc_sold</span><span class="p">,</span> <span class="n">fill</span> <span class="o">=</span> <span class="n">type</span><span class="p">))</span> <span class="o">+</span> 
@@ -358,8 +491,21 @@ code {
         <span class="n">strip.background</span> <span class="o">=</span> <span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;transparent&#34;</span><span class="p">),</span>
         <span class="n">legend.key</span> <span class="o">=</span> <span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;transparent&#34;</span><span class="p">))</span> <span class="o">+</span>
   <span class="nf">facet_wrap</span><span class="p">(</span><span class="o">~</span> <span class="n">type</span><span class="p">,</span> <span class="n">strip.position</span> <span class="o">=</span> <span class="s">&#34;top&#34;</span><span class="p">,</span> <span class="n">scales</span> <span class="o">=</span> <span class="s">&#34;free_x&#34;</span><span class="p">)</span>
-</code></pre></div><img src="index_files/figure-html/plot-n-sales-1.png" width="80%" style="display: block; margin: auto;" />
-<p>This adds fuel to the fire. I guess I&rsquo;m trying to show that there are a number of factors stacked against young buyers. Any money you have saved up you need to spend to outbid the massive competition. The massive competition means buyers only have a handful of feasible options. Again, because of the massive competition, the chance they actually get to buy one of those options is low. The number of options is not steady either, the number properties sold has overtaken the number of properties being put on the market. There is a dwindling reserve of properties. Combine this with more and more young people wanting to move to the bigger cities and you have a perfect cocktail for a congested housing market. Building new properties can counteract this, but over the last years the Netherlands has actually slowed building new properties.</p>
+</code></pre></div><p><img src="index_files/figure-gfm/plot-n-sales-1.png"
+data-fig-align="center" style="display:block; margin:auto;"
+style="width:80.0%" /></p>
+<p>This adds fuel to the fire. I guess I&rsquo;m trying to show that there are a
+number of factors stacked against young buyers. Any money you have saved
+up you need to spend to outbid the massive competition. The massive
+competition means buyers only have a handful of feasible options. Again,
+because of the massive competition, the chance they actually get to buy
+one of those options is low. The number of options is not steady either,
+the number properties sold has overtaken the number of properties being
+put on the market. There is a dwindling reserve of properties. Combine
+this with more and more young people wanting to move to the bigger
+cities and you have a perfect cocktail for a congested housing market.
+Building new properties can counteract this, but over the last years the
+Netherlands has actually slowed building new properties.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">decades</span> <span class="o">&lt;-</span> <span class="nf">tibble</span><span class="p">(</span>
   <span class="n">x1</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="m">1920</span><span class="p">,</span><span class="m">2020</span><span class="p">,</span><span class="m">10</span><span class="p">),</span>
   <span class="n">x2</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">+</span> <span class="m">10</span>
@@ -411,10 +557,51 @@ code {
                   <span class="n">subtitle</span> <span class="o">=</span> <span class="s">&#34;Data covers development in the Netherlands nationwide&#34;</span><span class="p">,</span>
                   <span class="n">caption</span> <span class="o">=</span> <span class="s">&#34;**Data**: CBS&#34;</span><span class="p">)</span> <span class="o">&amp;</span>
   <span class="nf">theme</span><span class="p">(</span><span class="n">plot.title</span> <span class="o">=</span> <span class="nf">element_textbox</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">20</span><span class="p">))</span>
-</code></pre></div><img src="index_files/figure-html/plot-n-homes-1.png" width="80%" style="display: block; margin: auto;" />
-<p>The figure displays data from from the CBS through the <code>{cbsodataR}</code> package. It shows an increase in the number of homes after the second World War in the 50s and the 60s. Since around 1975 there&rsquo;s been a decline in the net number of new houses added year-over-year. This while demand hasn&rsquo;t decreased in the same period.</p>
-<p>It&rsquo;s also important to mention that between the 60s and 70s, the Netherlands started building entire cities from scratch on newly-reclaimed land from the sea. The province of <a href="https://en.wikipedia.org/wiki/Flevoland">Flevoland</a> is currently home to about 415 000 people, and until the early 50s this province was non-existent, the current land was at the bottom of a bay of the North sea (called the Zuiderzee or &ldquo;Southern Sea&rdquo; in English). Other than a general enthusiasm for building, I think this contributed considerably to the increase in the number of homes added in the 60s and 70s. This new province has good access to Amsterdam, and if it weren&rsquo;t for this new piece of land, the shortage might have peaked earlier.</p>
-<p>But that&rsquo;s not all, there&rsquo;s a few other features that contribute to the gridlock. See, not only young people are on the market to buy apartments in Amsterdam. There&rsquo;s a thriving market for investors looking to take advantage of the rising prices in the Amsterdam housing market (source: <a href="https://www.ad.nl/wonen/beleggers-verwerven-massaal-koophuizen-voor-verhuur-in-amsterdam~afedc50c6/">Algemeen Dagblad</a>). According to the Dutch central bank, about 1 in 5 properties are sold to investors, who are mostly looking to convert it to a rental property or flip it for a profit. I couldn&rsquo;t find the data the Dutch central bank relied on, but I found something else. The Central Bureau for Statistics collects data on the number of &ldquo;mutations&rdquo; among properties. The &ldquo;mutation&rdquo; in this case refers to the change of purpose of a property, e.g. if a house meant for sale is bought and then transformed to a rental property by either private individuals or corporations, or vice versa. I collected this data from the governmental yearly report on the housing market of 2020 (&quot;<em>Staat van de Woningmarkt - Jaarrapportage 2020</em>&quot;, <a href="https://www.rijksoverheid.nl/documenten/rapporten/2020/06/15/staat-van-de-woningmarkt-jaarrapportage-2020">link</a>). Instead of per quarter, this data is reported per year. Unfortunately, the data on housing mutations in the report (from 2020 mind you) only goes until 2017. It&rsquo;s important to note that these numbers are country-wide, not specific for Amsterdam. That means there could be some other factors in play. Many of these trends are present across the country, but they&rsquo;re massively amplified in the larger cities. The data was contained in a pdf that wasn&rsquo;t easily machine-readable, so I had to manually copy the numbers into a tibble, which was great&hellip;</p>
+</code></pre></div><p><img src="index_files/figure-gfm/plot-n-homes-1.png"
+data-fig-align="center" style="display:block; margin:auto;"
+style="width:80.0%" /></p>
+<p>The figure displays data from from the CBS through the <code>{cbsodataR}</code>
+package. It shows an increase in the number of homes after the second
+World War in the 50s and the 60s. Since around 1975 there&rsquo;s been a
+decline in the net number of new houses added year-over-year. This while
+demand hasn&rsquo;t decreased in the same period.</p>
+<p>It&rsquo;s also important to mention that between the 60s and 70s, the
+Netherlands started building entire cities from scratch on
+newly-reclaimed land from the sea. The province of
+<a href="https://en.wikipedia.org/wiki/Flevoland">Flevoland</a> is currently home
+to about 415 000 people, and until the early 50s this province was
+non-existent, the current land was at the bottom of a bay of the North
+sea (called the Zuiderzee or &ldquo;Southern Sea&rdquo; in English). Other than a
+general enthusiasm for building, I think this contributed considerably
+to the increase in the number of homes added in the 60s and 70s. This
+new province has good access to Amsterdam, and if it weren&rsquo;t for this
+new piece of land, the shortage might have peaked earlier.</p>
+<p>But that&rsquo;s not all, there&rsquo;s a few other features that contribute to the
+gridlock. See, not only young people are on the market to buy apartments
+in Amsterdam. There&rsquo;s a thriving market for investors looking to take
+advantage of the rising prices in the Amsterdam housing market (source:
+<a href="https://www.ad.nl/wonen/beleggers-verwerven-massaal-koophuizen-voor-verhuur-in-amsterdam~afedc50c6/">Algemeen
+Dagblad</a>).
+According to the Dutch central bank, about 1 in 5 properties are sold to
+investors, who are mostly looking to convert it to a rental property or
+flip it for a profit. I couldn&rsquo;t find the data the Dutch central bank
+relied on, but I found something else. The Central Bureau for Statistics
+collects data on the number of &ldquo;mutations&rdquo; among properties. The
+&ldquo;mutation&rdquo; in this case refers to the change of purpose of a property,
+e.g. if a house meant for sale is bought and then transformed to a
+rental property by either private individuals or corporations, or vice
+versa. I collected this data from the governmental yearly report on the
+housing market of 2020 (&quot;<em>Staat van de Woningmarkt - Jaarrapportage
+2020</em>&quot;,
+<a href="https://www.rijksoverheid.nl/documenten/rapporten/2020/06/15/staat-van-de-woningmarkt-jaarrapportage-2020">link</a>).
+Instead of per quarter, this data is reported per year. Unfortunately,
+the data on housing mutations in the report (from 2020 mind you) only
+goes until 2017. It&rsquo;s important to note that these numbers are
+country-wide, not specific for Amsterdam. That means there could be some
+other factors in play. Many of these trends are present across the
+country, but they&rsquo;re massively amplified in the larger cities. The data
+was contained in a pdf that wasn&rsquo;t easily machine-readable, so I had to
+manually copy the numbers into a tibble, which was great&hellip;</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">house_mutations_in</span> <span class="o">&lt;-</span> <span class="nf">tribble</span><span class="p">(</span>
   <span class="o">~</span><span class="n">year</span><span class="p">,</span> <span class="o">~</span><span class="n">buy_to_rent_corp</span><span class="p">,</span> <span class="o">~</span><span class="n">buy_to_rent_other</span><span class="p">,</span> <span class="o">~</span><span class="n">rent_corp_to_buy</span><span class="p">,</span> <span class="o">~</span><span class="n">rent_corp_to_rent_other</span><span class="p">,</span> <span class="o">~</span><span class="n">rent_other_to_buy</span><span class="p">,</span> <span class="o">~</span><span class="n">rent_other_to_rent_corp</span><span class="p">,</span>
   <span class="m">2012</span><span class="p">,</span> <span class="m">900</span><span class="p">,</span> <span class="m">58000</span><span class="p">,</span> <span class="m">14600</span><span class="p">,</span> <span class="m">5500</span><span class="p">,</span> <span class="m">50600</span><span class="p">,</span> <span class="m">4900</span><span class="p">,</span>
@@ -439,7 +626,14 @@ code {
                                         <span class="nf">str_detect</span><span class="p">(</span><span class="n">.x</span><span class="p">,</span><span class="s">&#34;rent_other&#34;</span><span class="p">)</span> <span class="o">~</span> <span class="s">&#34;rent (other)&#34;</span><span class="p">)),</span>
          <span class="n">mutation_label</span> <span class="o">=</span> <span class="nf">str_glue</span><span class="p">(</span><span class="s">&#34;From {from} to {to}&#34;</span><span class="p">))</span> <span class="o">%&gt;%</span> 
   <span class="nf">ungroup</span><span class="p">()</span>
-</code></pre></div><p>So not every year there&rsquo;s the same number of &ldquo;mutations&rdquo; (transformations of purpose). That&rsquo;s I thought I&rsquo;d display this data in two different plots, one with the raw values per year, and one with the percentage-wise deconstruction per year. Now obviously, first-time buyers don&rsquo;t care about the percentage houses being taken of the market and being transformed into rental properties, they care about the total number. However, I do think showing the percentage-wise plot makes the trend a bit more clearly.</p>
+</code></pre></div><p>So not every year there&rsquo;s the same number of &ldquo;mutations&rdquo;
+(transformations of purpose). That&rsquo;s I thought I&rsquo;d display this data in
+two different plots, one with the raw values per year, and one with the
+percentage-wise deconstruction per year. Now obviously, first-time
+buyers don&rsquo;t care about the percentage houses being taken of the market
+and being transformed into rental properties, they care about the total
+number. However, I do think showing the percentage-wise plot makes the
+trend a bit more clearly.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">mutations_n_plot</span> <span class="o">&lt;-</span> <span class="n">house_mutations</span> <span class="o">%&gt;%</span> 
   <span class="nf">arrange</span><span class="p">(</span><span class="n">from</span><span class="p">,</span><span class="n">to</span><span class="p">)</span> <span class="o">%&gt;%</span> 
   <span class="nf">mutate</span><span class="p">(</span><span class="n">mutation_label</span> <span class="o">=</span> <span class="nf">fct_inorder</span><span class="p">(</span><span class="n">mutation_label</span><span class="p">))</span> <span class="o">%&gt;%</span> 
@@ -481,9 +675,35 @@ code {
                   <span class="n">caption</span> <span class="o">=</span> <span class="s">&#34;_**Data**: CBS_&#34;</span><span class="p">)</span> <span class="o">+</span>
   <span class="nf">plot_layout</span><span class="p">(</span><span class="n">guides</span> <span class="o">=</span> <span class="s">&#39;collect&#39;</span><span class="p">)</span> <span class="o">&amp;</span>
   <span class="nf">theme</span><span class="p">(</span><span class="n">plot.title</span> <span class="o">=</span> <span class="nf">element_textbox</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">20</span><span class="p">))</span>
-</code></pre></div><img src="index_files/figure-html/plot-housing-n_mutations-1.png" width="80%" style="display: block; margin: auto;" />
-<p>The total number of mutations has hovered around 150 000 since 2012. There was a bump in 2014 when about 40 000 properties were changed from &ldquo;rent (other)&rdquo; to &ldquo;rent (corporation)&rdquo;. The label &ldquo;rent (other)&rdquo; includes mostly private rentals or government-run rental properties, I think. I suspect that in 2014 one of those government-run rental agencies was privatized, causing the bump. The number of mutations from type to type has been fairly consistent until 2016. After 2016 there was a massive drop in the number of private rental properties being put up for sale, and a massive increase in the number of properties meant for sale being added to the private rental market. My guess is that this increase represents investors getting more and more involved in buying up properties and renting them out. Whereas in e.g. 2012, there was about an equal number of properties exchanged between the private rental market and the sale market, this balance is now heavily skewed. Relating this to the previous figures, where we showed that the number of houses sold exceeds the number of houses being put on the market, this also means that among those houses sold, a large number isn&rsquo;t kept in the sale market but rather added to the rental market.</p>
-<p>We can look at the net number of houses added to the rental market by adding up the different mutations. Again, prior to 2016, there were slightly more houses added to the sale market than the rental market, but after 2016, this number skyrocketed in favor of the rental market, when tens of thousands of properties were withdrawn from the sale market. Unfortunately I couldn&rsquo;t find any data since then to see if 2017 happened to be an outlier and if this number corrected to a more reasonable number since then.</p>
+</code></pre></div><p><img src="index_files/figure-gfm/plot-housing-n_mutations-1.png"
+data-fig-align="center" style="display:block; margin:auto;"
+style="width:80.0%" /></p>
+<p>The total number of mutations has hovered around 150 000 since 2012.
+There was a bump in 2014 when about 40 000 properties were changed from
+&ldquo;rent (other)&rdquo; to &ldquo;rent (corporation)&rdquo;. The label &ldquo;rent (other)&rdquo;
+includes mostly private rentals or government-run rental properties, I
+think. I suspect that in 2014 one of those government-run rental
+agencies was privatized, causing the bump. The number of mutations from
+type to type has been fairly consistent until 2016. After 2016 there was
+a massive drop in the number of private rental properties being put up
+for sale, and a massive increase in the number of properties meant for
+sale being added to the private rental market. My guess is that this
+increase represents investors getting more and more involved in buying
+up properties and renting them out. Whereas in e.g. 2012, there was
+about an equal number of properties exchanged between the private rental
+market and the sale market, this balance is now heavily skewed. Relating
+this to the previous figures, where we showed that the number of houses
+sold exceeds the number of houses being put on the market, this also
+means that among those houses sold, a large number isn&rsquo;t kept in the
+sale market but rather added to the rental market.</p>
+<p>We can look at the net number of houses added to the rental market by
+adding up the different mutations. Again, prior to 2016, there were
+slightly more houses added to the sale market than the rental market,
+but after 2016, this number skyrocketed in favor of the rental market,
+when tens of thousands of properties were withdrawn from the sale
+market. Unfortunately I couldn&rsquo;t find any data since then to see if 2017
+happened to be an outlier and if this number corrected to a more
+reasonable number since then.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">net_house_mutations</span> <span class="o">&lt;-</span> <span class="n">house_mutations</span> <span class="o">%&gt;%</span> 
   <span class="nf">mutate</span><span class="p">(</span><span class="nf">across</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="n">from</span><span class="p">,</span><span class="n">to</span><span class="p">),</span> <span class="o">~</span> <span class="nf">case_when</span><span class="p">(</span><span class="nf">str_detect</span><span class="p">(</span><span class="n">.x</span><span class="p">,</span> <span class="s">&#34;rent&#34;</span><span class="p">)</span> <span class="o">~</span> <span class="s">&#34;rent&#34;</span><span class="p">,</span>
                                         <span class="nf">str_detect</span><span class="p">(</span><span class="n">.x</span><span class="p">,</span> <span class="s">&#34;buy&#34;</span><span class="p">)</span> <span class="o">~</span> <span class="s">&#34;buy&#34;</span><span class="p">)))</span> <span class="o">%&gt;%</span>
@@ -530,8 +750,17 @@ code {
                   <span class="n">subtitle</span> <span class="o">=</span> <span class="s">&#34;_A lot more houses meant for sale are being transformed into rental properties than vice versa_&#34;</span><span class="p">,</span>
                   <span class="n">caption</span> <span class="o">=</span> <span class="s">&#34;_**Data**: CBS_&#34;</span><span class="p">)</span> <span class="o">&amp;</span>
   <span class="nf">theme</span><span class="p">(</span><span class="n">plot.title</span> <span class="o">=</span> <span class="nf">element_textbox</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">20</span><span class="p">))</span>
-</code></pre></div><img src="index_files/figure-html/net-shift-to-renters-1.png" width="80%" style="display: block; margin: auto;" />
-<p>So in 2017 nearly 90 000 houses were mutated from sale to rental properties. In that same year, about 62 000 new homes were built (source: <a href="https://www.cbs.nl/nl-nl/nieuws/2018/04/hoogste-aantal-nieuwbouwwoningen-in-acht-jaar">CBS</a>). Not all of those 62 000 homes are meant for sale, a proportion are added to the rental market, but even if all those new homes were meant for sale, the sale market still shrunk due to the (net) ~90 000 properties that were transformed and in that way removed from the sale market.</p>
+</code></pre></div><p><img src="index_files/figure-gfm/net-shift-to-renters-1.png"
+data-fig-align="center" style="display:block; margin:auto;"
+style="width:80.0%" /></p>
+<p>So in 2017 nearly 90 000 houses were mutated from sale to rental
+properties. In that same year, about 62 000 new homes were built
+(source:
+<a href="https://www.cbs.nl/nl-nl/nieuws/2018/04/hoogste-aantal-nieuwbouwwoningen-in-acht-jaar">CBS</a>).
+Not all of those 62 000 homes are meant for sale, a proportion are added
+to the rental market, but even if all those new homes were meant for
+sale, the sale market still shrunk due to the (net) ~90 000 properties
+that were transformed and in that way removed from the sale market.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">house_mutations</span> <span class="o">%&gt;%</span> 
   <span class="nf">filter</span><span class="p">(</span><span class="n">year</span> <span class="o">==</span> <span class="nf">max</span><span class="p">(</span><span class="n">year</span><span class="p">))</span> <span class="o">%&gt;%</span> 
   <span class="nf">select</span><span class="p">(</span><span class="n">from</span><span class="p">,</span> <span class="n">to</span><span class="p">,</span> <span class="n">n_mutations</span><span class="p">,</span> <span class="n">perc_mutations</span><span class="p">)</span> <span class="o">%&gt;%</span> 
@@ -563,8 +792,13 @@ code {
   <span class="nf">tab_options</span><span class="p">(</span><span class="n">table.background.color</span> <span class="o">=</span> <span class="s">&#34;#EBEBEB&#34;</span><span class="p">,</span>
               <span class="n">grand_summary_row.text_transform</span> <span class="o">=</span> <span class="s">&#34;capitalize&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">gtsave</span><span class="p">(</span><span class="s">&#34;mutations-table.png&#34;</span><span class="p">,</span> <span class="n">expand</span> <span class="o">=</span> <span class="m">0</span><span class="p">)</span>
-</code></pre></div><img src="index_files/figure-html/mutations-table-1.png" width="60%" style="display: block; margin: auto;" />
-<p>So what&rsquo;s the result of all these phenomena? The figure below shows the housing price index for Amsterdam. The first quarter of 2012 was taken as the reference point (100%). In the past 8(!) years, properties had on average nearly doubled in price.</p>
+</code></pre></div><p><img src="index_files/figure-gfm/mutations-table-1.png"
+data-fig-align="center" style="display:block; margin:auto;"
+style="width:60.0%" /></p>
+<p>So what&rsquo;s the result of all these phenomena? The figure below shows the
+housing price index for Amsterdam. The first quarter of 2012 was taken
+as the reference point (100%). In the past 8(!) years, properties had on
+average nearly doubled in price.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">asking_start</span> <span class="o">&lt;-</span> <span class="n">data</span> <span class="o">%&gt;%</span> 
   <span class="nf">filter</span><span class="p">(</span><span class="n">type</span> <span class="o">!=</span> <span class="s">&#34;Total&#34;</span><span class="p">,</span>
          <span class="n">date</span> <span class="o">==</span> <span class="nf">min</span><span class="p">(</span><span class="n">date</span><span class="p">))</span> <span class="o">%&gt;%</span> 
@@ -595,19 +829,38 @@ code {
   <span class="nf">theme</span><span class="p">(</span><span class="n">plot.title</span> <span class="o">=</span> <span class="nf">element_textbox</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">20</span><span class="p">),</span>
         <span class="n">axis.title.y</span> <span class="o">=</span> <span class="nf">element_textbox</span><span class="p">(</span><span class="n">width</span> <span class="o">=</span> <span class="n">grid</span><span class="o">::</span><span class="nf">unit</span><span class="p">(</span><span class="m">2.5</span><span class="p">,</span> <span class="s">&#34;in&#34;</span><span class="p">)),</span>
         <span class="n">legend.key</span> <span class="o">=</span> <span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;transparent&#34;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&#34;transparent&#34;</span><span class="p">))</span>
-</code></pre></div><img src="index_files/figure-html/plot-asking-index-increase-1.png" width="80%" style="display: block; margin: auto;" />
-<p>Adjusted for the number of properties offered, the average asking price in Amsterdam has increased by 107%. That means that prices since 2012 have (on average) doubled. For apartments, this increase was 110%. Inflation on the other hand was only about 8.5% since 2012. So young people wanting to buy a house in Amsterdam need to bring nearly twice as much money to the table as they did just a decade ago. The money they saved and the salaries they earned have by no means kept up with the increasing price though.</p>
-<p>I cannot know this for sure, because the data I presented here doesn&rsquo;t contain the answer, but perhaps these factors combined play a role in the financial uncertainty that millenials experience. How do we fix it? I&rsquo;m not sure. This is a really complicated issue. But a few things might (in my opinion) help:</p>
+</code></pre></div><p><img src="index_files/figure-gfm/plot-asking-index-increase-1.png"
+data-fig-align="center" style="display:block; margin:auto;"
+style="width:80.0%" /></p>
+<p>Adjusted for the number of properties offered, the average asking price
+in Amsterdam has increased by 107%. That means that prices since 2012
+have (on average) doubled. For apartments, this increase was 110%.
+Inflation on the other hand was only about 8.5% since 2012. So young
+people wanting to buy a house in Amsterdam need to bring nearly twice as
+much money to the table as they did just a decade ago. The money they
+saved and the salaries they earned have by no means kept up with the
+increasing price though.</p>
+<p>I cannot know this for sure, because the data I presented here doesn&rsquo;t
+contain the answer, but perhaps these factors combined play a role in
+the financial uncertainty that millenials experience. How do we fix it?
+I&rsquo;m not sure. This is a really complicated issue. But a few things might
+(in my opinion) help:</p>
 <ol>
 <li><strong>Build more (sustainable) durable houses</strong></li>
-<li><strong>Prohibit sale of properties to individuals who don&rsquo;t plan to live there themselves for at least 2 or 3 years</strong></li>
-<li><strong>Increase transparency when buying or selling a house through mandatory public offerings to prevent scooping by investors</strong></li>
+<li><strong>Prohibit sale of properties to individuals who don&rsquo;t plan to live
+there themselves for at least 2 or 3 years</strong></li>
+<li><strong>Increase transparency when buying or selling a house through
+mandatory public offerings to prevent scooping by investors</strong></li>
 <li><strong>Rent control to make <em>&ldquo;mutating&rdquo;</em> houses less profitable</strong></li>
 <li><strong>Increased socialized housing for poor and low-income families</strong></li>
 </ol>
-<p>Perhaps if we implement a few of these strategies we can make the housing market a little fairer and perhaps ensure that future generations will have the same opportunities current home-owners have.</p>
-<br>
-**EDIT (2021-12-03)**: Reintroduce the code to wrangle the data, generate the figures and tables etc. to the main document and put the code inside unfoldable tags to make it easier to see the code associated with a particular step while maintaining legibility.
+<p>Perhaps if we implement a few of these strategies we can make the
+housing market a little fairer and perhaps ensure that future
+generations will have the same opportunities current home-owners have.</p>
+<p><br> <strong>EDIT (2021-12-03)</strong>: Reintroduce the code to wrangle the data,
+generate the figures and tables etc. to the main document and put the
+code inside unfoldable tags to make it easier to see the code associated
+with a particular step while maintaining legibility.</p>
 <script type="text/javascript">
 // From: https://bookdown.org/yihui/rmarkdown-cookbook/details-tag.html
 (function() {

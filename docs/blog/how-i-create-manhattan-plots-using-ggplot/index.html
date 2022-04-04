@@ -13,7 +13,7 @@
     <meta property="og:title" content="
   How I Create Manhattan Plots Using ggplot - Daniel Roelfs
 ">
-    <meta property="og:description" content="How I Create Manhattan Plots Using ggplot ">
+    <meta property="og:description" content="How I Create Manhattan Plots Using ggplot">
     <meta property="og:type" content="website">
     <meta property="og:url" content="/blog/how-i-create-manhattan-plots-using-ggplot/">
     <meta property="og:image" content="/images/avatar.png">
@@ -104,9 +104,40 @@
     </header>
 
     <h3 id="introduction">Introduction</h3>
-<p>There are many ways to create a Manhattan plot. There&rsquo;s a number of online tools that create Manhattan plots for you, it&rsquo;s implemented in a number of toolboxes that are often used in genetics, and there&rsquo;s a couple of packages for R that can create these plots. However, these options often don&rsquo;t offer the customizability that some people (like me) would want. One of the most flexible ways to plot a Manhattan plot (I know of) is the <code>{manhattan}</code> package, but how nice would it be to have full control over the properties of the plot. Therefore, whenever I need to create a Manhattan plot, my preference is to go to the awesome <code>{ggplot2}</code> package. In my opinion, it gives me more control over the lay-out and properties of the Manhattan plot, so I thought I&rsquo;d go through how I go about creating Manhattan plots in R using the <code>{ggplot2}</code> package. I&rsquo;ve tried this code on GWAS summary statistics from several sources, and it works for a bunch of them. Because data can look somewhat different, I&rsquo;ll describe the concept behind some of the code, as to show what my reasoning is behind each step. One thing I should point out is that it&rsquo;s probably best to run this code on a computer that is a little bit powerful, since it will need to deal with an enormous amount of SNPs, that will create massive dataframes and plot objects.</p>
+<p>There are many ways to create a Manhattan plot. There&rsquo;s a number of
+online tools that create Manhattan plots for you, it&rsquo;s implemented in a
+number of toolboxes that are often used in genetics, and there&rsquo;s a
+couple of packages for R that can create these plots. However, these
+options often don&rsquo;t offer the customizability that some people (like me)
+would want. One of the most flexible ways to plot a Manhattan plot (I
+know of) is the <code>{manhattan}</code> package, but how nice would it be to have
+full control over the properties of the plot. Therefore, whenever I need
+to create a Manhattan plot, my preference is to go to the awesome
+<code>{ggplot2}</code> package. In my opinion, it gives me more control over the
+lay-out and properties of the Manhattan plot, so I thought I&rsquo;d go
+through how I go about creating Manhattan plots in R using the
+<code>{ggplot2}</code> package. I&rsquo;ve tried this code on GWAS summary statistics
+from several sources, and it works for a bunch of them. Because data can
+look somewhat different, I&rsquo;ll describe the concept behind some of the
+code, as to show what my reasoning is behind each step. One thing I
+should point out is that it&rsquo;s probably best to run this code on a
+computer that is a little bit powerful, since it will need to deal with
+an enormous amount of SNPs, that will create massive dataframes and plot
+objects.</p>
 <h3 id="import-data-into-r">Import data into R</h3>
-<p>The first step, as always, is to load the packages we need. I personally prefer to use as little packages as possible and write most of the code myself, because that gives me total control over what happens to my data. However, there are some packages (in particular some of the packages developed by Hadley Wickham) that are very powerful. So, all code described below depends on one of two packages, the <code>{tidyverse}</code> package, which includes the <code>{ggplot2}</code> and <code>{dplyr}</code> package. Next, I load the file that contains the GWAS summary statistics. Different tools use different file formats. The file I use is the output from PLINK with the <code>--meta-analysis</code> flag. This file can simple be loaded as a table. Here I use a function from our own <code>{normentR}</code> package, called <code>simulateGWAS()</code>, which does as the name suggest, and simulate the output from a GWAS analysis.</p>
+<p>The first step, as always, is to load the packages we need. I personally
+prefer to use as little packages as possible and write most of the code
+myself, because that gives me total control over what happens to my
+data. However, there are some packages (in particular some of the
+packages developed by Hadley Wickham) that are very powerful. So, all
+code described below depends on one of two packages, the <code>{tidyverse}</code>
+package, which includes the <code>{ggplot2}</code> and <code>{dplyr}</code> package. Next, I
+load the file that contains the GWAS summary statistics. Different tools
+use different file formats. The file I use is the output from PLINK with
+the <code>--meta-analysis</code> flag. This file can simple be loaded as a table.
+Here I use a function from our own <code>{normentR}</code> package, called
+<code>simulateGWAS()</code>, which does as the name suggest, and simulate the
+output from a GWAS analysis.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">ggtext</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">normentR</span><span class="p">)</span>
@@ -114,20 +145,37 @@
 
 <span class="n">gwas_data_load</span> <span class="o">&lt;-</span> <span class="nf">simulateGWAS</span><span class="p">(</span><span class="n">nSNPs</span> <span class="o">=</span> <span class="m">1e6</span><span class="p">,</span> <span class="n">nSigCols</span> <span class="o">=</span> <span class="m">3</span><span class="p">)</span> <span class="o">%&gt;%</span> 
   <span class="n">janitor</span><span class="o">::</span><span class="nf">clean_names</span><span class="p">()</span>
-</code></pre></div><pre tabindex="0"><code>## GENERATING SIMULATED GWAS DATASET
-## 1. Generating random rs IDs
-## 2. Generate list of N per SNP
-## 3. Generating BETA
-## 4. Generating SE
-## 5. Generating R^2
-## 6. Generating T-values
-## 7. Generating P-values
-## 8. Adding significant column in chromosome 4
-## 9. Adding significant column in chromosome 5
-## 10. Adding significant column in chromosome 7
-## DONE!
-</code></pre><p>This will create a dataframe with as many rows as there are SNPs in the summary statistics file. The columns and column names depend on what tools and functions have been used. But it should at least have a column with the chromosome (probably called <code>CHR</code>), the position of the SNP on the chromosome (probably called <code>BP</code>), the p-value (in a column called <code>P</code>), and the SNP name (in a column aptly named <code>SNP</code>). There can be multiple columns with differently weighted or corrected p-values. I usually use just the regular normal <code>P</code> column. Since I don&rsquo;t like capital letters in column names, I use the <code>clean_names()</code> function from the <code>{janitor}</code> package to clean those up. This function replaces all capital letters with lowercase letters in a clean way and adds underscores where appropriate.</p>
-<p>A vast majority of the datapoints will overlap in the non-significant region of the Manhattan plot, these data points are not particularly informative, and it&rsquo;s possible to select a random number of SNPs in this region to make it less computationally heavy. The data I used here does not have such a large volume, so I only needed to filter a small number of SNPs (10% in this case).</p>
+</code></pre></div><pre><code>GENERATING SIMULATED GWAS DATASET
+1. Generating random rs IDs
+2. Generate list of N per SNP
+3. Generating BETA
+4. Generating SE
+5. Generating R^2
+6. Generating T-values
+7. Generating P-values
+8. Adding significant column in chromosome 4
+9. Adding significant column in chromosome 5
+10. Adding significant column in chromosome 7
+DONE!
+</code></pre>
+<p>This will create a dataframe with as many rows as there are SNPs in the
+summary statistics file. The columns and column names depend on what
+tools and functions have been used. But it should at least have a column
+with the chromosome (probably called <code>CHR</code>), the position of the SNP on
+the chromosome (probably called <code>BP</code>), the p-value (in a column called
+<code>P</code>), and the SNP name (in a column aptly named <code>SNP</code>). There can be
+multiple columns with differently weighted or corrected p-values. I
+usually use just the regular normal <code>P</code> column. Since I don&rsquo;t like
+capital letters in column names, I use the <code>clean_names()</code> function from
+the <code>{janitor}</code> package to clean those up. This function replaces all
+capital letters with lowercase letters in a clean way and adds
+underscores where appropriate.</p>
+<p>A vast majority of the datapoints will overlap in the non-significant
+region of the Manhattan plot, these data points are not particularly
+informative, and it&rsquo;s possible to select a random number of SNPs in this
+region to make it less computationally heavy. The data I used here does
+not have such a large volume, so I only needed to filter a small number
+of SNPs (10% in this case).</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">sig_data</span> <span class="o">&lt;-</span> <span class="n">gwas_data_load</span> <span class="o">%&gt;%</span> 
   <span class="nf">subset</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;</span> <span class="m">0.05</span><span class="p">)</span>
 <span class="n">notsig_data</span> <span class="o">&lt;-</span> <span class="n">gwas_data_load</span> <span class="o">%&gt;%</span> 
@@ -136,7 +184,22 @@
   <span class="nf">sample_frac</span><span class="p">(</span><span class="m">0.1</span><span class="p">)</span>
 <span class="n">gwas_data</span> <span class="o">&lt;-</span> <span class="nf">bind_rows</span><span class="p">(</span><span class="n">sig_data</span><span class="p">,</span> <span class="n">notsig_data</span><span class="p">)</span>
 </code></pre></div><h3 id="preparing-the-data">Preparing the data</h3>
-<p>Since the only columns we have indicating position are the chromosome number and the base pair position of the SNP on that chromosome, we want to combine those so that we have one column with position that we can use for the x-axis. So, what we want to do is to create a column with cumulative base pair position in a way that puts the SNPs on the first chromosome first, and the SNPs on chromosome 22 last. I create a data frame frame called <code>data_cum</code> (for cumulative), which selects the largest position for each chromosome, and then calculates the cumulative sum of those. Since we don&rsquo;t need to add anything to the first chromosome, we move everything one row down (using the <code>lag()</code> function). We then merge this data frame with the original dataframe and calculate a the cumulative basepair position for each SNP by adding the relative position and the adding factor together. This will create a column (here called <code>bp_cum</code>) in which the relative base pair position is the position as if it was stitched together. This code is shown below:</p>
+<p>Since the only columns we have indicating position are the chromosome
+number and the base pair position of the SNP on that chromosome, we want
+to combine those so that we have one column with position that we can
+use for the x-axis. So, what we want to do is to create a column with
+cumulative base pair position in a way that puts the SNPs on the first
+chromosome first, and the SNPs on chromosome 22 last. I create a data
+frame frame called <code>data_cum</code> (for cumulative), which selects the
+largest position for each chromosome, and then calculates the cumulative
+sum of those. Since we don&rsquo;t need to add anything to the first
+chromosome, we move everything one row down (using the <code>lag()</code>
+function). We then merge this data frame with the original dataframe and
+calculate a the cumulative basepair position for each SNP by adding the
+relative position and the adding factor together. This will create a
+column (here called <code>bp_cum</code>) in which the relative base pair position
+is the position as if it was stitched together. This code is shown
+below:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">data_cum</span> <span class="o">&lt;-</span> <span class="n">gwas_data</span> <span class="o">%&gt;%</span> 
   <span class="nf">group_by</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span> <span class="o">%&gt;%</span> 
   <span class="nf">summarise</span><span class="p">(</span><span class="n">max_bp</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="n">bp</span><span class="p">))</span> <span class="o">%&gt;%</span> 
@@ -146,7 +209,34 @@
 <span class="n">gwas_data</span> <span class="o">&lt;-</span> <span class="n">gwas_data</span> <span class="o">%&gt;%</span> 
   <span class="nf">inner_join</span><span class="p">(</span><span class="n">data_cum</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="s">&#34;chr&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span> 
   <span class="nf">mutate</span><span class="p">(</span><span class="n">bp_cum</span> <span class="o">=</span> <span class="n">bp</span> <span class="o">+</span> <span class="n">bp_add</span><span class="p">)</span>
-</code></pre></div><p>When this is done, the next thing I want to do is to get a couple of parameters that I&rsquo;ll use for the plot later. First, I want the centre position of each chromosome. This position I&rsquo;ll use later to place the labels on the x-axis of the Manhattan plot neatly in the middle of each chromosome. In order to get this position, I&rsquo;ll pipe the <code>gwas_data</code> dataframe into this powerful <code>{dplyr}</code> function which I then ask to calculate the difference between the maximum and minimum cumulative base pair position for each chromosome and divide it by two to get the middle of each chromosome. I also want to set the limit of the y-axis, as not to cut off any highly significant SNPs. If you want to compare multiple GWAS statistics, then I highly recommend to hard code the limit of the y-axis, and then explore the data beforehand to make sure your chosen limit does not cut off any SNPs. Since the y-axis will be log transformed, we need an integer that is lower than the largest negative exponent. But since the y-axis will be linear and positive, I transform the largest exponent to positive and add 2, to give some extra space on the top edge of the plot. When plotting, I actually convert it back to a log scale, but it&rsquo;s a bit easier to add a constant to it by transforming it to a regular integer first. Then, we also want to indicate the significance threshold, I prefer to save this in a variable. Here, I choose to get a Bonferroni-corrected threshold, which is 0.05 divided by the number of SNPs in the summary statistics. I believe many scientists will use the &ldquo;standard&rdquo; threshold of 0.05 divided by 1e-6, which is 5e-8. However, in the data I had I believed it to be best to use the Bonferroni-corrected threshold since the sample encompassed different populations, and because it contained less than a million SNPs were used in the association testing, which would make a standard correction overly conservative. These three parameters were calculated as follows:</p>
+</code></pre></div><p>When this is done, the next thing I want to do is to get a couple of
+parameters that I&rsquo;ll use for the plot later. First, I want the centre
+position of each chromosome. This position I&rsquo;ll use later to place the
+labels on the x-axis of the Manhattan plot neatly in the middle of each
+chromosome. In order to get this position, I&rsquo;ll pipe the <code>gwas_data</code>
+dataframe into this powerful <code>{dplyr}</code> function which I then ask to
+calculate the difference between the maximum and minimum cumulative base
+pair position for each chromosome and divide it by two to get the middle
+of each chromosome. I also want to set the limit of the y-axis, as not
+to cut off any highly significant SNPs. If you want to compare multiple
+GWAS statistics, then I highly recommend to hard code the limit of the
+y-axis, and then explore the data beforehand to make sure your chosen
+limit does not cut off any SNPs. Since the y-axis will be log
+transformed, we need an integer that is lower than the largest negative
+exponent. But since the y-axis will be linear and positive, I transform
+the largest exponent to positive and add 2, to give some extra space on
+the top edge of the plot. When plotting, I actually convert it back to a
+log scale, but it&rsquo;s a bit easier to add a constant to it by transforming
+it to a regular integer first. Then, we also want to indicate the
+significance threshold, I prefer to save this in a variable. Here, I
+choose to get a Bonferroni-corrected threshold, which is 0.05 divided by
+the number of SNPs in the summary statistics. I believe many scientists
+will use the &ldquo;standard&rdquo; threshold of 0.05 divided by 1e-6, which is
+5e-8. However, in the data I had I believed it to be best to use the
+Bonferroni-corrected threshold since the sample encompassed different
+populations, and because it contained less than a million SNPs were used
+in the association testing, which would make a standard correction
+overly conservative. These three parameters were calculated as follows:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">axis_set</span> <span class="o">&lt;-</span> <span class="n">gwas_data</span> <span class="o">%&gt;%</span> 
   <span class="nf">group_by</span><span class="p">(</span><span class="n">chr</span><span class="p">)</span> <span class="o">%&gt;%</span> 
   <span class="nf">summarize</span><span class="p">(</span><span class="n">center</span> <span class="o">=</span> <span class="nf">mean</span><span class="p">(</span><span class="n">bp_cum</span><span class="p">))</span>
@@ -158,7 +248,17 @@
 
 <span class="n">sig</span> <span class="o">&lt;-</span> <span class="m">5e-8</span>
 </code></pre></div><h3 id="plotting-the-data">Plotting the data</h3>
-<p>Finally, we&rsquo;re ready to plot the data. As promised, I use the <code>ggplot()</code> function for this. I build this up like I would any other <code>ggplot</code> object, each SNP will be one point on the plot. Each SNP will be colored based on the chromosome. I manually set the colors, add the labels based on the definitions I determined earlier, and set the y limits to the limit calculated before as well. I add a horizontal dashed line indicating the significance threshold. In Manhattan plots we really don&rsquo;t need a grid, all that would be nice are horizontal grid lines, so I keep those but remove vertical lines. Manhattan plots can be a bit intimidating, so I prefer them as minimal as possible. Shown below is the code I use to create the plot and to save the plot as an image.</p>
+<p>Finally, we&rsquo;re ready to plot the data. As promised, I use the <code>ggplot()</code>
+function for this. I build this up like I would any other <code>ggplot</code>
+object, each SNP will be one point on the plot. Each SNP will be colored
+based on the chromosome. I manually set the colors, add the labels based
+on the definitions I determined earlier, and set the y limits to the
+limit calculated before as well. I add a horizontal dashed line
+indicating the significance threshold. In Manhattan plots we really
+don&rsquo;t need a grid, all that would be nice are horizontal grid lines, so
+I keep those but remove vertical lines. Manhattan plots can be a bit
+intimidating, so I prefer them as minimal as possible. Shown below is
+the code I use to create the plot and to save the plot as an image.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">manhplot</span> <span class="o">&lt;-</span> <span class="nf">ggplot</span><span class="p">(</span><span class="n">gwas_data</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">bp_cum</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="nf">log10</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> 
                                   <span class="n">color</span> <span class="o">=</span> <span class="nf">as_factor</span><span class="p">(</span><span class="n">chr</span><span class="p">),</span> <span class="n">size</span> <span class="o">=</span> <span class="o">-</span><span class="nf">log10</span><span class="p">(</span><span class="n">p</span><span class="p">)))</span> <span class="o">+</span>
   <span class="nf">geom_hline</span><span class="p">(</span><span class="n">yintercept</span> <span class="o">=</span> <span class="o">-</span><span class="nf">log10</span><span class="p">(</span><span class="n">sig</span><span class="p">),</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&#34;grey40&#34;</span><span class="p">,</span> <span class="n">linetype</span> <span class="o">=</span> <span class="s">&#34;dashed&#34;</span><span class="p">)</span> <span class="o">+</span> 
@@ -178,10 +278,47 @@
     <span class="n">axis.title.y</span> <span class="o">=</span> <span class="nf">element_markdown</span><span class="p">(),</span>
     <span class="n">axis.text.x</span> <span class="o">=</span> <span class="nf">element_text</span><span class="p">(</span><span class="n">angle</span> <span class="o">=</span> <span class="m">60</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">8</span><span class="p">,</span> <span class="n">vjust</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">)</span>
   <span class="p">)</span>
-</code></pre></div><p>I opt to include some white space on the x-axis around the Manhattan plot to give it some space to &ldquo;breathe&rdquo;, but this is personal preference. This white space can be removed by adding <code>expand = c(0,0)</code> to the <code>scale_x_continuous()</code> function to get a more compact plot. I also added a size aesthetic. It is possible to render the plot once it&rsquo;s created, but due to the size of the object, in this instance I&rsquo;d recommend to directly save it to a .png file instead of a pdf. It&rsquo;s possible to save it to a pdf anyway, but due to the size of the object, this will be an enormous file, but of course this depends on the resources at your disposal. If you do save it as an image, I personally like to save it in a ratio that is wider than it is tall. This is both for aesthetic reasons, and to prevent the labels on the x-axis to clash for the chromosomes of shorter length. Of course, this being a <code>ggplot()</code> object, it&rsquo;s possible to add onto this at will. One thing that you can do is to manually annotate the plot using the <code>annotate()</code>, <code>geom_text()</code>, or the <code>geom_label_repel()</code> function. The latter is implemented in the <code>{ggrepel}</code> package, and is actually quite a neat function. Do make sure to only annotate a selected number of SNPs, otherwise it will likely crash your session! I&rsquo;ve included a Manhattan plot of some simulated data below to show how it turned out for me when I ran the code described above.</p>
+</code></pre></div><p>I opt to include some white space on the x-axis around the Manhattan
+plot to give it some space to &ldquo;breathe&rdquo;, but this is personal
+preference. This white space can be removed by adding <code>expand = c(0,0)</code>
+to the <code>scale_x_continuous()</code> function to get a more compact plot. I
+also added a size aesthetic. It is possible to render the plot once it&rsquo;s
+created, but due to the size of the object, in this instance I&rsquo;d
+recommend to directly save it to a .png file instead of a pdf. It&rsquo;s
+possible to save it to a pdf anyway, but due to the size of the object,
+this will be an enormous file, but of course this depends on the
+resources at your disposal. If you do save it as an image, I personally
+like to save it in a ratio that is wider than it is tall. This is both
+for aesthetic reasons, and to prevent the labels on the x-axis to clash
+for the chromosomes of shorter length. Of course, this being a
+<code>ggplot()</code> object, it&rsquo;s possible to add onto this at will. One thing
+that you can do is to manually annotate the plot using the <code>annotate()</code>,
+<code>geom_text()</code>, or the <code>geom_label_repel()</code> function. The latter is
+implemented in the <code>{ggrepel}</code> package, and is actually quite a neat
+function. Do make sure to only annotate a selected number of SNPs,
+otherwise it will likely crash your session! I&rsquo;ve included a Manhattan
+plot of some simulated data below to show how it turned out for me when
+I ran the code described above.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">print</span><span class="p">(</span><span class="n">manhplot</span><span class="p">)</span>
-</code></pre></div><img src="index_files/figure-html/print-plot-1.png" width="1152" style="display: block; margin: auto;" />
-<p><strong>EDIT (2021-03-26)</strong>: Had to revisit some old code because I have now adopted better practices in both naming conventions and coding style. I moved away from using periods in variable names. I practically always use <code>janitor::clean_names()</code> to turn messy/ugly variable names into clean variable names. I also removed the (rather slow) for-loop in favor of a more elegant (<em>I think</em>) tidyverse solution. Biggest change that&rsquo;ll actually affect the result is in first section, where we remove superfluous datapoints with a high p-value. Here I now added the simple <code>group_by(chr)</code> line that&rsquo;ll make the split in the final plot less visible (try it both with and without that line to see what the difference is). I also adjusted the text according to the code updates. You can still access the older version in the history of the GitHub repository (<a href="https://www.github.com/danielroelfs/danielroelfs.com">danielroelfs/danielroelfs.com</a>). It&rsquo;s kinda fun to revisit older code and see how my process has improved, hope it&rsquo;ll help you too!</p>
+</code></pre></div><p><img src="index_files/figure-gfm/print-plot-1.png"
+data-fig-align="center" style="display:block; margin:auto;"
+width="1152" /></p>
+<p><strong>EDIT (2021-03-26)</strong>: Had to revisit some old code because I have now
+adopted better practices in both naming conventions and coding style. I
+moved away from using periods in variable names. I practically always
+use <code>janitor::clean_names()</code> to turn messy/ugly variable names into
+clean variable names. I also removed the (rather slow) for-loop in favor
+of a more elegant (<em>I think</em>) tidyverse solution. Biggest change that&rsquo;ll
+actually affect the result is in first section, where we remove
+superfluous datapoints with a high p-value. Here I now added the simple
+<code>group_by(chr)</code> line that&rsquo;ll make the split in the final plot less
+visible (try it both with and without that line to see what the
+difference is). I also adjusted the text according to the code updates.
+You can still access the older version in the history of the GitHub
+repository
+(<a href="https://www.github.com/danielroelfs/danielroelfs.com">danielroelfs/danielroelfs.com</a>).
+It&rsquo;s kinda fun to revisit older code and see how my process has
+improved, hope it&rsquo;ll help you too!</p>
 
   </article>
 

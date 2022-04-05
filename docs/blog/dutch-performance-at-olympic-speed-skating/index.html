@@ -427,10 +427,6 @@ preferred ordering.</p>
   <span class="nf">filter</span><span class="p">(</span><span class="nf">nchar</span><span class="p">(</span><span class="n">country</span><span class="p">)</span> <span class="o">&lt;</span> <span class="m">4</span><span class="p">)</span> <span class="o">%&gt;%</span> 
   <span class="nf">arrange</span><span class="p">(</span><span class="n">year</span><span class="p">)</span> <span class="o">%&gt;%</span> 
   <span class="nf">glimpse</span><span class="p">()</span>
-
-<span class="n">game_years</span> <span class="o">&lt;-</span> <span class="nf">unique</span><span class="p">(</span><span class="n">data</span><span class="o">$</span><span class="n">year</span><span class="p">)</span>
-
-<span class="n">event_lims</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="s">&#34;500 m&#34;</span><span class="p">,</span> <span class="s">&#34;1000 m&#34;</span><span class="p">,</span> <span class="s">&#34;1500 m&#34;</span><span class="p">,</span> <span class="s">&#34;3000 m&#34;</span><span class="p">,</span> <span class="s">&#34;5000 m&#34;</span><span class="p">,</span>  <span class="s">&#34;10000 m&#34;</span><span class="p">,</span> <span class="s">&#34;Combined&#34;</span><span class="p">,</span> <span class="s">&#34;Team pursuit&#34;</span><span class="p">,</span> <span class="s">&#34;Mass Start&#34;</span><span class="p">)</span>
 </code></pre></div><pre><code>Rows: 5,712
 Columns: 10
 $ title    &lt;chr&gt; &quot;Men's 1500 m - Speed Skating Chamonix 1924 Winter Olympics&quot;,…
@@ -444,7 +440,10 @@ $ country  &lt;chr&gt; &quot;FIN&quot;, &quot;NOR&quot;, &quot;NOR&quot;, &quot;
 $ time     &lt;dbl&gt; 2.208, 2.220, 2.256, 2.266, 2.290, 2.292, 2.298, 2.316, 2.316…
 $ comment  &lt;chr&gt; &quot;OR&quot;, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
 </code></pre>
-<p>Then we can finally create some plots. Not all speed skating events were
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">game_years</span> <span class="o">&lt;-</span> <span class="nf">unique</span><span class="p">(</span><span class="n">data</span><span class="o">$</span><span class="n">year</span><span class="p">)</span>
+
+<span class="n">event_lims</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="s">&#34;500 m&#34;</span><span class="p">,</span> <span class="s">&#34;1000 m&#34;</span><span class="p">,</span> <span class="s">&#34;1500 m&#34;</span><span class="p">,</span> <span class="s">&#34;3000 m&#34;</span><span class="p">,</span> <span class="s">&#34;5000 m&#34;</span><span class="p">,</span>  <span class="s">&#34;10000 m&#34;</span><span class="p">,</span> <span class="s">&#34;Combined&#34;</span><span class="p">,</span> <span class="s">&#34;Team pursuit&#34;</span><span class="p">,</span> <span class="s">&#34;Mass Start&#34;</span><span class="p">)</span>
+</code></pre></div><p>Then we can finally create some plots. Not all speed skating events were
 present from the start in 1924. Back then only men competed in Olympic
 speed skating, the women&rsquo;s program started in 1960. Here we&rsquo;ll create
 something that looks a bit like a Gantt chart. We&rsquo;ll use a
@@ -483,9 +482,7 @@ slightly below the line.</p>
   <span class="nf">theme_void</span><span class="p">(</span><span class="n">base_family</span> <span class="o">=</span> <span class="s">&#34;custom&#34;</span><span class="p">)</span> <span class="o">+</span> 
   <span class="nf">theme</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="nf">element_text</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="s">&#34;#333333&#34;</span><span class="p">),</span>
         <span class="n">strip.text</span> <span class="o">=</span> <span class="nf">element_text</span><span class="p">(</span><span class="n">face</span> <span class="o">=</span> <span class="s">&#34;bold&#34;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">42</span><span class="p">))</span>
-</code></pre></div><p><img src="index_files/figure-gfm/events-timeline-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/events-timeline-1.png" width="768" />
 <p>As we can see, the first Winter Olympic Games had only 5 events. This
 also included an event called &ldquo;combined&rdquo;, which is the ranking for the
 all-round best score at the speed skating tournament. This event was
@@ -543,8 +540,7 @@ color saved in that column.</p>
   <span class="nf">scale_fill_identity</span><span class="p">()</span> <span class="o">+</span> 
   <span class="nf">theme_minimal</span><span class="p">(</span><span class="n">base_family</span> <span class="o">=</span> <span class="s">&#34;custom&#34;</span><span class="p">)</span> <span class="o">+</span>
   <span class="nf">theme</span><span class="p">(</span><span class="n">panel.grid.major.y</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">())</span>
-</code></pre></div><p><img src="index_files/figure-gfm/n-medals-1.png" data-fig-align="center"
-style="display:block; margin:auto;" style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/n-medals-1.png" width="768" />
 <p>As you can see, the Netherlands has earned by far the most medals since
 1960 than any other country. In fact, it&rsquo;s earned more medals than
 number two and three combined. Now, news agencies have reported on the
@@ -592,7 +588,6 @@ won per year.</p>
         <span class="n">strip.text</span> <span class="o">=</span> <span class="nf">element_text</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">16</span><span class="p">,</span> <span class="n">face</span> <span class="o">=</span> <span class="s">&#34;bold&#34;</span><span class="p">),</span>
         <span class="n">panel.grid.major.y</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">())</span>
 </code></pre></div><p><img src="index_files/figure-gfm/n-medals-per-game-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
 style="width:100.0%" /></p>
 <p>As you can see from the plot, of the 16 Olympic Games since 1960, the
 Netherlands has earned the largest share of medals 9 times (56.25%). It
@@ -658,9 +653,7 @@ than a silver etc.). Then we&rsquo;ll look at the top 10 countries and use
         <span class="n">plot.title</span> <span class="o">=</span> <span class="nf">element_markdown</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">26</span><span class="p">),</span>
         <span class="n">plot.subtitle</span> <span class="o">=</span> <span class="nf">element_markdown</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">13</span><span class="p">),</span>
         <span class="n">axis.text.y</span> <span class="o">=</span> <span class="nf">element_text</span><span class="p">(</span><span class="n">hjust</span> <span class="o">=</span> <span class="m">1</span><span class="p">))</span>
-</code></pre></div><p><img src="index_files/figure-gfm/medal-table-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/medal-table-1.png" width="768" />
 <p>To show that a country is dominant in a particular competition it helps
 to show that a country can deliver not just one, but a few contenders
 for Olympic gold. The greatest display of strength for a country is to
@@ -700,9 +693,7 @@ this we&rsquo;ll create a simple stacked barplot.</p>
         <span class="n">axis.title.y</span> <span class="o">=</span> <span class="nf">element_text</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">12</span><span class="p">),</span>
         <span class="n">panel.grid.major.x</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
         <span class="n">panel.grid.minor</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">())</span>
-</code></pre></div><p><img src="index_files/figure-gfm/podium-sweeps-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/podium-sweeps-1.png" width="768" />
 <p>As you might gather, from this and the previous plot, the Winter Olympic
 Games from 2014 were a very good year for the Dutch speed skating team.
 That one year the Netherlands had <em>four</em> podium sweeps. For one of these
@@ -822,9 +813,7 @@ barplot.</p>
         <span class="n">plot.subtitle</span> <span class="o">=</span> <span class="nf">element_markdown</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">13</span><span class="p">),</span>
         <span class="n">axis.text.y</span> <span class="o">=</span> <span class="nf">element_markdown</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">13</span><span class="p">),</span>
         <span class="n">panel.grid.major.y</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">())</span>
-</code></pre></div><p><img src="index_files/figure-gfm/wust-win-rate-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/wust-win-rate-1.png" width="768" />
 <p>With the caveat that Ireen has only participated in one event in 2022
 (as of time of writing, 9/2/2022), there has been one instance where she
 took home a medal on every single event she participated in. The Sochi
@@ -866,9 +855,7 @@ instead with <code>geom_points()</code> in the shape and color of the medals.</p
         <span class="n">plot.subtitle</span> <span class="o">=</span> <span class="nf">element_markdown</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">13</span><span class="p">),</span>
         <span class="n">axis.text.x</span> <span class="o">=</span> <span class="nf">element_markdown</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">13</span><span class="p">),</span>
         <span class="n">panel.grid</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">())</span>
-</code></pre></div><p><img src="index_files/figure-gfm/wust-medals-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/wust-medals-1.png" width="768" />
 <p>Of course the Olympics are still ongoing, but I had a lot of fun
 collecting and visualizing this data. Again, not all numbers might
 correspond to official IOC records (as detailed
@@ -926,8 +913,6 @@ soon, but it might update this post later with the latest data.</p>
     
 
   <script src="/js/app.js"></script>
-  <script>$("img").parents('p').css("text-align", "center");</script>
-
   
   </body>
 </html>

@@ -489,8 +489,7 @@ data frame in long format and then visualize it using <code>ggplot()</code> and
   <span class="nf">coord_fixed</span><span class="p">()</span> <span class="o">+</span> 
   <span class="nf">theme</span><span class="p">(</span><span class="n">axis.text.x</span> <span class="o">=</span> <span class="nf">element_text</span><span class="p">(</span><span class="n">hjust</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> <span class="n">angle</span> <span class="o">=</span> <span class="m">30</span><span class="p">))</span>
 </code></pre></div><p><img src="index_files/figure-gfm/corr-matrix-original-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+width="768" /></p>
 <p>What we&rsquo;re looking for here are little blocks along the diagonal. This
 would indicate variables that correlate with each other. We can easily
 spot three blocks, and we can quietly expect these variables to cluster
@@ -648,9 +647,7 @@ matrix much in the same way we did earlier.</p>
   <span class="nf">coord_fixed</span><span class="p">(</span><span class="n">ratio</span> <span class="o">=</span> <span class="m">1</span><span class="o">/</span><span class="m">2</span><span class="p">)</span>
 
 <span class="nf">print</span><span class="p">(</span><span class="n">fa_loading_plot</span><span class="p">)</span>
-</code></pre></div><p><img src="index_files/figure-gfm/fa-weight-matrix-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/fa-weight-matrix-1.png" width="768" />
 <p>Here we can more easily see that there&rsquo;s two strong clusters in Factor 1
 and Factor 2. Factor 3 captures three or four variables to a lesser
 degree and Factor 4 captures mostly just a single variable
@@ -673,9 +670,7 @@ like before.</p>
        <span class="n">y</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">)</span> <span class="o">+</span>
   <span class="n">scico</span><span class="o">::</span><span class="nf">scale_fill_scico</span><span class="p">(</span><span class="n">palette</span> <span class="o">=</span> <span class="s">&#34;berlin&#34;</span><span class="p">,</span> <span class="n">limits</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">))</span> <span class="o">+</span> 
   <span class="nf">coord_equal</span><span class="p">()</span>
-</code></pre></div><p><img src="index_files/figure-gfm/fa-corr-matrix-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/fa-corr-matrix-1.png" width="768" />
 <p>We can see little correlation but certainly a few non-zero correlations
 also. In particular Factor 5 and Factor 7 seem to correlate to some
 extent at least and there are a few others with some minor correlations,
@@ -742,9 +737,7 @@ components combined capture only 56%.</p>
   <span class="nf">geom_hline</span><span class="p">(</span><span class="n">yintercept</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span> <span class="o">+</span>
   <span class="nf">geom_line</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span> <span class="o">+</span> 
   <span class="nf">geom_point</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">3</span><span class="p">)</span>
-</code></pre></div><p><img src="index_files/figure-gfm/pca-scree-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/pca-scree-1.png" width="768" />
 <p>We&rsquo;ll also create a weight matrix again, based on the rotation from the
 PCA. We&rsquo;ll create the weight matrix much in the same way as before. A
 PCA by its very nature returns an equal number of components as the
@@ -766,9 +759,7 @@ number of variables put in, however, we&rsquo;re interested in just the first
   <span class="nf">coord_fixed</span><span class="p">(</span><span class="n">ratio</span> <span class="o">=</span> <span class="m">1</span><span class="o">/</span><span class="m">2</span><span class="p">)</span>
 
 <span class="nf">print</span><span class="p">(</span><span class="n">pca_loading_plot</span><span class="p">)</span>
-</code></pre></div><p><img src="index_files/figure-gfm/pca-weight-matrix-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/pca-weight-matrix-1.png" width="768" />
 <p>One thing that immediately jumps out is that PC1 and PC2 are nearly
 identical to Factor 1 and Factor 2 from the factor analysis. The
 direction of the sign might be reversed, but we can fix this visually by
@@ -796,9 +787,7 @@ matrix the same way as before:</p>
        <span class="n">y</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">)</span> <span class="o">+</span>
   <span class="n">scico</span><span class="o">::</span><span class="nf">scale_fill_scico</span><span class="p">(</span><span class="n">palette</span> <span class="o">=</span> <span class="s">&#34;berlin&#34;</span><span class="p">,</span> <span class="n">limits</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">))</span> <span class="o">+</span> 
   <span class="nf">coord_equal</span><span class="p">()</span>
-</code></pre></div><p><img src="index_files/figure-gfm/pca-corr-matrix-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/pca-corr-matrix-1.png" width="768" />
 <p>What jumps out here is the apparent absence of correlation. By its
 design the principal components are orthogonal to each other. The PCA
 works by finding a direction (a vector) that maximizes correlation of
@@ -817,9 +806,7 @@ x-axis and PC2 on the y-axis) and also visualizes the direction across
 which correlation was maximized. It&rsquo;s simply the <code>biplot()</code> function
 implemented already in R.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">biplot</span><span class="p">(</span><span class="n">pc_model</span><span class="p">)</span>
-</code></pre></div><p><img src="index_files/figure-gfm/pca-biplot-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/pca-biplot-1.png" width="768" />
 <p>It isn&rsquo;t very pretty, but we can roughly see the directions across the
 first two components, one pointing straight down and one pointing to the
 left.</p>
@@ -847,9 +834,7 @@ a column with the corresponding element in the eigenvector.</p>
   <span class="nf">geom_hline</span><span class="p">(</span><span class="n">yintercept</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span> <span class="o">+</span>
   <span class="nf">geom_line</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span> <span class="o">+</span> 
   <span class="nf">geom_point</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">3</span><span class="p">)</span>
-</code></pre></div><p><img src="index_files/figure-gfm/pca-manual-scree-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/pca-manual-scree-1.png" width="768" />
 <p>Looks identical to the previous one. Let&rsquo;s also look at the correlation
 matrix between the principal components.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">data.frame</span><span class="p">(</span><span class="n">pc_manual</span><span class="p">)</span> <span class="o">%&gt;%</span> 
@@ -918,9 +903,7 @@ then create the plot like we&rsquo;ve done several times now.</p>
   <span class="nf">coord_fixed</span><span class="p">(</span><span class="n">ratio</span> <span class="o">=</span> <span class="m">1</span><span class="o">/</span><span class="m">2</span><span class="p">)</span>
 
 <span class="nf">print</span><span class="p">(</span><span class="n">ica_loading_plot</span><span class="p">)</span>
-</code></pre></div><p><img src="index_files/figure-gfm/ica-weight-matrix-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/ica-weight-matrix-1.png" width="768" />
 <p>The FastICA method doesn&rsquo;t rank the components based on variance like
 factor analysis and PCA. Degree of variance explained is not a part of
 the FastICA algorithm. The ordering of the clusters is not meaningful,
@@ -958,9 +941,7 @@ components.</p>
        <span class="n">y</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">)</span> <span class="o">+</span>
   <span class="n">scico</span><span class="o">::</span><span class="nf">scale_fill_scico</span><span class="p">(</span><span class="n">palette</span> <span class="o">=</span> <span class="s">&#34;berlin&#34;</span><span class="p">,</span> <span class="n">limits</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">))</span> <span class="o">+</span> 
   <span class="nf">coord_equal</span><span class="p">()</span>
-</code></pre></div><p><img src="index_files/figure-gfm/ica-corr-matrix-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/ica-corr-matrix-1.png" width="768" />
 <p>Again, the correlations between the components here are zero throughout,
 which would fit with the statistical independence. While independent
 components aren&rsquo;t forced to be uncorrelated, this is a feature of the
@@ -996,7 +977,6 @@ side by side, separated by the method we used so it&rsquo;s easier to compare.</
   <span class="n">scico</span><span class="o">::</span><span class="nf">scale_fill_scico</span><span class="p">(</span><span class="n">palette</span> <span class="o">=</span> <span class="s">&#34;cork&#34;</span><span class="p">,</span> <span class="n">limits</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">))</span> <span class="o">+</span> 
   <span class="nf">facet_wrap</span><span class="p">(</span><span class="o">~</span> <span class="n">alg</span><span class="p">,</span> <span class="n">scales</span> <span class="o">=</span> <span class="s">&#34;free_x&#34;</span><span class="p">)</span>
 </code></pre></div><p><img src="index_files/figure-gfm/all-weight-matrices-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
 style="width:100.0%" /></p>
 <p>Here we can most clearly see the overlap between the three methods,
 Factor 1, PC1, and IC 6 capture essentially the same information. The
@@ -1039,9 +1019,7 @@ supplying the <code>hclust_model</code> to the <code>plot()</code> function (lik
 <code>plot(hclust_model)</code>), but in this case I&rsquo;d prefer to use the
 <code>ggdendrogram()</code> function from the <code>{ggdendro}</code> package</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">ggdendro</span><span class="o">::</span><span class="nf">ggdendrogram</span><span class="p">(</span><span class="n">hclust_model</span><span class="p">)</span>
-</code></pre></div><p><img src="index_files/figure-gfm/dendrogram-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/dendrogram-1.png" width="768" />
 <p>Here we can see the different &ldquo;branches&rdquo; of the tree. You can see that
 for instance &ldquo;empowerment knowledge&rdquo; and &ldquo;empowerment abilities&rdquo; are
 very close to each other, but it&rsquo;s a long way from &ldquo;perception severity&rdquo;
@@ -1061,9 +1039,7 @@ branches. We can recreate this ourselves by simply adding a
 like cutting the tree at <code>y = 10.5</code> will give us 7 clusters.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">ggdendro</span><span class="o">::</span><span class="nf">ggdendrogram</span><span class="p">(</span><span class="n">hclust_model</span><span class="p">)</span> <span class="o">+</span> 
   <span class="nf">geom_hline</span><span class="p">(</span><span class="n">yintercept</span> <span class="o">=</span> <span class="m">10.5</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&#34;firebrick&#34;</span><span class="p">)</span>
-</code></pre></div><p><img src="index_files/figure-gfm/dendrogram-w-line-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/dendrogram-w-line-1.png" width="768" />
 <p>Let&rsquo;s look at how the clusters are made up according to the hierarchical
 clustering model. This isn&rsquo;t really a weight matrix, but rather a
 definition of the clusters. The &ldquo;loadings&rdquo; here are not numerical, but
@@ -1080,8 +1056,7 @@ rather 1 or 0.</p>
        <span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;cluster&#34;</span><span class="p">)</span> <span class="o">+</span> 
   <span class="n">scico</span><span class="o">::</span><span class="nf">scale_fill_scico_d</span><span class="p">(</span><span class="n">palette</span> <span class="o">=</span> <span class="s">&#34;batlow&#34;</span><span class="p">)</span>
 </code></pre></div><p><img src="index_files/figure-gfm/hclust-weight-matrix-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+width="768" /></p>
 <p>We can again see that the same two clusters show up. Cluster 6 and 7
 resemble those of Factor 2 and Factor 1, PC2 and PC1, and IC4 and IC6
 respectively. If you want to learn more about what you can do with the
@@ -1112,8 +1087,6 @@ in that effort, please let me know and I&rsquo;ll fix it as well as I can!</p>
     
 
   <script src="/js/app.js"></script>
-  <script>$("img").parents('p').css("text-align", "center");</script>
-
   
   </body>
 </html>

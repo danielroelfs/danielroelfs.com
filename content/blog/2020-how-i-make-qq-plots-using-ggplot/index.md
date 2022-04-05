@@ -11,14 +11,15 @@ tags:
 description: 'How I Make QQ Plots Using ggplot'
 thumbnail: images/avatar.png
 format: hugo
+execute:
+  fig.retina: 2
+  fig.align: center
+  fig.show: hold
+  results: hold
+  out.width: 80%
 ---
 
 
-
-<script src="//yihui.org/js/math-code.js"></script>
-<script async
-src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
 
 ### Introduction
 
@@ -97,18 +98,17 @@ input vector. In this case, we'll input just the number of SNPs. Since
 we also want to plot the confidence interval, we'll have to calculate
 the upper and lower limits of the confidence interval at each point. For
 this we'll use another base function called `qbeta()`. This generates
-the ![\\beta](https://latex.codecogs.com/svg.latex?%5Cbeta "\beta")
-distribution for a given probabily value or range of values. For the
-lower half of the confidence interval, we'll take 1 (i.e. the null line)
-minus the confidence interval (`0.95`), and since this is only half of
-the interval, we'll divide that value by 2. We'll do the same for the
-upper half of the confidence interval, except not it's 1 plus the
-confidence interval. For both the upper and lower interval, we'll supply
-a vector from 1 to the number of SNPs in your data frame and then also
-the reverse. These two vectors will be the parameters of the
-![\\beta](https://latex.codecogs.com/svg.latex?%5Cbeta "\beta")
-distribution. The output from all the functions below are the same
-length as the number of SNPs in your original data frame.
+the `$\beta$` distribution for a given probabily value or range of
+values. For the lower half of the confidence interval, we'll take 1
+(i.e. the null line) minus the confidence interval (`0.95`), and since
+this is only half of the interval, we'll divide that value by 2. We'll
+do the same for the upper half of the confidence interval, except not
+it's 1 plus the confidence interval. For both the upper and lower
+interval, we'll supply a vector from 1 to the number of SNPs in your
+data frame and then also the reverse. These two vectors will be the
+parameters of the `$\beta$` distribution. The output from all the
+functions below are the same length as the number of SNPs in your
+original data frame.
 
 ``` r
 plotdata <- data.frame(
@@ -211,9 +211,7 @@ patient. Let's see what the plot looks like.
 print(qqplot)
 ```
 
-<img src="index_files/figure-gfm/print-plot-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-width="768" />
+<img src="index_files/figure-gfm/print-plot-1.png" width="768" />
 
 Now we have our QQ plot. We see that our (simulated) GWAS dataset has a
 very nice signal! I'd be dissapointed if it didn't since I coded it to

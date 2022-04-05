@@ -212,9 +212,10 @@ bounds of the confidence interval.</p>
   <span class="nf">summarise</span><span class="p">(</span><span class="n">Mean_Amplitude</span> <span class="o">=</span> <span class="nf">mean</span><span class="p">(</span><span class="n">Amplitude</span><span class="p">),</span>
             <span class="n">CIlower</span> <span class="o">=</span> <span class="n">Rmisc</span><span class="o">::</span><span class="nf">CI</span><span class="p">(</span><span class="n">Amplitude</span><span class="p">,</span> <span class="n">ci</span> <span class="o">=</span> <span class="m">0.95</span><span class="p">)</span><span class="n">[</span><span class="s">&#34;lower&#34;</span><span class="n">]</span><span class="p">,</span>
             <span class="n">CIupper</span> <span class="o">=</span> <span class="n">Rmisc</span><span class="o">::</span><span class="nf">CI</span><span class="p">(</span><span class="n">Amplitude</span><span class="p">,</span> <span class="n">ci</span> <span class="o">=</span> <span class="m">0.95</span><span class="p">)</span><span class="n">[</span><span class="s">&#34;upper&#34;</span><span class="n">]</span><span class="p">)</span>
-<span class="c1">## `summarise()` has grouped output by &#39;Condition&#39;. You can override using the</span>
-<span class="c1">## `.groups` argument.</span>
-</code></pre></div><h2 id="preparing-to-plot">Preparing to plot</h2>
+</code></pre></div><pre><code>`summarise()` has grouped output by 'Condition'. You can override using the
+`.groups` argument.
+</code></pre>
+<h2 id="preparing-to-plot">Preparing to plot</h2>
 <p>Before we can start plotting, I just wanted to share one piece of code I
 found on StackOverflow. The question there was to move the x-axis and
 y-axis line towards 0, rather than the edge of the plot. You can find
@@ -256,8 +257,7 @@ confidence interval. I hope this was helpful and informative. Good luck!</p>
     <span class="n">axis.text.x</span> <span class="o">=</span> <span class="nf">element_text</span><span class="p">(</span><span class="n">vjust</span> <span class="o">=</span> <span class="m">-0.1</span><span class="p">)</span>
   <span class="p">)</span>
 <span class="nf">shift_axes</span><span class="p">(</span><span class="n">ERPplot</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="m">0</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="m">0</span><span class="p">)</span>
-</code></pre></div><p><img src="index_files/figure-gfm/erp-plot-1.png" data-fig-align="center"
-style="display:block; margin:auto;" width="1152" /></p>
+</code></pre></div><img src="index_files/figure-gfm/erp-plot-1.png" width="1152" />
 
   </article>
 
@@ -280,8 +280,6 @@ style="display:block; margin:auto;" width="1152" /></p>
     
 
   <script src="/js/app.js"></script>
-  <script>$("img").parents('p').css("text-align", "center");</script>
-
   
   </body>
 </html>

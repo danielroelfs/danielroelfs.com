@@ -11,6 +11,12 @@ tags:
 description: 'How I Create Manhattan Plots Using ggplot'
 thumbnail: images/avatar.png
 format: hugo
+execute:
+  fig.retina: 2
+  fig.align: center
+  fig.show: hold
+  results: hold
+  out.width: 80%
 ---
 
 
@@ -211,7 +217,6 @@ manhplot <- ggplot(gwas_data, aes(x = bp_cum, y = -log10(p),
   theme_minimal() +
   theme( 
     legend.position = "none",
-    panel.border = element_blank(),
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank(),
     axis.title.y = element_markdown(),
@@ -245,9 +250,7 @@ I ran the code described above.
 print(manhplot)
 ```
 
-<img src="index_files/figure-gfm/print-plot-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-width="1152" />
+<img src="index_files/figure-gfm/print-plot-1.png" width="1152" />
 
 **EDIT (2021-03-26)**: Had to revisit some old code because I have now
 adopted better practices in both naming conventions and coding style. I

@@ -12,9 +12,19 @@ tags:
 description: 'Analyzing Bach'
 thumbnail: images/avatar.png
 format: hugo
+execute:
+  fig.retina: 2
+  fig.align: center
+  fig.show: hold
+  results: hold
+  out.width: 80%
 ---
 
-<style>
+```{r knits-opts, include=FALSE}
+knitr::opts_chunk$set(dev.args = list(bg = "#FFFFF0"))
+```
+
+```{css, echo=FALSE}
 @import url('https://fonts.googleapis.com/css?family=IM+Fell+English|IM+Fell+English+SC&display=swap');
 body{
   background-color: #FFFFF0;
@@ -30,14 +40,6 @@ h2,h3,h4,h5,h6 {
   font-family: 'IM Fell English SC', serif;
   font-size: 6rem;
 }
-</style>
-
-```{r knits-opts, include=FALSE}
-knitr::opts_chunk$set(dev.args = list(bg = "#FFFFF0"),
-                      fig.retina = 2,
-                      fig.show = 'hold', 
-                      fig.align = 'center',
-                      out.extra = 'style="display:block; margin:auto;"')
 ```
 
 ```{r setup, message=FALSE, warning=FALSE, cache=FALSE, echo=FALSE}

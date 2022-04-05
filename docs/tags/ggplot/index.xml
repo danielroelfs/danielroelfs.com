@@ -23,7 +23,7 @@ Previously, I used a JSON file and the {geojsonio} package to create a map of No
       <pubDate>Sun, 20 Jun 2021 00:00:00 +0000</pubDate>
       
       <guid>/blog/visualizing-the-state-of-the-amsterdam-housing-market/</guid>
-      <description>body { background-color: #EBEBEB; /* was #EFEFEF */ } table { font-family: &#34;Nunito Sans&#34;, sans-serif; } code { background: #E0E0E0; }  For this post, I decided to hide the code chunks by default to improve legibility. You can click the Show code-button to expand the code. Introduction I&amp;rsquo;m at the age where a lot of my peers start thinking about buying a home. It is a major conversation topic around the office, and these conversations are not often filled with optimism and excitement.</description>
+      <description>body { background-color: #EBEBEB; /* was #EFEFEF */ } table { font-family: &#34;Nunito Sans&#34;, sans-serif; } code { background: #E0E0E0; } img { max-width: 80%; }  For this post, I decided to hide the code chunks by default to improve legibility. You can click the Show code-button to expand the code. Introduction I&amp;rsquo;m at the age where a lot of my peers start thinking about buying a home. It is a major conversation topic around the office, and these conversations are not often filled with optimism and excitement.</description>
     </item>
     
     <item>

@@ -12,6 +12,12 @@ tags:
 description: "Everything is a Linear Model"
 thumbnail: images/avatar.png
 format: hugo
+execute:
+  fig.retina: 2
+  fig.align: center
+  fig.show: hold
+  results: hold
+  out.width: 80%
 ---
 
 
@@ -125,7 +131,6 @@ interval have changed, although the range stays the same.
 
 ``` r
 t.test(concentration, mu = ref_concentration)
-t.test(concentration - ref_concentration, mu = 0)
 ```
 
 
@@ -139,6 +144,10 @@ t.test(concentration - ref_concentration, mu = 0)
     sample estimates:
     mean of x 
      2.855086 
+
+``` r
+t.test(concentration - ref_concentration, mu = 0)
+```
 
 
         One Sample t-test
@@ -279,8 +288,7 @@ ggplot(data, aes(x = group, y = concentration, fill = group)) +
   theme(legend.position = "none")
 ```
 
-<img src="index_files/figure-gfm/tst-boxplot-1.png"
-data-fig-align="center" style="width:80.0%" />
+<img src="index_files/figure-gfm/tst-boxplot-1.png" width="768" />
 
 Great! Now we have a visual representation of the data. Now, since the
 T-test compares means, we can might also add a point indicating the mean
@@ -301,8 +309,7 @@ ggplot(data, aes(x = group)) +
   theme_minimal()
 ```
 
-<img src="index_files/figure-gfm/tst-plot-1.png" data-fig-align="center"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/tst-plot-1.png" width="768" />
 
 You might see where we are going with this. The parameters from the
 linear model will describe the angle of the diagonal line and I'll
@@ -386,8 +393,7 @@ between the mean of the second group minor the mean of the first group.
 Now we can go back to the figure we made earlier and see how all these
 values relate:
 
-<img src="index_files/figure-gfm/tst-plot-w-annot-1.png"
-data-fig-align="center" style="width:80.0%" />
+<img src="index_files/figure-gfm/tst-plot-w-annot-1.png" width="768" />
 
 And that's how a Two-Sample T-test is basically a linear model!
 
@@ -481,8 +487,7 @@ ggplot(data, aes(x = group, y = score - ref_mean)) +
   theme_minimal()
 ```
 
-<img src="index_files/figure-gfm/aov-plot-1.png" data-fig-align="center"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/aov-plot-1.png" width="768" />
 
 Oh, would you look at that! The differences between the group means and
 the reference mean (in this case SCZ) correspond with the `Estimate` of
@@ -596,8 +601,7 @@ ggplot(data, aes(x = age, y = measure)) +
 
     `geom_smooth()` using formula 'y ~ x'
 
-<img src="index_files/figure-gfm/lm-plot-1.png" data-fig-align="center"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/lm-plot-1.png" width="768" />
 
 The line in the figure above shows the line that best fits the points
 with a ribbon indicating the standard error.
@@ -676,8 +680,7 @@ before. I added points along the regression line to indicate where each
 point will move to, and an arrow to indicate the size and the direction
 of the difference between the observed and the predicted value:
 
-<img src="index_files/figure-gfm/lm-plot-error-1.png"
-data-fig-align="center" style="width:80.0%" />
+<img src="index_files/figure-gfm/lm-plot-error-1.png" width="768" />
 
 You might have noticed now that the size of the arrow is defined as the
 difference between the observed and predicted value, i.e. the residual!
@@ -689,8 +692,7 @@ multiply the length of one side of the square by itself, i.e. you square
 it! That's where the "squared error" part of that comes from. Perhaps
 the figure below helps illustrate it:
 
-<img src="index_files/figure-gfm/lm-plot-squares-1.png"
-data-fig-align="center" style="width:80.0%" />
+<img src="index_files/figure-gfm/lm-plot-squares-1.png" width="768" />
 
 The "sum" part of "sum of squared error" refers to the sum of the areas
 of those squares. Simply, you sum the square of the sides. You can also
@@ -728,8 +730,7 @@ the sum of squared differences between the observed values and the mean
 value. I'll also add the original regression line in the background to
 show the difference with the sum of squared error.
 
-<img src="index_files/figure-gfm/lm-plot-mean-1.png"
-data-fig-align="center" style="width:80.0%" />
+<img src="index_files/figure-gfm/lm-plot-mean-1.png" width="768" />
 
 We already calculated the difference with the regression line, then to
 calculate the difference with the mean is simple:

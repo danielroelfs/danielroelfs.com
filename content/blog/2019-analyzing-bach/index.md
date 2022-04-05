@@ -12,11 +12,17 @@ tags:
 description: 'Analyzing Bach'
 thumbnail: images/avatar.png
 format: hugo
+execute:
+  fig.retina: 2
+  fig.align: center
+  fig.show: hold
+  results: hold
+  out.width: 80%
 ---
 
 
 
-<style>
+<style type="text/css">
 @import url('https://fonts.googleapis.com/css?family=IM+Fell+English|IM+Fell+English+SC&display=swap');
 body{
   background-color: #FFFFF0;
@@ -263,9 +269,7 @@ data %>%
     axis.text.x = element_text(angle = 45, hjust = 1.1, vjust = 1.15))
 ```
 
-<img src="index_files/figure-gfm/lollipop-cat1-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-width="768" />
+<img src="index_files/figure-gfm/lollipop-cat1-1.png" width="768" />
 
 It seems Bach didn't have a strong preference for either instrumental or
 choral music. I suppose he didn't have infinite freedom with what to
@@ -294,9 +298,7 @@ data %>%
     )
 ```
 
-<img src="index_files/figure-gfm/lollipop-cat2-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-width="768" />
+<img src="index_files/figure-gfm/lollipop-cat2-1.png" width="768" />
 
 From this it seems that most of the intrumental pieces are made up by
 just solo pieces for organ and the harpsichord and that the choral
@@ -329,8 +331,7 @@ data %>%
   )
 ```
 
-<img src="index_files/figure-gfm/waffle-1.png" data-fig-align="center"
-style="display:block; margin:auto;" width="1152" />
+<img src="index_files/figure-gfm/waffle-1.png" width="1152" />
 
 ## Scraping Wikipedia
 
@@ -439,9 +440,7 @@ ggplot(BWVperyear, aes(x = year, y = n, fill = n)) +
     )
 ```
 
-<img src="index_files/figure-gfm/BWVperyear-plot-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-width="1152" />
+<img src="index_files/figure-gfm/BWVperyear-plot-1.png" width="1152" />
 
 It seems there were two particularly productive years. But since the
 year column likely indicates year of publication, it's perhaps more
@@ -489,9 +488,7 @@ ggplot(summ_key_cat1, aes(x = reorder(Key,-n), y = n, fill = category1)) +
   )
 ```
 
-<img src="index_files/figure-gfm/colplot-key-cat1-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-width="768" />
+<img src="index_files/figure-gfm/colplot-key-cat1-1.png" width="768" />
 
 I noticed that there were no double keys, as in B flat is the same as A
 sharp. The person who compiled the table must have taken it into account
@@ -548,7 +545,6 @@ ggplot(plotdat, aes(x = Key, y = reorder(category2,n), fill = n)) +
 ```
 
 <img src="index_files/figure-gfm/tileplot-key-cat2-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
 width="1152" />
 
 ## Places Bach lived and worked
@@ -586,9 +582,7 @@ high outliers.
 
     Warning: Removed 1 rows containing non-finite values (stat_smooth).
 
-<img src="index_files/figure-gfm/plot-with-city-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-width="1152" />
+<img src="index_files/figure-gfm/plot-with-city-1.png" width="1152" />
 
 It's obvious that Bach lived in Leipzich the longest. He had a few
 productive periods, the last one perhaps being due to the publication of
@@ -610,8 +604,7 @@ ggplot(places_unique, aes(x = lon, y = lat)) +
   theme_void()
 ```
 
-<img src="index_files/figure-gfm/mapplot-1.png" data-fig-align="center"
-style="display:block; margin:auto;" width="768" />
+<img src="index_files/figure-gfm/mapplot-1.png" width="768" />
 
 This was a fun exercise in scraping data and trying out new things with
 visualization!

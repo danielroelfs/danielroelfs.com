@@ -11,6 +11,12 @@ tags:
 description: "A Basic Comparison Between Factor Analysis, PCA, and ICA"
 thumbnail: images/avatar.png
 format: hugo
+execute:
+  fig.retina: 2
+  fig.align: center
+  fig.show: hold
+  results: hold
+  out.width: 80%
 ---
 
 
@@ -173,8 +179,7 @@ cor(data_features) %>%
 ```
 
 <img src="index_files/figure-gfm/corr-matrix-original-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+width="768" />
 
 What we're looking for here are little blocks along the diagonal. This
 would indicate variables that correlate with each other. We can easily
@@ -353,9 +358,7 @@ fa_loading_plot <- ggplot(fa_weight_matrix, aes(x = factor, y = variable, fill =
 print(fa_loading_plot)
 ```
 
-<img src="index_files/figure-gfm/fa-weight-matrix-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/fa-weight-matrix-1.png" width="768" />
 
 Here we can more easily see that there's two strong clusters in Factor 1
 and Factor 2. Factor 3 captures three or four variables to a lesser
@@ -384,9 +387,7 @@ fa_model$scores %>%
   coord_equal()
 ```
 
-<img src="index_files/figure-gfm/fa-corr-matrix-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/fa-corr-matrix-1.png" width="768" />
 
 We can see little correlation but certainly a few non-zero correlations
 also. In particular Factor 5 and Factor 7 seem to correlate to some
@@ -465,9 +466,7 @@ pc_model$variance %>%
   geom_point(size = 3)
 ```
 
-<img src="index_files/figure-gfm/pca-scree-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/pca-scree-1.png" width="768" />
 
 We'll also create a weight matrix again, based on the rotation from the
 PCA. We'll create the weight matrix much in the same way as before. A
@@ -494,9 +493,7 @@ pca_loading_plot <- pc_weight_matrix %>%
 print(pca_loading_plot)
 ```
 
-<img src="index_files/figure-gfm/pca-weight-matrix-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/pca-weight-matrix-1.png" width="768" />
 
 One thing that immediately jumps out is that PC1 and PC2 are nearly
 identical to Factor 1 and Factor 2 from the factor analysis. The
@@ -530,9 +527,7 @@ pc_model$x %>%
   coord_equal()
 ```
 
-<img src="index_files/figure-gfm/pca-corr-matrix-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/pca-corr-matrix-1.png" width="768" />
 
 What jumps out here is the apparent absence of correlation. By its
 design the principal components are orthogonal to each other. The PCA
@@ -557,9 +552,7 @@ implemented already in R.
 biplot(pc_model)
 ```
 
-<img src="index_files/figure-gfm/pca-biplot-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/pca-biplot-1.png" width="768" />
 
 It isn't very pretty, but we can roughly see the directions across the
 first two components, one pointing straight down and one pointing to the
@@ -597,9 +590,7 @@ tibble(eigenvalues) %>%
   geom_point(size = 3)
 ```
 
-<img src="index_files/figure-gfm/pca-manual-scree-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/pca-manual-scree-1.png" width="768" />
 
 Looks identical to the previous one. Let's also look at the correlation
 matrix between the principal components.
@@ -683,9 +674,7 @@ ica_loading_plot <- ggplot(ica_weight_matrix, aes(x = ic, y = variable, fill = l
 print(ica_loading_plot)
 ```
 
-<img src="index_files/figure-gfm/ica-weight-matrix-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/ica-weight-matrix-1.png" width="768" />
 
 The FastICA method doesn't rank the components based on variance like
 factor analysis and PCA. Degree of variance explained is not a part of
@@ -729,9 +718,7 @@ ica_model$S %>%
   coord_equal()
 ```
 
-<img src="index_files/figure-gfm/ica-corr-matrix-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/ica-corr-matrix-1.png" width="768" />
 
 Again, the correlations between the components here are zero throughout,
 which would fit with the statistical independence. While independent
@@ -773,7 +760,6 @@ all_weight_matrices %>%
 ```
 
 <img src="index_files/figure-gfm/all-weight-matrices-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
 style="width:100.0%" />
 
 Here we can most clearly see the overlap between the three methods,
@@ -828,9 +814,7 @@ supplying the `hclust_model` to the `plot()` function (like
 ggdendro::ggdendrogram(hclust_model)
 ```
 
-<img src="index_files/figure-gfm/dendrogram-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/dendrogram-1.png" width="768" />
 
 Here we can see the different "branches" of the tree. You can see that
 for instance "empowerment knowledge" and "empowerment abilities" are
@@ -859,9 +843,7 @@ ggdendro::ggdendrogram(hclust_model) +
   geom_hline(yintercept = 10.5, color = "firebrick")
 ```
 
-<img src="index_files/figure-gfm/dendrogram-w-line-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/dendrogram-w-line-1.png" width="768" />
 
 Let's look at how the clusters are made up according to the hierarchical
 clustering model. This isn't really a weight matrix, but rather a
@@ -883,8 +865,7 @@ hclust_weight_matrix %>%
 ```
 
 <img src="index_files/figure-gfm/hclust-weight-matrix-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+width="768" />
 
 We can again see that the same two clusters show up. Cluster 6 and 7
 resemble those of Factor 2 and Factor 1, PC2 and PC1, and IC4 and IC6

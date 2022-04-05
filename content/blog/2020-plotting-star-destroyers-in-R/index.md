@@ -11,6 +11,12 @@ tags:
 description: 'Plotting Star Destroyers in R'
 thumbnail: images/avatar.png
 format: hugo
+execute:
+  fig.retina: 2
+  fig.align: center
+  fig.show: hold
+  results: hold
+  out.width: 80%
 ---
 
 
@@ -18,11 +24,6 @@ format: hugo
 <script src="index_files/libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="index_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
-
-<script src="//yihui.org/js/math-code.js"></script>
-<script async
-src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
 
 ### Introduction
 
@@ -202,16 +203,14 @@ we divide our initial value by 2 (and round it to the lower integer it
 in case we get decimal points) and take the modulus again. So the
 modulus of 6 when divided by 2 is 0. So that's the second digit. The
 next loop will result in another 1
-(![x = 6; \\lfloor x/2 \\rfloor\\ mod\\ 2 = 1](https://latex.codecogs.com/svg.latex?x%20%3D%206%3B%20%5Clfloor%20x%2F2%20%5Crfloor%5C%20mod%5C%202%20%3D%201 "x = 6; \lfloor x/2 \rfloor\ mod\ 2 = 1"),
-![\\lfloor x \\rfloor](https://latex.codecogs.com/svg.latex?%5Clfloor%20x%20%5Crfloor "\lfloor x \rfloor")
-represents rounding ![x](https://latex.codecogs.com/svg.latex?x "x") to
-the nearest lower integer, i.e. floor), and then in the final loop, we
-take half of 3 and take the modulus again
-(![x = 3; \\lfloor x/2 \\rfloor\\ mod\\ 2 = 1](https://latex.codecogs.com/svg.latex?x%20%3D%203%3B%20%5Clfloor%20x%2F2%20%5Crfloor%5C%20mod%5C%202%20%3D%201 "x = 3; \lfloor x/2 \rfloor\ mod\ 2 = 1")).
-After this, when we floor 0.5, the loop cancels since from here on it
-will just produce an infinite amount of leading zero's. This function
-now gives us the value 1101, which corresponds to the table above. The
-code for this function looks like this:
+(`$x = 6; \lfloor x/2 \rfloor\ mod\ 2 = 1$`, `$\lfloor x \rfloor$`
+represents rounding `$x$` to the nearest lower integer, i.e. floor), and
+then in the final loop, we take half of 3 and take the modulus again
+(`$x = 3; \lfloor x/2 \rfloor\ mod\ 2 = 1$`). After this, when we floor
+0.5, the loop cancels since from here on it will just produce an
+infinite amount of leading zero's. This function now gives us the value
+1101, which corresponds to the table above. The code for this function
+looks like this:
 
 ``` r
 ConvertToBinary <- function(x) {
@@ -293,27 +292,21 @@ which makes -1. We would also replace the second digit of fifth value
 (`12`), which makes \[1,-1\], which, when we add these numbers up ,
 makes 2. This because 1 in the first position denotes value 3, minus 1
 in the second position (representing 1) makes 2 since
-![(3\*1) + (1\*-1) = 2](https://latex.codecogs.com/svg.latex?%283%2A1%29%20%2B%20%281%2A-1%29%20%3D%202 "(3*1) + (1*-1) = 2").
-The next value (`20`) has a 2 in the first position, replace this with
--1 makes \[-1,0\]. The first position denotes 3, minus 0 in the second
-position, makes -3 since
-![(3\*-1) + (1\*0) = -3](https://latex.codecogs.com/svg.latex?%283%2A-1%29%20%2B%20%281%2A0%29%20%3D%20-3 "(3*-1) + (1*0) = -3").
-Applying the same rule to the sixth value gives
-![(3\*-1) + (1\*1)](https://latex.codecogs.com/svg.latex?%283%2A-1%29%20%2B%20%281%2A1%29 "(3*-1) + (1*1)")
-which makes -2. The next value has two incidences of the number 2,
-replacing both with -1 gives
-![(3\*-1) + (1\*-1)](https://latex.codecogs.com/svg.latex?%283%2A-1%29%20%2B%20%281%2A-1%29 "(3*-1) + (1*-1)")
-is equal to -4. Let's skip ahead a few numbers to decimal number 18,
-which in ternary becomes 200, where the first position represents the
-number 9. Replacing the 2 in this number gives
-![(9\*-1) + (3\*0) + (1\*0)](https://latex.codecogs.com/svg.latex?%289%2A-1%29%20%2B%20%283%2A0%29%20%2B%20%281%2A0%29 "(9*-1) + (3*0) + (1*0)"),
-which makes -9. This process is the balanced ternary enumeration.
+`$(3*1) + (1*-1) = 2$`. The next value (`20`) has a 2 in the first
+position, replace this with -1 makes \[-1,0\]. The first position
+denotes 3, minus 0 in the second position, makes -3 since
+`$(3*-1) + (1*0) = -3$`. Applying the same rule to the sixth value gives
+`$(3*-1) + (1*1)$` which makes -2. The next value has two incidences of
+the number 2, replacing both with -1 gives `$(3*-1) + (1*-1)$` is equal
+to -4. Let's skip ahead a few numbers to decimal number 18, which in
+ternary becomes 200, where the first position represents the number 9.
+Replacing the 2 in this number gives `$(9*-1) + (3*0) + (1*0)$`, which
+makes -9. This process is the balanced ternary enumeration.
 
 Just as show of proof, we can also apply the same formula to values that
 don't contain a 2, for instance decimal number 10, which becomes 101 in
-ternary. The formula for this becomes
-![(9\*1) + (3\*0) + (1\*1)](https://latex.codecogs.com/svg.latex?%289%2A1%29%20%2B%20%283%2A0%29%20%2B%20%281%2A1%29 "(9*1) + (3*0) + (1*1)"),
-which makes again 10.
+ternary. The formula for this becomes `$(9*1) + (3*0) + (1*1)$`, which
+makes again 10.
 
 Let's put this sequence together:
 
@@ -327,26 +320,11 @@ So obviously we are lazy, and don't want to do this process manually for
 thousands of values. that's why we're going to code it. For this step I
 translated some Python code to R syntax. The function I wrote to do one
 step of balanced ternary enumartion is shown below. The first value is
-always 0 (since it's a 0 in the first position, hence
-![1\*0 = 0](https://latex.codecogs.com/svg.latex?1%2A0%20%3D%200 "1*0 = 0")).
+always 0 (since it's a 0 in the first position, hence `$1*0 = 0$`).
 After this, we can incorporate the two steps (of converting into ternary
 and the enumeration) into one. The formula for this looks like this:
 
-![
-\\begin{aligned}
-a(0) &= 0\\\\
-a(3n) &= 3 \* a(n)\\\\
-a(3n + 1) &= 3 \* a(n) + 1\\\\
-a(3n + 2) &= 3 \* a(n) - 1\\\\
-\\end{aligned}
-](https://latex.codecogs.com/svg.latex?%0A%5Cbegin%7Baligned%7D%0Aa%280%29%20%26%3D%200%5C%5C%0Aa%283n%29%20%26%3D%203%20%2A%20a%28n%29%5C%5C%0Aa%283n%20%2B%201%29%20%26%3D%203%20%2A%20a%28n%29%20%2B%201%5C%5C%0Aa%283n%20%2B%202%29%20%26%3D%203%20%2A%20a%28n%29%20-%201%5C%5C%0A%5Cend%7Baligned%7D%0A "
-\begin{aligned}
-a(0) &= 0\\
-a(3n) &= 3 * a(n)\\
-a(3n + 1) &= 3 * a(n) + 1\\
-a(3n + 2) &= 3 * a(n) - 1\\
-\end{aligned}
-")
+`$$\begin{aligned} a(0) &= 0\\ a(3n) &= 3 * a(n)\\ a(3n + 1) &= 3 * a(n) + 1\\ a(3n + 2) &= 3 * a(n) - 1\\ \end{aligned}$$`
 
 The Python code for this function came from a website that collects
 mathematical functions and sequences and can be found
@@ -423,9 +401,7 @@ ggplot(data = NULL, aes(x = seq(starwars_seq), y = starwars_seq)) +
   theme_minimal()
 ```
 
-<img src="index_files/figure-gfm/sw-minimal-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-width="768" />
+<img src="index_files/figure-gfm/sw-minimal-1.png" width="768" />
 
 It's star destroyers in battle formation! How crazy is that!? It's such
 an interesting pattern. You can create as many formations as you like
@@ -456,10 +432,9 @@ BTE(59049)
 
 There is a range of values where the input of the balanced ternary
 enumeration is equal to the outcome (or where the outcome is equal to
-the input divided by two times -1
-(![\\frac{-x}{2}](https://latex.codecogs.com/svg.latex?%5Cfrac%7B-x%7D%7B2%7D "\frac{-x}{2}")).
-There's a clear pattern to these numbers, but I've done enough maths for
-today, so I'll save it for another time.
+the input divided by two times -1 (`$\frac{-x}{2}$`). There's a clear
+pattern to these numbers, but I've done enough maths for today, so I'll
+save it for another time.
 
 Anyway, the plot! It is cool and all, but let's make it look a bit more
 like Star Wars by changing some style elements. We'll also generate some
@@ -484,9 +459,7 @@ ggplot(data = NULL, aes(x = seq(starwars_seq), y = starwars_seq)) +
   )
 ```
 
-<img src="index_files/figure-gfm/plot-pretty-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-width="1152" />
+<img src="index_files/figure-gfm/plot-pretty-1.png" width="768" />
 
 Hope you enjoyed reading about me rambling about maths and implementing
 these functions to R! I will certainly do another plot some time later!
@@ -502,6 +475,4 @@ ggplot(data = NULL, aes(x = seq(starwars_seq), y = starwars_seq)) +
   theme_minimal()
 ```
 
-<img src="index_files/figure-gfm/plot-castle-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-width="768" />
+<img src="index_files/figure-gfm/plot-castle-1.png" width="768" />

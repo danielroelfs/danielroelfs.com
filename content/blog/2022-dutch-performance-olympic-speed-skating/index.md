@@ -11,6 +11,12 @@ tags:
 description: "Dutch performance at Olympic speed skating"
 thumbnail: images/avatar.png
 format: hugo
+execute:
+  fig.retina: 2
+  fig.align: center
+  fig.show: hold
+  results: hold
+  out.width: 80%
 ---
 
 
@@ -358,10 +364,6 @@ data <- data_load %>%
   filter(nchar(country) < 4) %>% 
   arrange(year) %>% 
   glimpse()
-
-game_years <- unique(data$year)
-
-event_lims <- c("500 m", "1000 m", "1500 m", "3000 m", "5000 m",  "10000 m", "Combined", "Team pursuit", "Mass Start")
 ```
 
     Rows: 5,712
@@ -376,6 +378,12 @@ event_lims <- c("500 m", "1000 m", "1500 m", "3000 m", "5000 m",  "10000 m", "Co
     $ country  <chr> "FIN", "NOR", "NOR", "FIN", "NOR", "NOR", "USA", "USA", "USA"…
     $ time     <dbl> 2.208, 2.220, 2.256, 2.266, 2.290, 2.292, 2.298, 2.316, 2.316…
     $ comment  <chr> "OR", NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
+
+``` r
+game_years <- unique(data$year)
+
+event_lims <- c("500 m", "1000 m", "1500 m", "3000 m", "5000 m",  "10000 m", "Combined", "Team pursuit", "Mass Start")
+```
 
 Then we can finally create some plots. Not all speed skating events were
 present from the start in 1924. Back then only men competed in Olympic
@@ -420,9 +428,7 @@ data %>%
         strip.text = element_text(face = "bold", size = 42))
 ```
 
-<img src="index_files/figure-gfm/events-timeline-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/events-timeline-1.png" width="768" />
 
 As we can see, the first Winter Olympic Games had only 5 events. This
 also included an event called "combined", which is the ranking for the
@@ -486,8 +492,7 @@ data %>%
   theme(panel.grid.major.y = element_blank())
 ```
 
-<img src="index_files/figure-gfm/n-medals-1.png" data-fig-align="center"
-style="display:block; margin:auto;" style="width:80.0%" />
+<img src="index_files/figure-gfm/n-medals-1.png" width="768" />
 
 As you can see, the Netherlands has earned by far the most medals since
 1960 than any other country. In fact, it's earned more medals than
@@ -541,7 +546,6 @@ data %>%
 ```
 
 <img src="index_files/figure-gfm/n-medals-per-game-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
 style="width:100.0%" />
 
 As you can see from the plot, of the 16 Olympic Games since 1960, the
@@ -613,9 +617,7 @@ data %>%
         axis.text.y = element_text(hjust = 1))
 ```
 
-<img src="index_files/figure-gfm/medal-table-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/medal-table-1.png" width="768" />
 
 To show that a country is dominant in a particular competition it helps
 to show that a country can deliver not just one, but a few contenders
@@ -660,9 +662,7 @@ data %>%
         panel.grid.minor = element_blank())
 ```
 
-<img src="index_files/figure-gfm/podium-sweeps-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/podium-sweeps-1.png" width="768" />
 
 As you might gather, from this and the previous plot, the Winter Olympic
 Games from 2014 were a very good year for the Dutch speed skating team.
@@ -795,9 +795,7 @@ data_wust %>%
         panel.grid.major.y = element_blank())
 ```
 
-<img src="index_files/figure-gfm/wust-win-rate-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/wust-win-rate-1.png" width="768" />
 
 With the caveat that Ireen has only participated in one event in 2022
 (as of time of writing, 9/2/2022), there has been one instance where she
@@ -845,9 +843,7 @@ data_wust %>%
         panel.grid = element_blank())
 ```
 
-<img src="index_files/figure-gfm/wust-medals-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/wust-medals-1.png" width="768" />
 
 Of course the Olympics are still ongoing, but I had a lot of fun
 collecting and visualizing this data. Again, not all numbers might

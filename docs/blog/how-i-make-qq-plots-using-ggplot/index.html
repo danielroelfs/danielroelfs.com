@@ -103,11 +103,7 @@
       
     </header>
 
-    <script src="//yihui.org/js/math-code.js"></script>
-<script async
-src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
-<h3 id="introduction">Introduction</h3>
+    <h3 id="introduction">Introduction</h3>
 <p>Whenever I show my colleagues in the genetics group my results, the
 first things they say are &ldquo;<em>can you show me the Manhattan plots?</em>&rdquo; and
 &ldquo;<em>can you show me the QQ plots?</em>&rdquo;. I covered how to make Manhattan plots
@@ -171,18 +167,17 @@ input vector. In this case, we&rsquo;ll input just the number of SNPs. Since
 we also want to plot the confidence interval, we&rsquo;ll have to calculate
 the upper and lower limits of the confidence interval at each point. For
 this we&rsquo;ll use another base function called <code>qbeta()</code>. This generates
-the <img src="https://latex.codecogs.com/svg.latex?%5Cbeta" alt="\\beta" title="\beta">
-distribution for a given probabily value or range of values. For the
-lower half of the confidence interval, we&rsquo;ll take 1 (i.e. the null line)
-minus the confidence interval (<code>0.95</code>), and since this is only half of
-the interval, we&rsquo;ll divide that value by 2. We&rsquo;ll do the same for the
-upper half of the confidence interval, except not it&rsquo;s 1 plus the
-confidence interval. For both the upper and lower interval, we&rsquo;ll supply
-a vector from 1 to the number of SNPs in your data frame and then also
-the reverse. These two vectors will be the parameters of the
-<img src="https://latex.codecogs.com/svg.latex?%5Cbeta" alt="\\beta" title="\beta">
-distribution. The output from all the functions below are the same
-length as the number of SNPs in your original data frame.</p>
+the <code>$\beta$</code> distribution for a given probabily value or range of
+values. For the lower half of the confidence interval, we&rsquo;ll take 1
+(i.e. the null line) minus the confidence interval (<code>0.95</code>), and since
+this is only half of the interval, we&rsquo;ll divide that value by 2. We&rsquo;ll
+do the same for the upper half of the confidence interval, except not
+it&rsquo;s 1 plus the confidence interval. For both the upper and lower
+interval, we&rsquo;ll supply a vector from 1 to the number of SNPs in your
+data frame and then also the reverse. These two vectors will be the
+parameters of the <code>$\beta$</code> distribution. The output from all the
+functions below are the same length as the number of SNPs in your
+original data frame.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">plotdata</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span>
   <span class="n">observed</span> <span class="o">=</span> <span class="o">-</span><span class="nf">log10</span><span class="p">(</span><span class="nf">sort</span><span class="p">(</span><span class="n">sumstats.data</span><span class="o">$</span><span class="n">P</span><span class="p">)),</span>
   <span class="n">expected</span> <span class="o">=</span> <span class="o">-</span><span class="nf">log10</span><span class="p">(</span><span class="nf">ppoints</span><span class="p">(</span><span class="n">nSNPs</span><span class="p">)),</span>
@@ -264,9 +259,7 @@ large, plotting all these values can take quite some time, so if you&rsquo;re
 working on an older MacBook Air (like I am) you may have to be a little
 patient. Let&rsquo;s see what the plot looks like.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">print</span><span class="p">(</span><span class="n">qqplot</span><span class="p">)</span>
-</code></pre></div><p><img src="index_files/figure-gfm/print-plot-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-width="768" /></p>
+</code></pre></div><img src="index_files/figure-gfm/print-plot-1.png" width="768" />
 <p>Now we have our QQ plot. We see that our (simulated) GWAS dataset has a
 very nice signal! I&rsquo;d be dissapointed if it didn&rsquo;t since I coded it to
 be this way. It is possible to annotate this plot further or to add
@@ -299,8 +292,6 @@ repository).</p>
     
 
   <script src="/js/app.js"></script>
-  <script>$("img").parents('p').css("text-align", "center");</script>
-
   
   </body>
 </html>

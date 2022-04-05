@@ -12,6 +12,12 @@ tags:
 description: 'How I Plot ERPs in R'
 thumbnail: images/avatar.png
 format: hugo
+execute:
+  fig.retina: 2
+  fig.align: center
+  fig.show: hold
+  results: hold
+  out.width: 80%
 ---
 
 
@@ -150,9 +156,10 @@ ERP_plotdata <- MeanERPs %>%
   summarise(Mean_Amplitude = mean(Amplitude),
             CIlower = Rmisc::CI(Amplitude, ci = 0.95)["lower"],
             CIupper = Rmisc::CI(Amplitude, ci = 0.95)["upper"])
-## `summarise()` has grouped output by 'Condition'. You can override using the
-## `.groups` argument.
 ```
+
+    `summarise()` has grouped output by 'Condition'. You can override using the
+    `.groups` argument.
 
 ## Preparing to plot
 
@@ -204,5 +211,4 @@ ERPplot <- ggplot(ERP_plotdata, aes(x = Time, y = Mean_Amplitude,
 shift_axes(ERPplot, x = 0, y = 0)
 ```
 
-<img src="index_files/figure-gfm/erp-plot-1.png" data-fig-align="center"
-style="display:block; margin:auto;" width="1152" />
+<img src="index_files/figure-gfm/erp-plot-1.png" width="1152" />

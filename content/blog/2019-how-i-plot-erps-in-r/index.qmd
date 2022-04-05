@@ -12,15 +12,13 @@ tags:
 description: 'How I Plot ERPs in R'
 thumbnail: images/avatar.png
 format: hugo
+execute:
+  fig.retina: 2
+  fig.align: center
+  fig.show: hold
+  results: hold
+  out.width: 80%
 ---
-
-```{r knits-opts, include=FALSE}
-knitr::opts_chunk$set(fig.retina = 2,
-                      collapse = TRUE,
-                      fig.show = 'hold', 
-                      fig.align = 'center',
-                      out.extra = 'style="display:block; margin:auto;"')
-```
 
 ```{r setup, message=FALSE, warning=FALSE, cache=FALSE, echo=FALSE}
 # Setup of the environment
@@ -124,7 +122,7 @@ I take the colors from our own  `{normentR}` package. I ask for two colors from 
 
 After running the chunk below, we have a beautiful ERP with a nice confidence interval. I hope this was helpful and informative. Good luck!
 
-```{r erp-plot, fig.width=12, fig.height=6, dev.args = list(bg = 'transparent')}
+```{r erp-plot, fig.width=12, fig.height=6}
 colors <- norment_pal(palette = "logo")(2)
 
 ERPplot <- ggplot(ERP_plotdata, aes(x = Time, y = Mean_Amplitude, 

@@ -4,9 +4,7 @@ slug: "publications"
 thumbnail: "images/avatar.png"
 title: "Publications"
 author: "Daniel Roelfs"
-output:
-  html_document:
-    keep_md: yes
+format: hugo
 ---
 
 Selection of publications. For a full list see my [Google Scholar profile](https://scholar.google.com/citations?user=QmVQcsAAAAAJ&hl=en).

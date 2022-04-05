@@ -11,16 +11,14 @@ tags:
 description: "Visualizing the State of the Amsterdam Housing Market"
 thumbnail: images/avatar.png
 format: hugo
+execute:
+  fig.retina: 2
+  fig.align: center
+  fig.show: hold
+  results: hold
+  out.width: 80%
+  dev.args: list(bg = "#EBEBEB")
 ---
-
-```{r knitr-opts, include=FALSE}
-knitr::opts_chunk$set(fig.retina = 2,
-                      fig.show = "hold", 
-                      fig.align = "center",
-                      dev.args = list(bg = "#EBEBEB"),
-                      out.width = "80%",
-                      out.extra = 'style="display:block; margin:auto;"')
-```
 
 ```{css echo=FALSE}
 body {
@@ -35,6 +33,9 @@ code {
   background: #E0E0E0;
 }
 
+img {
+  max-width: 80%;
+}
 ```
 
 ```{r setup, include=FALSE, cache=FALSE}
@@ -217,7 +218,7 @@ data %>%
 
 Prior to 2014, most properties in Amsterdam were sold at about 6% below asking price, in the last quarter of 2020, that trend had changed to more than 3.5% above asking. The variance is obviously larger for detached and semi-detached houses, since those are both expensive and scarce in Amsterdam, and are thus also bought and sold less often. The table below shows the stats for the first quarter of 2021. Apart from semi-detached houses, most other properties were sold at 4% over asking or more. The types of properties most accessible to first-time buyers are obviously the apartments. Either the older type in the inner city, or the newer apartments in the suburbs. People buying pre-1970 apartments spent more than €28 000 over the asking price and people buying apartments built after 1970 spent on average more than €18 000 over the asking price.
 
-```{r overpay-table, out.width="50%"}
+```{r overpay-table, out.width="60%"}
 data %>% 
   filter(type != "Total",
          date == max(date)) %>% 

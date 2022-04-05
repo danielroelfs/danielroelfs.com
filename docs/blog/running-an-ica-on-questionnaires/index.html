@@ -295,8 +295,7 @@ where the horizontal line comes in.</p>
   <span class="nf">labs</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s">&#34;Principal component&#34;</span><span class="p">,</span>
        <span class="n">y</span> <span class="o">=</span> <span class="s">&#34;Variance (eigenvalue)&#34;</span><span class="p">)</span> <span class="o">+</span>
   <span class="nf">theme_minimal</span><span class="p">()</span>
-</code></pre></div><p><img src="index_files/figure-gfm/plot-var-1.png" data-fig-align="center"
-style="display:block; margin:auto;" width="768" /></p>
+</code></pre></div><img src="index_files/figure-gfm/plot-var-1.png" width="768" />
 <p>It can be a bit hard to see from the plot how many components have an
 eigenvalue larger than 1. But we can calulate it. The number of
 components with an eigenvalue larger than 1 will be the number of
@@ -388,9 +387,7 @@ plot a simple dendrogram using R&rsquo;s basic <code>plot()</code> function.</p>
 <span class="n">dist_matrix</span> <span class="o">&lt;-</span> <span class="nf">dist</span><span class="p">(</span><span class="nf">as.matrix</span><span class="p">(</span><span class="n">weight_matrix</span><span class="p">))</span>
 <span class="n">clust</span> <span class="o">&lt;-</span> <span class="nf">hclust</span><span class="p">(</span><span class="n">dist_matrix</span><span class="p">)</span>
 <span class="nf">plot</span><span class="p">(</span><span class="n">clust</span><span class="p">)</span>
-</code></pre></div><p><img src="index_files/figure-gfm/show-hclust-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-width="768" /></p>
+</code></pre></div><img src="index_files/figure-gfm/show-hclust-1.png" width="768" />
 <p>What we can see from the dendrogram is that for instance question 16
 (<em>&ldquo;I gravitate towards introspection&rdquo;</em>) and question 17 (<em>&ldquo;I am more
 comfortable interacting online than in person&rdquo;</em>) on the left are very
@@ -432,7 +429,6 @@ strength.</p>
     <span class="n">axis.text.x</span> <span class="o">=</span> <span class="nf">element_text</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">6</span><span class="p">),</span>
   <span class="p">)</span>
 </code></pre></div><p><img src="index_files/figure-gfm/plot-wmatrix-nolabs-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
 style="width:100.0%" /></p>
 <p>So what do we have? It looks quite interesting, but what does this
 figure mean? We&rsquo;ve established using the PCA that the 26 questions from
@@ -494,8 +490,6 @@ loadings, possibly in a machine learning context.</p>
     
 
   <script src="/js/app.js"></script>
-  <script>$("img").parents('p').css("text-align", "center");</script>
-
   
   </body>
 </html>

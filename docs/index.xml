@@ -50,7 +50,7 @@ Previously, I used a JSON file and the {geojsonio} package to create a map of No
       <pubDate>Sun, 20 Jun 2021 00:00:00 +0000</pubDate>
       
       <guid>/blog/visualizing-the-state-of-the-amsterdam-housing-market/</guid>
-      <description>body { background-color: #EBEBEB; /* was #EFEFEF */ } table { font-family: &#34;Nunito Sans&#34;, sans-serif; } code { background: #E0E0E0; }  For this post, I decided to hide the code chunks by default to improve legibility. You can click the Show code-button to expand the code. Introduction I&amp;rsquo;m at the age where a lot of my peers start thinking about buying a home. It is a major conversation topic around the office, and these conversations are not often filled with optimism and excitement.</description>
+      <description>body { background-color: #EBEBEB; /* was #EFEFEF */ } table { font-family: &#34;Nunito Sans&#34;, sans-serif; } code { background: #E0E0E0; } img { max-width: 80%; }  For this post, I decided to hide the code chunks by default to improve legibility. You can click the Show code-button to expand the code. Introduction I&amp;rsquo;m at the age where a lot of my peers start thinking about buying a home. It is a major conversation topic around the office, and these conversations are not often filled with optimism and excitement.</description>
     </item>
     
     <item>
@@ -114,7 +114,7 @@ Previously, I used a JSON file and the {geojsonio} package to create a map of No
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/about/</guid>
-      <description>&amp;lt;img style=&amp;ldquo;position: relative; top: 15px; padding: 0 15px; float: right;&amp;rdquo; src=&amp;ldquo;avatar.png&amp;rdquo; width=&amp;ldquo;33%&amp;rdquo; /&amp;gt;
+      <description>&amp;lt;img style=&amp;ldquo;position: relative; top: 15px; padding: 0 15px; float: right;&amp;rdquo; src=&amp;quot;./avatar.png&amp;quot; width=&amp;ldquo;33%&amp;rdquo; /&amp;gt;
 I&amp;rsquo;m Daniel Roelfs, I&amp;rsquo;m a PhD candidate working at the Norwegian Centre for Mental Disorders Research (NORMENT) in Oslo. My research focuses on the intersection between neuroimaging and genetics to discover more about the human brain and schizophrenia in particular. I&amp;rsquo;m enrolled in a doctoral education programme at the University of Oslo.
 Originally from the Netherlands, I have also studied in France and Sweden before moving to Norway.</description>
     </item>

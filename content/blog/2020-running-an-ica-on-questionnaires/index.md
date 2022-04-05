@@ -12,6 +12,12 @@ tags:
 description: 'Running an ICA on Questionnaires'
 thumbnail: images/avatar.png
 format: hugo
+execute:
+  fig.retina: 2
+  fig.align: center
+  fig.show: hold
+  results: hold
+  out.width: 80%
 ---
 
 
@@ -259,8 +265,7 @@ ggplot(pca_stats, aes(x = seq(var), y = var)) +
   theme_minimal()
 ```
 
-<img src="index_files/figure-gfm/plot-var-1.png" data-fig-align="center"
-style="display:block; margin:auto;" width="768" />
+<img src="index_files/figure-gfm/plot-var-1.png" width="768" />
 
 It can be a bit hard to see from the plot how many components have an
 eigenvalue larger than 1. But we can calulate it. The number of
@@ -378,9 +383,7 @@ clust <- hclust(dist_matrix)
 plot(clust)
 ```
 
-<img src="index_files/figure-gfm/show-hclust-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-width="768" />
+<img src="index_files/figure-gfm/show-hclust-1.png" width="768" />
 
 What we can see from the dendrogram is that for instance question 16
 (*"I gravitate towards introspection"*) and question 17 (*"I am more
@@ -435,7 +438,6 @@ ggplot(weight_matrix_long, aes(x = IC, y = question, fill = loading)) +
 ```
 
 <img src="index_files/figure-gfm/plot-wmatrix-nolabs-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
 style="width:100.0%" />
 
 So what do we have? It looks quite interesting, but what does this

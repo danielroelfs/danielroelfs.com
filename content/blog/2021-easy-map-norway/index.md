@@ -12,6 +12,12 @@ tags:
 description: "The Easier Way to Create a Map of Norway Using {fhimaps}"
 thumbnail: images/avatar.png
 format: hugo
+execute:
+  fig.retina: 2
+  fig.align: center
+  fig.show: hold
+  results: hold
+  out.width: 80%
 ---
 
 
@@ -134,9 +140,7 @@ ggplot(map_df, aes(x = long, y = lat, group = group, fill = location_code)) +
   geom_polygon()
 ```
 
-<img src="index_files/figure-gfm/minimal-plot-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/minimal-plot-1.png" width="768" />
 
 Now let's convert the awkward county numbers to the actual names of the
 fylker. The `{fhidata}` package has a data frame with codes and names
@@ -205,9 +209,7 @@ map_df %>%
         legend.background = element_rect(fill = "white", color = "transparent"))
 ```
 
-<img src="index_files/figure-gfm/simple-plot-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/simple-plot-1.png" width="768" />
 
 ## Norway with Scandinavia
 
@@ -271,8 +273,7 @@ fhimaps::norway_nuts3_map_b2020_default_dt %>%
         legend.text = element_text(size = 6))
 ```
 
-<img src="index_files/figure-gfm/vax-plot-1.png" data-fig-align="center"
-style="display:block; margin:auto;" style="width:80.0%" />
+<img src="index_files/figure-gfm/vax-plot-1.png" width="768" />
 
 ## Geocoding
 
@@ -345,9 +346,7 @@ map_df %>%
         legend.key.height = unit(10,"pt"))
 ```
 
-<img src="index_files/figure-gfm/plot-w-cities-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/plot-w-cities-1.png" width="768" />
 
 ## Combine the map with other data
 
@@ -473,8 +472,7 @@ fhimaps::norway_lau2_map_b2020_split_dt %>%
 ```
 
 <img src="index_files/figure-gfm/plot-kommune-faceted-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+width="768" />
 
 ## Oslo
 
@@ -561,9 +559,7 @@ fhimaps::oslo_ward_map_b2020_default_dt %>%
         legend.direction = "horizontal")
 ```
 
-<img src="index_files/figure-gfm/plot-oslo-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/plot-oslo-1.png" width="768" />
 
 BONUS
 

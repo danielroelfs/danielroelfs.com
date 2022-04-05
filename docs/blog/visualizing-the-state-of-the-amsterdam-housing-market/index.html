@@ -116,6 +116,9 @@ code {
   background: #E0E0E0;
 }
 
+img {
+  max-width: 80%;
+}
 </style>
 <p style="border-radius: 5px; background-color: #acc8d4; padding: 1em;">
 For this post, I decided to hide the code chunks by default to improve
@@ -344,9 +347,7 @@ graph to visualize the percentage overpay.</p>
   <span class="nf">theme</span><span class="p">(</span><span class="n">plot.title</span> <span class="o">=</span> <span class="nf">element_textbox</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">20</span><span class="p">),</span>
         <span class="n">axis.title.y</span> <span class="o">=</span> <span class="nf">element_textbox</span><span class="p">(</span><span class="n">width</span> <span class="o">=</span> <span class="n">grid</span><span class="o">::</span><span class="nf">unit</span><span class="p">(</span><span class="m">2.5</span><span class="p">,</span> <span class="s">&#34;in&#34;</span><span class="p">)),</span>
         <span class="n">legend.key</span> <span class="o">=</span> <span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;transparent&#34;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&#34;transparent&#34;</span><span class="p">))</span>
-</code></pre></div><p><img src="index_files/figure-gfm/plot-overpay-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/plot-overpay-1.png" width="768" />
 <p>Prior to 2014, most properties in Amsterdam were sold at about 6% below
 asking price, in the last quarter of 2020, that trend had changed to
 more than 3.5% above asking. The variance is obviously larger for
@@ -384,8 +385,7 @@ over the asking price.</p>
   <span class="nf">tab_options</span><span class="p">(</span><span class="n">table.background.color</span> <span class="o">=</span> <span class="s">&#34;#EBEBEB&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">gtsave</span><span class="p">(</span><span class="s">&#34;overpay-table.png&#34;</span><span class="p">,</span> <span class="n">expand</span> <span class="o">=</span> <span class="m">0</span><span class="p">)</span>
 </code></pre></div><p><img src="index_files/figure-gfm/overpay-table-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:50.0%" /></p>
+style="width:60.0%" /></p>
 <p>What contributed to this price increase? A simple supply-and-demand
 plays a part. The figure below shows the &ldquo;tightness index&rdquo; (Dutch:
 &ldquo;krapte indicator&rdquo;) over time. This number represents the number of
@@ -443,9 +443,7 @@ to about 55 a year earlier (source:
         <span class="n">axis.title.y</span> <span class="o">=</span> <span class="nf">element_textbox</span><span class="p">(</span><span class="n">orientation</span> <span class="o">=</span> <span class="s">&#34;left-rotated&#34;</span><span class="p">,</span>
                                        <span class="n">width</span> <span class="o">=</span> <span class="n">grid</span><span class="o">::</span><span class="nf">unit</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="s">&#34;in&#34;</span><span class="p">)),</span>
         <span class="n">legend.key</span> <span class="o">=</span> <span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;transparent&#34;</span><span class="p">))</span>
-</code></pre></div><p><img src="index_files/figure-gfm/plot-tightness-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/plot-tightness-1.png" width="768" />
 <p>So, there&rsquo;s a lot of competition among buyers, and people looking to
 sell their houses can expect to be paid more than they anticipated.
 Dozens of buyers compete for the same properties, driving up the price.
@@ -491,9 +489,7 @@ item by RTL</a>.
         <span class="n">strip.background</span> <span class="o">=</span> <span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;transparent&#34;</span><span class="p">),</span>
         <span class="n">legend.key</span> <span class="o">=</span> <span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;transparent&#34;</span><span class="p">))</span> <span class="o">+</span>
   <span class="nf">facet_wrap</span><span class="p">(</span><span class="o">~</span> <span class="n">type</span><span class="p">,</span> <span class="n">strip.position</span> <span class="o">=</span> <span class="s">&#34;top&#34;</span><span class="p">,</span> <span class="n">scales</span> <span class="o">=</span> <span class="s">&#34;free_x&#34;</span><span class="p">)</span>
-</code></pre></div><p><img src="index_files/figure-gfm/plot-n-sales-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/plot-n-sales-1.png" width="960" />
 <p>This adds fuel to the fire. I guess I&rsquo;m trying to show that there are a
 number of factors stacked against young buyers. Any money you have saved
 up you need to spend to outbid the massive competition. The massive
@@ -557,9 +553,7 @@ Netherlands has actually slowed building new properties.</p>
                   <span class="n">subtitle</span> <span class="o">=</span> <span class="s">&#34;Data covers development in the Netherlands nationwide&#34;</span><span class="p">,</span>
                   <span class="n">caption</span> <span class="o">=</span> <span class="s">&#34;**Data**: CBS&#34;</span><span class="p">)</span> <span class="o">&amp;</span>
   <span class="nf">theme</span><span class="p">(</span><span class="n">plot.title</span> <span class="o">=</span> <span class="nf">element_textbox</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">20</span><span class="p">))</span>
-</code></pre></div><p><img src="index_files/figure-gfm/plot-n-homes-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/plot-n-homes-1.png" width="960" />
 <p>The figure displays data from from the CBS through the <code>{cbsodataR}</code>
 package. It shows an increase in the number of homes after the second
 World War in the 50s and the 60s. Since around 1975 there&rsquo;s been a
@@ -676,8 +670,7 @@ trend a bit more clearly.</p>
   <span class="nf">plot_layout</span><span class="p">(</span><span class="n">guides</span> <span class="o">=</span> <span class="s">&#39;collect&#39;</span><span class="p">)</span> <span class="o">&amp;</span>
   <span class="nf">theme</span><span class="p">(</span><span class="n">plot.title</span> <span class="o">=</span> <span class="nf">element_textbox</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">20</span><span class="p">))</span>
 </code></pre></div><p><img src="index_files/figure-gfm/plot-housing-n_mutations-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+width="960" /></p>
 <p>The total number of mutations has hovered around 150 000 since 2012.
 There was a bump in 2014 when about 40 000 properties were changed from
 &ldquo;rent (other)&rdquo; to &ldquo;rent (corporation)&rdquo;. The label &ldquo;rent (other)&rdquo;
@@ -751,8 +744,7 @@ reasonable number since then.</p>
                   <span class="n">caption</span> <span class="o">=</span> <span class="s">&#34;_**Data**: CBS_&#34;</span><span class="p">)</span> <span class="o">&amp;</span>
   <span class="nf">theme</span><span class="p">(</span><span class="n">plot.title</span> <span class="o">=</span> <span class="nf">element_textbox</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">20</span><span class="p">))</span>
 </code></pre></div><p><img src="index_files/figure-gfm/net-shift-to-renters-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+width="960" /></p>
 <p>So in 2017 nearly 90 000 houses were mutated from sale to rental
 properties. In that same year, about 62 000 new homes were built
 (source:
@@ -793,7 +785,6 @@ that were transformed and in that way removed from the sale market.</p>
               <span class="n">grand_summary_row.text_transform</span> <span class="o">=</span> <span class="s">&#34;capitalize&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">gtsave</span><span class="p">(</span><span class="s">&#34;mutations-table.png&#34;</span><span class="p">,</span> <span class="n">expand</span> <span class="o">=</span> <span class="m">0</span><span class="p">)</span>
 </code></pre></div><p><img src="index_files/figure-gfm/mutations-table-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
 style="width:60.0%" /></p>
 <p>So what&rsquo;s the result of all these phenomena? The figure below shows the
 housing price index for Amsterdam. The first quarter of 2012 was taken
@@ -830,8 +821,7 @@ average nearly doubled in price.</p>
         <span class="n">axis.title.y</span> <span class="o">=</span> <span class="nf">element_textbox</span><span class="p">(</span><span class="n">width</span> <span class="o">=</span> <span class="n">grid</span><span class="o">::</span><span class="nf">unit</span><span class="p">(</span><span class="m">2.5</span><span class="p">,</span> <span class="s">&#34;in&#34;</span><span class="p">)),</span>
         <span class="n">legend.key</span> <span class="o">=</span> <span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;transparent&#34;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&#34;transparent&#34;</span><span class="p">))</span>
 </code></pre></div><p><img src="index_files/figure-gfm/plot-asking-index-increase-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+width="960" /></p>
 <p>Adjusted for the number of properties offered, the average asking price
 in Amsterdam has increased by 107%. That means that prices since 2012
 have (on average) doubled. For apartments, this increase was 110%.
@@ -903,8 +893,6 @@ with a particular step while maintaining legibility.</p>
     
 
   <script src="/js/app.js"></script>
-  <script>$("img").parents('p').css("text-align", "center");</script>
-
   
   </body>
 </html>

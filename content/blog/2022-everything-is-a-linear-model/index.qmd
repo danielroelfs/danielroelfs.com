@@ -12,15 +12,13 @@ tags:
 description: "Everything is a Linear Model"
 thumbnail: images/avatar.png
 format: hugo
+execute:
+  fig.retina: 2
+  fig.align: center
+  fig.show: hold
+  results: hold
+  out.width: 80%
 ---
-
-```{r knitr-opts, include=FALSE}
-knitr::opts_chunk$set(fig.retina = 2,
-                      fig.show = "hold", 
-                      fig.align = "center",
-                      results = "hold",
-                      out.width = "80%")
-```
 
 Let's imagine you're incredibly lazy and you want to learn R, but you only want to learn one function to do statistics. What function do you learn? I'd recommend to learn to use the `lm()` function. Why? Because most common statistical tests are in fact nothing more than some variation of a linear model, from the simplest One-Sample T-test to a repeated-measures ANOVA. I think most people that have Googled for this question have found Jonas Lindeløv's post on how [common statistical tests are linear models](https://lindeloev.github.io/tests-as-linear/) (as they should, it's an amazing post). Here I want to go a bit more in depth into the mathematics behind this statement to show how common statistical tests are in fact variations of a linear model.
 

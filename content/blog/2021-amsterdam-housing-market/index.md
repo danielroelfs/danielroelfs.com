@@ -11,6 +11,13 @@ tags:
 description: "Visualizing the State of the Amsterdam Housing Market"
 thumbnail: images/avatar.png
 format: hugo
+execute:
+  fig.retina: 2
+  fig.align: center
+  fig.show: hold
+  results: hold
+  out.width: 80%
+  dev.args: list(bg = "#EBEBEB")
 ---
 
 
@@ -28,6 +35,9 @@ code {
   background: #E0E0E0;
 }
 
+img {
+  max-width: 80%;
+}
 </style>
 <p style="border-radius: 5px; background-color: #acc8d4; padding: 1em;">
 For this post, I decided to hide the code chunks by default to improve
@@ -282,9 +292,7 @@ data %>%
         legend.key = element_rect(fill = "transparent", color = "transparent"))
 ```
 
-<img src="index_files/figure-gfm/plot-overpay-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/plot-overpay-1.png" width="768" />
 
 Prior to 2014, most properties in Amsterdam were sold at about 6% below
 asking price, in the last quarter of 2020, that trend had changed to
@@ -327,8 +335,7 @@ data %>%
 ```
 
 <img src="index_files/figure-gfm/overpay-table-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:50.0%" />
+style="width:60.0%" />
 
 What contributed to this price increase? A simple supply-and-demand
 plays a part. The figure below shows the "tightness index" (Dutch:
@@ -391,9 +398,7 @@ data %>%
         legend.key = element_rect(fill = "transparent"))
 ```
 
-<img src="index_files/figure-gfm/plot-tightness-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/plot-tightness-1.png" width="768" />
 
 So, there's a lot of competition among buyers, and people looking to
 sell their houses can expect to be paid more than they anticipated.
@@ -445,9 +450,7 @@ data %>%
   facet_wrap(~ type, strip.position = "top", scales = "free_x")
 ```
 
-<img src="index_files/figure-gfm/plot-n-sales-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/plot-n-sales-1.png" width="960" />
 
 This adds fuel to the fire. I guess I'm trying to show that there are a
 number of factors stacked against young buyers. Any money you have saved
@@ -516,9 +519,7 @@ total_hist_plot / diff_hist_plot +
   theme(plot.title = element_textbox(size = 20))
 ```
 
-<img src="index_files/figure-gfm/plot-n-homes-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+<img src="index_files/figure-gfm/plot-n-homes-1.png" width="960" />
 
 The figure displays data from from the CBS through the `{cbsodataR}`
 package. It shows an increase in the number of homes after the second
@@ -646,8 +647,7 @@ mutations_n_plot / mutations_perc_plot +
 ```
 
 <img src="index_files/figure-gfm/plot-housing-n_mutations-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+width="960" />
 
 The total number of mutations has hovered around 150 000 since 2012.
 There was a bump in 2014 when about 40 000 properties were changed from
@@ -727,8 +727,7 @@ net_mutation_plot + perc_mutation_plot +
 ```
 
 <img src="index_files/figure-gfm/net-shift-to-renters-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+width="960" />
 
 So in 2017 nearly 90 000 houses were mutated from sale to rental
 properties. In that same year, about 62 000 new homes were built
@@ -774,7 +773,6 @@ house_mutations %>%
 ```
 
 <img src="index_files/figure-gfm/mutations-table-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
 style="width:60.0%" />
 
 So what's the result of all these phenomena? The figure below shows the
@@ -816,8 +814,7 @@ data_asking_index %>%
 ```
 
 <img src="index_files/figure-gfm/plot-asking-index-increase-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" />
+width="960" />
 
 Adjusted for the number of properties offered, the average asking price
 in Amsterdam has increased by 107%. That means that prices since 2012

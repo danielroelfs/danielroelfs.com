@@ -272,7 +272,6 @@ the code I use to create the plot and to save the plot as an image.</p>
   <span class="nf">theme_minimal</span><span class="p">()</span> <span class="o">+</span>
   <span class="nf">theme</span><span class="p">(</span> 
     <span class="n">legend.position</span> <span class="o">=</span> <span class="s">&#34;none&#34;</span><span class="p">,</span>
-    <span class="n">panel.border</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
     <span class="n">panel.grid.major.x</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
     <span class="n">panel.grid.minor.x</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
     <span class="n">axis.title.y</span> <span class="o">=</span> <span class="nf">element_markdown</span><span class="p">(),</span>
@@ -300,9 +299,7 @@ otherwise it will likely crash your session! I&rsquo;ve included a Manhattan
 plot of some simulated data below to show how it turned out for me when
 I ran the code described above.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">print</span><span class="p">(</span><span class="n">manhplot</span><span class="p">)</span>
-</code></pre></div><p><img src="index_files/figure-gfm/print-plot-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-width="1152" /></p>
+</code></pre></div><img src="index_files/figure-gfm/print-plot-1.png" width="1152" />
 <p><strong>EDIT (2021-03-26)</strong>: Had to revisit some old code because I have now
 adopted better practices in both naming conventions and coding style. I
 moved away from using periods in variable names. I practically always
@@ -341,8 +338,6 @@ improved, hope it&rsquo;ll help you too!</p>
     
 
   <script src="/js/app.js"></script>
-  <script>$("img").parents('p').css("text-align", "center");</script>
-
   
   </body>
 </html>

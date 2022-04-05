@@ -11,19 +11,13 @@ tags:
 description: 'How I Make QQ Plots Using ggplot'
 thumbnail: images/avatar.png
 format: hugo
+execute:
+  fig.retina: 2
+  fig.align: center
+  fig.show: hold
+  results: hold
+  out.width: 80%
 ---
-
-<script src="//yihui.org/js/math-code.js"></script>
-<script async
-src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
-
-```{r knitr-opts, include=FALSE}
-knitr::opts_chunk$set(fig.retina = 2,
-                      fig.show = 'hold', 
-                      fig.align = 'center',
-                      out.extra = 'style="display:block; margin:auto;"')
-```
 
 ```{r setup, message=FALSE, warning=FALSE, cache=FALSE, echo=FALSE}
 # Setup of the environment
@@ -54,7 +48,7 @@ nSNPs <- nrow(sumstats.data)
 ```
 
 Next, we'll create a data frame that has all the data we need for the plot. We'll call that data frame `plotdata`. We initiate a data frame with four columns. The first column is the observed p-values, sorted in decreasing order, and then -log~10~ transformed. So then the SNPs with the lowest p-values will have the highest value. These SNPs will end up on the right side of the figure later. Based on this sorted vector, we can also generate the expected vector of log transformed p-values. We could do this manually, but I much prefer to use one of the (somewhat obscure but very useful) base functions in R called `ppoints()`. This generates the sequence of probabilities based on the input vector. In this case, we'll input just the number of SNPs.
-Since we also want to plot the confidence interval, we'll have to calculate the upper and lower limits of the confidence interval at each point. For this we'll use another base function called `qbeta()`. This generates the $\beta$ distribution for a given probabily value or range of values. For the lower half of the confidence interval, we'll take 1 (i.e. the null line) minus the confidence interval (`0.95`), and since this is only half of the interval, we'll divide that value by 2. We'll do the same for the upper half of the confidence interval, except not it's 1 plus the confidence interval. For both the upper and lower interval, we'll supply a vector from 1 to the number of SNPs in your data frame and then also the reverse. These two vectors will be the parameters of the $\beta$ distribution. The output from all the functions below are the same length as the number of SNPs in your original data frame.
+Since we also want to plot the confidence interval, we'll have to calculate the upper and lower limits of the confidence interval at each point. For this we'll use another base function called `qbeta()`. This generates the `$\beta$` distribution for a given probabily value or range of values. For the lower half of the confidence interval, we'll take 1 (i.e. the null line) minus the confidence interval (`0.95`), and since this is only half of the interval, we'll divide that value by 2. We'll do the same for the upper half of the confidence interval, except not it's 1 plus the confidence interval. For both the upper and lower interval, we'll supply a vector from 1 to the number of SNPs in your data frame and then also the reverse. These two vectors will be the parameters of the `$\beta$` distribution. The output from all the functions below are the same length as the number of SNPs in your original data frame.
 
 ```{r calculate-data}
 plotdata <- data.frame(

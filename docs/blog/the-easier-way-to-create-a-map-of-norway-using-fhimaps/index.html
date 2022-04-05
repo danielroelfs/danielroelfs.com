@@ -200,9 +200,7 @@ from 1 to 11, but instead uses some other standard format matching
 numbers in other government datasets). Let&rsquo;s see the simplest map:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">ggplot</span><span class="p">(</span><span class="n">map_df</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">long</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">lat</span><span class="p">,</span> <span class="n">group</span> <span class="o">=</span> <span class="n">group</span><span class="p">,</span> <span class="n">fill</span> <span class="o">=</span> <span class="n">location_code</span><span class="p">))</span> <span class="o">+</span> 
   <span class="nf">geom_polygon</span><span class="p">()</span>
-</code></pre></div><p><img src="index_files/figure-gfm/minimal-plot-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/minimal-plot-1.png" width="768" />
 <p>Now let&rsquo;s convert the awkward county numbers to the actual names of the
 fylker. The <code>{fhidata}</code> package has a data frame with codes and names
 for all the kommuner, fylker, and even regions (Øst, Vest, Nord-Norge
@@ -258,9 +256,7 @@ results a greater distortion in favor of southern points).</p>
         <span class="n">legend.text</span> <span class="o">=</span> <span class="nf">element_text</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">5</span><span class="p">),</span>
         <span class="n">legend.key.height</span> <span class="o">=</span> <span class="nf">unit</span><span class="p">(</span><span class="m">10</span><span class="p">,</span><span class="s">&#34;pt&#34;</span><span class="p">),</span>
         <span class="n">legend.background</span> <span class="o">=</span> <span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;white&#34;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&#34;transparent&#34;</span><span class="p">))</span>
-</code></pre></div><p><img src="index_files/figure-gfm/simple-plot-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/simple-plot-1.png" width="768" />
 <h2 id="norway-with-scandinavia">Norway with Scandinavia</h2>
 <p>Sometimes it&rsquo;s useful to plot Norway in geographical context. We can
 overlay Norway on a map of Scandinavia or Europe to create a more
@@ -310,8 +306,7 @@ with the crop of the map to get something that works best.</p>
         <span class="n">legend.position</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">0.8</span><span class="p">,</span> <span class="m">0.1</span><span class="p">),</span>
         <span class="n">legend.title</span> <span class="o">=</span> <span class="nf">element_text</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">8</span><span class="p">),</span>
         <span class="n">legend.text</span> <span class="o">=</span> <span class="nf">element_text</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">6</span><span class="p">))</span>
-</code></pre></div><p><img src="index_files/figure-gfm/vax-plot-1.png" data-fig-align="center"
-style="display:block; margin:auto;" style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/vax-plot-1.png" width="768" />
 <h2 id="geocoding">Geocoding</h2>
 <p>The <code>{ggmap}</code> package also has an incredibly useful function called
 <code>mutate_geocode()</code> which transforms a string with an address or
@@ -370,9 +365,7 @@ how it can be done anyway.</p>
   <span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">0.2</span><span class="p">,</span><span class="m">0.7</span><span class="p">),</span>
         <span class="n">legend.text</span> <span class="o">=</span> <span class="nf">element_text</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">5</span><span class="p">),</span>
         <span class="n">legend.key.height</span> <span class="o">=</span> <span class="nf">unit</span><span class="p">(</span><span class="m">10</span><span class="p">,</span><span class="s">&#34;pt&#34;</span><span class="p">))</span>
-</code></pre></div><p><img src="index_files/figure-gfm/plot-w-cities-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/plot-w-cities-1.png" width="768" />
 <h2 id="combine-the-map-with-other-data">Combine the map with other data</h2>
 <p>Let&rsquo;s take it a step further and now look at how we can combine our map
 with data that didn&rsquo;t come directly from the FHI. Instead I downloaded
@@ -484,8 +477,7 @@ designation:</p>
         <span class="n">strip.text.x</span> <span class="o">=</span> <span class="nf">element_textbox_simple</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="nf">rel</span><span class="p">(</span><span class="m">1.25</span><span class="p">),</span> <span class="n">halign</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span>
                                               <span class="n">margin</span> <span class="o">=</span> <span class="nf">margin</span><span class="p">(</span><span class="m">10</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">10</span><span class="p">,</span><span class="m">0</span><span class="p">,</span> <span class="s">&#34;pt&#34;</span><span class="p">)))</span>
 </code></pre></div><p><img src="index_files/figure-gfm/plot-kommune-faceted-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+width="768" /></p>
 <h2 id="oslo">Oslo</h2>
 <p>The last thing I want to show is a map of Oslo! I haven&rsquo;t been able to
 find a JSON file of the bydeler (boroughs) of Oslo. <code>{fhimaps}</code> does
@@ -558,9 +550,7 @@ what we did before.</p>
   <span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span> <span class="o">=</span> <span class="s">&#34;bottom&#34;</span><span class="p">,</span>
         <span class="n">legend.title</span> <span class="o">=</span> <span class="nf">element_markdown</span><span class="p">(),</span>
         <span class="n">legend.direction</span> <span class="o">=</span> <span class="s">&#34;horizontal&#34;</span><span class="p">)</span>
-</code></pre></div><p><img src="index_files/figure-gfm/plot-oslo-1.png"
-data-fig-align="center" style="display:block; margin:auto;"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/plot-oslo-1.png" width="768" />
 <p>BONUS</p>
 <p>An example of when you might use the <code>sf</code> data format is in interactive
 maps. Here&rsquo;s a short example of what that might look like. Here we&rsquo;ll
@@ -614,8 +604,6 @@ separately.</p>
     
 
   <script src="/js/app.js"></script>
-  <script>$("img").parents('p').css("text-align", "center");</script>
-
   
   </body>
 </html>

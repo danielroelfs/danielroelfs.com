@@ -4,14 +4,8 @@ slug: "cv"
 thumbnail: "images/avatar.png"
 title: "Curriculum Vitæ"
 author: "Daniel Roelfs"
-output:
-  html_document:
-    keep_md: yes
+format: hugo
 ---
-
-```{r echo=FALSE, include=FALSE}
-knitr::include_url("https://danielroelfs.github.io/cv", height = "540px")
-```
 
 ```{r, echo=FALSE}
 htmltools::tags$iframe(src = "https://danielroelfs.github.io/cv", 

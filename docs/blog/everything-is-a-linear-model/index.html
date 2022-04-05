@@ -183,7 +183,6 @@ doing this it centers all the values relative to 0, so if we&rsquo;d run
 obviously with a different mean and the values of the confidence
 interval have changed, although the range stays the same.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">t.test</span><span class="p">(</span><span class="n">concentration</span><span class="p">,</span> <span class="n">mu</span> <span class="o">=</span> <span class="n">ref_concentration</span><span class="p">)</span>
-<span class="nf">t.test</span><span class="p">(</span><span class="n">concentration</span> <span class="o">-</span> <span class="n">ref_concentration</span><span class="p">,</span> <span class="n">mu</span> <span class="o">=</span> <span class="m">0</span><span class="p">)</span>
 </code></pre></div><pre><code>    One Sample t-test
 
 data:  concentration
@@ -194,9 +193,9 @@ alternative hypothesis: true mean is not equal to 2.5
 sample estimates:
 mean of x 
  2.855086 
-
-
-    One Sample t-test
+</code></pre>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">t.test</span><span class="p">(</span><span class="n">concentration</span> <span class="o">-</span> <span class="n">ref_concentration</span><span class="p">,</span> <span class="n">mu</span> <span class="o">=</span> <span class="m">0</span><span class="p">)</span>
+</code></pre></div><pre><code>    One Sample t-test
 
 data:  concentration - ref_concentration
 t = 1.6805, df = 29, p-value = 0.1036
@@ -305,8 +304,7 @@ visualize how the linear model applies here later. Let&rsquo;s make a boxplot:</
   <span class="n">scico</span><span class="o">::</span><span class="nf">scale_fill_scico_d</span><span class="p">(</span><span class="n">palette</span> <span class="o">=</span> <span class="s">&#34;hawaii&#34;</span><span class="p">)</span> <span class="o">+</span>
   <span class="nf">theme_minimal</span><span class="p">()</span> <span class="o">+</span> 
   <span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span> <span class="o">=</span> <span class="s">&#34;none&#34;</span><span class="p">)</span>
-</code></pre></div><p><img src="index_files/figure-gfm/tst-boxplot-1.png"
-data-fig-align="center" style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/tst-boxplot-1.png" width="768" />
 <p>Great! Now we have a visual representation of the data. Now, since the
 T-test compares means, we can might also add a point indicating the mean
 for both groups. Let&rsquo;s look just at the jittered points and add a line
@@ -322,8 +320,7 @@ connecting the two mean values.</p>
   <span class="nf">geom_line</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">mean_concentration</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="n">mean_conc</span><span class="p">),</span> <span class="n">group</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span>
             <span class="n">size</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&#34;violet&#34;</span><span class="p">)</span> <span class="o">+</span>
   <span class="nf">theme_minimal</span><span class="p">()</span>
-</code></pre></div><p><img src="index_files/figure-gfm/tst-plot-1.png" data-fig-align="center"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/tst-plot-1.png" width="768" />
 <p>You might see where we are going with this. The parameters from the
 linear model will describe the angle of the diagonal line and I&rsquo;ll
 illustrative this a further down. Let&rsquo;s get the values from the linear
@@ -392,8 +389,7 @@ the slope of the regression line is nothing more than the difference
 between the mean of the second group minor the mean of the first group.
 Now we can go back to the figure we made earlier and see how all these
 values relate:</p>
-<p><img src="index_files/figure-gfm/tst-plot-w-annot-1.png"
-data-fig-align="center" style="width:80.0%" /></p>
+<img src="index_files/figure-gfm/tst-plot-w-annot-1.png" width="768" />
 <p>And that&rsquo;s how a Two-Sample T-test is basically a linear model!</p>
 <h1 id="anova">ANOVA</h1>
 <p>Based on what we did in the previous section, you may already predict
@@ -467,8 +463,7 @@ F-statistic: 17.79 on 3 and 116 DF,  p-value: 1.448e-09
                         <span class="nf">aes</span><span class="p">(</span><span class="n">label</span> <span class="o">=</span> <span class="nf">str_glue</span><span class="p">(</span><span class="s">&#34;x&amp;#772; = {round(mean_adj, 2)}&#34;</span><span class="p">)),</span> 
                         <span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;#ffffff80&#34;</span><span class="p">,</span> <span class="n">nudge_x</span> <span class="o">=</span> <span class="m">1</span><span class="o">/</span><span class="m">3</span><span class="p">)</span> <span class="o">+</span> 
   <span class="nf">theme_minimal</span><span class="p">()</span>
-</code></pre></div><p><img src="index_files/figure-gfm/aov-plot-1.png" data-fig-align="center"
-style="width:80.0%" /></p>
+</code></pre></div><img src="index_files/figure-gfm/aov-plot-1.png" width="768" />
 <p>Oh, would you look at that! The differences between the group means and
 the reference mean (in this case SCZ) correspond with the <code>Estimate</code> of
 the linear model! Let&rsquo;s also see if we can reproduce the sum of squares
@@ -558,8 +553,7 @@ function, and then setting the <code>method</code> to <code>&quot;lm&quot;</code
   <span class="nf">theme_minimal</span><span class="p">()</span>
 </code></pre></div><pre><code>`geom_smooth()` using formula 'y ~ x'
 </code></pre>
-<p><img src="index_files/figure-gfm/lm-plot-1.png" data-fig-align="center"
-style="width:80.0%" /></p>
+<img src="index_files/figure-gfm/lm-plot-1.png" width="768" />
 <p>The line in the figure above shows the line that best fits the points
 with a ribbon indicating the standard error.</p>
 <p>Back to our data. We know that a linear models fits a line that
@@ -613,8 +607,7 @@ I just want to show the difference visually in the scatter plot we had
 before. I added points along the regression line to indicate where each
 point will move to, and an arrow to indicate the size and the direction
 of the difference between the observed and the predicted value:</p>
-<p><img src="index_files/figure-gfm/lm-plot-error-1.png"
-data-fig-align="center" style="width:80.0%" /></p>
+<img src="index_files/figure-gfm/lm-plot-error-1.png" width="768" />
 <p>You might have noticed now that the size of the arrow is defined as the
 difference between the observed and predicted value, i.e. the residual!
 Now, you might have come across the term &ldquo;sum of squared error&rdquo; in
@@ -624,8 +617,7 @@ above is one side of a square. How do you get the area of a suqare? You
 multiply the length of one side of the square by itself, i.e. you square
 it! That&rsquo;s where the &ldquo;squared error&rdquo; part of that comes from. Perhaps
 the figure below helps illustrate it:</p>
-<p><img src="index_files/figure-gfm/lm-plot-squares-1.png"
-data-fig-align="center" style="width:80.0%" /></p>
+<img src="index_files/figure-gfm/lm-plot-squares-1.png" width="768" />
 <p>The &ldquo;sum&rdquo; part of &ldquo;sum of squared error&rdquo; refers to the sum of the areas
 of those squares. Simply, you sum the square of the sides. You can also
 look at it in mathematical form:</p>
@@ -654,8 +646,7 @@ illustrate sum of squared total. Remember the sum of squared total is
 the sum of squared differences between the observed values and the mean
 value. I&rsquo;ll also add the original regression line in the background to
 show the difference with the sum of squared error.</p>
-<p><img src="index_files/figure-gfm/lm-plot-mean-1.png"
-data-fig-align="center" style="width:80.0%" /></p>
+<img src="index_files/figure-gfm/lm-plot-mean-1.png" width="768" />
 <p>We already calculated the difference with the regression line, then to
 calculate the difference with the mean is simple:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">data</span> <span class="o">&lt;-</span> <span class="n">data</span> <span class="o">%&gt;%</span> 
@@ -771,8 +762,6 @@ loaded via a namespace (and not attached):
     
 
   <script src="/js/app.js"></script>
-  <script>$("img").parents('p').css("text-align", "center");</script>
-
   
   </body>
 </html>

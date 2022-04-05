@@ -11,16 +11,13 @@ tags:
 description: "Dutch performance at Olympic speed skating"
 thumbnail: images/avatar.png
 format: hugo
+execute:
+  fig.retina: 2
+  fig.align: center
+  fig.show: hold
+  results: hold
+  out.width: 80%
 ---
-
-```{r knitr-opts, include=FALSE}
-knitr::opts_chunk$set(fig.retina = 2,
-                      fig.show = "hold", 
-                      fig.align = "center",
-                      results = "hold",
-                      out.width = "80%",
-                      out.extra = 'style="display:block; margin:auto;"')
-```
 
 ```{r setup, include=FALSE, cache=FALSE}
 # Set up the environment

@@ -39,6 +39,34 @@ img {
   max-width: 80%;
 }
 </style>
+
+``` r
+# Setup of the environment
+library(tidyverse)
+library(ggtext)
+library(magrittr)
+library(showtext)
+
+font_add_google(name = "Nunito Sans", family = "nunito-sans")
+showtext_auto()
+
+theme_set(ggthemes::theme_economist(base_family = "nunito-sans") +
+            theme(rect = element_rect(fill = "#EBEBEB", color = "transparent"),
+                  plot.background = element_rect(fill = "#EBEBEB", color = "transparent"),
+                  panel.background = element_rect(fill = "#EBEBEB", color = "transparent"),
+                  plot.title = element_textbox(margin = margin(0,0,5,0,"pt")),
+                  plot.title.position = "plot",
+                  plot.subtitle = element_textbox(hjust = 0, margin = margin(0,0,15,0,"pt")),
+                  plot.caption = element_textbox(hjust = 1),
+                  plot.caption.position = "plot",
+                  axis.title.y = element_textbox(orientation = "left-rotated", face = "bold",
+                                                 margin = margin(0,0,5,0,"pt")),
+                  axis.text.y = element_text(hjust = 1),
+                  legend.position = "bottom",
+                  legend.box = "vertical",
+                  legend.text = element_text(size = 10)))
+```
+
 <p style="border-radius: 5px; background-color: #acc8d4; padding: 1em;">
 For this post, I decided to hide the code chunks by default to improve
 legibility. You can click the <em>Show code</em>-button to expand the
@@ -848,7 +876,7 @@ generate the figures and tables etc. to the main document and put the
 code inside unfoldable tags to make it easier to see the code associated
 with a particular step while maintaining legibility.
 
-<script type="text/javascript">
+<script>
 // From: https://bookdown.org/yihui/rmarkdown-cookbook/details-tag.html
 (function() {
   var codes = document.querySelectorAll('div.highlight');

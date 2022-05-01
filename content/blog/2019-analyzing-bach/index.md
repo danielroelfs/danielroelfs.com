@@ -511,14 +511,7 @@ summ_key_cat2 <- merged_data %>%
   ) %>%
   group_by(category2, Key) %>%
   summarise(n = sum(n))
-```
 
-    `summarise()` has grouped output by 'category2'. You can override using the
-    `.groups` argument.
-    `summarise()` has grouped output by 'category2'. You can override using the
-    `.groups` argument.
-
-``` r
 plotdat <- rbind(summ_key_cat1 %>% rename(category2 = category1),
                  summ_key_cat2) %>%
   cbind(gr = c(rep(1,nrow(summ_key_cat1)),

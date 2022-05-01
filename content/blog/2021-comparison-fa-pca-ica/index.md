@@ -74,6 +74,10 @@ visualization, `{fastICA}` to get access to an ICA algorithm, and
 library(tidyverse)
 library(fastICA)
 library(patchwork)
+
+set.seed(21)
+
+theme_set(theme_minimal())
 ```
 
 We'll load the data into R, clean up the variable names, convert the

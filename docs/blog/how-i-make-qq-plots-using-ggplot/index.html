@@ -122,12 +122,15 @@ summary statistics and get some of my preferred color palettes. The code
 to calculate the confidence interval is based on code from Kamil
 Slowikowski (click <a href="https://gist.github.com/slowkow/9041570">here</a> to go
 to the Gist).</p>
-<h3 id="import-data-into-r">Import data into R</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">normentR</span><span class="p">)</span>
+</code></pre></div><h3 id="import-data-into-r">Import data into R</h3>
 <p>First we&rsquo;ll simulate some summary statistics data. We can do this using
 the <code>simulateGWAS()</code> function in the <code>{normentR}</code> package for now. If
 you have summary statistics ready, you can load it in and use that
 instead.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">set.seed</span><span class="p">(</span><span class="m">1994</span><span class="p">)</span>
+
 <span class="n">sumstats.data</span> <span class="o">&lt;-</span> <span class="nf">simulateGWAS</span><span class="p">(</span><span class="n">nSNPs</span> <span class="o">=</span> <span class="m">1e6</span><span class="p">,</span> <span class="n">nSigCols</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span>
 </code></pre></div><pre><code>GENERATING SIMULATED GWAS DATASET
 1. Generating random rs IDs

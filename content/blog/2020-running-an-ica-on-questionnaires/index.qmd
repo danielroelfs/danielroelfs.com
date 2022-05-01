@@ -20,12 +20,6 @@ execute:
   out.width: 80%
 ---
 
-```{r setup, message=FALSE, warning=FALSE, cache=FALSE, echo=FALSE}
-# Setup of the environment
-library(tidyverse)
-library(fastICA)
-```
-
 ### Introduction
 
 If there was a statistics magazine and it were to have ads, the ad for independent component analysis (commonly referred to as the ICA) might read something like this:
@@ -42,14 +36,21 @@ We'll use a dataset called the _Nerdy Personality Attributes Scale_ from the [Op
 
 The dataset in question consists of almost 20.000 individuals from 149 different countries. Is there any reliable way to ensure that the tests are filled in correctly? No, definitely not. Does that make it a unreliable dataset for scientific analysis? Probably. Both issues are perhaps slightly confounded by its sheer size, but the dataset serves our goal well, which is to run an ICA in R. We'll use the `{tidyverse}` package and the `{fastICA}` package.
 
-```{r load-packages, eval=FALSE}
+```{r}
+#| label: pkgs
+#| message: false
+
 library(tidyverse)
 library(fastICA)
 ```
 
 There are two files we need, one with the actual data (we'll call this `loaddata`), and one with the list of questions (we'll call this `loadcodes`).
 
-```{r load-data, message=FALSE, warning=FALSE}
+```{r}
+#| label: load-data
+#| message: false
+#| warning: false
+
 loaddata <- read_delim("data.csv", delim = "\t") %>% 
   mutate(id = row_number())
 
@@ -64,7 +65,9 @@ After cleaning, we still have more than 250.000 individual records left. This is
 
 Next, we want to prune the data. We want to exclude questions that have a low degree of variance and we might want to remove or impute questions with a large number of `NA`s. Our first step is to get the data in a format that's easier to work with, in this case, the long format. We'll select all questions, and put the question number in a column called `question` and the values in a column called `score`.
 
-```{r make-long}
+```{r}
+#| label: make-long
+
 questdata <- loaddata %>%
   select(starts_with("Q")) %>%
   pivot_longer(cols = everything(), names_to = "question", values_to = "score")
@@ -72,7 +75,9 @@ questdata <- loaddata %>%
 
 We'll first find if there's any unanswered questions. These are rows where `score` is `NA`. 
 
-```{r find-nas}
+```{r}
+#| label: find-nas
+
 questdata %>%
   filter(is.na(score)) %>%
   nrow(.)
@@ -82,7 +87,9 @@ We find that there's no missing values (crazy, I know!). If there were any missi
 
 The next step is to find if there are questions with insufficient variation in answers. For this we'll calculate the percentage that each answer on the Likert scale represents in the total variance of the dataset. We'll take our long-format data, group by the question and the answers on the question (`score`). Count the number of times that answer has been given to that question (using `count()`). Then we'll calculate the percentage that this answer represented within each question (using `perc = n / sum(n)`). Then we'll sort the answers within the questions on the percentage (with the answer that's been answered the most on top, and the answer that's answered the least on the bottom (`arrange(question, -perc)`)). Then we'll take the second-most common answer (`slice(2)`) and select the questions where the second-most answer represented less than 15% of the answers (`perc < 0.15`). The threshold of 15% is fairly arbitrary. Usually I'd go for 10%, but due to the source of the data, I'm being a bit more stringent here. The output from these steps will give us the questions that we might want to exclude due to low variance.
 
-```{r excl-vars}
+```{r}
+#| label: excl-vars
+
 less15var <- questdata %>%
   group_by(question, score) %>%
   count() %>%
@@ -97,14 +104,18 @@ print(less15var)
 
 So no question has too little variance. If there was, I'd remove that question like so:
 
-```{r remove-low-var}
+```{r}
+#| label: remove-low-var
+
 data <- loaddata %>% 
   select(-less15var$question)
 ```
 
 Next we want to normalize the data. Usually you'd do this to ensure that all answers on a questionnaire are in the same domain. Let's imagine a scenario where some questions are scored from 0 to 10, others are scored from 0 to 5, and a third is scored from 80 to 120. The ICA is then biased towards questions that have larger values, like the third question in the example above. That's why we want to normalize the data. The statistical term for this is z-score normalization. The defining property of z-scored transformed data is that the mean is 0 and the standard deviation is one. The z-score transformation is obtained by subtracting the mean from each individual value and then dividing by the standard deviation. This is implemented in R with the `scale()` function. We'll also check if it worked afterwards.
 
-```{r normalize-data}
+```{r}
+#| label: normalize-data
+
 data <- data %>%
   pivot_longer(starts_with("Q"), names_to = "qnum", values_to = "score") %>%
   group_by(qnum) %>%
@@ -127,7 +138,9 @@ There's two clustering approaches we'll use. One will actually help us do the ot
 
 The PCA is implemented in the `prcomp()` function. This function doesn't accept a data frame, but instead it requires a matrix. So we'll have to make that first. We'll transform the long-format data that we created earlier back into wide format (using `pivot_wider()`), then select only the columns that we want to include in the analysis (i.e. the questions (`select(starts_with("Q"))`)), and then we'll turn it into a matrix (using `as.matrix()`). Then we'll put the resulting matrix into the `prcomp()` function.
 
-```{r run-pca}
+```{r}
+#| label: run-pca
+
 mat <- data %>%
   pivot_wider(names_from = "qnum", values_from = "score_z", id_cols = "id") %>%
   select(starts_with("Q")) %>%
@@ -138,7 +151,9 @@ pca_data <- prcomp(mat)
 
 Then we can calculate a few other parameters. We want to calculate the variance that each component captures. The variance is the standard deviation squared. We can calculate the variance explained by each component by dividing the variance by the sum of the variance.
 
-```{r calc-pca-stats}
+```{r}
+#| label: calc-pca-stats
+
 pca_data$var <- pca_data$sdev^2
 pca_data$varexpl <- pca_data$var / sum(pca_data$var)
 
@@ -149,7 +164,9 @@ pca_stats <- tibble(sdev = pca_data$sdev,
 
 We can visualize the variance captured in each component by creating a [scree plot](https://en.wikipedia.org/wiki/Scree_plot). This plot shows the components on the x-axis and the variance on the y-axis. Scree plots also typically include a horizontal line to indicate the eigenvalue of 1. Scree plots are typically interpreted based on the "elbow" in the plot, where the variance decreases. This can be a bit subjective. That's where the horizontal line comes in.
 
-```{r plot-var}
+```{r}
+#| label: plot-var
+
 ggplot(pca_stats, aes(x = seq(var), y = var)) + 
   geom_line(color = "grey30", size = 1) + 
   geom_point(color = "grey30", size = 2) + 
@@ -161,7 +178,9 @@ ggplot(pca_stats, aes(x = seq(var), y = var)) +
 
 It can be a bit hard to see from the plot how many components have an eigenvalue larger than 1. But we can calulate it. The number of components with an eigenvalue larger than 1 will be the number of independent components we'll request from the ICA.
 
-```{r get-n-ics}
+```{r}
+#| label: get-n-ics
+
 nICs <- pca_stats %>%
   filter(var > 1) %>%
   nrow()
@@ -172,7 +191,9 @@ print(nICs)
 
 Now we're ready to run the ICA! We'll use the `fastICA()` function. The function has a bunch of inputs. We'll pick the parallel algorithm (as opposed to the "deflation" algorithm). In the parallel algorithm the components are extracted simultaneously, with the deflation algorithm they're calculated one at a time. The "fun" option defines the form of the entropy function. I'm not 100% sure what it does. Just set it to `"exp"` and move on. For the `"method"` option there are two options: `"R"` or `"C"`. In the first option, all analyses are run in R, in the second option, all code is run in C, which is slightly faster. I typically use the `"C"` option. The `maxit` option defines the maximum number of iterations to perform. The default is 200, but in complex datasets, it may take a larger number of iterations to converge. That's why I set it to 5000. This process may take a while. If you want to follow along with what the algorithm is doing, you can set the `verbose` option to `TRUE`.
 
-```{r run-ica}
+```{r}
+#| label: run-ica
+
 set.seed(2020)
 ica_model <- fastICA(mat, n.comp = nICs, alg.typ = "parallel",
                      fun = "exp", method = "C", maxit = 5000)
@@ -182,7 +203,9 @@ ica_model <- fastICA(mat, n.comp = nICs, alg.typ = "parallel",
 
 So now we have run the ICA decomposition. The function provides a few outputs:
 
-```{r show-ica-out}
+```{r}
+#| label: show-ica-out
+
 glimpse(ica_model)
 ```
 
@@ -190,7 +213,9 @@ These names aren't very informative. In this function, `X` represens the pre-pro
 
 One feature of independent component analysis, is that there's a high degree of correlation within the independent components, but by definition a very poor correlation between independent components. We can measure this by correlating the individual loadings with each other. The individual loadings are stored in `ica_data$S`. We can simply correlate that matrix by using the `cor()` function.
 
-```{r corr-ica}
+```{r}
+#| label: corr-ica
+
 cor(ica_model$S)
 ```
 
@@ -200,7 +225,9 @@ We take the data in `ica_model$A`, rotate it (rows become columns, and columns b
 
 Then we can also have a quick look at hierarchical clustering. This is a process where data is separated based on the closeness (or dissimilarity) of the datapoints. In this example we transform the weight matrix into a distance matrix (a matrix representing the degree of similarity between datapoints) using the `dist()` function. Then we simply provide the hierarchical clustering function `hclust()` with the distance matrix and we have our hierarchical clustering. We can then plot a simple dendrogram using R's basic `plot()` function.
 
-```{r show-hclust}
+```{r}
+#| label: show-hclust
+
 weight_matrix <- data.frame(t(ica_model$A))
 names(weight_matrix) <- paste0("IC",seq(weight_matrix))
 
@@ -211,14 +238,18 @@ plot(clust)
 
 What we can see from the dendrogram is that for instance question 16 (_"I gravitate towards introspection"_) and question 17 (_"I am more comfortable interacting online than in person"_) on the left are very similar. Question 3 (_"I like to play RPGs. (Ex. D&D)"_) is somewhat similar, but not as much as question 16 and 17. The same goes for question 1 and 4, question 11 and 19, and so on.
 
-```{r select-qs}
+```{r}
+#| label: select-qs
+
 codes <- loadcodes %>%
   filter(str_detect(qnum, "Q"))
 ```
 
 Next we'll plot the weight matrix. For that we first create a column with the question number, we'll then merge the matrix with the list of questions so we can plot the actual question asked instead of the question number. Next, we'll put the data frame in a long format. Finally, we'll also reorder the questions to match the order determined by the hierarchical clustering.
 
-```{r create-plotdata}
+```{r}
+#| label: create-plotdata
+
 weight_matrix_long <- weight_matrix %>%
   mutate(qnum = sprintf("Q%s",row_number())) %>%
   inner_join(codes, by = "qnum") %>%
@@ -229,7 +260,10 @@ weight_matrix_long <- weight_matrix %>%
 
 So let's see what the ICA spit out. We'll make a plot where the questions are shown along the y-axis and where the x-axis shows their loading onto the different independent components. The orientation of the loading between the components does not have meaning, but within the components it can indicate that some questions have opposing effects. We'll reorder the x- and y-axis to order it based on the loading strength.
 
-```{r plot-wmatrix-nolabs, out.width='100%'}
+```{r}
+#| label: plot-wmatrix-nolabs
+#| out.width: 100%
+
 ggplot(weight_matrix_long, aes(x = IC, y = question, fill = loading)) +
   geom_tile() + 
   labs(x = NULL,

@@ -120,7 +120,31 @@ img {
   max-width: 80%;
 }
 </style>
-<p style="border-radius: 5px; background-color: #acc8d4; padding: 1em;">
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="c1"># Setup of the environment</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">ggtext</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">magrittr</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">showtext</span><span class="p">)</span>
+
+<span class="nf">font_add_google</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#34;Nunito Sans&#34;</span><span class="p">,</span> <span class="n">family</span> <span class="o">=</span> <span class="s">&#34;nunito-sans&#34;</span><span class="p">)</span>
+<span class="nf">showtext_auto</span><span class="p">()</span>
+
+<span class="nf">theme_set</span><span class="p">(</span><span class="n">ggthemes</span><span class="o">::</span><span class="nf">theme_economist</span><span class="p">(</span><span class="n">base_family</span> <span class="o">=</span> <span class="s">&#34;nunito-sans&#34;</span><span class="p">)</span> <span class="o">+</span>
+            <span class="nf">theme</span><span class="p">(</span><span class="n">rect</span> <span class="o">=</span> <span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;#EBEBEB&#34;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&#34;transparent&#34;</span><span class="p">),</span>
+                  <span class="n">plot.background</span> <span class="o">=</span> <span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;#EBEBEB&#34;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&#34;transparent&#34;</span><span class="p">),</span>
+                  <span class="n">panel.background</span> <span class="o">=</span> <span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;#EBEBEB&#34;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&#34;transparent&#34;</span><span class="p">),</span>
+                  <span class="n">plot.title</span> <span class="o">=</span> <span class="nf">element_textbox</span><span class="p">(</span><span class="n">margin</span> <span class="o">=</span> <span class="nf">margin</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">5</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="s">&#34;pt&#34;</span><span class="p">)),</span>
+                  <span class="n">plot.title.position</span> <span class="o">=</span> <span class="s">&#34;plot&#34;</span><span class="p">,</span>
+                  <span class="n">plot.subtitle</span> <span class="o">=</span> <span class="nf">element_textbox</span><span class="p">(</span><span class="n">hjust</span> <span class="o">=</span> <span class="m">0</span><span class="p">,</span> <span class="n">margin</span> <span class="o">=</span> <span class="nf">margin</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">15</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="s">&#34;pt&#34;</span><span class="p">)),</span>
+                  <span class="n">plot.caption</span> <span class="o">=</span> <span class="nf">element_textbox</span><span class="p">(</span><span class="n">hjust</span> <span class="o">=</span> <span class="m">1</span><span class="p">),</span>
+                  <span class="n">plot.caption.position</span> <span class="o">=</span> <span class="s">&#34;plot&#34;</span><span class="p">,</span>
+                  <span class="n">axis.title.y</span> <span class="o">=</span> <span class="nf">element_textbox</span><span class="p">(</span><span class="n">orientation</span> <span class="o">=</span> <span class="s">&#34;left-rotated&#34;</span><span class="p">,</span> <span class="n">face</span> <span class="o">=</span> <span class="s">&#34;bold&#34;</span><span class="p">,</span>
+                                                 <span class="n">margin</span> <span class="o">=</span> <span class="nf">margin</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">5</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="s">&#34;pt&#34;</span><span class="p">)),</span>
+                  <span class="n">axis.text.y</span> <span class="o">=</span> <span class="nf">element_text</span><span class="p">(</span><span class="n">hjust</span> <span class="o">=</span> <span class="m">1</span><span class="p">),</span>
+                  <span class="n">legend.position</span> <span class="o">=</span> <span class="s">&#34;bottom&#34;</span><span class="p">,</span>
+                  <span class="n">legend.box</span> <span class="o">=</span> <span class="s">&#34;vertical&#34;</span><span class="p">,</span>
+                  <span class="n">legend.text</span> <span class="o">=</span> <span class="nf">element_text</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">10</span><span class="p">)))</span>
+</code></pre></div><p style="border-radius: 5px; background-color: #acc8d4; padding: 1em;">
 For this post, I decided to hide the code chunks by default to improve
 legibility. You can click the <em>Show code</em>-button to expand the
 code.
@@ -851,7 +875,7 @@ generations will have the same opportunities current home-owners have.</p>
 generate the figures and tables etc. to the main document and put the
 code inside unfoldable tags to make it easier to see the code associated
 with a particular step while maintaining legibility.</p>
-<script type="text/javascript">
+<script>
 // From: https://bookdown.org/yihui/rmarkdown-cookbook/details-tag.html
 (function() {
   var codes = document.querySelectorAll('div.highlight');

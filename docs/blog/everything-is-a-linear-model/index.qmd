@@ -26,7 +26,10 @@ Don't believe me? Fine, I'll show you.
 
 Let's load the packages we'll use today and set a seed so it's reproducible.
 
-```{r pkgs, message=FALSE}
+```{r}
+#| label: pkgs
+#| message: false
+
 library(tidyverse)
 library(patchwork)
 
@@ -45,7 +48,9 @@ What this says is that the effect size (_t_) is equal to the sample mean minus t
 
 In this formula, you'd subtract the average across the sample values from each individual value, square it, and sum all these resulting values. This sum you would then divide by the size of the sample minus one (or the degrees of freedom), and take the square root of the whole thing. This will give the standard deviation (`$\sigma$`). Alright, let's now consider a study where we collected blood samples from a number of patients and measured for instance sodium levels in the blood. We don't have a control group for this study, but we know from medical textbooks that the reference value for sodium in healthy individuals for the age and sex distribution in our sample is for instance 2.5 mmol/L. Then we measure the sodium levels for 30 patients, we can simulate some fake measurements by generating a random sequence of values with a mean of 3 and a standard deviation of 1.2. 
 
-```{r ost-setup}
+```{r}
+#| label: ost-setup
+
 ref_concentration <- 2.5
 
 n <- 30
@@ -58,7 +63,9 @@ If we then implement these values in the formulas earlier, we get the following 
 
 this formula would like like this when implemented in R:
 
-```{r sd-calc}
+```{r}
+#| label: sd-calc
+
 sqrt( sum(abs(concentration - mean(concentration))^2) / (n - 1) )
 ```
 
@@ -68,13 +75,17 @@ But of course in any normal setting, you'd use the `sd()` function, which will g
 
 So just to over this formula again, you take the mean of your sample, subtract the reference number, and you divide this number by the standard deviation of your sample divided by the square root of the sample size. Or in R-terms:
 
-```{r t-calc}
+```{r}
+#| label: t-calc
+
 (mean(concentration) - ref_concentration) / (sd(concentration) / sqrt(n))
 ```
 
 Now we can compare this to the `t.test()` function and then we'd find the same _t_-value (barring some rounding and digit cutoffs). In this function, since we're not comparing two samples, we set the population mean (`mu`) we want to compare to as the reference concentration (the default value for a One-Sample T-test is 0). What the `mu` option does is nothing else than subtract the reference value from all values. By doing this it centers all the values relative to 0, so if we'd run `t.test(concentration - ref_concentration)`, we'd get the same result, obviously with a different mean and the values of the confidence interval have changed, although the range stays the same.
 
-```{r ost-test}
+```{r}
+#| label: ost-test
+
 t.test(concentration, mu = ref_concentration)
 t.test(concentration - ref_concentration, mu = 0)
 ```
@@ -87,7 +98,9 @@ In this formula `$Y_{i}$` is the dependent variable, `$x$` is the independent va
 
 Now let's build the linear model. Remember that the formula for the linear model included this term: `$\beta_{1}x$`. In this case, since we only have one sample, we don't have any value to multiply our value to, so we multiply it by 1. If we wanted to correlate two variables, for instance concentration with age, we would substitute the 1 with a continuous variable, i.e. age, but in this case we correlate all sample values with 1. Since we still want to compare our value to 0, we subtract the reference value from our sample values like we did before for the `t.test()`. Let's build the linear model.
 
-```{r ost-lm}
+```{r}
+#| label: ost-lm
+
 ost_model <- lm((concentration - ref_concentration) ~ 1)
 summary(ost_model)
 ```
@@ -98,7 +111,9 @@ Again, we find the same _t_- and _p_-value as when we ran the `t.test()`! How ex
 
 Now we'll apply the same logic we used for the One-Sample T-test to show how an Two-Sample T-test is in essence a linear model. First we'll look at the formula again, then the implementation using the `t.test()` function, and then the linear model. Let's now consider another experiment using the blood measurements we had before, but now we actually do have a control sample. We have 30 participants in both samples. Let's generate some random data:
 
-```{r tst-setup}
+```{r}
+#| label: tst-setup
+
 n <- 30
 data <- tibble(
   concentration = c(rnorm(n, mean = 4, sd = 1.5), rnorm(n, mean = 6, sd = 2)),
@@ -112,7 +127,9 @@ The formula for an Two-Sample T-test is very similar to that of the One-Sample T
 
 It's a bit too complex to describe in a sentence, but the definitions are perhaps familiar: `$\overline{x}$` for group means, `$\sigma$` for group standard deviations, and `$n$` for group size. I find that the simplest way to implement this in R is by first separating the groups and then adding them in the formula.
 
-```{r tst-t-calc}
+```{r}
+#| label: tst-t-calc
+
 g1 <- data %>% 
   filter(group == "HC") %>% 
   pull(concentration)
@@ -125,13 +142,17 @@ g2 <- data %>%
 
 Then running the regular T-test is easy.
 
-```{r tst-test}
+```{r}
+#| label: tst-test
+
 t.test(g1, g2)
 ```
 
 Look at that! We find the same _t_-value! Before we move on to the linear model, I first want to do some plotting, it will help us visualize how the linear model applies here later. Let's make a boxplot:
 
-```{r tst-boxplot}
+```{r}
+#| label: tst-boxplot
+
 ggplot(data, aes(x = group, y = concentration, fill = group)) +
   geom_violin(width = 0.5, alpha = 0.2) +
   geom_boxplot(width = 0.2) +
@@ -143,7 +164,9 @@ ggplot(data, aes(x = group, y = concentration, fill = group)) +
 
 Great! Now we have a visual representation of the data. Now, since the T-test compares means, we can might also add a point indicating the mean for both groups. Let's look just at the jittered points and add a line connecting the two mean values.
 
-```{r tst-plot}
+```{r}
+#| label: tst-plot
+
 mean_concentration <- data %>%
   group_by(group) %>%
   summarise(mean_conc = mean(concentration))
@@ -159,7 +182,9 @@ ggplot(data, aes(x = group)) +
 
 You might see where we are going with this. The parameters from the linear model will describe the angle of the diagonal line and I'll illustrative this a further down. Let's get the values from the linear model:
 
-```{r tst-lm}
+```{r}
+#| label: tst-lm
+
 tst_model <- lm(concentration ~ group, data = data)
 summary(tst_model)
 ```
@@ -196,7 +221,10 @@ We can reverse engineer the _t_-value too using just the output from the `lm()` 
 
 Which as you'll notice is one thousandths-decimal place off, which is due to rounding errors. `lm()` reports up to 4 decimal points while it uses more for the calculation. And now we've come full circle, because the slope of the regression line is nothing more than the difference between the mean of the second group minor the mean of the first group. Now we can go back to the figure we made earlier and see how all these values relate:
 
-```{r tst-plot-w-annot, echo=FALSE}
+```{r}
+#| label: tst-plot-w-annot
+#| echo: false
+
 ggplot(data, aes(x = group)) +
   geom_jitter(aes(y = concentration), width = 5e-2, size = 2, alpha = 0.75) +
   geom_point(data = mean_concentration, aes(y = mean_conc), 
@@ -220,7 +248,9 @@ And that's how a Two-Sample T-test is basically a linear model!
 
 Based on what we did in the previous section, you may already predict what we'll do in this section. Instead of one or two groups, we'll now show how this works for more than two groups. The mathematics becomes a bit more long-winded and the visualizations a bit less clear, so we'll just stick with the R code. Let's for instance say we have four groups of patients and each have a certain score on a questionnaire:
 
-```{r aov-setup}
+```{r}
+#| label: aov-setup
+
 n <- 30
 data <- tibble(score = round(c(rnorm(n, mean = 75, sd = 30), 
                                rnorm(n, mean = 60, sd = 35),
@@ -232,21 +262,27 @@ data <- tibble(score = round(c(rnorm(n, mean = 75, sd = 30),
 
 Those of you that have used the `aov()` function before might have noticed the similarity in syntax between `aov()` and `lm()`, this is not a coincidence. The `aov()` function in R is actually just a wrapper for the `lm()` function, the `anova()` function reports the ANOVA calculations. That's why I just want to compare them both side-by-side now. Let's run the ANOVA first:
 
-```{r aov}
+```{r}
+#| label: aov
+
 aov_model <- aov(score ~ group, data = data)
 summary(aov_model)
 ```
 
 And then the linear model:
 
-```{r aov-lm}
+```{r}
+#| label: aov-lm
+
 anova_lm_model <- lm(score ~ group, data = data)
 summary(anova_lm_model)
 ```
 
 The first thing you might notice is that the _F_-statistic and the _p_-value are the same in both models.
 
-```{r aov-plot}
+```{r}
+#| label: aov-plot
+
 ref_mean <- data %>% 
   filter(group == "SCZ") %>% 
   pull(score) %>% 
@@ -282,7 +318,9 @@ The second formula calculates the residual sum of squares (or sum of squared err
 
 We can do both calculations in one go with the following quick code:
 
-```{r aov-calc-ss}
+```{r}
+#| label: aov-calc-ss
+
 data %>% 
   mutate(overall_mean = mean(score)) %>% 
   group_by(group) %>% 
@@ -304,7 +342,9 @@ Well that's a statement of unequaled wisdom, isn't it? No wonder they give us do
 
 I don't think I need a lot of effort to convince anyone that a linear model is a linear model. Actually, I'm so convinced that you are aware that a linear model is a linear model that I wanted to about something else instead. Instead I wanted to dive into residuals and R<sup>2</sup>. Before we start, let's first simulate some data, We'll create an age column, a sex column, and a measure column. We'll make it so that the measure column correlates with the age column.
 
-```{r lm-setup}
+```{r}
+#| label: lm-setup
+
 n <- 20
 data <- tibble(age = round(runif(n = n, min = 18, max = 60)),
                sex = factor(sample(c("Male", "Female"), size = n, replace = TRUE), 
@@ -314,14 +354,18 @@ data <- tibble(age = round(runif(n = n, min = 18, max = 60)),
 
 We've used the formula for a straight line in previous sections (`$y = ax + c$`), we can apply it here too, but instead of the difference in the mean between two groups, the slope of the line (denoted by `$a$`) is now derived from the slope at which the line has the least distance to all points, referred to as the best fit. We will plot this later, but first we should maybe just run the linear model:
 
-```{r lm}
+```{r}
+#| label: lm
+
 lm_model <- lm(measure ~ age, data = data)
 summary(lm_model)
 ```
 
 We find that there is a significant association between age and our measure, and the R<sup>2</sup> is about 47%. Recall that R<sup>2</sup> denotes the amount of variance explained by the predictor, or age in our case. We can plot the linear model in `ggplot` with the `geom_smooth()` function, and then setting the `method` to `"lm"`:
 
-```{r lm-plot}
+```{r}
+#| label: lm-plot
+
 ggplot(data, aes(x = age, y = measure)) +
   geom_point(size = 4, alpha = 0.8) +
   geom_smooth(method = "lm", color = "grey30") +
@@ -333,7 +377,9 @@ The line in the figure above shows the line that best fits the points with a rib
 
 Back to our data. We know that a linear models fits a line that "predicts" outcome based on some other variable. This is heavily simplified, but it'll make clear what we'll do next. So what we did before with the best fit line was create one line that best fits all the data points, but now we want to relate that back to our data points. What would our values be if they would be exactly on this line? To get this, all we have to do is calculate the difference between the current data point and the value of the best fit line at the corresponding "predictor" value. We could do it by hand, but since this section is quite long already, I'll skip straight to the R function, which is appropriately called `predict.lm()`. It takes the linear model we created with the `lm()` function earlier as input. It outputs a vector with the predicted values based on the model. 
 
-```{r lm-predict}
+```{r}
+#| label: lm-predict
+
 data <- data %>% 
   mutate(measure_pred = predict.lm(lm_model))
 ```
@@ -344,20 +390,26 @@ With that we can quickly calculate the residual standard error (oversimplified, 
 
 or in R terms (the degrees of freedom is 18 here, too complicated to explain for now):
 
-```{r lm-calc-rse}
+```{r}
+#| label: lm-calc-rse
+
 sqrt(sum((data$measure - data$measure_pred)^2) / 18)
 ```
 
 So that checks out. What we can then also do is calculate the difference between the observed and the predicted values values, this is called the residual:
 
-```{r lm-calc-residual}
+```{r}
+#| label: lm-calc-residual
+
 data <- data %>%
   mutate(residual = measure - measure_pred)
 ```
 
 We can check that this is correct too by comparing the residuals we calculated with the output from the `predict.lm()` function to the output of the `residuals(lm_model)`:
 
-```{r lm-compare-residuals}
+```{r}
+#| label: lm-compare-residuals
+
 tibble(residual_manual = data$residual,
        residual_lm = residuals(lm_model)) %>% 
   glimpse()
@@ -365,13 +417,19 @@ tibble(residual_manual = data$residual,
 
 Predictably, when we sum all the individual differences (or residuals) we would get 0 (allowing for rounding errors) since the regression line perfectly fits in between the datapoints.
 
-```{r lm-sum-residuals}
+```{r}
+#| label: lm-sum-residuals
+
 sum(data$residual)
 ```
 
 We can visualize the residuals using the `geom_smooth()` function. First I just want to show the difference visually in the scatter plot we had before. I added points along the regression line to indicate where each point will move to, and an arrow to indicate the size and the direction of the difference between the observed and the predicted value:
 
-```{r lm-plot-error, echo=FALSE, message=FALSE}
+```{r}
+#| label: lm-plot-error
+#| echo: false
+#| message: false
+
 ggplot(data, aes(x = age)) +
   geom_smooth(aes(y = measure), method = 'lm', color = "grey30") +
   geom_point(aes(y = measure), size = 4, alpha = 0.8) +
@@ -385,7 +443,11 @@ ggplot(data, aes(x = age)) +
 
 You might have noticed now that the size of the arrow is defined as the difference between the observed and predicted value, i.e. the residual! Now, you might have come across the term "sum of squared error" in different textbooks. With the values that we've calculated so far we can illustrate where this comes from. Imagine that the arrow in the figure above is one side of a square. How do you get the area of a suqare? You multiply the length of one side of the square by itself, i.e. you square it! That's where the "squared error" part of that comes from. Perhaps the figure below helps illustrate it:
 
-```{r lm-plot-squares, echo=FALSE, message=FALSE}
+```{r}
+#| label: lm-plot-squares
+#| echo: false
+#| message: false
+
 ggplot(data, aes(x = age)) +
   geom_smooth(aes(y = measure), method = 'lm', color = "grey30") +
   geom_point(aes(y = measure), size = 4, alpha = 0.8) +
@@ -408,7 +470,7 @@ ggplot(data, aes(x = age)) +
 
 The "sum" part of "sum of squared error" refers to the sum of the areas of those squares. Simply, you sum the square of the sides. You can also look at it in mathematical form:
 
-`$$\sum(residual~or~difference~with~regression~line^2)$$`
+$$\sum(residual~or~difference~with~regression~line^2)$$
 
 We'll use this formula again a bit later to calculate the R<sup>2</sup>.
 
@@ -422,7 +484,11 @@ Important here is to notice that the error term has switched from the difference
 
 We've already plotted the sum of squared error, now we'll also illustrate sum of squared total. Remember the sum of squared total is the sum of squared differences between the observed values and the mean value. I'll also add the original regression line in the background to show the difference with the sum of squared error.
 
-```{r lm-plot-mean, echo=FALSE, message=FALSE}
+```{r}
+#| label: lm-plot-mean
+#| echo: false
+#| message: false
+
 ggplot(data, aes(x = age)) +
   geom_smooth(aes(y = measure), method = 'lm', color = "grey95", alpha = 0.1) +
   geom_hline(yintercept = mean(data$measure), color = "grey30", size = 1) +
@@ -434,7 +500,9 @@ ggplot(data, aes(x = age)) +
 
 We already calculated the difference with the regression line, then to calculate the difference with the mean is simple: 
 
-```{r lm-calc-differences}
+```{r}
+#| label: lm-calc-differences
+
 data <- data %>% 
   mutate(measure_mean = mean(measure),
          difference_mean = measure - measure_mean)
@@ -448,7 +516,9 @@ Notice how the numerator is the same calculation as the sum of squared total, th
 
 To calculate the squared regression coefficient (R<sup>2</sup>) from the formula above is then simple. We take 1 (perfect correlation) and subtract the sum of the squared residuals (explained variance) divided by the sum of the squared difference with the mean (total variance). In R terms, that would look like this:
 
-```{r lm-calc-r2}
+```{r}
+#| label: lm-calc-r2
+
 1 - sum(data$residual^2) / sum(data$difference_mean^2)
 ```
 
@@ -467,7 +537,9 @@ There's many more things we could go over, multiple linear regression, non-param
 - [Explaining the `lm` summary in R - Learn by Marketing](https://www.learnbymarketing.com/tutorials/explaining-the-lm-summary-in-r/)
 
 <details><summary>Session info for reproducibility purposes</summary>
-```{r sessioninfo}
+```{r}
+#| label: sessioninfo
+
 sessionInfo()
 ```
 </details>

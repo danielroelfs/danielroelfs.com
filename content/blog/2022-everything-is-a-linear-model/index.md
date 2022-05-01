@@ -698,7 +698,7 @@ The "sum" part of "sum of squared error" refers to the sum of the areas
 of those squares. Simply, you sum the square of the sides. You can also
 look at it in mathematical form:
 
-`$$\sum(residual~or~difference~with~regression~line^2)$$`
+![\\sum(residual\~or\~difference\~with\~regression\~line^2)](https://latex.codecogs.com/svg.latex?%5Csum%28residual~or~difference~with~regression~line%5E2%29 "\sum(residual~or~difference~with~regression~line^2)")
 
 We'll use this formula again a bit later to calculate the R<sup>2</sup>.
 

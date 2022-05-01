@@ -102,7 +102,7 @@ the header data and some variables were missing, which made machine
 reading this page very difficult, so when the script got to that
 instance I filled in the data manually.
 
-``` py
+``` python
 ### DOWNLOAD OLYMPIC SPEED SKATING DATA ########################
 
 # -- Libraries -------------------------
@@ -861,8 +861,9 @@ I hope I can do the same for others. The Winter Olympics happen every
 four years so I won't get much opportunity to do this again any time
 soon, but it might update this post later with the latest data.
 
-<script type="text/javascript">
+<script>
 // From: https://bookdown.org/yihui/rmarkdown-cookbook/details-tag.html
+
 (function() {
   var codes = document.querySelectorAll('div.highlight');
   console.log(codes)

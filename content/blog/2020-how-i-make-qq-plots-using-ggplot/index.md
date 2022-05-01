@@ -42,6 +42,11 @@ to calculate the confidence interval is based on code from Kamil
 Slowikowski (click [here](https://gist.github.com/slowkow/9041570) to go
 to the Gist).
 
+``` r
+library(tidyverse)
+library(normentR)
+```
+
 ### Import data into R
 
 First we'll simulate some summary statistics data. We can do this using
@@ -51,6 +56,7 @@ instead.
 
 ``` r
 set.seed(1994)
+
 sumstats.data <- simulateGWAS(nSNPs = 1e6, nSigCols = 1)
 ```
 

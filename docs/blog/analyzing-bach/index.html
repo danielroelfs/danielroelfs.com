@@ -511,12 +511,8 @@ primary category.</p>
   <span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">group_by</span><span class="p">(</span><span class="n">category2</span><span class="p">,</span> <span class="n">Key</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">summarise</span><span class="p">(</span><span class="n">n</span> <span class="o">=</span> <span class="nf">sum</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
-</code></pre></div><pre><code>`summarise()` has grouped output by 'category2'. You can override using the
-`.groups` argument.
-`summarise()` has grouped output by 'category2'. You can override using the
-`.groups` argument.
-</code></pre>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">plotdat</span> <span class="o">&lt;-</span> <span class="nf">rbind</span><span class="p">(</span><span class="n">summ_key_cat1</span> <span class="o">%&gt;%</span> <span class="nf">rename</span><span class="p">(</span><span class="n">category2</span> <span class="o">=</span> <span class="n">category1</span><span class="p">),</span>
+
+<span class="n">plotdat</span> <span class="o">&lt;-</span> <span class="nf">rbind</span><span class="p">(</span><span class="n">summ_key_cat1</span> <span class="o">%&gt;%</span> <span class="nf">rename</span><span class="p">(</span><span class="n">category2</span> <span class="o">=</span> <span class="n">category1</span><span class="p">),</span>
                  <span class="n">summ_key_cat2</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">cbind</span><span class="p">(</span><span class="n">gr</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="nf">rep</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="nf">nrow</span><span class="p">(</span><span class="n">summ_key_cat1</span><span class="p">)),</span>
                <span class="nf">rep</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="nf">nrow</span><span class="p">(</span><span class="n">summ_key_cat2</span><span class="p">)))</span>

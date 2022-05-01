@@ -52,6 +52,11 @@ with my data, so that's where the necessity for me came from to build my
 own code. I'll share my code underneath and I'll annotate the code where
 necessary.
 
+``` r
+library(tidyverse)
+library(normentR)
+```
+
 ## Loading the data
 
 Since I cannot share participants' data, I used an open EEG dataset

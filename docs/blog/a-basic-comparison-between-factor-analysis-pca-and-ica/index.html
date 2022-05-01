@@ -149,6 +149,10 @@ visualization, <code>{fastICA}</code> to get access to an ICA algorithm, and
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">fastICA</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">patchwork</span><span class="p">)</span>
+
+<span class="nf">set.seed</span><span class="p">(</span><span class="m">21</span><span class="p">)</span>
+
+<span class="nf">theme_set</span><span class="p">(</span><span class="nf">theme_minimal</span><span class="p">())</span>
 </code></pre></div><p>We&rsquo;ll load the data into R, clean up the variable names, convert the
 outcome variable (<code>ca_cervix</code>) to a factor. We&rsquo;ll have a look at the
 dataset using some functions from <code>{skimr}</code>. This function will give us

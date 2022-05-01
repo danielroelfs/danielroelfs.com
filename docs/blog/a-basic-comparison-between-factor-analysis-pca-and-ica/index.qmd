@@ -19,17 +19,6 @@ execute:
   out.width: 80%
 ---
 
-```{r setup, include=FALSE, cache=FALSE}
-# Setup of the environment
-library(tidyverse)
-library(fastICA)
-library(patchwork)
-
-set.seed(21)
-
-theme_set(theme_minimal())
-```
-
 This is just a very quick blog post outlining some of the commonalities and differences between factor analysis (FA), principal component analysis (PCA), and independent component analysis (ICA). I was inspired to write some of this down through some confusion caused in the lab by SPSS' apparent dual usage of the term "factor analysis" and "principal components". A few of my colleagues who use SPSS showed me the following screen:
 
 <p align="center">
@@ -44,15 +33,25 @@ To show the methods I'll use a small dataset on cervical cancer risk factors wit
 
 We'll load a few packages first, `{tidyverse}` for data wrangling and visualization, `{fastICA}` to get access to an ICA algorithm, and `{patchwork}` to combine different plots into one.
 
-```{r pkgs}
+```{r}
+#| label: pkgs
+#| message: false
+
 library(tidyverse)
 library(fastICA)
 library(patchwork)
+
+set.seed(21)
+
+theme_set(theme_minimal())
 ```
 
 We'll load the data into R, clean up the variable names, convert the outcome variable (`ca_cervix`) to a factor. We'll have a look at the dataset using some functions from `{skimr}`. This function will give us summary statistics and basic histograms of the different variables.
 
-```{r load-data, message=FALSE}
+```{r}
+#| label: load-data
+#| message: false
+
 data <- read_csv("sobar-72.csv") %>% 
   janitor::clean_names() %>% 
   mutate(ca_cervix = as_factor(ca_cervix))
@@ -63,7 +62,9 @@ skim_summ(data)
 
 Now let's only select the variables containing the risk factors (called features from here on). We'll also scale all the features to have a mean of 0 and a standard deviation of 1 using the `scale()` function. We can check what the new variable looks like using the `summary()` function.
 
-```{r scale-data}
+```{r}
+#| label: scale-data
+
 data_features <- data %>% 
   select(-ca_cervix) %>% 
   mutate(across(everything(), ~ scale(.x)))
@@ -73,7 +74,9 @@ summary(data_features$attitude_consistency)
 
 So now we have a data frame with 72 entries and 19 normalized columns, each representing a feature that may or may not predict cervical cancer. We can create a correlation matrix to visualize the degree of correlation between the different features. For this we simply run `cor()` on the data frame with the features, transform the output to a data frame in long format and then visualize it using `ggplot()` and `geom_tile()`.
 
-```{r corr-matrix-original}
+```{r}
+#| label: corr-matrix-original
+
 cor(data_features) %>% 
   as_tibble() %>% 
   mutate(feature_y = names(.)) %>% 
@@ -98,7 +101,9 @@ Let's now dive into the approaches we'll use. We'll discuss three here, and if t
 
 For factor analysis and ICA we need to provide the number of factors we want to extract. We'll use the same number of factors/components throughout this tutorial (also for PCA). Selection of the optimal number of factors/components is a fairly arbitrary process which I won't go into now. In short, before writing this I ran PCA and a tool called [icasso](https://research.ics.aalto.fi/ica/icasso/). _Icasso_ runs an ICA algorithm a number of times and provides a number of parameters on the stability of the clusters at different thresholds, this approach is very data-driven. A more common and easier way to get some data-driven insight into the optimal number of clusters is using the "elbow"-method using PCA, eigenvalues of the components, and the cumulative variance explained by the components (we'll show those later). However, in the end, you should also look at the weight matrix of the different cluster thresholds and it becomes a fairly arbitrary process. In this case, the _icasso_ showed that 7 components was good (but not the best), the weight matrix looked okay, and 7 components explained more than 80% of the variance in the PCA. I went for 7 components in the end also because it served the purpose of this blogpost quite well, but I think different thresholds are valid and you could make a case for different ones based on the data, based on the interpretation of the weight matrix, etc. This process is a bit of an art and a science combined.
 
-```{r n-comps}
+```{r}
+#| label: n-comps
+
 n_comps <- 7
 ```
 
@@ -109,7 +114,9 @@ So, let's run the factor analysis. Technically speaking, factor analysis isn't a
 
 We've established we want 7 factors. The factor analysis method is implemented in R through the `factanal()` function (see [here](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/factanal for the documentation). This function applies a common factor model using the maximum likelihood method.  We'll simply provide it with our data frame, the number of factors we want to extract, and we'll ask to provide Bartlett's weighted least-squares scores as well. We can apply a "rotation" to the factors to make them reduce the complexity of the factor loadings and make them easier to interpret, here we'll use the `varimax` option. Varimax maximizes the sum of the variances of the squared loadings. Then we'll print the model to see the results (and sort so the loadings are ordered). The output may be a bit long.
 
-```{r fa}
+```{r}
+#| label: fa
+
 fa_model <- factanal(data_features, factors = n_comps, scores = "Bartlett", rotation = "varimax")
 print(fa_model, sort = TRUE)
 ```
@@ -118,7 +125,9 @@ We may be tempted to immediately look at the _p_-value at the end of the output.
 
 The "Loadings" section of the results show a make-shift weight matrix, but in order to further interpret these results, let's create a plot showing the weight matrix. We'll get the results from the factor analysis model we created earlier using the `tidy()` function from `{broom}` and convert it to long format. We'll then create a weight matrix much in the same way we did earlier.
 
-```{r fa-weight-matrix}
+```{r}
+#| label: fa-weight-matrix
+
 fa_weight_matrix <- broom::tidy(fa_model) %>% 
   pivot_longer(starts_with("fl"), names_to = "factor", values_to = "loading")
 
@@ -137,7 +146,9 @@ Here we can more easily see that there's two strong clusters in Factor 1 and Fac
 
 Lastly, I think it would be interesting to see how the different factors relate to each other. We'll take the Bartlett's scores and correlate them with each other much like before and create a correlation matrix like before.
 
-```{r fa-corr-matrix}
+```{r}
+#| label: fa-corr-matrix
+
 fa_model$scores %>% 
   cor() %>% 
   data.frame() %>% 
@@ -166,7 +177,9 @@ I can recommend this paper as a great primer to PCA methods. It goes over a few 
 
 Now, let's run the PCA. In R there's two functions built-in to run a principal component analysis, here we'll use the `prcomp()`function (the other being `princomp()`, but `prcomp()` is preferred for reasons beyond the scope of this post). The `prcomp()` function contains a few options we can play with, but in my experience it works fine out of the box if you've normalized the data beforehand ([link to documentation](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/prcomp)). So we'll simply provide the data frame with the features. In addition, we'll also calculate the variance explained by each component. We do that by simply taking the standard deviation calculated by the PCA and squaring it, we'll save it in a new field called `variance`.
 
-```{r pca}
+```{r}
+#| label: pca
+
 pc_model <- prcomp(data_features)
 
 pc_model$variance <- pc_model$sdev^2
@@ -174,7 +187,9 @@ pc_model$variance <- pc_model$sdev^2
 
 Next we can make a simple scree plot using the variance we calculate above. We'll create a plot with the principal components on the x-axis and the eigenvalue on the y-axis. The scree plot is a very popular plot to visualize features of a PCA. In this plot the elbow is quite clearly at principal component 3, but as discussed, the scree plot is not the best nor the only way to determine the optimal number of components. In the code below I also added a calculation for the cumulative variance (`cum_variance`) which showed that a little more than 80% of the variance is captured in the first 7 components, while the first 3 components combined capture only 56%.
 
-```{r pca-scree}
+```{r}
+#| label: pca-scree
+
 pc_model$variance %>% 
   as_tibble() %>%
   rename(eigenvalue = value) %>% 
@@ -189,7 +204,9 @@ pc_model$variance %>%
 
 We'll also create a weight matrix again, based on the rotation from the PCA. We'll create the weight matrix much in the same way as before. A PCA by its very nature returns an equal number of components as the number of variables put in, however, we're interested in just the first 7 components, so we'll select just those using the `filter()` function.
 
-```{r pca-weight-matrix}
+```{r}
+#| label: pca-weight-matrix
+
 pc_weight_matrix <- pc_model$rotation %>% 
   data.frame() %>% 
   rownames_to_column("variable") %>% 
@@ -212,7 +229,9 @@ One thing that immediately jumps out is that PC1 and PC2 are nearly identical to
 
 We can also make a correlation matrix for the different principal components. We'll use the `x` field  and otherwise create the correlation matrix the same way as before:
 
-```{r pca-corr-matrix}
+```{r}
+#| label: pca-corr-matrix
+
 pc_model$x %>% 
   cor() %>% 
   data.frame() %>% 
@@ -234,7 +253,9 @@ What jumps out here is the apparent absence of correlation. By its design the pr
 
 Next, we can also visualize the PCA using a plot called a "biplot". It visualizes the loading of the first two components (e.g. PC1 on the x-axis and PC2 on the y-axis) and also visualizes the direction across which correlation was maximized. It's simply the `biplot()` function implemented already in R.
 
-```{r pca-biplot}
+```{r}
+#| label: pca-biplot
+
 biplot(pc_model)
 ```
 
@@ -242,7 +263,9 @@ It isn't very pretty, but we can roughly see the directions across the first two
 
 A nice feature of PCA is that the underlying principles are rather simple, and you could calculate the eigenvectors and eigenvalues using just two functions: `cov()` and `eigen()`, which calculate the covariance matrix and the eigenvalues and -vectors of the covariance matrix respectively. If the terms "matrix manipulations", eigenvectors, and dot product sound scary to you, you can skip to the [ICA](#independent-component-analysis) section. We can then calculate the individual loadings (stored in the `prcomp()` model in the `x` field) by calculating the dot product of the data features and the eigenvector. Dot product in this case means multiplying every element of a column with the corresponding element in the eigenvector.
 
-```{r pca-manual}
+```{r}
+#| label: pca-manual
+
 cov_matrix <- cov(data_features)
 
 eigen_model <- eigen(cov_matrix)
@@ -254,7 +277,9 @@ pc_manual <- as.matrix(data_features) %*% eigenvector
 
 Let's look at the scree plot:
 
-```{r pca-manual-scree}
+```{r}
+#| label: pca-manual-scree
+
 tibble(eigenvalues) %>% 
   ggplot(aes(x = seq_along(eigenvalues),  y = eigenvalues)) + 
   geom_hline(yintercept = 1) +
@@ -264,7 +289,11 @@ tibble(eigenvalues) %>%
 
 Looks identical to the previous one. Let's also look at the correlation matrix between the principal components.
 
-```{r pca-manual-individual-loadings, echo=FALSE, eval=FALSE}
+```{r}
+#| label: pca-manual-individual-loadings
+#| echo: false
+#| eval: false
+
 data.frame(pc_manual) %>% 
   rename_with(~ str_glue("PC{parse_number(.x)}")) %>% 
   rownames_to_column("participant") %>% 
@@ -280,7 +309,9 @@ data.frame(pc_manual) %>%
   coord_fixed(1/5)
 ```
 
-```{r pca-manual-corr-matrix}
+```{r}
+#| label: pca-manual-corr-matrix
+
 data.frame(pc_manual) %>% 
   cor() %>% 
   round(., 4)
@@ -293,13 +324,17 @@ Yup, also still 0 across the board. Calculating a PCA by just using matrix manip
 
 While PCA attempts to find components explaining the maximum degree of covariance or correlation, an ICA attemps to find components with maximum statistical independence. There's very complicated nuance here where PCA components are orthogonal and uncorrelated to each other and ICA components are merely statistically independent, which is a very subtle nuance. In practice, it'll mean that ICA components also have a practically zero correlation. The main difference is in how the components are obtained. Like with factor analysis, most ICA algorithms require you to provide a number of components up front. The FastICA algorithm we'll use here is a version of an ICA implementation. There's also InfoMax and JADE to name two other implementations. I couldn't tell you the difference between these ICA algorithms. The FastICA is implemented in R through the `fastICA()` function and the eponymous `{fastICA}` package ([link to documentation](https://www.rdocumentation.org/packages/fastICA/versions/1.2-2/topics/fastICA)).
 
-```{r ica}
+```{r}
+#| label: ica
+
 ica_model <- fastICA(data_features, n.comp = n_comps)
 ```
 
 Let's create a weight matrix again. The output from the `fastICA()` doesn't provide useful names, but the [documentation](https://www.rdocumentation.org/packages/fastICA/versions/1.2-2/topics/fastICA) provides sufficient information. To create the weight matrix we take the `A` field, transpose it, get the right names to the right places and then create the plot like we've done several times now.
 
-```{r ica-weight-matrix}
+```{r}
+#| label: ica-weight-matrix
+
 ica_weight_matrix <- data.frame(t(ica_model$A)) %>% 
   rename_with(~ str_glue("IC{seq(.)}")) %>%
   mutate(variable = names(data_features)) %>%
@@ -320,7 +355,9 @@ The FastICA method doesn't rank the components based on variance like factor ana
 
 Again, we can also visualize the correlation between the different components.  
 
-```{r ica-corr-matrix}
+```{r}
+#| label: ica-corr-matrix
+
 ica_model$S %>% 
   cor() %>% 
   data.frame() %>% 
@@ -340,7 +377,10 @@ Again, the correlations between the components here are zero throughout, which w
 
 Okay, let's now compare the three approaches and put the loading matrices side by side so we can look at the differences are bit more closely. We'll take the three weight matrices from factor analysis, PCA, and ICA, and bind them together. We'll then create a plot much in the same way as before and we'll add a facet to show the weight matrices side by side, separated by the method we used so it's easier to compare.
 
-```{r all-weight-matrices, out.width="100%"}
+```{r}
+#| label:  all-weight-matrices
+#| out.width: 100%
+
 all_weight_matrices <- bind_rows(
   fa_weight_matrix %>% 
     rename(comp = factor) %>% 
@@ -373,7 +413,9 @@ I'll quickly go over hierarchical clustering too, it's simple and easy to interp
 
 First we convert our data frame with the features to a matrix, then we transpose it. If we don't transpose, we'd be clustering participants together, and we're interested here in clustering of variables. Clustering of individuals can be interesting but this post is already long enough. Next we create a distance matrix using the `dist()` function, this is a matrix containing the relative distance between the variables to each other. You can think of the distance matrix as a sort of weighted adjacency matrix. Then we can supply this distance matrix to the hierarchical clustering function (`hclust()`, [documentation](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/hclust)). We don't need to supply the number of clusters at this stage.
 
-```{r hclust}
+```{r}
+#| label: hclust
+
 dist_data_features <- dist(t(as.matrix(data_features)))
 
 hclust_model <- hclust(dist_data_features)
@@ -381,26 +423,34 @@ hclust_model <- hclust(dist_data_features)
 
 We can visualize the hierarchical clustering with a dendrogram simply by supplying the `hclust_model` to the `plot()` function (like `plot(hclust_model)`), but in this case I'd prefer to use the `ggdendrogram()` function from the `{ggdendro}` package
 
-```{r dendrogram}
+```{r}
+#| label: dendrogram
+
 ggdendro::ggdendrogram(hclust_model)
 ```
 
 Here we can see the different "branches" of the tree. You can see that for instance "empowerment knowledge" and "empowerment abilities" are very close to each other, but it's a long way from "perception severity" to "motivation willingness" for instance. You may also notice the values along the y-axis. You could for instance "cut" the tree at `y = 13` and you'd separate the tree into 2 "branches". You could cut it at e.g. `y = 8`, and then you would get 11 clusters. Since we already determined that we wanted 7 clusters, we can ask another function to determine where to cut the tree to get the components we would like. This is implemented in the `cutree()` function.
 
-```{r cutree}
+```{r}
+#| label: cutree
+
 hclust_weight_matrix <- cutree(hclust_model, k = n_comps)
 ```
 
 The `cutree()` function assigns a cluster to each of the variables. It looks at the tree and determines where to cut the tree to get the desired number of branches and then tells you the composition of the branches. We can recreate this ourselves by simply adding a `geom_hline()` to the dendrogram. With some trial and error, it seems like cutting the tree at `y = 10.5` will give us 7 clusters.
 
-```{r dendrogram-w-line}
+```{r}
+#| label: dendrogram-w-line
+
 ggdendro::ggdendrogram(hclust_model) + 
   geom_hline(yintercept = 10.5, color = "firebrick")
 ```
 
 Let's look at how the clusters are made up according to the hierarchical clustering model. This isn't really a weight matrix, but rather a definition of the clusters. The "loadings" here are not numerical, but rather 1 or 0.
 
-```{r hclust-weight-matrix}
+```{r}
+#| label: hclust-weight-matrix
+
 hclust_weight_matrix %>% 
   data.frame() %>% 
   janitor::clean_names() %>% 

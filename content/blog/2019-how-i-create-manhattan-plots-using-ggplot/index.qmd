@@ -123,7 +123,7 @@ I opt to include some white space on the x-axis around the Manhattan plot to giv
 
 ```{r}
 #| label: print-plot
-#| fig.width: 12
+#| fig-width: 12
 
 print(manhplot)
 ```

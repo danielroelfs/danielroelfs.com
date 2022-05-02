@@ -38,15 +38,26 @@ img {
 }
 ```
 
+<p style="border-radius: 5px; background-color: #acc8d4; padding: 1em;">For this post, I decided to hide the code chunks by default to improve legibility. You can click the <em>Show code</em>-button to expand the code.</p>
+
+### Introduction
+
+I'm at the age where a lot of my peers start thinking about buying a home. It is a major conversation topic around the office, and these conversations are not often filled with optimism and excitement. Oslo is a notoriously expensive city to live in, and the housing market is very tough. 
+
+Of all the worrying events in 2020, Millenials and Gen Z kids ranked financial instability as the second most common driver of stress, the most common being the welfare of their family ([link](https://www2.deloitte.com/global/en/pages/about-deloitte/articles/millennialsurvey.html)). Today I want to dissect one of the possible causes of this _economic anxiety_: **the housing market**. Now, I'm not an economist nor a financial expert. Nonetheless, I believe I can leverage some of my knowledge of data wrangling and analysis to contribute a small piece to this topic. My insight into the Oslo housing market is fairly limited to so far and there's many nuances I don't fully understand yet, but I do think I have some relevant knowledge of the Dutch housing market. So today I'll dive into some data on the Dutch market, and particularly the Amsterdam housing market. There's countless stories about the Amsterdam housing market and how terrible it is for new buyers, similar to the Oslo housing market. However, in my opinion the Amsterdam housing market is already a few steps ahead of the Oslo market, and hopefully the Amsterdam market can offer some warnings about what the Oslo housing market might look like in a few years without some policy corrections.
+
+This will be a fairly basic data analysis and visualization post, I can't claim that this is an exhaustive list and that I didn't miss some nuances, but I'll give it . I collected some data from the Amsterdam Real Estate Association ([Makelaars Vereniging Amsterdam; MVA](https://www.mva.nl)) and statistics from the Central Bureau for Statistics ([Centraal Bureau for de Statistiek; CBS](https://www.cbs.nl)). As usual, I'll be using `{tidyverse}` _a lot_. I've also recently started using the `{ggtext}` package to manage the text elements in my plots, inspired by Cédric Scherer ([@CedScherer](https://twitter.com/CedScherer)). I'll use the `{gt}` package to spice up some of the tables, and `{patchwork}` for arranging plots. I'll use the `{cbsodataR}` to download data from the Central Bureau for Statistics ([CBS](https://www.cbs.nl)).
+
 ```{r}
-#| label: setup
+#| label: pkgs
 #| message: false
 
-# Setup of the environment
 library(tidyverse)
 library(ggtext)
+library(patchwork)
 library(magrittr)
 library(showtext)
+library(gt)
 
 font_add_google(name = "Nunito Sans", family = "nunito-sans")
 showtext_auto()
@@ -66,26 +77,6 @@ theme_set(ggthemes::theme_economist(base_family = "nunito-sans") +
                   legend.position = "bottom",
                   legend.box = "vertical",
                   legend.text = element_text(size = 10)))
-```
-
-<p style="border-radius: 5px; background-color: #acc8d4; padding: 1em;">For this post, I decided to hide the code chunks by default to improve legibility. You can click the <em>Show code</em>-button to expand the code.</p>
-
-### Introduction
-
-I'm at the age where a lot of my peers start thinking about buying a home. It is a major conversation topic around the office, and these conversations are not often filled with optimism and excitement. Oslo is a notoriously expensive city to live in, and the housing market is very tough. 
-
-Of all the worrying events in 2020, Millenials and Gen Z kids ranked financial instability as the second most common driver of stress, the most common being the welfare of their family ([link](https://www2.deloitte.com/global/en/pages/about-deloitte/articles/millennialsurvey.html)). Today I want to dissect one of the possible causes of this _economic anxiety_: **the housing market**. Now, I'm not an economist nor a financial expert. Nonetheless, I believe I can leverage some of my knowledge of data wrangling and analysis to contribute a small piece to this topic. My insight into the Oslo housing market is fairly limited to so far and there's many nuances I don't fully understand yet, but I do think I have some relevant knowledge of the Dutch housing market. So today I'll dive into some data on the Dutch market, and particularly the Amsterdam housing market. There's countless stories about the Amsterdam housing market and how terrible it is for new buyers, similar to the Oslo housing market. However, in my opinion the Amsterdam housing market is already a few steps ahead of the Oslo market, and hopefully the Amsterdam market can offer some warnings about what the Oslo housing market might look like in a few years without some policy corrections.
-
-This will be a fairly basic data analysis and visualization post, I can't claim that this is an exhaustive list and that I didn't miss some nuances, but I'll give it . I collected some data from the Amsterdam Real Estate Association ([Makelaars Vereniging Amsterdam; MVA](https://www.mva.nl)) and statistics from the Central Bureau for Statistics ([Centraal Bureau for de Statistiek; CBS](https://www.cbs.nl)). As usual, I'll be using `{tidyverse}` _a lot_. I've also recently started using the `{ggtext}` package to manage the text elements in my plots, inspired by Cédric Scherer ([@CedScherer](https://twitter.com/CedScherer)). I'll use the `{gt}` package to spice up some of the tables, and `{patchwork}` for arranging plots. I'll use the `{cbsodataR}` to download data from the Central Bureau for Statistics ([CBS](https://www.cbs.nl)).
-
-```{r}
-#| label: pkgs
-#| message: false
-
-library(tidyverse)
-library(ggtext)
-library(patchwork)
-library(gt)
 ```
 
 ### Getting the data
@@ -234,7 +225,7 @@ Prior to 2014, most properties in Amsterdam were sold at about 6% below asking p
 
 ```{r}
 #| label: overpay-table
-#| out.width: 60%
+#| out-width: 60%
 
 data %>% 
   filter(type != "Total",
@@ -266,8 +257,8 @@ What contributed to this price increase? A simple supply-and-demand plays a part
 ```{r}
 #| label: plot-tightness
 #| warning: false
-#| fig.width: 8
-#| fig.height: 6
+#| fig-width: 8
+#| fig-height: 6
 
 data %>% 
   filter(type != "Total") %>% 
@@ -314,8 +305,8 @@ So, there's a lot of competition among buyers, and people looking to sell their 
 ```{r}
 #| label: plot-n-sales
 #| warning: false
-#| fig.width: 10
-#| fig.height: 7
+#| fig-width: 10
+#| fig-height: 7
 
 data %>% 
   filter(type != "Total") %>% 
@@ -348,8 +339,8 @@ This adds fuel to the fire. I guess I'm trying to show that there are a number o
 #| label: plot-n-homes
 #| message: false
 #| warning: false
-#| fig.width: 10
-#| fig.height: 8
+#| fig-width: 10
+#| fig-height: 8
 
 decades <- tibble(
   x1 = seq(1920,2020,10),
@@ -445,8 +436,8 @@ So not every year there's the same number of "mutations" (transformations of pur
 ```{r}
 #| label: plot-housing-n_mutations
 #| warning: false
-#| fig.width: 10
-#| fig.height: 9
+#| fig-width: 10
+#| fig-height: 9
 
 mutations_n_plot <- house_mutations %>% 
   arrange(from,to) %>% 
@@ -498,8 +489,8 @@ We can look at the net number of houses added to the rental market by adding up 
 ```{r}
 #| label: net-shift-to-renters
 #| message: false
-#| fig.width: 10
-#| fig.height: 6
+#| fig-width: 10
+#| fig-height: 6
 
 net_house_mutations <- house_mutations %>% 
   mutate(across(c(from,to), ~ case_when(str_detect(.x, "rent") ~ "rent",
@@ -554,7 +545,7 @@ So in 2017 nearly 90 000 houses were mutated from sale to rental properties. In 
 
 ```{r}
 #| label: mutations-table
-#| out.width: 60%
+#| out-width: 60%
 
 house_mutations %>% 
   filter(year == max(year)) %>% 
@@ -595,8 +586,8 @@ So what's the result of all these phenomena? The figure below shows the housing 
 #| label: plot-asking-index-increase
 #| message: false
 #| warning: false
-#| fig.width: 10
-#| fig.height: 6
+#| fig-width: 10
+#| fig-height: 6
 
 asking_start <- data %>% 
   filter(type != "Total",

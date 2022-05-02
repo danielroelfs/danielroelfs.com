@@ -314,7 +314,7 @@ I noticed that some entries in the `year` column exceeded the year of Bach's dea
 #| label: BWVperyear-plot
 #| warning: false
 #| message: false
-#| fig.width: 12
+#| fig-width: 12
 
 BWVperyear <- merged_data %>%
   filter(!is.na(year)) %>%
@@ -402,7 +402,7 @@ I noticed that there were no double keys, as in B flat is the same as A sharp. T
 ```{r}
 #| label: tileplot-key-cat2
 #| warning: false
-#| fig.width: 12
+#| fig-width: 12
 
 summ_key_cat2 <- merged_data %>%
   group_by(category2, Key) %>%
@@ -478,7 +478,7 @@ Since this time I wanted to visualize whether Bach was more productive in certai
 ```{r}
 #| label: plot-with-city
 #| echo: false
-#| fig.width: 12
+#| fig-width: 12
 
 places_plot <- places %>%
   mutate(meanyear = year_from + ((year_to - year_from)/2))

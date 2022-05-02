@@ -1,5 +1,5 @@
 ---
-title: How I make QQ Plots Using ggplot
+title: How I Make QQ Plots Using ggplot
 author: Daniel Roelfs
 date: '2020-04-10'
 slug: how-i-make-qq-plots-using-ggplot
@@ -114,8 +114,8 @@ I must issue a small warning now, since these GWAS files can be quite large, plo
 
 ```{r}
 #| label: print-plot
-#| fig.height: 8
-#| fig.width: 8
+#| fig-height: 8
+#| fig-width: 8
 
 print(qqplot)
 ```

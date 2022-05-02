@@ -1,5 +1,5 @@
 ---
-title: How I make QQ Plots Using ggplot
+title: How I Make QQ Plots Using ggplot
 author: Daniel Roelfs
 date: '2020-04-10'
 slug: how-i-make-qq-plots-using-ggplot

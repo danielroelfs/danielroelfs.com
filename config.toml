@@ -13,7 +13,7 @@ PygmentsCodeFences = true # Enable code fence background highlighting.
 PygmentsCodeFencesGuessSyntax = false # Enable syntax guessing for code fences without specified language.
 PygmentsUseClasses = true # new add
 
-ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_cache$", "index\\.html", "about\\.html", "static/blog/\\*_files/", "README"] 
+ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "index\\.html", "about\\.html", "static/blog/\\*_files/", "README"] 
 
 [markup]
   defaultMarkdownHandler = "goldmark"

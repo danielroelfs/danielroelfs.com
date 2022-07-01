@@ -12,6 +12,14 @@ format: hugo
 Selection of publications. For a full list see my [Google Scholar
 profile](https://scholar.google.com/citations?user=QmVQcsAAAAAJ&hl=en).
 
+-   **PREPRINT** **D Roelfs**, O Frei, D van der Meer, E Tissink, A
+    Shadrin, D Alnæs, OA Andreassen, LT Westlye, T Kaufmann (2022)
+    [***Shared genetic architecture between mental health and the brain
+    functional connectome in the UK
+    Biobank***](https://doi.org/10.1101/2022.06.24.22276846). *medRxiv*.
+    doi:
+    [10.1101/2022.06.24.22276846](https://doi.org/10.1101/2022.06.24.22276846)
+
 -   D van der Meer, T Kaufmann, AA Shadrin, C Makowski, O Frei, **D
     Roelfs**, J Monereo Sanchez, DEJ Linden, J Rokicki, D Alnæs, C de
     Leeuw, WK Thompson, R Loughnan, C Chieh Fan, PM Thompson, LT

@@ -114,9 +114,8 @@ Previously, I used a JSON file and the {geojsonio} package to create a map of No
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/about/</guid>
-      <description>&amp;lt;img style=&amp;ldquo;position: relative; top: 15px; padding: 0 15px; float: right;&amp;rdquo; src=&amp;quot;./avatar.png&amp;quot; width=&amp;ldquo;33%&amp;rdquo; /&amp;gt;
-I&amp;rsquo;m Daniel Roelfs, I&amp;rsquo;m a PhD candidate working at the Norwegian Centre for Mental Disorders Research (NORMENT) in Oslo. My research focuses on the intersection between neuroimaging and genetics to discover more about the human brain and schizophrenia in particular. I&amp;rsquo;m enrolled in a doctoral education programme at the University of Oslo.
-Originally from the Netherlands, I have also studied in France and Sweden before moving to Norway.</description>
+      <description>&amp;lt;img style=&amp;ldquo;position: relative; top: 15px; padding: 0 15px; float: right;&amp;rdquo; src=&amp;ldquo;avatar.png&amp;rdquo; width=&amp;ldquo;33%&amp;rdquo; /&amp;gt;
+I&amp;rsquo;m Daniel Roelfs, currently working as a Data Scientist at the Norwegian bank DNB. Prior to this I was a PhD candidate working at the Norwegian Centre for Mental Disorders Research (NORMENT) in Oslo. My doctoral research focused on the intersection between neuroimaging and genetics to discover more about the human brain and the biology underlying psychiatric disorders.</description>
     </item>
     
     <item>

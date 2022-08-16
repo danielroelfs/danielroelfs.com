@@ -51,7 +51,7 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "i
     enableLineShare = false     # new add
     enableLinkedInShare = false # new add
 
-    thumbnail = "images/tn.png" # default sns thumbnail
+    thumbnail = "images/avatar.png" # default sns thumbnail
     
 # Social links
 [[params.social]]

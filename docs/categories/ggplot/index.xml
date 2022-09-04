@@ -8,13 +8,12 @@
     <language>en</language>
     <lastBuildDate>Tue, 24 Aug 2021 00:00:00 +0000</lastBuildDate><atom:link href="/categories/ggplot/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>The Easier Way to Create a Map of Norway Using {fhimaps}</title>
-      <link>/blog/the-easier-way-to-create-a-map-of-norway-using-fhimaps/</link>
+      <title>The Easier Way to Create a Map of Norway Using {splmaps}</title>
+      <link>/blog/the-easier-way-to-create-a-map-of-norway-using-splmaps/</link>
       <pubDate>Tue, 24 Aug 2021 00:00:00 +0000</pubDate>
       
-      <guid>/blog/the-easier-way-to-create-a-map-of-norway-using-fhimaps/</guid>
-      <description>Every now and then you discover a discover a much simpler solution to a problem you spent a lot of time solving. This recently happened to me on the topic of creating a map of Norway in R. In this post, I want to go through the process of what I learned.
-Previously, I used a JSON file and the {geojsonio} package to create a map of Norway and its fylker (counties) in particular.</description>
+      <guid>/blog/the-easier-way-to-create-a-map-of-norway-using-splmaps/</guid>
+      <description>p.announcement { border-radius: 5px; background-color: #acc8d4; padding: 1em; } p.announcement code { background-color: #93b8c8 }  This post was updated to include the new {splmaps} package since the {fhimaps} and {fhidata} package will no longer receive updates. Practically, these apps will behave the same way. Installation instructions for the {splmaps} and {spldata} packages can be found here.  Every now and then you discover a discover a much simpler solution to a problem you spent a lot of time solving.</description>
     </item>
     
   </channel>

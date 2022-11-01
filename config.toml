@@ -80,9 +80,14 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "i
     weight = 5
     url = "https://www.linkedin.com/in/danielroelfs/"
 [[params.social]]
+    name = "Mastodon"
+    icon = "fab fa-mastodon"
+    weight = 6
+    url = "https://mastodon.online/@danielroelfs#"
+[[params.social]]
     name = "Mail"
     icon = "fas fa-envelope"
-    weight = 6
+    weight = 7
     url = "mailto:daniel.roelfs@medisin.uio.no"
 
 # Menu links

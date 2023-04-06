@@ -6,7 +6,17 @@
     <description>Recent content in Blogs on Daniel Roelfs</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 18 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 06 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Difference in sunset times in Europe</title>
+      <link>/blog/difference-in-sunset-times-in-europe/</link>
+      <pubDate>Thu, 06 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/difference-in-sunset-times-in-europe/</guid>
+      <description>Today I want to share a project that deals with data scientist&amp;rsquo;s favorite kind of data: date- and timedata involving time zones and daylight savings time. Who doesn&amp;rsquo;t love it?
+This project stems from a discussion I had with my family about living up north in Norway and when the days become longer than in the Netherlands. Intuitively, one might think that because of the prevailing snow and cold in March and occasionally April this corresponds with shorter day length.</description>
+    </item>
+    
     <item>
       <title>Everything is a Linear Model</title>
       <link>/blog/everything-is-a-linear-model/</link>

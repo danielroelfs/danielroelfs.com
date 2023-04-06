@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Daniel Roelfs">
+    <meta name="description" content="/">
+    <meta name="keywords" content="blog,personal,coding">
+
+    <meta property="og:site_name" content="Daniel Roelfs">
+    <meta property="og:title" content="
+  Difference in sunset times in Europe - Daniel Roelfs
+">
+    <meta property="og:description" content="Difference in sunset times in Europe">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/blog/difference-in-sunset-times-in-europe/">
+    <meta property="og:image" content="/images/avatar.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="/blog/difference-in-sunset-times-in-europe/">
+    <meta name="twitter:image" content="/images/avatar.png">
+
+    <base href="/blog/difference-in-sunset-times-in-europe/">
+    <title>
+  Difference in sunset times in Europe - Daniel Roelfs
+</title>
+
+    <link rel="canonical" href="/blog/difference-in-sunset-times-in-europe/">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
+    
+    <link rel="preconnect" href="https://fonts.gstatic.com"> 
+    <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400;1,700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700;1,800;1,900&display=swap" rel="stylesheet">    <link rel="stylesheet" href="/css/normalize.min.css">
+    <link rel="stylesheet" href="/css/style.min.css">
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    
+      <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Daniel Roelfs">
+      <link href="/index.xml" rel="feed" type="application/rss+xml" title="Daniel Roelfs" />
+    
+
+    
+    <script async defer data-website-id="da48a88a-2e87-4024-8c99-639222aab54d" src="https://analytics-danielroelfs.netlify.app/umami.js"></script>
+    
+
+    <meta name="generator" content="Hugo 0.92.1" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">Daniel Roelfs</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="/blog">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="/photography">Photography</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="/publications">Publications</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="/cv">Curriculum Vitæ</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="/about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="post-title">Difference in sunset times in Europe</h1> 
+      <h2 class="date">April 6, 2023</h2>
+
+      
+    </header>
+
+    <p>Today I want to share a project that deals with data scientist&rsquo;s favorite kind of data: date- and timedata involving time zones and daylight savings time. Who doesn&rsquo;t love it?</p>
+<p>This project stems from a discussion I had with my family about living up north in Norway and when the days become longer than in the Netherlands. Intuitively, one might think that because of the prevailing snow and cold in March and occasionally April this corresponds with shorter day length. We can look at the data and see what the length of day and sunset time trajectories actually look like. Perhaps we can learn something about working with date- and timedata.</p>
+<p>As always, let&rsquo;s use R to make the plots, but I think Python is a bit better suited to do the data wrangling in this case. First, we&rsquo;ll load the packages we&rsquo;ll need here. We&rsquo;ll use the default packages like <code>{tidyverse}</code> and <code>{ggtext}</code>, but in addition (since we&rsquo;ll be dealing with time data) we&rsquo;ll also load the <code>{lubridate}</code> package. I&rsquo;m writing this in <a href="https://quarto.org">Quarto</a> so the <code>{reticulate}</code> package does not need to be loaded directly to use the Python code blocks, but we&rsquo;ll use it using the <code>::</code> syntax later to easily get the results back to R using the <code>py$&lt;variable name&gt;</code> functionality.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">lubridate</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">ggtext</span><span class="p">)</span>
+
+<span class="n">reticulate</span><span class="o">::</span><span class="nf">use_virtualenv</span><span class="p">(</span><span class="s">&#39;./.venv&#39;</span><span class="p">,</span> <span class="n">required</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+
+<span class="n">theme_custom</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="kc">...</span><span class="p">){</span>
+  <span class="n">ggthemes</span><span class="o">::</span><span class="nf">theme_fivethirtyeight</span><span class="p">(</span><span class="kc">...</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">theme</span><span class="p">(</span><span class="n">plot.background</span> <span class="o">=</span> <span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;transparent&#34;</span><span class="p">),</span>
+        <span class="n">panel.background</span> <span class="o">=</span> <span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;transparent&#34;</span><span class="p">),</span>
+        <span class="n">legend.background</span> <span class="o">=</span> <span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;transparent&#34;</span><span class="p">),</span>
+        <span class="n">legend.key</span> <span class="o">=</span> <span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;transparent&#34;</span><span class="p">))</span>
+  <span class="p">}</span>
+</code></pre></div><p>For the Python part, we&rsquo;ll use <code>pandas</code> as usual, the <code>datetime</code> and <code>time</code> module to deal with date- and timedata. The <code>dateutil</code> module to deal with time zones. And to get the actual raw data we&rsquo;ll use the <code>astral</code> module to get the sunrise and sunset times for different locations. Unfortunately, not all cities are included, it includes all capital cities plus some additional cities in the UK and USA. To get the coordinates for the cities we want to look at, we&rsquo;ll use the <code>geopy</code> module which allows you to look up the longitude, latitude of a given location without needing to create an account somewhere or dealing with an API (directly). To deal with some wrangling of strings we&rsquo;ll use the <code>re</code> module.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">date</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">dateutil</span> <span class="kn">import</span> <span class="n">tz</span>
+<span class="kn">from</span> <span class="nn">astral</span> <span class="kn">import</span> <span class="n">LocationInfo</span>
+<span class="kn">from</span> <span class="nn">astral.sun</span> <span class="kn">import</span> <span class="n">sun</span>
+<span class="kn">from</span> <span class="nn">geopy.geocoders</span> <span class="kn">import</span> <span class="n">Nominatim</span>
+<span class="kn">import</span> <span class="nn">re</span>
+</code></pre></div><p>For this project we&rsquo;ll collect a number of variables related to sunrise and sunset for different locations throughout the year. The <code>astral</code> module makes this very easy, and in order to keep things clean and efficient we&rsquo;ll create a function to efficient collect this data. We&rsquo;ll write it in such a way that it can collect a number of locations within one function call using a list input (which isn&rsquo;t the cleanest, but works quite well here). We&rsquo;ll provide the list of cities we want to analyze in the form <code>'&lt;region&gt;/&lt;city&gt;'</code> to avoid any possible misconceptions (e.g. Cambridge, Cambridgeshire in the UK or Cambridge, MA in the US). We&rsquo;ll then extract the coordinates for that location using the <code>geopy</code> module. We&rsquo;ll also supply the reference time zone (for this project Central Europe). The <code>astral</code> module has a <a href="https://github.com/sffjunkie/astral/issues/67">known issue</a> when dusk happens past midnight. So we&rsquo;ll extract everything in <a href="https://en.wikipedia.org/wiki/Coordinated_Universal_Time">UTC</a> and convert it to the time zone of interest later. We&rsquo;ll collect the data throughout the year for the various locations in a loop. And we&rsquo;ll cycle through the year using a <code>while</code> loop. We&rsquo;ll also collect the difference in time from the <a href="https://en.wikipedia.org/wiki/Daylight_saving_time">Daylights Savings Time</a>. We&rsquo;ll convert it to the time zone of interest using the <code>_convert_timezone()</code> function. In the final data frame we&rsquo;ll only get the times (not the dates) so in case the dusk happens past midnight, we&rsquo;ll consider that &ldquo;no dusk takes place this day&rdquo; instead of having it happen &ldquo;early in the morning the same day&rdquo;, implemented in the <code>_fix_dusks_past_midnight()</code> function. This will help with the plots later. Finally we&rsquo;ll convert some of the variables to a format that&rsquo;ll make it easy to deal with in R later.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">_convert_timezone</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">to_tz</span><span class="o">=</span><span class="n">tz</span><span class="o">.</span><span class="n">tzlocal</span><span class="p">()):</span>
+  <span class="s1">&#39;&#39;&#39;
+</span><span class="s1">  Convert the default time zone to local
+</span><span class="s1">  &#39;&#39;&#39;</span>
+  
+  <span class="n">x_out</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">k</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">to_tz</span><span class="p">))</span>
+  
+  <span class="k">return</span> <span class="n">x_out</span>
+
+<span class="k">def</span> <span class="nf">_fix_dusks_past_midnight</span><span class="p">(</span><span class="n">sunset</span><span class="p">,</span> <span class="n">dusk</span><span class="p">):</span>
+  <span class="s1">&#39;&#39;&#39;
+</span><span class="s1">  Replace the dusk time with NaN if it&#39;s past midnight
+</span><span class="s1">  &#39;&#39;&#39;</span>
+  
+  <span class="n">sunset_dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">sunset</span><span class="p">,</span> <span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">)</span>
+  <span class="n">dusk_dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">dusk</span><span class="p">,</span> <span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">)</span>
+  
+  <span class="k">if</span> <span class="n">dusk_dt</span> <span class="o">&lt;</span> <span class="n">sunset_dt</span><span class="p">:</span>
+    <span class="n">dusk_out</span> <span class="o">=</span> <span class="s1">&#39;23:59:59&#39;</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">dusk_out</span> <span class="o">=</span> <span class="n">dusk_dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">)</span>
+    
+  <span class="k">return</span> <span class="n">dusk_out</span>
+    
+<span class="k">def</span> <span class="nf">get_sun_data</span><span class="p">(</span>
+        <span class="n">cities</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Norway/Oslo&#39;</span><span class="p">,</span> <span class="s1">&#39;Netherlands/Amsterdam&#39;</span><span class="p">],</span>
+        <span class="n">ref_tz</span><span class="o">=</span><span class="s1">&#39;Europe/Berlin&#39;</span><span class="p">):</span>
+    <span class="s1">&#39;&#39;&#39;
+</span><span class="s1">    Get sunset data from location
+</span><span class="s1">    &#39;&#39;&#39;</span>
+    
+    <span class="n">geolocator</span> <span class="o">=</span> <span class="n">Nominatim</span><span class="p">(</span><span class="n">user_agent</span><span class="o">=</span><span class="s2">&#34;geoapiExercises&#34;</span><span class="p">)</span>
+    
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">city</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cities</span><span class="p">):</span>
+        <span class="n">df_tmp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        
+        <span class="n">loc</span> <span class="o">=</span> <span class="n">geolocator</span><span class="o">.</span><span class="n">geocode</span><span class="p">(</span><span class="n">city</span><span class="p">)</span>
+        <span class="n">city_loc</span> <span class="o">=</span> <span class="n">LocationInfo</span><span class="p">(</span><span class="n">timezone</span><span class="o">=</span><span class="n">city</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="n">loc</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="n">loc</span><span class="o">.</span><span class="n">longitude</span><span class="p">)</span>
+
+        <span class="n">start_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
+            <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-01-01&#39;</span><span class="p">),</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">end_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
+            <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-12-31&#39;</span><span class="p">),</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">start_date</span> <span class="o">&lt;=</span> <span class="n">end_date</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">sun</span><span class="p">(</span><span class="n">city_loc</span><span class="o">.</span><span class="n">observer</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="n">start_date</span><span class="p">)</span>
+            <span class="n">s</span><span class="p">[</span><span class="s1">&#39;dst&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">localtime</span><span class="p">(</span><span class="n">start_date</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span><span class="o">.</span><span class="n">tm_isdst</span>
+            <span class="n">df_tmp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df_tmp</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])])</span>
+            <span class="n">start_date</span> <span class="o">+=</span> <span class="n">delta</span>
+        <span class="n">df_tmp</span><span class="p">[</span><span class="s1">&#39;city_no&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">df_tmp</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">city_loc</span><span class="o">.</span><span class="n">timezone</span>
+        <span class="n">df_tmp</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">loc</span><span class="o">.</span><span class="n">latitude</span>
+        <span class="n">df_tmp</span><span class="p">[</span><span class="s1">&#39;long&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">loc</span><span class="o">.</span><span class="n">longitude</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">,</span> <span class="n">df_tmp</span><span class="p">])</span>
+
+    <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;noon&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;dst&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;dst&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;city&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">/(.*)&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;dawn&#39;</span><span class="p">,</span> <span class="s1">&#39;sunrise&#39;</span><span class="p">,</span> <span class="s1">&#39;noon&#39;</span><span class="p">,</span> <span class="s1">&#39;sunset&#39;</span><span class="p">,</span> <span class="s1">&#39;dusk&#39;</span><span class="p">]</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">_convert_timezone</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">to_tz</span><span class="o">=</span><span class="n">ref_tz</span><span class="p">))</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">k</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">))</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;dusk&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">_fix_dusks_past_midnight</span><span class="p">(</span><span class="n">sunset</span><span class="o">=</span><span class="n">k</span><span class="p">[</span><span class="s1">&#39;sunset&#39;</span><span class="p">],</span> <span class="n">dusk</span><span class="o">=</span><span class="n">k</span><span class="p">[</span><span class="s1">&#39;dusk&#39;</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span>
+</code></pre></div><p>Let&rsquo;s run this function once for Oslo, Amsterdam, Warsaw, and Madrid and once for only Oslo and Amsterdam. Amsterdam and Warsaw are roughly on the same latitude, Madrid and Oslo are on opposite ends. Both Warsaw and Madrid are also on either end of the central European time zone. Let&rsquo;s also look at the output.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">df</span> <span class="o">=</span> <span class="n">get_sun_data</span><span class="p">([</span><span class="s1">&#39;Norway/Oslo&#39;</span><span class="p">,</span> <span class="s1">&#39;Netherlands/Amsterdam&#39;</span><span class="p">,</span> <span class="s1">&#39;Poland/Warsaw&#39;</span><span class="p">,</span> <span class="s1">&#39;Spain/Madrid&#39;</span><span class="p">])</span>
+<span class="n">df_deux</span> <span class="o">=</span> <span class="n">get_sun_data</span><span class="p">([</span><span class="s1">&#39;Norway/Oslo&#39;</span><span class="p">,</span> <span class="s1">&#39;Netherlands/Amsterdam&#39;</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">info</span><span class="p">(),</span> <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</code></pre></div><pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 1460 entries, 0 to 1459
+Data columns (total 12 columns):
+ #   Column    Non-Null Count  Dtype  
+---  ------    --------------  -----  
+ 0   dawn      1460 non-null   object 
+ 1   sunrise   1460 non-null   object 
+ 2   noon      1460 non-null   object 
+ 3   sunset    1460 non-null   object 
+ 4   dusk      1460 non-null   object 
+ 5   dst       1460 non-null   int64  
+ 6   city_no   1460 non-null   int64  
+ 7   location  1460 non-null   object 
+ 8   lat       1460 non-null   float64
+ 9   long      1460 non-null   float64
+ 10  date      1460 non-null   object 
+ 11  city      1460 non-null   object 
+dtypes: float64(2), int64(2), object(8)
+memory usage: 137.0+ KB
+None        dawn   sunrise      noon    sunset  ...       lat      long        date  city
+0  08:21:36  09:19:09  12:20:15  15:22:01  ...  59.91333  10.73897  2023-01-01  Oslo
+1  08:21:19  09:18:39  12:20:43  15:23:29  ...  59.91333  10.73897  2023-01-02  Oslo
+2  08:20:57  09:18:04  12:21:11  15:25:01  ...  59.91333  10.73897  2023-01-03  Oslo
+3  08:20:31  09:17:24  12:21:38  15:26:37  ...  59.91333  10.73897  2023-01-04  Oslo
+4  08:20:01  09:16:39  12:22:06  15:28:17  ...  59.91333  10.73897  2023-01-05  Oslo
+
+[5 rows x 12 columns]
+</code></pre>
+<p>Here&rsquo;s where we&rsquo;ll define a function to get everything into R and create a data frame we can work with so we can reuse it. We&rsquo;ll first reorder to columns to something sensible. We&rsquo;ll convert the date and time columns to their respective variable types, and we&rsquo;ll the length of day by subtracting the sunset time from the sunrise and get it into a time variable. Finally, we&rsquo;ll sort the <code>city</code> variable by the order by which they were listed.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">parse_sun_data</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">#&#39; Get the data frame from Python into R</span>
+  
+  <span class="n">data</span> <span class="o">&lt;-</span> <span class="nf">tibble</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">|&gt;</span> 
+    <span class="nf">relocate</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s">&#34;city&#34;</span><span class="p">,</span><span class="s">&#34;date&#34;</span><span class="p">),</span> <span class="n">.before</span> <span class="o">=</span> <span class="s">&#34;dawn&#34;</span><span class="p">)</span> <span class="o">|&gt;</span> 
+    <span class="nf">mutate</span><span class="p">(</span><span class="n">date</span> <span class="o">=</span> <span class="nf">parse_date</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="s">&#34;%Y-%m-%d&#34;</span><span class="p">),</span>
+           <span class="nf">across</span><span class="p">(</span><span class="n">dawn</span><span class="o">:</span><span class="n">dusk</span><span class="p">,</span> <span class="o">~</span> <span class="nf">parse_time</span><span class="p">(</span><span class="n">.x</span><span class="p">,</span> <span class="n">format</span> <span class="o">=</span> <span class="s">&#34;%H:%M:%S&#34;</span><span class="p">)),</span>
+           <span class="n">day_length</span> <span class="o">=</span> <span class="n">hms</span><span class="o">::</span><span class="nf">as_hms</span><span class="p">(</span><span class="n">sunset</span> <span class="o">-</span> <span class="n">sunrise</span><span class="p">),</span>
+           <span class="n">city</span> <span class="o">=</span> <span class="nf">fct_reorder</span><span class="p">(</span><span class="n">city</span><span class="p">,</span> <span class="n">city_no</span><span class="p">))</span>
+  
+  <span class="nf">return</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>Let&rsquo;s have a look at when sunset happens throughout the year for these cities. I deliberately picked a few cities on extreme ends of the Central European time zone to show the variety within a single time zone. We&rsquo;ll include the <a href="https://en.wikipedia.org/wiki/Daylight_saving_time">DST</a> also.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">data</span> <span class="o">&lt;-</span> <span class="nf">parse_sun_data</span><span class="p">(</span><span class="n">reticulate</span><span class="o">::</span><span class="n">py</span><span class="o">$</span><span class="n">df</span><span class="p">)</span> 
+
+<span class="n">data</span> <span class="o">|&gt;</span> 
+  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">date</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">sunset</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">city</span><span class="p">,</span> <span class="n">group</span> <span class="o">=</span> <span class="n">city</span><span class="p">))</span> <span class="o">+</span> 
+  <span class="nf">geom_line</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span> <span class="n">lineend</span> <span class="o">=</span> <span class="s">&#34;round&#34;</span><span class="p">,</span> <span class="n">key_glyph</span> <span class="o">=</span> <span class="s">&#34;point&#34;</span><span class="p">)</span> <span class="o">+</span> 
+  <span class="c1">#geom_vline(xintercept = Sys.Date(), color = &#34;grey30&#34;, size = 1) +</span>
+  <span class="nf">labs</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+       <span class="n">y</span> <span class="o">=</span> <span class="s">&#34;Sunset time&#34;</span><span class="p">,</span>
+       <span class="n">color</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">scale_x_date</span><span class="p">(</span><span class="n">labels</span> <span class="o">=</span> <span class="n">scales</span><span class="o">::</span><span class="nf">label_date</span><span class="p">(</span><span class="n">format</span> <span class="o">=</span> <span class="s">&#34;%B&#34;</span><span class="p">))</span> <span class="o">+</span>
+  <span class="c1">#scale_y_time(limits = hms::as_hms(c(&#34;12:00:00&#34;, &#34;23:59:59&#34;))) + </span>
+  <span class="n">ggthemes</span><span class="o">::</span><span class="nf">scale_color_tableau</span><span class="p">(</span><span class="n">guide</span> <span class="o">=</span> <span class="nf">guide_legend</span><span class="p">(</span><span class="n">override.aes</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">4</span><span class="p">)))</span> <span class="o">+</span>
+  <span class="nf">theme_custom</span><span class="p">()</span>
+</code></pre></div><img src="index.markdown_strict_files/figure-markdown_strict/plot-sunset-1.png" width="768" />
+<p>As expected, the latitude (how far north or south a location is) has the most to say about sunset times in summer in winter. Oslo has both the earliest and latest sunsets in winter and summer. And also predictable, the longitude (how far east or west a location is) merely shifts the curve up or down. Madrid has later sunsets in summer than Warsaw (which is further north) but also later sunsets in winter and a flatter curve overall. Oslo has a much steeper curve than e.g. Amsterdam while simultaneously also having the curve slightly shifted due to Oslo being further east than Amsterdam. The plot below shows the locations of of the cities in this analysis.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">rnaturalearth</span><span class="o">::</span><span class="nf">ne_countries</span><span class="p">(</span><span class="n">scale</span> <span class="o">=</span> <span class="s">&#34;medium&#34;</span><span class="p">,</span> 
+                            <span class="n">returnclass</span> <span class="o">=</span> <span class="s">&#34;sf&#34;</span><span class="p">,</span> 
+                            <span class="n">continent</span> <span class="o">=</span> <span class="s">&#34;Europe&#34;</span><span class="p">)</span> <span class="o">|&gt;</span> 
+  <span class="nf">ggplot</span><span class="p">()</span> <span class="o">+</span> 
+  <span class="nf">geom_sf</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="s">&#34;grey60&#34;</span><span class="p">,</span> <span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;#DDD5C7&#34;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">geom_point</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="o">|&gt;</span> <span class="nf">distinct</span><span class="p">(</span><span class="n">city</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">long</span><span class="p">),</span> 
+             <span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">long</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">lat</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">city</span><span class="p">),</span>
+             <span class="n">shape</span> <span class="o">=</span> <span class="m">18</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">4</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">labs</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">)</span> <span class="o">+</span> 
+  <span class="n">ggthemes</span><span class="o">::</span><span class="nf">scale_color_tableau</span><span class="p">()</span> <span class="o">+</span>
+  <span class="nf">coord_sf</span><span class="p">(</span><span class="n">xlim</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">-15</span><span class="p">,</span> <span class="m">25</span><span class="p">),</span> <span class="n">ylim</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">35</span><span class="p">,</span> <span class="m">65</span><span class="p">))</span> <span class="o">+</span>
+  <span class="nf">theme_custom</span><span class="p">()</span> <span class="o">+</span> 
+  <span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span> <span class="o">=</span> <span class="s">&#34;right&#34;</span><span class="p">,</span> 
+        <span class="n">legend.direction</span> <span class="o">=</span> <span class="s">&#34;vertical&#34;</span><span class="p">,</span>
+        <span class="n">panel.grid.major</span> <span class="o">=</span> <span class="nf">element_line</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">))</span>
+</code></pre></div><img src="index.markdown_strict_files/figure-markdown_strict/plot-map-1.png" width="768" />
+<p>Perhaps we can have a look at day length to get a better reflection of the isolated effect of latitude. To make the plot more legible, we&rsquo;ll use only 2 cities this time.</p>
+<p>We&rsquo;ll create the plot using the <code>geom_ribbon()</code> function to shade the area between sunrise and sunset.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">parse_sun_data</span><span class="p">(</span><span class="n">reticulate</span><span class="o">::</span><span class="n">py</span><span class="o">$</span><span class="n">df_deux</span><span class="p">)</span> <span class="o">|&gt;</span> 
+  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">xmin</span> <span class="o">=</span> <span class="n">date</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">date</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="n">date</span><span class="p">,</span> 
+             <span class="n">ymin</span> <span class="o">=</span> <span class="n">sunrise</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">noon</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">sunset</span><span class="p">,</span> 
+             <span class="n">fill</span> <span class="o">=</span> <span class="n">city</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">city</span><span class="p">,</span> <span class="n">group</span> <span class="o">=</span> <span class="n">city</span><span class="p">))</span> <span class="o">+</span> 
+  <span class="nf">geom_hline</span><span class="p">(</span><span class="n">yintercept</span> <span class="o">=</span> <span class="nf">parse_time</span><span class="p">(</span><span class="s">&#34;12:00&#34;</span><span class="p">,</span> <span class="s">&#34;%H:%M&#34;</span><span class="p">),</span>
+             <span class="n">size</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">geom_ribbon</span><span class="p">(</span><span class="n">alpha</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="kc">NA</span><span class="p">,</span> <span class="n">key_glyph</span> <span class="o">=</span> <span class="s">&#34;point&#34;</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">labs</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+       <span class="n">y</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+       <span class="n">color</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+       <span class="n">fill</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">scale_x_date</span><span class="p">(</span><span class="n">expand</span> <span class="o">=</span> <span class="nf">expansion</span><span class="p">(</span><span class="n">add</span> <span class="o">=</span> <span class="m">0</span><span class="p">))</span> <span class="o">+</span> 
+  <span class="nf">scale_y_time</span><span class="p">(</span><span class="n">limits</span> <span class="o">=</span> <span class="n">hms</span><span class="o">::</span><span class="nf">hms</span><span class="p">(</span><span class="n">hours</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">24</span><span class="p">)),</span>
+               <span class="n">breaks</span> <span class="o">=</span> <span class="n">hms</span><span class="o">::</span><span class="nf">hms</span><span class="p">(</span><span class="n">hours</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">24</span><span class="p">,</span> <span class="m">2</span><span class="p">)))</span> <span class="o">+</span>
+  <span class="n">ggthemes</span><span class="o">::</span><span class="nf">scale_fill_tableau</span><span class="p">(</span><span class="n">guide</span> <span class="o">=</span> <span class="nf">guide_legend</span><span class="p">(</span>
+    <span class="n">override.aes</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">shape</span> <span class="o">=</span> <span class="m">21</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">8</span><span class="p">)))</span> <span class="o">+</span>
+  <span class="nf">theme_custom</span><span class="p">()</span>
+</code></pre></div><img src="index.markdown_strict_files/figure-markdown_strict/plot-day-length-areas-1.png" width="768" />
+<p>As you see, in neither cities 12:00 in the afternoon is perfectly in the middle between sunrise and sunset, although this trend is slightly enhanced for Oslo (again due to longitude differences). We can also see that the length of days in Oslo is longer in summer particularly because the mornings start earlier. We&rsquo;ll get back to the distance between sunset and dusk, which is also a lot larger in Oslo which means darkness sets in much later in Oslo despite sunset happening around the same time. This means it&rsquo;s lighter outside longer than in Amsterdam.</p>
+<p>So let&rsquo;s also squish everything on the bottom axis and just look at day length in total.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">parse_sun_data</span><span class="p">(</span><span class="n">reticulate</span><span class="o">::</span><span class="n">py</span><span class="o">$</span><span class="n">df_deux</span><span class="p">)</span> <span class="o">|&gt;</span> 
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">day_length</span> <span class="o">=</span> <span class="n">hms</span><span class="o">::</span><span class="nf">as_hms</span><span class="p">(</span><span class="n">sunset</span> <span class="o">-</span> <span class="n">sunrise</span><span class="p">))</span> <span class="o">|&gt;</span> 
+  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">date</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">day_length</span><span class="p">,</span> <span class="n">fill</span> <span class="o">=</span> <span class="n">city</span><span class="p">,</span> <span class="n">group</span> <span class="o">=</span> <span class="n">city</span><span class="p">))</span> <span class="o">+</span> 
+  <span class="nf">geom_area</span><span class="p">(</span><span class="n">position</span> <span class="o">=</span> <span class="s">&#34;identity&#34;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> <span class="n">key_glyph</span> <span class="o">=</span> <span class="s">&#34;point&#34;</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">labs</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s">&#34;Comparison in day length across the year&#34;</span><span class="p">,</span>
+       <span class="n">x</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+       <span class="n">y</span> <span class="o">=</span> <span class="s">&#34;Day length (_hours_)&#34;</span><span class="p">,</span>
+       <span class="n">fill</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">scale_x_date</span><span class="p">(</span><span class="n">labels</span> <span class="o">=</span> <span class="n">scales</span><span class="o">::</span><span class="nf">label_date</span><span class="p">(</span><span class="n">format</span> <span class="o">=</span> <span class="s">&#34;%B&#34;</span><span class="p">))</span> <span class="o">+</span>
+  <span class="nf">scale_y_time</span><span class="p">(</span><span class="n">labels</span> <span class="o">=</span> <span class="n">scales</span><span class="o">::</span><span class="nf">label_time</span><span class="p">(</span><span class="n">format</span> <span class="o">=</span> <span class="s">&#34;%H hours&#34;</span><span class="p">),</span>
+               <span class="n">limits</span> <span class="o">=</span> <span class="nf">parse_time</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s">&#34;00:00&#34;</span><span class="p">,</span> <span class="s">&#34;23:59&#34;</span><span class="p">),</span> <span class="s">&#34;%H:%M&#34;</span><span class="p">),</span>
+               <span class="n">breaks</span> <span class="o">=</span> <span class="n">hms</span><span class="o">::</span><span class="nf">hms</span><span class="p">(</span><span class="n">hours</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">24</span><span class="p">,</span> <span class="m">4</span><span class="p">)),</span>
+               <span class="n">expand</span> <span class="o">=</span> <span class="nf">expansion</span><span class="p">(</span><span class="n">add</span> <span class="o">=</span> <span class="m">0</span><span class="p">))</span> <span class="o">+</span>
+  <span class="n">ggthemes</span><span class="o">::</span><span class="nf">scale_fill_tableau</span><span class="p">(</span><span class="n">guide</span> <span class="o">=</span> <span class="nf">guide_legend</span><span class="p">(</span>
+    <span class="n">override.aes</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">shape</span> <span class="o">=</span> <span class="m">21</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">8</span><span class="p">),</span> <span class="n">direction</span> <span class="o">=</span> <span class="s">&#34;vertical&#34;</span><span class="p">))</span> <span class="o">+</span>
+  <span class="nf">theme_custom</span><span class="p">()</span> <span class="o">+</span>
+  <span class="nf">theme</span><span class="p">(</span><span class="n">plot.title.position</span> <span class="o">=</span> <span class="s">&#34;plot&#34;</span><span class="p">,</span>
+        <span class="n">axis.title.y</span> <span class="o">=</span> <span class="nf">element_markdown</span><span class="p">(),</span>
+        <span class="n">legend.position</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">0.85</span><span class="p">,</span> <span class="m">0.85</span><span class="p">))</span>
+</code></pre></div><img src="index.markdown_strict_files/figure-markdown_strict/plot-day-length-curve-1.png" width="768" />
+<p>Now I&rsquo;m curious when the largest difference occurs and when the days are roughly equal. Let&rsquo;s select the relevant columns and get the day length in Oslo and Amsterdam next to each other using the <code>pivot_wider()</code> function so we can easily compare. Let&rsquo;s then select the largest and smallest differences.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">day_length_diff</span> <span class="o">&lt;-</span> <span class="nf">parse_sun_data</span><span class="p">(</span><span class="n">reticulate</span><span class="o">::</span><span class="n">py</span><span class="o">$</span><span class="n">df_deux</span><span class="p">)</span> <span class="o">|&gt;</span> 
+  <span class="nf">select</span><span class="p">(</span><span class="n">city</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">day_length</span><span class="p">)</span> <span class="o">|&gt;</span> 
+  <span class="nf">group_by</span><span class="p">(</span><span class="n">city</span><span class="p">)</span> <span class="o">|&gt;</span> 
+  <span class="nf">pivot_wider</span><span class="p">(</span><span class="n">id_cols</span> <span class="o">=</span> <span class="n">date</span><span class="p">,</span> <span class="n">names_from</span> <span class="o">=</span> <span class="n">city</span><span class="p">,</span> <span class="n">values_from</span> <span class="o">=</span> <span class="n">day_length</span><span class="p">,</span>
+              <span class="n">names_glue</span> <span class="o">=</span> <span class="s">&#34;day_length_{city}&#34;</span><span class="p">)</span> <span class="o">|&gt;</span> 
+  <span class="n">janitor</span><span class="o">::</span><span class="nf">clean_names</span><span class="p">()</span> <span class="o">|&gt;</span> 
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">difference</span> <span class="o">=</span> <span class="n">hms</span><span class="o">::</span><span class="nf">as_hms</span><span class="p">(</span><span class="n">day_length_oslo</span> <span class="o">-</span> <span class="n">day_length_amsterdam</span><span class="p">))</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="s">&#34;Biggest positive difference:&#34;</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">day_length_diff</span> <span class="o">|&gt;</span> <span class="nf">slice_max</span><span class="p">(</span><span class="n">difference</span><span class="p">))</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="s">&#34;Biggest negative difference:&#34;</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">day_length_diff</span> <span class="o">|&gt;</span> <span class="nf">slice_min</span><span class="p">(</span><span class="n">difference</span><span class="p">))</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="s">&#34;Smallest differences:&#34;</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">day_length_diff</span> <span class="o">|&gt;</span> <span class="nf">slice_min</span><span class="p">(</span><span class="nf">abs</span><span class="p">(</span><span class="n">difference</span><span class="p">),</span> <span class="n">n</span> <span class="o">=</span> <span class="m">5</span><span class="p">))</span>
+</code></pre></div><pre><code>[1] &quot;Biggest positive difference:&quot;
+# A tibble: 1 × 4
+  date       day_length_oslo day_length_amsterdam difference
+  &lt;date&gt;     &lt;time&gt;          &lt;time&gt;               &lt;time&gt;    
+1 2023-06-21 18:48:57        16:47:42             02:01:15  
+[1] &quot;Biggest negative difference:&quot;
+# A tibble: 1 × 4
+  date       day_length_oslo day_length_amsterdam difference
+  &lt;date&gt;     &lt;time&gt;          &lt;time&gt;               &lt;time&gt;    
+1 2023-12-22 05:52:47        07:39:53             -01:47:06 
+[1] &quot;Smallest differences:&quot;
+# A tibble: 5 × 4
+  date       day_length_oslo day_length_amsterdam difference
+  &lt;date&gt;     &lt;time&gt;          &lt;time&gt;               &lt;time&gt;    
+1 2023-03-19 12:04:45        12:04:28              00'17&quot;   
+2 2023-09-25 12:00:42        12:01:18             -00'36&quot;   
+3 2023-09-24 12:06:04        12:05:20              00'44&quot;   
+4 2023-03-18 11:59:17        12:00:22             -01'05&quot;   
+5 2023-03-20 12:10:12        12:08:35              01'37&quot;   
+</code></pre>
+<p>Seems like the largest difference occur around the 20th of June when Oslo gets about 2 full hours of daylight more than Oslo.</p>
+<p>Finally, let&rsquo;s look at the effect of longitude (how far east or west a place is) on the sunset/sunrise times. The easiest way to look at this is to compare the time solar noon happens. Due to (most of) mainland Europe being in the same time zone (<a href="https://en.wikipedia.org/wiki/Central_European_Time">CET</a>), it&rsquo;s 12:00 at the same time across central Europe. However, the sun did not get the note and still travels (from Earth perspective) in a very consistent pace from east to west. This means that the sun arrives first in Poland and leaves last in Spain. This means that solar noon (the time the sun is at its highest point in the sky) is unequal across the continent. Let&rsquo;s look at when solar noon happens across the four cities in this analysis.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">data</span> <span class="o">|&gt;</span> 
+  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">date</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">noon</span><span class="p">,</span> <span class="n">group</span> <span class="o">=</span> <span class="n">city</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">city</span><span class="p">))</span> <span class="o">+</span>
+  <span class="nf">geom_hline</span><span class="p">(</span><span class="n">yintercept</span> <span class="o">=</span> <span class="n">hms</span><span class="o">::</span><span class="nf">hms</span><span class="p">(</span><span class="n">hours</span> <span class="o">=</span> <span class="m">12</span><span class="p">),</span> <span class="n">size</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">geom_line</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span> <span class="n">key_glyph</span> <span class="o">=</span> <span class="s">&#34;point&#34;</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">labs</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s">&#34;What time is solar noon?&#34;</span><span class="p">,</span>
+       <span class="n">color</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">scale_x_date</span><span class="p">(</span><span class="n">expand</span> <span class="o">=</span> <span class="nf">expansion</span><span class="p">(</span><span class="n">add</span> <span class="o">=</span> <span class="m">0</span><span class="p">))</span> <span class="o">+</span> 
+  <span class="nf">scale_y_time</span><span class="p">(</span><span class="n">limits</span> <span class="o">=</span> <span class="n">hms</span><span class="o">::</span><span class="nf">hms</span><span class="p">(</span><span class="n">hours</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">11</span><span class="p">,</span> <span class="m">15</span><span class="p">)),</span>
+               <span class="n">breaks</span> <span class="o">=</span> <span class="n">hms</span><span class="o">::</span><span class="nf">hms</span><span class="p">(</span><span class="n">hours</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="m">11</span><span class="p">,</span> <span class="m">15</span><span class="p">,</span> <span class="m">0.5</span><span class="p">)))</span> <span class="o">+</span>
+  <span class="n">ggthemes</span><span class="o">::</span><span class="nf">scale_color_tableau</span><span class="p">(</span><span class="n">guide</span> <span class="o">=</span> <span class="nf">guide_legend</span><span class="p">(</span>
+    <span class="n">override.aes</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">4</span><span class="p">)))</span> <span class="o">+</span>
+  <span class="n">ggthemes</span><span class="o">::</span><span class="nf">scale_fill_tableau</span><span class="p">()</span> <span class="o">+</span>
+  <span class="nf">theme_custom</span><span class="p">()</span>
+</code></pre></div><img src="index.markdown_strict_files/figure-markdown_strict/plot-noon-1.png" width="768" />
+<p>This one actually quite surprised me! Due to it&rsquo;s location on the far west of the time zone Madrid has solar noon only at around 14:00. Oslo and Warsaw are actually the only cities that are at time roughly near the 12:00 mark corrected for DST. However, with DST Oslo has solar noon close to midday (12:00) in late October right after switching off from DST and Warsaw most of the winter months early in the year. Also, solar noon in Madrid is nearly 2 hours later than solar noon in Warsaw, which is quite a big difference for a single time zone, which is one of the few reasons Portugal is in the <a href="https://en.wikipedia.org/wiki/Western_European_Time">western European time zone</a>)</p>
+<p>If I had time (and motivation) I would explore some other extremes like <a href="https://en.wikipedia.org/wiki/Time_in_China">China which one uses a single time zone</a> despite probably needing 4 to 5 due to its size, <a href="https://en.wikipedia.org/wiki/Time_in_Australia">Australia with it&rsquo;s half hour time zones</a>, and locations that are on roughly the same longitude but aren&rsquo;t in the same time zone due to economic and/or political reasons (e.g. China, and <a href="https://en.wikipedia.org/wiki/Time_in_Iceland">Iceland which doesn&rsquo;t observe DST</a>). This was a fun little project, I certainly gained some insight into how latitude and longitude affect sunrise and sunset times and how much of a difference exists within central Europe. For an added bonus we got to create some fun plots, what&rsquo;s not to love! Thanks for reading!</p>
+
+  </article>
+
+  <br/>
+
+  
+  
+</section>
+
+      </div>
+      
+        
+<footer class="footer">
+  <script src="https://yihui.org/js/math-code.js"></script>
+  <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.min.js"></script>
+</footer>
+      
+    </main>
+
+    
+
+  <script src="/js/app.js"></script>
+  
+  </body>
+</html>

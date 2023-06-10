@@ -14,6 +14,7 @@ body {
     font-weight: 400;
     /*letter-spacing: .0625em;*/
     line-height: 1.8em; /* was 1.8em */
+    margin: 0;
 }
 @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
     body {
@@ -27,7 +28,7 @@ a {
     text-decoration: none
 }
 a:focus, a:hover {
-    text-decoration: underline
+    text-decoration: underline;
 }
 p {
     margin: 1.6rem 0 1.6rem 0

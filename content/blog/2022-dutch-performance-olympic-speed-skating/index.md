@@ -311,6 +311,9 @@ data %>%
         strip.text = element_text(face = "bold", size = 42))
 ```
 
+    Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+    ℹ Please use `linewidth` instead.
+
 <img src="index.markdown_strict_files/figure-markdown_strict/events-timeline-1.png" width="768" />
 
 As we can see, the first Winter Olympic Games had only 5 events. This also included an event called "combined", which is the ranking for the all-round best score at the speed skating tournament. This event was only part of the Olympics in 1924 and an all-round medal hasn't been awarded since that tournament in 1924. The women's competition at the Olympics started in 1960 with 4 distances. Today the only difference is that the men have a 10.000 m event, and the women have a 3000 m event. Both competitions have a team pursuit event, but the men skate 8 laps around the 400 m track, while women do 6 laps. Why? I don't know. I think there's quite a lot of female athletes who'd love to show how fast they can skate a 10k, and there's a lot of male athletes who'd love the chance to earn a medal at the medium-distance 3000 m. The mass start is a new event that was added only in 2018, it is a spectacular event that mimics some of the scenarios from the eventful short-track tournament.

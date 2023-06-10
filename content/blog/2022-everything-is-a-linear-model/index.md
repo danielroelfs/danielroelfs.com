@@ -350,6 +350,11 @@ ggplot(data, aes(x = group, y = score - ref_mean)) +
   theme_minimal()
 ```
 
+    Warning in do_once((if (is_R_CMD_check()) stop else warning)("The function
+    xfun::isFALSE() will be deprecated in the future. Please ", : The function
+    xfun::isFALSE() will be deprecated in the future. Please consider using
+    base::isFALSE(x) or identical(x, FALSE) instead.
+
 <img src="index.markdown_strict_files/figure-markdown_strict/aov-plot-1.png" width="768" />
 
 Oh, would you look at that! The differences between the group means and the reference mean (in this case SCZ) correspond with the `Estimate` of the linear model! Let's also see if we can reproduce the sum of squares from the ANOVA summary. We'll go a bit more in depth into the sum of squares further down, but I just wanted to go over a few formulas and calculations:
@@ -571,32 +576,33 @@ sessionInfo()
     [1] stats     graphics  grDevices utils     datasets  methods   base     
 
     other attached packages:
-     [1] patchwork_1.1.2 forcats_0.5.2   stringr_1.4.1   dplyr_1.0.10   
+     [1] patchwork_1.1.2 forcats_0.5.2   stringr_1.5.0   dplyr_1.0.10   
      [5] purrr_0.3.5     readr_2.1.3     tidyr_1.2.1     tibble_3.2.1   
      [9] ggplot2_3.4.2   tidyverse_1.3.2
 
     loaded via a namespace (and not attached):
-     [1] Rcpp_1.0.9          lattice_0.20-45     lubridate_1.8.0    
-     [4] assertthat_0.2.1    digest_0.6.30       utf8_1.2.3         
+     [1] Rcpp_1.0.10         lattice_0.20-45     lubridate_1.8.0    
+     [4] assertthat_0.2.1    digest_0.6.31       utf8_1.2.3         
      [7] R6_2.5.1            cellranger_1.1.0    backports_1.4.1    
-    [10] reprex_2.0.2        evaluate_0.17       httr_1.4.4         
+    [10] reprex_2.0.2        evaluate_0.21       httr_1.4.4         
     [13] pillar_1.9.0        rlang_1.1.1         googlesheets4_1.0.1
-    [16] readxl_1.4.1        Matrix_1.5-1        rmarkdown_2.17     
-    [19] splines_4.2.1       labeling_0.4.2      googledrive_2.0.0  
-    [22] munsell_0.5.0       gridtext_0.1.5      broom_1.0.1        
-    [25] compiler_4.2.1      modelr_0.1.9        xfun_0.34          
-    [28] pkgconfig_2.0.3     mgcv_1.8-40         scico_1.3.1        
-    [31] htmltools_0.5.4     ggtext_0.1.2        tidyselect_1.2.0   
-    [34] fansi_1.0.4         crayon_1.5.2        tzdb_0.3.0         
-    [37] dbplyr_2.2.1        withr_2.5.0         commonmark_1.8.1   
-    [40] grid_4.2.1          nlme_3.1-157        jsonlite_1.8.3     
-    [43] gtable_0.3.3        lifecycle_1.0.3     DBI_1.1.3          
-    [46] magrittr_2.0.3      scales_1.2.1        cli_3.6.1          
-    [49] stringi_1.7.8       farver_2.1.1        fs_1.5.2           
-    [52] xml2_1.3.3          ellipsis_0.3.2      generics_0.1.3     
-    [55] vctrs_0.6.2         tools_4.2.1         glue_1.6.2         
-    [58] markdown_1.3        hms_1.1.2           fastmap_1.1.0      
-    [61] yaml_2.3.6          colorspace_2.1-0    gargle_1.2.1       
-    [64] rvest_1.0.3         knitr_1.40          haven_2.5.1        
+    [16] readxl_1.4.1        rstudioapi_0.14     Matrix_1.5-1       
+    [19] rmarkdown_2.22      splines_4.2.1       labeling_0.4.2     
+    [22] googledrive_2.0.0   munsell_0.5.0       gridtext_0.1.5     
+    [25] broom_1.0.1         compiler_4.2.1      modelr_0.1.9       
+    [28] xfun_0.39           pkgconfig_2.0.3     mgcv_1.8-40        
+    [31] scico_1.3.1         htmltools_0.5.5     ggtext_0.1.2       
+    [34] tidyselect_1.2.0    fansi_1.0.4         crayon_1.5.2       
+    [37] tzdb_0.3.0          dbplyr_2.2.1        withr_2.5.0        
+    [40] commonmark_1.8.1    grid_4.2.1          nlme_3.1-157       
+    [43] jsonlite_1.8.5      gtable_0.3.3        lifecycle_1.0.3    
+    [46] DBI_1.1.3           magrittr_2.0.3      scales_1.2.1       
+    [49] cli_3.6.1           stringi_1.7.12      farver_2.1.1       
+    [52] fs_1.6.2            xml2_1.3.3          ellipsis_0.3.2     
+    [55] generics_0.1.3      vctrs_0.6.2         tools_4.2.1        
+    [58] glue_1.6.2          markdown_1.3        hms_1.1.2          
+    [61] fastmap_1.1.1       yaml_2.3.7          colorspace_2.1-0   
+    [64] gargle_1.2.1        rvest_1.0.3         knitr_1.43         
+    [67] haven_2.5.1        
 
 </details>

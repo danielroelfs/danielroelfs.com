@@ -20,23 +20,13 @@ execute:
   out.width: 80%
 ---
 
-```{r}
-#| label: knits-opts
-#| include: false
-
-knitr::opts_chunk$set(dev.args = list(bg = "#FFFFF0"))
-```
-
 ```{css, echo=FALSE}
-@import url('https://fonts.googleapis.com/css?family=IM+Fell+English|IM+Fell+English+SC&display=swap');
-body{
-  background-color: #FFFFF0;
-}
+@import url('https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400;1,700&family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&display=swap');
 
 h1 {
   font-family: 'IM Fell English', serif;
 }
-h2,h3,h4,h5,h6 {
+h2, h3, h4, h5, h6 {
   font-family: 'IM Fell English', serif;
 }
 .post-title {
@@ -231,7 +221,7 @@ data %>%
     )
 ```
 
-From this it seems that most of the intrumental pieces are made up by just solo pieces for organ and the harpsichord and that the choral pieces are made up mostly by cantates and chorales for four voices. While I appreciate the information dissemination qualities of a barplot (or lollipop plot) like this, in that it's good in communicating absolute quantities (while I admit that this could also be displayed in a table). One thing it is less good at, is communicating the subjective volume of the works. There's more than a thousand pieces in the BWV, and I feel that the plots above don't do a good enough job at communicating just how many pieces this is. Therefore, I created a tile plot (using `{ggwaffle}`), where every tile represents one piece. I colored again based on the secondary category. In order to still maintain the quantities of each category, I added the number of compositions to the legend.
+From this it seems that most of the intrumental pieces are made up by just solo pieces for organ and the harpsichord and that the choral pieces are made up mostly by cantates and chorales for four voices. While I appreciate the information dissemination qualities of a barplot (or lollipop plot) like this, in that it's good in communicating absolute quantities (while I admit that this could also be displayed in a table). One thing it is less good at, is communicating the subjective volume of the works. There's more than a thousand pieces in the BWV, and I feel that the plots above don't do a good enough job at communicating just how many pieces this is. Therefore, I created a tile plot (using `{waffle}`), where every tile represents one piece. I colored again based on the secondary category. In order to still maintain the quantities of each category, I added the number of compositions to the legend.
 
 ```{r}
 #| label: waffle
@@ -242,7 +232,7 @@ data %>%
   summarise(n = n()) %>%
   mutate(category2 = sprintf("%s (%s)", category2, n)) %>%
   ggplot(aes(fill = category2, values = n)) +
-  geom_waffle(n_rows = 17, size = 0.2, colour = "#FFFFFC", flip = FALSE) +
+  geom_waffle(n_rows = 17, size = 0.2, colour = "#FFFFFC", flip = FALSE, na.rm = TRUE) +
   scale_fill_daniel(palette = "staalmeesters", name = NULL) +
   coord_equal() +
   theme_bach(base_family = "Alegreya", base_size = 14) +

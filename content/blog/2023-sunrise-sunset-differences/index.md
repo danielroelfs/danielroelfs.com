@@ -96,7 +96,11 @@ def get_sun_data(
         df_tmp = pd.DataFrame()
         
         loc = geolocator.geocode(city)
-        city_loc = LocationInfo(timezone=city, latitude=loc.latitude, longitude=loc.longitude)
+        city_loc = LocationInfo(
+          timezone=city, 
+          latitude=loc.latitude, 
+          longitude=loc.longitude
+          )
 
         start_date = datetime.strptime(
             date.today().strftime('%Y-01-01'), '%Y-%m-%d')
@@ -122,7 +126,9 @@ def get_sun_data(
     cols = ['dawn', 'sunrise', 'noon', 'sunset', 'dusk']
     df[cols] = df[cols].apply(lambda k: _convert_timezone(k, to_tz=ref_tz))
     df[cols] = df[cols].apply(lambda k: k.dt.strftime('%H:%M:%S'))
-    df['dusk'] = df.apply(lambda k: _fix_dusks_past_midnight(sunset=k['sunset'], dusk=k['dusk']), axis=1)
+    df['dusk'] = df.apply(
+      lambda k: _fix_dusks_past_midnight(sunset=k['sunset'], dusk=k['dusk']), axis=1
+      )
 
     return df
 ```
@@ -130,7 +136,9 @@ def get_sun_data(
 Let's run this function once for Oslo, Amsterdam, Warsaw, and Madrid and once for only Oslo and Amsterdam. Amsterdam and Warsaw are roughly on the same latitude, Madrid and Oslo are on opposite ends. Both Warsaw and Madrid are also on either end of the central European time zone. Let's also look at the output.
 
 ``` python
-df = get_sun_data(['Norway/Oslo', 'Netherlands/Amsterdam', 'Poland/Warsaw', 'Spain/Madrid'])
+df = get_sun_data(
+  ['Norway/Oslo', 'Netherlands/Amsterdam', 'Poland/Warsaw', 'Spain/Madrid']
+  )
 df_deux = get_sun_data(['Norway/Oslo', 'Netherlands/Amsterdam'])
 
 print(df.info(), df.head())
@@ -189,15 +197,16 @@ data <- parse_sun_data(reticulate::py$df)
 data |> 
   ggplot(aes(x = date, y = sunset, color = city, group = city)) + 
   geom_line(size = 2, lineend = "round", key_glyph = "point") + 
-  #geom_vline(xintercept = Sys.Date(), color = "grey30", size = 1) +
   labs(x = NULL,
        y = "Sunset time",
        color = NULL) +
   scale_x_date(labels = scales::label_date(format = "%B")) +
-  #scale_y_time(limits = hms::as_hms(c("12:00:00", "23:59:59"))) + 
   ggthemes::scale_color_tableau(guide = guide_legend(override.aes = list(size = 4))) +
   theme_custom()
 ```
+
+    Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+    ℹ Please use `linewidth` instead.
 
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-sunset-1.png" width="768" />
 
@@ -220,6 +229,9 @@ rnaturalearth::ne_countries(scale = "medium",
         legend.direction = "vertical",
         panel.grid.major = element_line(size = 0.1))
 ```
+
+    Warning: The `size` argument of `element_line()` is deprecated as of ggplot2 3.4.0.
+    ℹ Please use the `linewidth` argument instead.
 
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-map-1.png" width="768" />
 
@@ -274,6 +286,11 @@ parse_sun_data(reticulate::py$df_deux) |>
         axis.title.y = element_markdown(),
         legend.position = c(0.85, 0.85))
 ```
+
+    Warning in do_once((if (is_R_CMD_check()) stop else warning)("The function
+    xfun::isFALSE() will be deprecated in the future. Please ", : The function
+    xfun::isFALSE() will be deprecated in the future. Please consider using
+    base::isFALSE(x) or identical(x, FALSE) instead.
 
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-day-length-curve-1.png" width="768" />
 

@@ -30,9 +30,24 @@ padding: 1em;
 }
 
 p.announcement code {
-background-color: #93b8c8
+background-color: #93b8c8;
+}
+
+p.warning {
+border-radius: 5px; 
+background-color: #F57A95; 
+padding: 1em;
+}
+
+p.warning code {
+background-color: #F25476;
 }
 </style>
+
+<p class="warning">
+As of March 2023 <code>{splmaps}</code> is no longer supported. This post will in due time be updated with a new solution when I have the time.
+</p>
+
 <p class="announcement">
 This post was updated to include the new <code>{splmaps}</code> package since the <code>{fhimaps}</code> and <code>{fhidata}</code> package will no longer receive updates. Practically, these apps will behave the same way. Installation instructions for the <code>{splmaps}</code> and <code>{spldata}</code> packages can be found <a href="https://docs.sykdomspulsen.no/packages.html">here</a>.
 </p>

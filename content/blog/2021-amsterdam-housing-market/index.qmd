@@ -34,7 +34,7 @@ code {
 }
 
 img {
-  max-width: 80%;
+  max-width: 90%;
 }
 ```
 
@@ -275,7 +275,7 @@ data %>%
             color = "transparent", alpha = 0.2, key_glyph = "point", inherit.aes = FALSE) +
   geom_hline(yintercept = 0, color = "grey30", size = 1) +
   geom_line(size = 1.2, alpha = 0.8, lineend = "round", key_glyph = "point") + 
-  labs(title = "Amsterdam has had a seller's market for nearly 5 years",
+  labs(title = "Amsterdam has had a sellers market for nearly 5 years",
        x = NULL,
        y = "Indicator of _\"density\"_ on the housing market",
        color = NULL,

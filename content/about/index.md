@@ -7,8 +7,6 @@ author: "Daniel Roelfs"
 format: hugo
 ---
 
-
-
 <img style="position: relative;
     top: 15px;
     padding: 0 15px; 

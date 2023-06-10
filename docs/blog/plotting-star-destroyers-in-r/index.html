@@ -30,9 +30,9 @@
     
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
     
-    <link rel="preconnect" href="https://fonts.gstatic.com"> 
-    <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400;1,700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700;1,800;1,900&display=swap" rel="stylesheet">    <link rel="stylesheet" href="/css/normalize.min.css">
-    <link rel="stylesheet" href="/css/style.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700;1,800;1,900&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500;1,600;1,700;1,900&display=swap" rel="stylesheet">    <link rel="stylesheet" href="/css/style.min.css">
 
     
 
@@ -106,46 +106,11 @@
     <script src="index_files/libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="index_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 <h3 id="introduction">Introduction</h3>
-<p>Most people in my environment know R as the quintessential tool for
-statistical analysis and data visualization. There&rsquo;s plenty of tutorials
-and discussions online about how to go about either. But one important
-aspect that is noticeably lacking is a discussion about R&rsquo;s ability to
-simulate scenes from Star Wars. Today, we&rsquo;ll set this straight. At the
-same time we&rsquo;ll also explore how to incorporate a mathematical formula
-with a set of simple rules into R. This post is an R implementation of a
-formula published on the <em>On-line Encyclopedia of Integer Sequences</em>
-(OEIS, <a href="https://oeis.org/A117966">sequence A117966</a>). Numberphile has a
-video from Brady Haran with Neil Sloane where they discuss the
-mathematics behind fun graphs, among which this one. It&rsquo;s a great video,
-you can check it out <a href="https://youtu.be/o8c4uYnnNnc"><strong>here</strong></a>.</p>
-<p>We&rsquo;ll use a formula called the <em>balanced ternary enumeration</em>. The game
-is to convert a decimal number to base 3, or the ternary. The best way
-to describe the ternary is to put it next to the binary. Binary (or base
-2) is perhaps more widely understood. I don&rsquo;t actually know of any use
-of the ternary outside of these hypothetical mathematical problems.
-Octadecimal and hexadecimal are used sometimes. The latter is used for
-instance in defining colors in computers.</p>
+<p>Most people in my environment know R as the quintessential tool for statistical analysis and data visualization. There&rsquo;s plenty of tutorials and discussions online about how to go about either. But one important aspect that is noticeably lacking is a discussion about R&rsquo;s ability to simulate scenes from Star Wars. Today, we&rsquo;ll set this straight. At the same time we&rsquo;ll also explore how to incorporate a mathematical formula with a set of simple rules into R. This post is an R implementation of a formula published on the <em>On-line Encyclopedia of Integer Sequences</em> (OEIS, <a href="https://oeis.org/A117966">sequence A117966</a>). Numberphile has a video from Brady Haran with Neil Sloane where they discuss the mathematics behind fun graphs, among which this one. It&rsquo;s a great video, you can check it out <a href="https://youtu.be/o8c4uYnnNnc"><strong>here</strong></a>.</p>
+<p>We&rsquo;ll use a formula called the <em>balanced ternary enumeration</em>. The game is to convert a decimal number to base 3, or the ternary. The best way to describe the ternary is to put it next to the binary. Binary (or base 2) is perhaps more widely understood. I don&rsquo;t actually know of any use of the ternary outside of these hypothetical mathematical problems. Octadecimal and hexadecimal are used sometimes. The latter is used for instance in defining colors in computers.</p>
 <h3 id="lets-start-with-counting">Let&rsquo;s start with counting</h3>
-<p>Let&rsquo;s start at the very basics. Like primary school basic. In the
-decimal system, we could from 1 to 9 and then add a digit and start from
-1 again ([1 2 3 &hellip; 8 9 10 11 12 &hellip; 20 21 &hellip;]) This system likely
-comes from the fact that humans have 10 fingers. (Interestingly, the
-Maya used a system with base 20, because they used their toes to count
-also, and there&rsquo;s a Native American tribe in California that uses base 8
-because they use the space between fingers to count.) Computers use
-binary (base 2) because a pin or electrical signal can either be on or
-off. This means that there&rsquo;s two values available to denote a number,
-either 0 or 1. In this system each digit represents the double of the
-previous, starting from 1. So the first digit represents 1, the second
-2, the third 4, the fourth 8 and so on. So the number 5 is made from
-adding 4 and 1 together, so the binary representation of the number 4 is
-100, and 5 is 101. The number 6 is denoted as 110, and so on. In a
-ternary system, this same principle applies as in the binary system,
-except digits now increase by a factor of 3. The first digit represents
-1, the second 3, the third9 and so on. This also means that there&rsquo;s
-three possible values to denote a number, 0, 1, or 2. To illustrate how
-decimal numbers are represented in the binary and ternary system, look
-at the table below.</p>
+<p>Let&rsquo;s start at the very basics. Like primary school basic. In the decimal system, we could from 1 to 9 and then add a digit and start from 1 again ([1 2 3 &hellip; 8 9 10 11 12 &hellip; 20 21 &hellip;]) This system likely comes from the fact that humans have 10 fingers. (Interestingly, the Maya used a system with base 20, because they used their toes to count also, and there&rsquo;s a Native American tribe in California that uses base 8 because they use the space between fingers to count.) Computers use binary (base 2) because a pin or electrical signal can either be on or off. This means that there&rsquo;s two values available to denote a number, either 0 or 1. In this system each digit represents the double of the previous, starting from 1. So the first digit represents 1, the second 2, the third 4, the fourth 8 and so on. So the number 5 is made from adding 4 and 1 together, so the binary representation of the number 4 is 100, and 5 is 101. The number 6 is denoted as 110, and so on.
+In a ternary system, this same principle applies as in the binary system, except digits now increase by a factor of 3. The first digit represents 1, the second 3, the third9 and so on. This also means that there&rsquo;s three possible values to denote a number, 0, 1, or 2. To illustrate how decimal numbers are represented in the binary and ternary system, look at the table below.</p>
 <table class="table" style="margin-left: auto; margin-right: auto;">
  <thead>
   <tr>
@@ -263,27 +228,7 @@ at the table below.</p>
 </tbody>
 </table>
 <h3 id="moving-numbers-between-systems">Moving numbers between systems</h3>
-<p>Unlike MATLAB (<code>dec2bin()</code>) or Python (<code>bin()</code>), R doesn&rsquo;t have a
-natural built-in function to convert decimal numbers to binary (unless
-you want to use the weird <code>intToBits()</code> function). So I wrote a function
-instead which continually appends the modulus while it loops through the
-digits of the numbers by dividing it in half continuously. The modulus
-is what is left after division of number x by number y. Let&rsquo;s take the
-number 13 as an example. In the first loop, the modulus of 13 when
-divided by 2 is 1. So that goes in the first position, representing
-value 1. The next digit in the binary system represents the value 2. So
-we divide our initial value by 2 (and round it to the lower integer it
-in case we get decimal points) and take the modulus again. So the
-modulus of 6 when divided by 2 is 0. So that&rsquo;s the second digit. The
-next loop will result in another 1
-(<code>$x = 6; \lfloor x/2 \rfloor\ mod\ 2 = 1$</code>, <code>$\lfloor x \rfloor$</code>
-represents rounding <code>$x$</code> to the nearest lower integer, i.e. floor), and
-then in the final loop, we take half of 3 and take the modulus again
-(<code>$x = 3; \lfloor x/2 \rfloor\ mod\ 2 = 1$</code>). After this, when we floor
-0.5, the loop cancels since from here on it will just produce an
-infinite amount of leading zero&rsquo;s. This function now gives us the value
-1101, which corresponds to the table above. The code for this function
-looks like this:</p>
+<p>Unlike MATLAB (<code>dec2bin()</code>) or Python (<code>bin()</code>), R doesn&rsquo;t have a natural built-in function to convert decimal numbers to binary (unless you want to use the weird <code>intToBits()</code> function). So I wrote a function instead which continually appends the modulus while it loops through the digits of the numbers by dividing it in half continuously. The modulus is what is left after division of number x by number y. Let&rsquo;s take the number 13 as an example. In the first loop, the modulus of 13 when divided by 2 is 1. So that goes in the first position, representing value 1. The next digit in the binary system represents the value 2. So we divide our initial value by 2 (and round it to the lower integer it in case we get decimal points) and take the modulus again. So the modulus of 6 when divided by 2 is 0. So that&rsquo;s the second digit. The next loop will result in another 1 (<code>$x = 6; \lfloor x/2 \rfloor\ mod\ 2 = 1$</code>, <code>$\lfloor x \rfloor$</code> represents rounding <code>$x$</code> to the nearest lower integer, i.e. floor), and then in the final loop, we take half of 3 and take the modulus again (<code>$x = 3; \lfloor x/2 \rfloor\ mod\ 2 = 1$</code>). After this, when we floor 0.5, the loop cancels since from here on it will just produce an infinite amount of leading zero&rsquo;s. This function now gives us the value 1101, which corresponds to the table above. The code for this function looks like this:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">ConvertToBinary</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
   <span class="n">out</span> <span class="o">&lt;-</span> <span class="n">mod</span> <span class="o">&lt;-</span> <span class="kc">NULL</span>
   <span class="nf">while </span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="m">0</span> <span class="o">|</span> <span class="nf">is.null</span><span class="p">(</span><span class="n">mod</span><span class="p">))</span> <span class="p">{</span>
@@ -297,11 +242,7 @@ looks like this:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">ConvertToBinary</span><span class="p">(</span><span class="m">13</span><span class="p">)</span>
 </code></pre></div><pre><code>[1] &quot;1101&quot;
 </code></pre>
-<p>Now in this function we&rsquo;ve hard coded that the base is 2, but this code
-works for any base up to base 10 with just a simple rewrite of the code.
-If we go higher, e.g. base 11, we are going to have to start using
-letters to represent values, which I&rsquo;m too lazy to implement right now.
-We can specify the base as an input variable.</p>
+<p>Now in this function we&rsquo;ve hard coded that the base is 2, but this code works for any base up to base 10 with just a simple rewrite of the code. If we go higher, e.g. base 11, we are going to have to start using letters to represent values, which I&rsquo;m too lazy to implement right now. We can specify the base as an input variable.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">ConvertToBase</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">base</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">)</span> <span class="p">{</span>
   <span class="nf">if </span><span class="p">(</span><span class="n">base</span> <span class="o">&gt;</span> <span class="m">10</span><span class="p">)</span> <span class="p">{</span>
     <span class="nf">stop</span><span class="p">(</span><span class="s">&#34;Function not defined for bases higher than 10&#34;</span><span class="p">)</span>
@@ -314,11 +255,7 @@ We can specify the base as an input variable.</p>
   <span class="p">}</span>
   <span class="nf">return</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
 <span class="p">}</span>
-</code></pre></div><p>These functions only accepts a single value, but to get the transformed
-value for a vector of integers we can use the <code>map()</code> function from
-<code>{purrr}</code>. <code>map()</code> as default outputs a list, but we can also ask for a
-character vector. We can then convert a number of values to binary like
-this:</p>
+</code></pre></div><p>These functions only accepts a single value, but to get the transformed value for a vector of integers we can use the <code>map()</code> function from <code>{purrr}</code>. <code>map()</code> as default outputs a list, but we can also ask for a character vector. We can then convert a number of values to binary like this:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">example_vector</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="o">:</span><span class="m">4</span><span class="p">,</span><span class="m">10</span><span class="p">,</span><span class="m">13</span><span class="p">,</span><span class="m">22</span><span class="p">,</span><span class="m">50</span><span class="p">,</span><span class="m">75</span><span class="p">,</span><span class="m">100</span><span class="p">)</span>
 <span class="nf">map_chr</span><span class="p">(</span><span class="n">example_vector</span><span class="p">,</span> <span class="n">ConvertToBinary</span><span class="p">)</span>
 </code></pre></div><pre><code> [1] &quot;0&quot;       &quot;1&quot;       &quot;10&quot;      &quot;11&quot;      &quot;100&quot;     &quot;1010&quot;    &quot;1101&quot;   
@@ -329,53 +266,19 @@ this:</p>
 [10] &quot;2210&quot;  &quot;10201&quot;
 </code></pre>
 <h3 id="the-rules-of-the-game">The rules of the game</h3>
-<p>Okay, so here&rsquo;s the rules of the <em>balanced ternary enumeration</em> game We
-write all integers in base 3, and replace all digits that are 2 with -1
-and then sum the outcome. Let&rsquo;s look at the first ten numbers in
-ternary:</p>
+<p>Okay, so here&rsquo;s the rules of the <em>balanced ternary enumeration</em> game We write all integers in base 3, and replace all digits that are 2 with -1 and then sum the outcome. Let&rsquo;s look at the first ten numbers in ternary:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">map_chr</span><span class="p">(</span><span class="nf">seq</span><span class="p">(</span><span class="m">10</span><span class="p">),</span> <span class="n">base</span> <span class="o">=</span> <span class="m">3</span><span class="p">,</span> <span class="n">ConvertToBase</span><span class="p">)</span>
 </code></pre></div><pre><code> [1] &quot;1&quot;   &quot;2&quot;   &quot;10&quot;  &quot;11&quot;  &quot;12&quot;  &quot;20&quot;  &quot;21&quot;  &quot;22&quot;  &quot;100&quot; &quot;101&quot;
 </code></pre>
-<p>So in this sequence, we would replace the second value (<code>2</code>) with <code>-1</code>,
-which makes -1. We would also replace the second digit of fifth value
-(<code>12</code>), which makes [1,-1], which, when we add these numbers up ,
-makes 2. This because 1 in the first position denotes value 3, minus 1
-in the second position (representing 1) makes 2 since
-<code>$(3*1) + (1*-1) = 2$</code>. The next value (<code>20</code>) has a 2 in the first
-position, replace this with -1 makes [-1,0]. The first position
-denotes 3, minus 0 in the second position, makes -3 since
-<code>$(3*-1) + (1*0) = -3$</code>. Applying the same rule to the sixth value gives
-<code>$(3*-1) + (1*1)$</code> which makes -2. The next value has two incidences of
-the number 2, replacing both with -1 gives <code>$(3*-1) + (1*-1)$</code> is equal
-to -4. Let&rsquo;s skip ahead a few numbers to decimal number 18, which in
-ternary becomes 200, where the first position represents the number 9.
-Replacing the 2 in this number gives <code>$(9*-1) + (3*0) + (1*0)$</code>, which
-makes -9. This process is the balanced ternary enumeration.</p>
-<p>Just as show of proof, we can also apply the same formula to values that
-don&rsquo;t contain a 2, for instance decimal number 10, which becomes 101 in
-ternary. The formula for this becomes <code>$(9*1) + (3*0) + (1*1)$</code>, which
-makes again 10.</p>
+<p>So in this sequence, we would replace the second value (<code>2</code>) with <code>-1</code>, which makes -1. We would also replace the second digit of fifth value (<code>12</code>), which makes [1,-1], which, when we add these numbers up , makes 2. This because 1 in the first position denotes value 3, minus 1 in the second position (representing 1) makes 2 since <code>$(3*1) + (1*-1) = 2$</code>. The next value (<code>20</code>) has a 2 in the first position, replace this with -1 makes [-1,0]. The first position denotes 3, minus 0 in the second position, makes -3 since <code>$(3*-1) + (1*0) = -3$</code>. Applying the same rule to the sixth value gives <code>$(3*-1) + (1*1)$</code> which makes -2. The next value has two incidences of the number 2, replacing both with -1 gives <code>$(3*-1) + (1*-1)$</code> is equal to -4. Let&rsquo;s skip ahead a few numbers to decimal number 18, which in ternary becomes 200, where the first position represents the number 9. Replacing the 2 in this number gives <code>$(9*-1) + (3*0) + (1*0)$</code>, which makes -9. This process is the balanced ternary enumeration.</p>
+<p>Just as show of proof, we can also apply the same formula to values that don&rsquo;t contain a 2, for instance decimal number 10, which becomes 101 in ternary. The formula for this becomes <code>$(9*1) + (3*0) + (1*1)$</code>, which makes again 10.</p>
 <p>Let&rsquo;s put this sequence together:</p>
 <p>[0   1   -1   3   4   2   -3   -2   -4   9   10]</p>
 <p>And that&rsquo;s balanced ternary enumeration.</p>
 <h3 id="coding-the-formula">Coding the formula</h3>
-<p>So obviously we are lazy, and don&rsquo;t want to do this process manually for
-thousands of values. that&rsquo;s why we&rsquo;re going to code it. For this step I
-translated some Python code to R syntax. The function I wrote to do one
-step of balanced ternary enumartion is shown below. The first value is
-always 0 (since it&rsquo;s a 0 in the first position, hence <code>$1*0 = 0$</code>).
-After this, we can incorporate the two steps (of converting into ternary
-and the enumeration) into one. The formula for this looks like this:</p>
+<p>So obviously we are lazy, and don&rsquo;t want to do this process manually for thousands of values. that&rsquo;s why we&rsquo;re going to code it. For this step I translated some Python code to R syntax. The function I wrote to do one step of balanced ternary enumartion is shown below. The first value is always 0 (since it&rsquo;s a 0 in the first position, hence <code>$1*0 = 0$</code>). After this, we can incorporate the two steps (of converting into ternary and the enumeration) into one. The formula for this looks like this:</p>
 <p><code>$$\begin{aligned} a(0) &amp;= 0\\ a(3n) &amp;= 3 * a(n)\\ a(3n + 1) &amp;= 3 * a(n) + 1\\ a(3n + 2) &amp;= 3 * a(n) - 1\\ \end{aligned}$$</code></p>
-<p>The Python code for this function came from a website that collects
-mathematical functions and sequences and can be found
-<a href="https://oeis.org/A117966">here</a>. I&rsquo;ve adapted it to work in R. Since 0
-will always result in 0, this is hard coded in. Afterwards it is a
-nested function (I know, we all love it) where it iteratively calls
-itself until the input to the function is 0 and it stops. At that point
-we have out balanced ternary. This function only performs the
-calculation for one value. So getting a sequence means putting it in a
-<code>map()</code> function.</p>
+<p>The Python code for this function came from a website that collects mathematical functions and sequences and can be found <a href="https://oeis.org/A117966">here</a>. I&rsquo;ve adapted it to work in R. Since 0 will always result in 0, this is hard coded in. Afterwards it is a nested function (I know, we all love it) where it iteratively calls itself until the input to the function is 0 and it stops. At that point we have out balanced ternary. This function only performs the calculation for one value. So getting a sequence means putting it in a <code>map()</code> function.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">BTE</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
   <span class="nf">if </span><span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
     <span class="nf">return</span><span class="p">(</span><span class="m">0</span><span class="p">)</span>
@@ -388,66 +291,34 @@ calculation for one value. So getting a sequence means putting it in a
     <span class="nf">return</span><span class="p">(</span><span class="m">3</span> <span class="o">*</span> <span class="nf">BTE</span><span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="m">2</span><span class="p">)</span> <span class="o">/</span> <span class="m">3</span><span class="p">)</span> <span class="o">-</span> <span class="m">1</span><span class="p">)</span>
   <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div><p>Let&rsquo;s go through one iteration of this code. Let&rsquo;s say <code>x &lt;- 3</code>. 3
-modulo 3 is equal to 0, so we enter the first condition. The result of
-this is 3 multiplied by the outcome of the same function, except the
-input now is x divided by three, or 3/3, or 1, in our example. This
-becomes the new input for the function. 1 modulo 3 is equal to 1. So now
-we enter the second condition. Now the input to the <code>BTE()</code> function is
-1 minus 1, divided by 3. This is 0, so we return 3 * 0 + 1, which is
-equal to 3.</p>
+</code></pre></div><p>Let&rsquo;s go through one iteration of this code. Let&rsquo;s say <code>x &lt;- 3</code>. 3 modulo 3 is equal to 0, so we enter the first condition. The result of this is 3 multiplied by the outcome of the same function, except the input now is x divided by three, or 3/3, or 1, in our example. This becomes the new input for the function. 1 modulo 3 is equal to 1. So now we enter the second condition. Now the input to the <code>BTE()</code> function is 1 minus 1, divided by 3. This is 0, so we return 3 * 0 + 1, which is equal to 3.</p>
 <p>If we plug the number 3 into the formula, we will get the same result:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">BTE</span><span class="p">(</span><span class="m">3</span><span class="p">)</span>
 </code></pre></div><pre><code>[1] 3
 </code></pre>
-<p>Let&rsquo;s also look at a few other examples using the <code>map()</code> function
-again. Since the <code>BTE()</code> function outputs only integers, I use
-<code>map_dbl()</code>. Let&rsquo;s input a few exampels:</p>
+<p>Let&rsquo;s also look at a few other examples using the <code>map()</code> function again. Since the <code>BTE()</code> function outputs only integers, I use <code>map_dbl()</code>. Let&rsquo;s input a few exampels:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">example_vector</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="nf">seq</span><span class="p">(</span><span class="m">10</span><span class="p">),</span><span class="m">500</span><span class="p">,</span><span class="m">1500</span><span class="p">,</span><span class="m">9999</span><span class="p">)</span>
 <span class="nf">map_dbl</span><span class="p">(</span><span class="n">example_vector</span><span class="p">,</span> <span class="n">BTE</span><span class="p">)</span>
 </code></pre></div><pre><code> [1]    0    1   -1    3    4    2   -3   -2   -4    9   10 -232 -696 9270
 </code></pre>
-<p>This corresponds to the values we created earlier, and the larger
-numbers make sense also. Okay, let&rsquo;s now create an entire sequence.
-We&rsquo;ll do 59.048 iterations (it&rsquo;ll become clear later why this specific
-number). We&rsquo;ll save the output in a variable called <code>starwars_seq</code>
-(forgotten yet that this thing started with Star Wars?).</p>
+<p>This corresponds to the values we created earlier, and the larger numbers make sense also. Okay, let&rsquo;s now create an entire sequence. We&rsquo;ll do 59.048 iterations (it&rsquo;ll become clear later why this specific number). We&rsquo;ll save the output in a variable called <code>starwars_seq</code> (forgotten yet that this thing started with Star Wars?).</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">starwars_seq</span> <span class="o">&lt;-</span> <span class="nf">map_dbl</span><span class="p">(</span><span class="nf">seq</span><span class="p">(</span><span class="m">59048</span><span class="p">),</span> <span class="n">BTE</span><span class="p">)</span>
 </code></pre></div><h3 id="plotting-the-star-destroyers">Plotting the Star Destroyers</h3>
-<p>Now, when we plot the values as a scatter plot, it&rsquo;ll become maybe a bit
-clearer how this mathematical formula circles back to our Star Wars
-scene.</p>
+<p>Now, when we plot the values as a scatter plot, it&rsquo;ll become maybe a bit clearer how this mathematical formula circles back to our Star Wars scene.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">ggplot</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="n">starwars_seq</span><span class="p">),</span> <span class="n">y</span> <span class="o">=</span> <span class="n">starwars_seq</span><span class="p">))</span> <span class="o">+</span>
   <span class="nf">geom_point</span><span class="p">()</span> <span class="o">+</span>
   <span class="nf">theme_minimal</span><span class="p">()</span>
-</code></pre></div><img src="index_files/figure-gfm/sw-minimal-1.png" width="768" />
-<p>It&rsquo;s star destroyers in battle formation! How crazy is that!? It&rsquo;s such
-an interesting pattern. You can create as many formations as you like
-(or as your computer can handle) since the sequence will continue to
-infinity (it&rsquo;s like Emperor Palpatine&rsquo;s wet dream). Another feature of
-this sequence is that it will return every integer exactly once. We can
-confirm this property very easily by comparing the number of integers
-given to the balanced ternary enumeration function and the length of
-unique values returned:</p>
+</code></pre></div><img src="index.markdown_strict_files/figure-markdown_strict/sw-minimal-1.png" width="768" />
+<p>It&rsquo;s star destroyers in battle formation! How crazy is that!? It&rsquo;s such an interesting pattern. You can create as many formations as you like (or as your computer can handle) since the sequence will continue to infinity (it&rsquo;s like Emperor Palpatine&rsquo;s wet dream). Another feature of this sequence is that it will return every integer exactly once. We can confirm this property very easily by comparing the number of integers given to the balanced ternary enumeration function and the length of unique values returned:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">length</span><span class="p">(</span><span class="n">starwars_seq</span><span class="p">)</span> <span class="o">==</span> <span class="nf">length</span><span class="p">(</span><span class="nf">unique</span><span class="p">(</span><span class="n">starwars_seq</span><span class="p">))</span>
 </code></pre></div><pre><code>[1] TRUE
 </code></pre>
-<p>The first point of each &ldquo;squadron&rdquo; of star destroyers starts with a
-value that is the same in decimal system as it is in balanced ternary
-enumeration. Remember the length of the <code>starwars_seq</code> variable was 59
-048? I chose that because it would start plotting a new squadron at x =
-59 049. Let&rsquo;s confirm this:</p>
+<p>The first point of each &ldquo;squadron&rdquo; of star destroyers starts with a value that is the same in decimal system as it is in balanced ternary enumeration. Remember the length of the <code>starwars_seq</code> variable was 59 048? I chose that because it would start plotting a new squadron at x = 59 049. Let&rsquo;s confirm this:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">BTE</span><span class="p">(</span><span class="m">59049</span><span class="p">)</span>
 </code></pre></div><pre><code>[1] 59049
 </code></pre>
-<p>There is a range of values where the input of the balanced ternary
-enumeration is equal to the outcome (or where the outcome is equal to
-the input divided by two times -1 (<code>$\frac{-x}{2}$</code>). There&rsquo;s a clear
-pattern to these numbers, but I&rsquo;ve done enough maths for today, so I&rsquo;ll
-save it for another time.</p>
-<p>Anyway, the plot! It is cool and all, but let&rsquo;s make it look a bit more
-like Star Wars by changing some style elements. We&rsquo;ll also generate some
-stars. For fun&rsquo;s sake we&rsquo;ll also add a planet or moon.</p>
+<p>There is a range of values where the input of the balanced ternary enumeration is equal to the outcome (or where the outcome is equal to the input divided by two times -1 (<code>$\frac{-x}{2}$</code>). There&rsquo;s a clear pattern to these numbers, but I&rsquo;ve done enough maths for today, so I&rsquo;ll save it for another time.</p>
+<p>Anyway, the plot! It is cool and all, but let&rsquo;s make it look a bit more like Star Wars by changing some style elements. We&rsquo;ll also generate some stars. For fun&rsquo;s sake we&rsquo;ll also add a planet or moon.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">set.seed</span><span class="p">(</span><span class="m">1983</span><span class="p">)</span>
 <span class="nf">ggplot</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="n">starwars_seq</span><span class="p">),</span> <span class="n">y</span> <span class="o">=</span> <span class="n">starwars_seq</span><span class="p">))</span> <span class="o">+</span>
   <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="nf">sample</span><span class="p">(</span><span class="nf">seq</span><span class="p">(</span><span class="m">-1e4</span><span class="p">,</span><span class="nf">length</span><span class="p">(</span><span class="n">starwars_seq</span><span class="p">)</span> <span class="o">+</span> <span class="m">1e4</span><span class="p">),</span> <span class="m">1e3</span><span class="p">),</span>
@@ -464,17 +335,15 @@ stars. For fun&rsquo;s sake we&rsquo;ll also add a planet or moon.</p>
     <span class="n">legend.position</span> <span class="o">=</span> <span class="s">&#34;none&#34;</span><span class="p">,</span>
     <span class="n">panel.background</span> <span class="o">=</span> <span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;black&#34;</span><span class="p">)</span>
   <span class="p">)</span>
-</code></pre></div><img src="index_files/figure-gfm/plot-pretty-1.png" width="768" />
-<p>Hope you enjoyed reading about me rambling about maths and implementing
-these functions to R! I will certainly do another plot some time later!
+</code></pre></div><img src="index.markdown_strict_files/figure-markdown_strict/plot-pretty-1.png" width="768" />
+<p>Hope you enjoyed reading about me rambling about maths and implementing these functions to R! I will certainly do another plot some time later!
 <br><br></p>
-<p><strong>BONUS</strong><br> We can create another plot (nothing related to Star Wars
-perhaps), that looks nice also. Now, instead of <code>geom_point()</code> we&rsquo;ll use
-<code>geom_line()</code>. No further purpose, just pretty.</p>
+<p><strong>BONUS</strong><br>
+We can create another plot (nothing related to Star Wars perhaps), that looks nice also. Now, instead of <code>geom_point()</code> we&rsquo;ll use <code>geom_line()</code>. No further purpose, just pretty.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">ggplot</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="n">starwars_seq</span><span class="p">),</span> <span class="n">y</span> <span class="o">=</span> <span class="n">starwars_seq</span><span class="p">))</span> <span class="o">+</span>
   <span class="nf">geom_line</span><span class="p">()</span> <span class="o">+</span> 
   <span class="nf">theme_minimal</span><span class="p">()</span>
-</code></pre></div><img src="index_files/figure-gfm/plot-castle-1.png" width="768" />
+</code></pre></div><img src="index.markdown_strict_files/figure-markdown_strict/plot-castle-1.png" width="768" />
 
   </article>
 

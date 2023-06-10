@@ -50,7 +50,7 @@ This project stems from a discussion I had with my family about living up north 
       <pubDate>Tue, 24 Aug 2021 00:00:00 +0000</pubDate>
       
       <guid>/blog/the-easier-way-to-create-a-map-of-norway-using-splmaps/</guid>
-      <description>p.announcement { border-radius: 5px; background-color: #acc8d4; padding: 1em; } p.announcement code { background-color: #93b8c8 }  This post was updated to include the new {splmaps} package since the {fhimaps} and {fhidata} package will no longer receive updates. Practically, these apps will behave the same way. Installation instructions for the {splmaps} and {spldata} packages can be found here.  Every now and then you discover a discover a much simpler solution to a problem you spent a lot of time solving.</description>
+      <description>p.announcement { border-radius: 5px; background-color: #acc8d4; padding: 1em; } p.announcement code { background-color: #93b8c8; } p.warning { border-radius: 5px; background-color: #F57A95; padding: 1em; } p.warning code { background-color: #F25476; }  As of March 2023 {splmaps} is no longer supported. This post will in due time be updated with a new solution when I have the time. This post was updated to include the new {splmaps} package since the {fhimaps} and {fhidata} package will no longer receive updates.</description>
     </item>
     
     <item>
@@ -59,7 +59,7 @@ This project stems from a discussion I had with my family about living up north 
       <pubDate>Sun, 20 Jun 2021 00:00:00 +0000</pubDate>
       
       <guid>/blog/visualizing-the-state-of-the-amsterdam-housing-market/</guid>
-      <description>body { background-color: #EBEBEB; /* was #EFEFEF */ } table { font-family: &#34;Nunito Sans&#34;, sans-serif; } code { background: #E0E0E0; } img { max-width: 80%; }  For this post, I decided to hide the code chunks by default to improve legibility. You can click the Show code-button to expand the code. Introduction I&amp;rsquo;m at the age where a lot of my peers start thinking about buying a home. It is a major conversation topic around the office, and these conversations are not often filled with optimism and excitement.</description>
+      <description>body { background-color: #EBEBEB; /* was #EFEFEF */ } table { font-family: &#34;Nunito Sans&#34;, sans-serif; } code { background: #E0E0E0; } img { max-width: 90%; }  For this post, I decided to hide the code chunks by default to improve legibility. You can click the Show code-button to expand the code. Introduction I&amp;rsquo;m at the age where a lot of my peers start thinking about buying a home. It is a major conversation topic around the office, and these conversations are not often filled with optimism and excitement.</description>
     </item>
     
     <item>
@@ -96,7 +96,7 @@ This project stems from a discussion I had with my family about living up north 
       <pubDate>Sun, 01 Dec 2019 00:00:00 +0000</pubDate>
       
       <guid>/blog/analyzing-bach/</guid>
-      <description>@import url(&#39;https://fonts.googleapis.com/css?family=IM+Fell+English|IM+Fell+English+SC&amp;display=swap&#39;); body{ background-color: #FFFFF0; } h1 { font-family: &#39;IM Fell English&#39;, serif; } h2,h3,h4,h5,h6 { font-family: &#39;IM Fell English&#39;, serif; } .post-title { font-family: &#39;IM Fell English SC&#39;, serif; font-size: 6rem; }  Introduction A little while ago I was watching a documentary series on Dutch television about one of the most important composers in the Netherlands: Johann Sebastian Bach. The documentary discussed parts of Bach&amp;rsquo;s life and the music he wrote during it.</description>
+      <description>@import url(&#39;https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400;1,700&amp;family=IM+Fell+English+SC&amp;family=IM+Fell+English:ital@0;1&amp;display=swap&#39;); h1 { font-family: &#39;IM Fell English&#39;, serif; } h2, h3, h4, h5, h6 { font-family: &#39;IM Fell English&#39;, serif; } .post-title { font-family: &#39;IM Fell English SC&#39;, serif; font-size: 6rem; }  Introduction A little while ago I was watching a documentary series on Dutch television about one of the most important composers in the Netherlands: Johann Sebastian Bach. The documentary discussed parts of Bach&amp;rsquo;s life and the music he wrote during it.</description>
     </item>
     
     <item>

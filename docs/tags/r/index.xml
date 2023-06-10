@@ -78,7 +78,7 @@ This project stems from a discussion I had with my family about living up north 
       <pubDate>Sun, 01 Dec 2019 00:00:00 +0000</pubDate>
       
       <guid>/blog/analyzing-bach/</guid>
-      <description>@import url(&#39;https://fonts.googleapis.com/css?family=IM+Fell+English|IM+Fell+English+SC&amp;display=swap&#39;); body{ background-color: #FFFFF0; } h1 { font-family: &#39;IM Fell English&#39;, serif; } h2,h3,h4,h5,h6 { font-family: &#39;IM Fell English&#39;, serif; } .post-title { font-family: &#39;IM Fell English SC&#39;, serif; font-size: 6rem; }  Introduction A little while ago I was watching a documentary series on Dutch television about one of the most important composers in the Netherlands: Johann Sebastian Bach. The documentary discussed parts of Bach&amp;rsquo;s life and the music he wrote during it.</description>
+      <description>@import url(&#39;https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400;1,700&amp;family=IM+Fell+English+SC&amp;family=IM+Fell+English:ital@0;1&amp;display=swap&#39;); h1 { font-family: &#39;IM Fell English&#39;, serif; } h2, h3, h4, h5, h6 { font-family: &#39;IM Fell English&#39;, serif; } .post-title { font-family: &#39;IM Fell English SC&#39;, serif; font-size: 6rem; }  Introduction A little while ago I was watching a documentary series on Dutch television about one of the most important composers in the Netherlands: Johann Sebastian Bach. The documentary discussed parts of Bach&amp;rsquo;s life and the music he wrote during it.</description>
     </item>
     
     <item>

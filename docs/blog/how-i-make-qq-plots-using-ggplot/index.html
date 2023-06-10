@@ -30,9 +30,9 @@
     
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
     
-    <link rel="preconnect" href="https://fonts.gstatic.com"> 
-    <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400;1,700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700;1,800;1,900&display=swap" rel="stylesheet">    <link rel="stylesheet" href="/css/normalize.min.css">
-    <link rel="stylesheet" href="/css/style.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700;1,800;1,900&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500;1,600;1,700;1,900&display=swap" rel="stylesheet">    <link rel="stylesheet" href="/css/style.min.css">
 
     
 
@@ -104,31 +104,11 @@
     </header>
 
     <h3 id="introduction">Introduction</h3>
-<p>Whenever I show my colleagues in the genetics group my results, the
-first things they say are &ldquo;<em>can you show me the Manhattan plots?</em>&rdquo; and
-&ldquo;<em>can you show me the QQ plots?</em>&rdquo;. I covered how to make Manhattan plots
-in ggplot before (click
-<a href="https://danielroelfs.com/blog/how-i-create-manhattan-plots-using-ggplot/">here</a>
-for a link. But now I want to go through how I make QQ plots. I&rsquo;m aware
-that there&rsquo;s a number of packages available that offer this
-funcionality, but I feel they&rsquo;re for the most part a bit limiting
-compared to making the plot yourself using the <code>{ggplot2}</code> package.
-Another advantage I found of creating QQ plots myself, is that I got a
-better understanding of how GWAS summary statistics are projected on the
-QQ plot, and thus I got a better understanding of QQ plots. For this
-process, I&rsquo;ll use the <code>{tidyverse}</code> package (which includes <code>{ggplot2}</code>)
-for all operations, and the <code>{normentR}</code> package to simulate some
-summary statistics and get some of my preferred color palettes. The code
-to calculate the confidence interval is based on code from Kamil
-Slowikowski (click <a href="https://gist.github.com/slowkow/9041570">here</a> to go
-to the Gist).</p>
+<p>Whenever I show my colleagues in the genetics group my results, the first things they say are &ldquo;<em>can you show me the Manhattan plots?</em>&rdquo; and &ldquo;<em>can you show me the QQ plots?</em>&rdquo;. I covered how to make Manhattan plots in ggplot before (click <a href="https://danielroelfs.com/blog/how-i-create-manhattan-plots-using-ggplot/">here</a> for a link. But now I want to go through how I make QQ plots. I&rsquo;m aware that there&rsquo;s a number of packages available that offer this funcionality, but I feel they&rsquo;re for the most part a bit limiting compared to making the plot yourself using the <code>{ggplot2}</code> package. Another advantage I found of creating QQ plots myself, is that I got a better understanding of how GWAS summary statistics are projected on the QQ plot, and thus I got a better understanding of QQ plots. For this process, I&rsquo;ll use the <code>{tidyverse}</code> package (which includes <code>{ggplot2}</code>) for all operations, and the <code>{normentR}</code> package to simulate some summary statistics and get some of my preferred color palettes. The code to calculate the confidence interval is based on code from Kamil Slowikowski (click <a href="https://gist.github.com/slowkow/9041570">here</a> to go to the Gist).</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">normentR</span><span class="p">)</span>
 </code></pre></div><h3 id="import-data-into-r">Import data into R</h3>
-<p>First we&rsquo;ll simulate some summary statistics data. We can do this using
-the <code>simulateGWAS()</code> function in the <code>{normentR}</code> package for now. If
-you have summary statistics ready, you can load it in and use that
-instead.</p>
+<p>First we&rsquo;ll simulate some summary statistics data. We can do this using the <code>simulateGWAS()</code> function in the <code>{normentR}</code> package for now. If you have summary statistics ready, you can load it in and use that instead.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">set.seed</span><span class="p">(</span><span class="m">1994</span><span class="p">)</span>
 
 <span class="n">sumstats.data</span> <span class="o">&lt;-</span> <span class="nf">simulateGWAS</span><span class="p">(</span><span class="n">nSNPs</span> <span class="o">=</span> <span class="m">1e6</span><span class="p">,</span> <span class="n">nSigCols</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span>
@@ -143,63 +123,21 @@ instead.</p>
 8. Adding significant column in chromosome 8
 DONE!
 </code></pre>
-<p>Now we have a data frame called <code>sumstats.data</code> that contains a
-simulated GWAS summary statistic dataset. Note that I only generated a
-small number of SNPs. The QQ plot can take quite a while to generate if
-there&rsquo;s a lot of SNPs in the file. QQ plots require only the p-values,
-but we&rsquo;ll keep the entire data frame because you might need this data
-frame at some point later on.</p>
+<p>Now we have a data frame called <code>sumstats.data</code> that contains a simulated GWAS summary statistic dataset. Note that I only generated a small number of SNPs. The QQ plot can take quite a while to generate if there&rsquo;s a lot of SNPs in the file. QQ plots require only the p-values, but we&rsquo;ll keep the entire data frame because you might need this data frame at some point later on.</p>
 <h3 id="preparing-the-data">Preparing the data</h3>
-<p>First I&rsquo;ll specify two variables, just to make the code later somehwat
-cleaner. I&rsquo;ll want to plot an area indicating the confidence interval,
-so we specify the confidence interval (e.g. 95%) and the number of SNPs
-(which is just the length of your <code>sumstats.data</code> data frame)</p>
+<p>First I&rsquo;ll specify two variables, just to make the code later somehwat cleaner. I&rsquo;ll want to plot an area indicating the confidence interval, so we specify the confidence interval (e.g. 95%) and the number of SNPs (which is just the length of your <code>sumstats.data</code> data frame)</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">ci</span> <span class="o">&lt;-</span> <span class="m">0.95</span>
 <span class="n">nSNPs</span> <span class="o">&lt;-</span> <span class="nf">nrow</span><span class="p">(</span><span class="n">sumstats.data</span><span class="p">)</span>
-</code></pre></div><p>Next, we&rsquo;ll create a data frame that has all the data we need for the
-plot. We&rsquo;ll call that data frame <code>plotdata</code>. We initiate a data frame
-with four columns. The first column is the observed p-values, sorted in
-decreasing order, and then -log<sub>10</sub> transformed. So then the
-SNPs with the lowest p-values will have the highest value. These SNPs
-will end up on the right side of the figure later. Based on this sorted
-vector, we can also generate the expected vector of log transformed
-p-values. We could do this manually, but I much prefer to use one of the
-(somewhat obscure but very useful) base functions in R called
-<code>ppoints()</code>. This generates the sequence of probabilities based on the
-input vector. In this case, we&rsquo;ll input just the number of SNPs. Since
-we also want to plot the confidence interval, we&rsquo;ll have to calculate
-the upper and lower limits of the confidence interval at each point. For
-this we&rsquo;ll use another base function called <code>qbeta()</code>. This generates
-the <code>$\beta$</code> distribution for a given probabily value or range of
-values. For the lower half of the confidence interval, we&rsquo;ll take 1
-(i.e. the null line) minus the confidence interval (<code>0.95</code>), and since
-this is only half of the interval, we&rsquo;ll divide that value by 2. We&rsquo;ll
-do the same for the upper half of the confidence interval, except not
-it&rsquo;s 1 plus the confidence interval. For both the upper and lower
-interval, we&rsquo;ll supply a vector from 1 to the number of SNPs in your
-data frame and then also the reverse. These two vectors will be the
-parameters of the <code>$\beta$</code> distribution. The output from all the
-functions below are the same length as the number of SNPs in your
-original data frame.</p>
+</code></pre></div><p>Next, we&rsquo;ll create a data frame that has all the data we need for the plot. We&rsquo;ll call that data frame <code>plotdata</code>. We initiate a data frame with four columns. The first column is the observed p-values, sorted in decreasing order, and then -log<sub>10</sub> transformed. So then the SNPs with the lowest p-values will have the highest value. These SNPs will end up on the right side of the figure later. Based on this sorted vector, we can also generate the expected vector of log transformed p-values. We could do this manually, but I much prefer to use one of the (somewhat obscure but very useful) base functions in R called <code>ppoints()</code>. This generates the sequence of probabilities based on the input vector. In this case, we&rsquo;ll input just the number of SNPs.
+Since we also want to plot the confidence interval, we&rsquo;ll have to calculate the upper and lower limits of the confidence interval at each point. For this we&rsquo;ll use another base function called <code>qbeta()</code>. This generates the <code>$\beta$</code> distribution for a given probabily value or range of values. For the lower half of the confidence interval, we&rsquo;ll take 1 (i.e. the null line) minus the confidence interval (<code>0.95</code>), and since this is only half of the interval, we&rsquo;ll divide that value by 2. We&rsquo;ll do the same for the upper half of the confidence interval, except not it&rsquo;s 1 plus the confidence interval. For both the upper and lower interval, we&rsquo;ll supply a vector from 1 to the number of SNPs in your data frame and then also the reverse. These two vectors will be the parameters of the <code>$\beta$</code> distribution. The output from all the functions below are the same length as the number of SNPs in your original data frame.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">plotdata</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span>
   <span class="n">observed</span> <span class="o">=</span> <span class="o">-</span><span class="nf">log10</span><span class="p">(</span><span class="nf">sort</span><span class="p">(</span><span class="n">sumstats.data</span><span class="o">$</span><span class="n">P</span><span class="p">)),</span>
   <span class="n">expected</span> <span class="o">=</span> <span class="o">-</span><span class="nf">log10</span><span class="p">(</span><span class="nf">ppoints</span><span class="p">(</span><span class="n">nSNPs</span><span class="p">)),</span>
   <span class="n">clower</span>   <span class="o">=</span> <span class="o">-</span><span class="nf">log10</span><span class="p">(</span><span class="nf">qbeta</span><span class="p">(</span><span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="m">1</span> <span class="o">-</span> <span class="n">ci</span><span class="p">)</span> <span class="o">/</span> <span class="m">2</span><span class="p">,</span> <span class="n">shape1</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="n">nSNPs</span><span class="p">),</span> <span class="n">shape2</span> <span class="o">=</span> <span class="nf">rev</span><span class="p">(</span><span class="nf">seq</span><span class="p">(</span><span class="n">nSNPs</span><span class="p">)))),</span>
   <span class="n">cupper</span>   <span class="o">=</span> <span class="o">-</span><span class="nf">log10</span><span class="p">(</span><span class="nf">qbeta</span><span class="p">(</span><span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="m">1</span> <span class="o">+</span> <span class="n">ci</span><span class="p">)</span> <span class="o">/</span> <span class="m">2</span><span class="p">,</span> <span class="n">shape1</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="n">nSNPs</span><span class="p">),</span> <span class="n">shape2</span> <span class="o">=</span> <span class="nf">rev</span><span class="p">(</span><span class="nf">seq</span><span class="p">(</span><span class="n">nSNPs</span><span class="p">))))</span>
 <span class="p">)</span>
-</code></pre></div><p>Now we have a data frame that contains all the information we need for
-plotting. We have the log-tranformed observed p-values, the expected
-values, and the lower and upper bounds for the 95% confidence interval.
-Before we move on to plotting, we can do another step that makes our
-lives later a bit easier.</p>
-<p>Since the majority of SNPs have a p-value that&rsquo;s between 1 and 0.01,
-plotting all these individual SNPs is unnecessary. Similar to what one
-would do in a Manhattan plot, we&rsquo;re going to filter out a large number
-of SNPs that have a p-value higher than 0.01. Recall that the
--log<sub>10</sub> of 0.01 is equal to 2, so we&rsquo;re going to take a subset
-of all expected values equal to or lower than 2. If this step causes
-some issue due to inflation etc., it will be easily visible in the plot
-later.</p>
+</code></pre></div><p>Now we have a data frame that contains all the information we need for plotting. We have the log-tranformed observed p-values, the expected values, and the lower and upper bounds for the 95% confidence interval. Before we move on to plotting, we can do another step that makes our lives later a bit easier.</p>
+<p>Since the majority of SNPs have a p-value that&rsquo;s between 1 and 0.01, plotting all these individual SNPs is unnecessary. Similar to what one would do in a Manhattan plot, we&rsquo;re going to filter out a large number of SNPs that have a p-value higher than 0.01. Recall that the -log<sub>10</sub> of 0.01 is equal to 2, so we&rsquo;re going to take a subset of all expected values equal to or lower than 2. If this step causes some issue due to inflation etc., it will be easily visible in the plot later.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">plotdata_sub</span> <span class="o">&lt;-</span> <span class="n">plotdata</span> <span class="o">%&gt;%</span>
   <span class="nf">filter</span><span class="p">(</span><span class="n">expected</span> <span class="o">&lt;=</span> <span class="m">2</span><span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="nf">sample_frac</span><span class="p">(</span><span class="m">0.01</span><span class="p">)</span>
@@ -208,45 +146,11 @@ later.</p>
   <span class="nf">filter</span><span class="p">(</span><span class="n">expected</span> <span class="o">&gt;</span> <span class="m">2</span><span class="p">)</span>
 
 <span class="n">plotdata_small</span> <span class="o">&lt;-</span> <span class="nf">rbind</span><span class="p">(</span><span class="n">plotdata_sub</span><span class="p">,</span> <span class="n">plotdata_sup</span><span class="p">)</span>
-</code></pre></div><p>Now we have a much smaller data frame, which should make plotting a lot
-faster!</p>
+</code></pre></div><p>Now we have a much smaller data frame, which should make plotting a lot faster!</p>
 <h3 id="plotting-the-data">Plotting the data</h3>
-<p>Let&rsquo;s make a plot! We want the expected values on the x-axis, and the
-observed values on the y-axis. Then I&rsquo;ll make a <code>geom_ribbon()</code> layer
-with the upper and lower bounds of the confidence interval. Now, there&rsquo;s
-a few options. Some people prefer to see individual points (with
-<code>geom_point()</code>), but if you have a million SNPs, I don&rsquo;t think this
-always makes much sense. You can also use <code>geom_line()</code>, but I
-especially prefer <code>geom_step()</code>. This function creates a line between
-the dots in a stepwise manner, so strictly speaking there are no
-diagonal lines (but with many points in a region, it may look like a
-diagonal line). There&rsquo;s two options for the direction of the
-<code>geom_step()</code> function, to go from a point to the next first in vertical
-direction and then horizontal direction is <code>&quot;vh&quot;</code>, the other way around
-is denoted by <code>&quot;hv&quot;</code>. What is most suitable for your plot depends on
-what you want to look at. I&rsquo;d recommend to be conservative, so if you&rsquo;re
-trying to assess inflation, go for <code>&quot;vh&quot;</code>, which will visually bias the
-curve upwards. If you&rsquo;re looking only at the quality of genetic signal
-in your GWAS, then go for <code>&quot;hv&quot;</code>, since that will visually bias the
-curve to be closer to the null line. If you&rsquo;re not sure, then just go
-for <code>geom_line()</code>.</p>
-<p>When there is no signal in your GWAS, the expected and observed p-values
-should overlap perfectly. In that case there&rsquo;ll be a correlation of
-exactly 1. This is our reference value. In order to indicate this
-null-line, we can add a line with an intersect at 0 and a slope of 1
-with the <code>geom_abline()</code> function. This <code>geom_abline()</code> will plot a line
-that exceeds the observed values. I prefer to use a <code>geom_segment()</code> so
-that I can specify the range of the line. I select the largest expected
-x- and y-value and plot a line from (0,0) to that point, which will
-perfectly correspond to a line with a slope of 1. Your line with
-observed p-values should never go below this null line. If it does, it
-means that the p-values that you measured are higher than could
-reasonably be expected under a null distrbution.</p>
-<p>We&rsquo;ll also add some labels (with the <code>expression()</code> and <code>paste()</code>
-functions). You may just copy paste this. I&rsquo;ll add my preferred theme
-(<code>theme_norment()</code>) and I added an empty <code>theme()</code> layer. I haven&rsquo;t
-added anything there yet, but perhaps if there&rsquo;s some unwanted behavior
-in the theme, you can fix it there.</p>
+<p>Let&rsquo;s make a plot! We want the expected values on the x-axis, and the observed values on the y-axis. Then I&rsquo;ll make a <code>geom_ribbon()</code> layer with the upper and lower bounds of the confidence interval. Now, there&rsquo;s a few options. Some people prefer to see individual points (with <code>geom_point()</code>), but if you have a million SNPs, I don&rsquo;t think this always makes much sense. You can also use <code>geom_line()</code>, but I especially prefer <code>geom_step()</code>. This function creates a line between the dots in a stepwise manner, so strictly speaking there are no diagonal lines (but with many points in a region, it may look like a diagonal line). There&rsquo;s two options for the direction of the <code>geom_step()</code> function, to go from a point to the next first in vertical direction and then horizontal direction is <code>&quot;vh&quot;</code>, the other way around is denoted by <code>&quot;hv&quot;</code>. What is most suitable for your plot depends on what you want to look at. I&rsquo;d recommend to be conservative, so if you&rsquo;re trying to assess inflation, go for <code>&quot;vh&quot;</code>, which will visually bias the curve upwards. If you&rsquo;re looking only at the quality of genetic signal in your GWAS, then go for <code>&quot;hv&quot;</code>, since that will visually bias the curve to be closer to the null line. If you&rsquo;re not sure, then just go for <code>geom_line()</code>.</p>
+<p>When there is no signal in your GWAS, the expected and observed p-values should overlap perfectly. In that case there&rsquo;ll be a correlation of exactly 1. This is our reference value. In order to indicate this null-line, we can add a line with an intersect at 0 and a slope of 1 with the <code>geom_abline()</code> function. This <code>geom_abline()</code> will plot a line that exceeds the observed values. I prefer to use a <code>geom_segment()</code> so that I can specify the range of the line. I select the largest expected x- and y-value and plot a line from (0,0) to that point, which will perfectly correspond to a line with a slope of 1. Your line with observed p-values should never go below this null line. If it does, it means that the p-values that you measured are higher than could reasonably be expected under a null distrbution.</p>
+<p>We&rsquo;ll also add some labels (with the <code>expression()</code> and <code>paste()</code> functions). You may just copy paste this. I&rsquo;ll add my preferred theme (<code>theme_norment()</code>) and I added an empty <code>theme()</code> layer. I haven&rsquo;t added anything there yet, but perhaps if there&rsquo;s some unwanted behavior in the theme, you can fix it there.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="n">qqplot</span> <span class="o">&lt;-</span> <span class="nf">ggplot</span><span class="p">(</span><span class="n">plotdata_small</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">expected</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">observed</span><span class="p">))</span> <span class="o">+</span>
   <span class="nf">geom_ribbon</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">ymax</span> <span class="o">=</span> <span class="n">cupper</span><span class="p">,</span> <span class="n">ymin</span> <span class="o">=</span> <span class="n">clower</span><span class="p">),</span> <span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;grey30&#34;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">)</span> <span class="o">+</span>
   <span class="nf">geom_step</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="n">norment_colors[[</span><span class="s">&#34;purple&#34;</span><span class="n">]]</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">1.1</span><span class="p">,</span> <span class="n">direction</span> <span class="o">=</span> <span class="s">&#34;vh&#34;</span><span class="p">)</span> <span class="o">+</span>
@@ -257,22 +161,14 @@ in the theme, you can fix it there.</p>
        <span class="n">y</span> <span class="o">=</span> <span class="nf">expression</span><span class="p">(</span><span class="nf">paste</span><span class="p">(</span><span class="s">&#34;Observed -log&#34;</span><span class="n">[10]</span><span class="p">,</span><span class="s">&#34;(&#34;</span><span class="p">,</span> <span class="nf">plain</span><span class="p">(</span><span class="n">P</span><span class="p">),</span><span class="s">&#34;)&#34;</span><span class="p">)))</span> <span class="o">+</span>
   <span class="nf">theme_norment</span><span class="p">()</span> <span class="o">+</span>
   <span class="nf">theme</span><span class="p">()</span>
-</code></pre></div><p>I must issue a small warning now, since these GWAS files can be quite
-large, plotting all these values can take quite some time, so if you&rsquo;re
-working on an older MacBook Air (like I am) you may have to be a little
-patient. Let&rsquo;s see what the plot looks like.</p>
+</code></pre></div><pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.
+</code></pre>
+<p>I must issue a small warning now, since these GWAS files can be quite large, plotting all these values can take quite some time, so if you&rsquo;re working on an older MacBook Air (like I am) you may have to be a little patient. Let&rsquo;s see what the plot looks like.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="nf">print</span><span class="p">(</span><span class="n">qqplot</span><span class="p">)</span>
-</code></pre></div><img src="index_files/figure-gfm/print-plot-1.png" width="768" />
-<p>Now we have our QQ plot. We see that our (simulated) GWAS dataset has a
-very nice signal! I&rsquo;d be dissapointed if it didn&rsquo;t since I coded it to
-be this way. It is possible to annotate this plot further or to add
-multiple lines depending on thresholds (I&rsquo;m thinking about
-conditional/conjunctional FDR thresholds for instance). Good luck!</p>
-<p>The code above was adapted from a script by Kamil Slowikowski (click
-<a href="https://gist.github.com/slowkow/9041570">here</a> to go to the Gist). See
-also the <code>{qqplotr}</code> package for extended functionality around QQ plots
-in ggplot (click <a href="https://github.com/aloy/qqplotr">here</a> to go to the
-repository).</p>
+</code></pre></div><img src="index.markdown_strict_files/figure-markdown_strict/print-plot-1.png" width="768" />
+<p>Now we have our QQ plot. We see that our (simulated) GWAS dataset has a very nice signal! I&rsquo;d be dissapointed if it didn&rsquo;t since I coded it to be this way. It is possible to annotate this plot further or to add multiple lines depending on thresholds (I&rsquo;m thinking about conditional/conjunctional FDR thresholds for instance). Good luck!</p>
+<p>The code above was adapted from a script by Kamil Slowikowski (click <a href="https://gist.github.com/slowkow/9041570">here</a> to go to the Gist). See also the <code>{qqplotr}</code> package for extended functionality around QQ plots in ggplot (click <a href="https://github.com/aloy/qqplotr">here</a> to go to the repository).</p>
 
   </article>
 

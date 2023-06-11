@@ -12,6 +12,8 @@ tags:
 description: "The Easier Way to Create a Map of Norway Using {splmaps}"
 thumbnail: images/avatar.png
 format: hugo
+editor_options:
+  chunk_output_type: console
 execute:
   fig.retina: 2
   fig.align: center
@@ -19,8 +21,6 @@ execute:
   results: hold
   out.width: 80%
 ---
-
-
 
 <style type="text/css">
 p.announcement {
@@ -30,24 +30,22 @@ padding: 1em;
 }
 
 p.announcement code {
-background-color: #93b8c8;
+background-color: #93b8c8
 }
 
 p.warning {
 border-radius: 5px; 
-background-color: #F57A95; 
+background-color: #f57a95; 
 padding: 1em;
 }
 
 p.warning code {
-background-color: #F25476;
+background-color: #f25476
 }
 </style>
-
 <p class="warning">
-As of March 2023 <code>{splmaps}</code> is no longer supported. This post will in due time be updated with a new solution when I have the time.
+As of March 2023 <code>{splmaps}</code> is no longer supported. In the meantime I've saved the data that <code>{splmaps}</code> uses in a <code>{.RData}</code> file that you can download [here](https://github.com/danielroelfs/danielroelfs.com/tree/main/content/blog/2021-easy-map-norway/). Maybe in the future I'll have the time to find a more sophisticated solution. This post will in due time be updated with a new solution when I have the time.
 </p>
-
 <p class="announcement">
 This post was updated to include the new <code>{splmaps}</code> package since the <code>{fhimaps}</code> and <code>{fhidata}</code> package will no longer receive updates. Practically, these apps will behave the same way. Installation instructions for the <code>{splmaps}</code> and <code>{spldata}</code> packages can be found <a href="https://docs.sykdomspulsen.no/packages.html">here</a>.
 </p>
@@ -78,35 +76,28 @@ data(package = "splmaps") %>%
   print(n = 18)
 ```
 
-    # A tibble: 33 × 2
-       Item                                             Title                                                                        
-       <chr>                                            <chr>                                                                        
-     1 nor_lau2_map_b2019_default_dt                    Maps of Norwegian municipalities in data.table format                        
-     2 nor_lau2_map_b2019_default_sf                    Maps of Norwegian municipalities in sf format                                
-     3 nor_lau2_map_b2019_insert_oslo_dt                Maps of Norwegian municipalities with an insert for Oslo in data.table format
-     4 nor_lau2_map_b2020_default_dt                    Maps of Norwegian municipalities in data.table format                        
-     5 nor_lau2_map_b2020_default_sf                    Maps of Norwegian municipalities in sf format                                
-     6 nor_lau2_map_b2020_insert_oslo_dt                Maps of Norwegian municipalities with an insert for Oslo in data.table format
-     7 nor_lau2_map_b2020_split_dt                      Split map of Norwegian municipalities in data.table format                   
-     8 nor_lau2_position_geolabels_b2019_default_dt     Maps of Norwegian municipalities in data.table format                        
-     9 nor_lau2_position_geolabels_b2019_insert_oslo_dt Maps of Norwegian municipalities with an insert for Oslo in data.table format
-    10 nor_lau2_position_geolabels_b2020_default_dt     Maps of Norwegian municipalities in data.table format                        
-    11 nor_lau2_position_geolabels_b2020_insert_oslo_dt Maps of Norwegian municipalities with an insert for Oslo in data.table format
-    12 nor_nuts3_map_b2017_default_dt                   Maps of Norwegian counties in data.table format                              
-    13 nor_nuts3_map_b2017_default_sf                   Maps of Norwegian municipalities in sf format                                
-    14 nor_nuts3_map_b2017_insert_oslo_dt               Maps of Norwegian counties with an insert for Oslo in data.table format      
-    15 nor_nuts3_map_b2019_default_dt                   Maps of Norwegian counties in data.table format                              
-    16 nor_nuts3_map_b2019_default_sf                   Maps of Norwegian municipalities in sf format                                
-    17 nor_nuts3_map_b2019_insert_oslo_dt               Maps of Norwegian counties with an insert for Oslo in data.table format      
-    18 nor_nuts3_map_b2020_default_dt                   Maps of Norwegian counties in data.table format                              
-    # … with 15 more rows
+<p class="warning">
+The code above is deprecated. I'll leave it here for now, but the code chunk below will load the data into the workspace.
+</p>
+
+``` r
+load("splmaps_data.RData")
+
+ls()[seq(10)]
+```
+
+     [1] "nor_lau2_map_b2019_default_dt"                    "nor_lau2_map_b2019_default_sf"                    "nor_lau2_map_b2019_insert_oslo_dt"                "nor_lau2_map_b2020_default_dt"                    "nor_lau2_map_b2020_default_sf"                    "nor_lau2_map_b2020_insert_oslo_dt"                "nor_lau2_map_b2020_split_dt"                      "nor_lau2_position_geolabels_b2019_default_dt"     "nor_lau2_position_geolabels_b2019_insert_oslo_dt" "nor_lau2_position_geolabels_b2020_default_dt"    
 
 A comprehensive version of this list is also included in the [reference](https://docs.sykdomspulsen.no/splmaps/reference/index.html) for this package.
 
 So let's have a look at one of those maps. For instance the one with the new fylker from 2020 with an inset of Oslo.
 
+<p class="warning">
+When the <code>{splmaps}</code> package was not deprecated yet, all data used in the <code>{splmaps}</code> package could be accessed using the <code>::</code> operator like <code>splmaps::<data></code>. Now we can simply refer to the variable of the same name in the workspace from the file that we loaded earlier.
+</p>
+
 ``` r
-map_df <- splmaps::nor_nuts3_map_b2020_insert_oslo_dt %>% 
+map_df <- nor_nuts3_map_b2020_insert_oslo_dt %>% 
   glimpse()
 ```
 
@@ -125,30 +116,30 @@ ggplot(map_df, aes(x = long, y = lat, group = group, fill = location_code)) +
   geom_polygon()
 ```
 
-<img src="index_files/figure-gfm/minimal-plot-1.png" width="768" />
+<img src="index.markdown_strict_files/figure-markdown_strict/minimal-plot-1.png" width="768" />
 
 Now let's convert the awkward county numbers to the actual names of the fylker. The `{spldata}` package has a data frame with codes and names for all the kommuner, fylker, and even regions (Øst, Vest, Nord-Norge etc.). We're only interested in the fylker here, so we'll select the unique location codes and the corresponding location names.
 
 ``` r
-county_names <- spldata::nor_locations_names(border = 2020) %>% 
+county_names <- nor_locations_names_2020 %>% 
   filter(str_detect(location_code, "^county")) %>%
   distinct(location_code, location_name)
 
 print(county_names)
 ```
 
-        location_code        location_name
-     1:      county42                Agder
-     2:      county34            Innlandet
-     3:      county15      Møre og Romsdal
-     4:      county18             Nordland
-     5:      county03                 Oslo
-     6:      county11             Rogaland
-     7:      county54    Troms og Finnmark
-     8:      county50            Trøndelag
-     9:      county38 Vestfold og Telemark
-    10:      county46             Vestland
-    11:      county30                Viken
+       location_code        location_name
+    1       county42                Agder
+    2       county34            Innlandet
+    3       county15      Møre og Romsdal
+    4       county18             Nordland
+    5       county03                 Oslo
+    6       county11             Rogaland
+    7       county54    Troms og Finnmark
+    8       county50            Trøndelag
+    9       county38 Vestfold og Telemark
+    10      county46             Vestland
+    11      county30                Viken
 
 Now let's also create a nice color palette to give each fylke a nicer color than the default ggplot colors. We'll create a named vector to match each fylke with a color from the *batlow* palette by [Fabio Crameri](https://www.fabiocrameri.ch/colourmaps/).
 
@@ -179,7 +170,7 @@ map_df %>%
         legend.background = element_rect(fill = "white", color = "transparent"))
 ```
 
-<img src="index_files/figure-gfm/simple-plot-1.png" width="768" />
+<img src="index.markdown_strict_files/figure-markdown_strict/simple-plot-1.png" width="768" />
 
 ## Norway with Scandinavia
 
@@ -196,7 +187,7 @@ str_glue("Range across latitude: {str_c(range(map_df$lat), collapse = ', ')}")
 Let's also combine the map with some actual data. The `{spldata}` package contains some simple data on age distribution in kommuner and fylker. Let's take the data from the different fylker in the last available year and see what proportion of the total population is younger than 18.
 
 ``` r
-age_data <- spldata::nor_population_by_age_cats(cats = list("0_18" = 0:18), border = 2020) %>%
+age_data <- nor_population_by_age_cats_2020 %>%
   filter(str_detect(location_code, "^county"), 
          calyear == max(calyear)) %>%
   pivot_wider(id_cols = location_code, names_from = age, values_from = pop_jan1_n) %>%
@@ -207,7 +198,7 @@ age_data <- spldata::nor_population_by_age_cats(cats = list("0_18" = 0:18), bord
 Let's create a map without the Oslo inset, combine it with the age distribution data and plot it on top of a map of the world cropped to just Scandinavia. So for this we load another data frame and use `left_join` to merge the age distribution data into one data frame. The `{ggmap}` package has a map of the entire world, which we'll use. To avoid awkward overlap, we'll plot everything except Norway from that world map (since we'll have our own better map to use instead). We'll set the `fill` to proportion of the population under the age of 18 and set similar style elements to make the figure look nicer. I used the extremities we extracted earlier as a guideline, but we can play around with the crop of the map to get something that works best.
 
 ``` r
-splmaps::nor_nuts3_map_b2020_default_dt %>%
+nor_nuts3_map_b2020_default_dt %>%
   left_join(age_data, by = "location_code") %>% 
   ggplot(aes(x = long, y = lat, group = group)) +
   geom_polygon(data = map_data("world") %>% filter(region != "Norway"), 
@@ -228,7 +219,10 @@ splmaps::nor_nuts3_map_b2020_default_dt %>%
         legend.text = element_text(size = 6))
 ```
 
-<img src="index_files/figure-gfm/age-plot-1.png" width="768" />
+    Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+    ℹ Please use `linewidth` instead.
+
+<img src="index.markdown_strict_files/figure-markdown_strict/age-plot-1.png" width="768" />
 
 ## Geocoding
 
@@ -286,7 +280,7 @@ map_df %>%
         legend.key.height = unit(10,"pt"))
 ```
 
-<img src="index_files/figure-gfm/plot-w-cities-1.png" width="768" />
+<img src="index.markdown_strict_files/figure-markdown_strict/plot-w-cities-1.png" width="768" />
 
 ## Combine the map with other data
 
@@ -312,7 +306,7 @@ print(area_use)
      8 3011 Hvaler                             2.31                              5.79                                                 0.65                                              0.34                                        0.04                                             0.02                                        0.03                                                                1.96                                     0                                           0.29                                                   0.19                        4.76             34.0                       5.65              0.16                                      33.5                                      0                    0.21                                        0
      9 3012 Aremark                            0.64                              0.73                                                 0.8                                               0.31                                        0.02                                             0.01                                        0.03                                                                3.35                                     0                                           0.16                                                   0.14                       20.9             245.                        0.94              7.24                                       0.02                                     0                   38.6                                         0
     10 3013 Marker                             1.38                              0.58                                                 1.68                                              0.52                                        0.03                                             0.02                                        0.05                                                                5.38                                     0.01                                        0.14                                                   0.34                       40.0             305.                        1.71             10.5                                        0.04                                     0                   46.0                                         0
-    # … with 346 more rows
+    # ℹ 346 more rows
 
 You can see there's 356 rows, each representing a different kommune in Norway. The columns here represent the surface area (in km<sup>2</sup>) with different designations (e.g. forest, health services, agriculture etc.). All data here is from 2021. Now, kommunes have different sizes, so I want to get the designations of interest as percentages of total area in the kommune. Here I assumed that the sum of all designations is equal to the total size of each kommune. I also want to extract the kommune number, since we'll use that to merge this data frame with the map later. The kommune number needs to be 4 digits, so we need to add a leading 0 in some instances. Then we'll create the `location_code` column which will match the `location_code` column in the data frame from `{splmaps}`. Then we'll calculate the percentage land use for different designations. Here I'm just interested in *"bare rock, gravel, and blockfields"*, *"wetland*, *"forest"*, and *"Open firm ground"*.
 
@@ -333,7 +327,7 @@ area_use <- area_use %>%
 
     Rows: 356
     Columns: 27
-    $ region                                                              <chr> "0301 Oslo municipality", "1101 Eigersund", "1103 Stavanger", "1106 Haugesund", "1108 Sandnes", "1111 Sokndal", "1112 Lund", "1114 Bjerkreim", "1119 H\xe5", "1120 Klepp", "1121 Time", "1122 Gjesdal", "1124 Sola", "1127 Randaberg", "1130 Strand", "1133 Hjelmeland", "1134 Suldal", "1135 Sauda", "1144 Kvits\xf8y", "1145 Bokn", "1146 Tysv\xe6r", "1149 Karm\xf8y", "1151 Utsira", "1160 Vindafjord", "1505 Kristiansund", "1506 Molde", "1507 \xc5lesund", "1511 Vanylven", "1514 Sande (M\U{803782f}g Romsdal)", "1515 Her\U{8039a0d}\U{803782f}g Romsdal)", "1516 Ulstein", "1517 Hareid", "1520 \xd8rsta", "1525 Stranda", "1528 Sykkylven", "1531 Sula", "1532 Giske", "1535 Vestnes", "1539 Rauma", "1547 Aukra", "1554 Aver\xf8y", "1557 Gjemnes", "1560 Tingvoll", "1563 Sunndal", "1566 Surnadal", "1573 Sm\xf8la", "1576 Aure", "1577 Volda", "1578 Fjord", "1579 Hustadvika", "1804 Bod\xf8", "1806 Narvik", "1811 Bindal", "1812 S\xf8m…
+    $ region                                                              <chr> "0301 Oslo municipality", "1101 Eigersund", "1103 Stavanger", "1106 Haugesund", "1108 Sandnes", "1111 Sokndal", "1112 Lund", "1114 Bjerkreim", "1119 H\xe5", "1120 Klepp", "1121 Time", "1122 Gjesdal", "1124 Sola", "1127 Randaberg", "1130 Strand", "1133 Hjelmeland", "1134 Suldal", "1135 Sauda", "1144 Kvits\xf8y", "1145 Bokn", "1146 Tysv\xe6r", "1149 Karm\xf8y", "1151 Utsira", "1160 Vindafjord", "1505 Kristiansund", "1506 Molde", "1507 \xc5lesund", "1511 Vanylven", "1514 Sande (M\xf8re og Romsdal)", "1515 Her\xf8y (M\xf8re og Romsdal)", "1516 Ulstein", "1517 Hareid", "1520 \xd8rsta", "1525 Stranda", "1528 Sykkylven", "1531 Sula", "1532 Giske", "1535 Vestnes", "1539 Rauma", "1547 Aukra", "1554 Aver\xf8y", "1557 Gjemnes", "1560 Tingvoll", "1563 Sunndal", "1566 Surnadal", "1573 Sm\xf8la", "1576 Aure", "1577 Volda", "1578 Fjord", "1579 Hustadvika", "1804 Bod\xf8", "1806 Narvik", "1811 Bindal", "1812 S\xf8mna", "181…
     $ area_2021_residential_areas                                         <dbl> 51.53, 3.58, 19.28, 7.30, 11.90, 1.15, 1.03, 0.70, 3.66, 3.45, 3.49, 2.23, 4.70, 1.71, 3.75, 0.81, 1.25, 1.54, 0.12, 0.34, 3.48, 12.53, 0.07, 2.98, 4.78, 7.88, 15.66, 1.22, 0.82, 3.00, 2.17, 1.50, 2.92, 1.30, 2.15, 2.69, 2.29, 2.86, 1.96, 1.86, 2.26, 0.83, 1.37, 2.07, 2.11, 0.88, 1.28, 2.53, 0.75, 4.79, 8.31, 5.79, 0.56, 0.65, 2.56, 0.63, 0.20, 0.86, 2.10, 0.85, 3.50, 0.56, 0.57, 0.71, 0.76, 1.69, 7.11, 0.88, 0.19, 0.63, 2.97, 1.04, 0.47, 1.82, 3.82, 0.75, 1.02, 0.77, 0.58, 0.25, 0.29, 0.64, 5.09, 2.41, 2.97, 1.29, 1.85, 3.32, 2.06, 0.45, 1.38, 9.61, 10.41, 13.98, 19.91, 18.35, 7.68, 11.00, 2.31, 0.64, 1.38, 13.26, 1.31, 2.95, 2.67, 1.93, 4.30, 11.79, 4.68, 3.60, 5.70, 22.83, 25.10, 7.36, 3.31, 3.23, 5.76, 15.38, 5.24, 1.92, 7.53, 7.49, 8.37, 4.31, 1.38, 2.35, 0.56, 1.50, 1.81, 0.83, 1.66, 1.98, 1.42, 1.09, 5.35, 6.29, 6.06, 1.11, 0.50, 0.95, 2.39, 3.30, 6.35, 7.93, 7.19, 10.47, 13.54, 3.07, 8.24, 2.52, 3.89…
     $ area_2021_recreational_facilities                                   <dbl> 1.12, 1.20, 1.87, 0.21, 2.85, 0.26, 0.50, 0.67, 0.43, 0.13, 0.04, 0.66, 0.30, 0.14, 1.61, 1.02, 1.64, 0.92, 0.07, 0.18, 1.74, 0.80, 0.05, 1.31, 0.47, 1.62, 1.83, 0.31, 0.17, 0.35, 0.22, 0.13, 0.64, 0.72, 0.68, 0.15, 0.10, 0.63, 1.09, 0.11, 0.52, 0.67, 1.16, 0.67, 1.43, 0.50, 1.39, 0.63, 0.76, 0.80, 2.53, 3.45, 0.42, 0.28, 0.79, 0.44, 0.18, 0.58, 0.50, 0.50, 0.81, 0.71, 0.64, 0.38, 0.39, 0.93, 1.60, 0.85, 0.05, 0.55, 0.83, 1.76, 0.59, 1.06, 1.03, 0.61, 0.90, 0.59, 0.61, 0.05, 0.06, 0.15, 0.81, 0.67, 0.68, 0.75, 0.42, 0.66, 0.50, 0.10, 1.37, 1.85, 1.86, 2.95, 5.14, 1.17, 2.23, 3.99, 5.79, 0.73, 0.58, 1.42, 0.41, 0.29, 1.19, 0.42, 2.02, 0.52, 0.57, 4.12, 1.68, 0.83, 4.51, 1.47, 0.13, 1.02, 0.02, 0.69, 0.53, 0.06, 0.10, 0.66, 0.67, 0.30, 0.69, 1.00, 2.64, 3.65, 3.06, 2.30, 3.08, 7.11, 4.51, 1.56, 0.57, 0.53, 0.32, 3.26, 2.13, 3.73, 0.31, 1.26, 1.46, 0.74, 1.62, 0.86, 7.62, 1.36, 0.90, 0.86, 0.65, 0.82, 0.84, 0.7…
     $ area_2021_built_up_areas_for_agriculture_and_fishing                <dbl> 0.64, 1.26, 3.51, 0.33, 3.58, 0.54, 0.89, 1.22, 4.21, 4.36, 2.28, 1.03, 1.91, 1.07, 1.29, 1.41, 1.48, 0.39, 0.09, 0.27, 2.25, 2.12, 0.03, 3.02, 0.30, 3.22, 3.33, 1.26, 0.57, 0.78, 0.39, 0.60, 2.15, 0.93, 1.04, 0.29, 0.82, 1.51, 1.78, 0.33, 1.32, 1.27, 1.14, 1.28, 1.96, 0.81, 1.37, 2.14, 1.02, 3.73, 1.65, 1.21, 0.71, 0.89, 1.13, 0.42, 0.26, 0.18, 0.70, 1.00, 1.68, 0.49, 0.74, 0.62, 0.37, 1.27, 1.53, 0.26, 0.03, 0.25, 0.76, 0.33, 0.55, 1.26, 0.75, 0.62, 1.04, 0.29, 0.49, 0.07, 0.15, 0.24, 0.78, 0.67, 1.14, 0.32, 0.36, 1.35, 1.03, 0.12, 0.75, 2.51, 1.59, 3.49, 3.05, 1.26, 2.38, 4.18, 0.65, 0.80, 1.68, 8.58, 1.33, 3.52, 1.62, 1.41, 1.35, 1.49, 1.38, 0.73, 0.49, 1.09, 2.42, 3.81, 0.16, 1.08, 0.30, 4.10, 0.81, 0.60, 2.66, 4.79, 2.72, 1.97, 0.63, 1.01, 0.63, 1.34, 1.75, 0.84, 2.15, 1.15, 2.14, 0.81, 2.82, 2.39, 2.67, 1.53, 1.12, 1.44, 0.81, 1.53, 3.41, 1.95, 2.40, 3.56, 7.60, 2.30, 3.70, 2.11, 2.62, 2.44, 2.84, 4.2…
@@ -364,7 +358,7 @@ area_use <- area_use %>%
 Then the next step is very similar to what we've done before. We'll use `left_join` to merge the data frame containing the land use variables with the data frame containing the map with the kommune borders. I want to plot the four designations of interest in one figure, so I'll transform the plot to a long format using `pivot_longer`. Then I'll create a new label with nicer descriptions of the designations, and then the rest is similar to before. We'll facet the plot based on the designation:
 
 ``` r
-splmaps::nor_lau2_map_b2020_split_dt %>%
+nor_lau2_map_b2020_split_dt %>%
   left_join(area_use, by = "location_code") %>% 
   pivot_longer(cols = starts_with("perc"), names_to = "land_type", values_to = "percentage") %>% 
   mutate(land_type_label = case_when(str_detect(land_type, "rocks") ~ "Bare rock, gravel and rockfields",
@@ -386,7 +380,7 @@ splmaps::nor_lau2_map_b2020_split_dt %>%
                                               margin = margin(10,0,10,0, "pt")))
 ```
 
-<img src="index_files/figure-gfm/plot-kommune-faceted-1.png" width="768" />
+<img src="index.markdown_strict_files/figure-markdown_strict/plot-kommune-faceted-1.png" width="768" />
 
 ## Oslo
 
@@ -435,17 +429,17 @@ print(bydel_data)
 `{splmaps}` also provides a very useful data frame containing the geographical center or best location to put a label to avoid overlap and make it as clear as possible which label corresponds to which bydel. So we'll merge those two together.
 
 ``` r
-bydel_centres <- splmaps::oslo_ward_position_geolabels_b2020_default_dt %>%
+bydel_centres <- oslo_ward_position_geolabels_b2020_default_dt %>%
   inner_join(bydel_data, by = "location_code")
 ```
 
 Then we'll create the final plot. This will be more-or-less identical to what we did before.
 
 ``` r
-splmaps::oslo_ward_map_b2020_default_dt %>%
+oslo_ward_map_b2020_default_dt %>%
   left_join(bydel_data, by = "location_code") %>% 
   ggplot(aes(x = long, y = lat, group = group)) +
-  geom_polygon(aes(color = pop_density, fill = pop_density), size = 1.5) + 
+  geom_polygon(aes(color = pop_density, fill = pop_density)) + 
   geom_label(data = bydel_centres, aes(label = borough, group = 1), alpha = 0.5, label.size = 0) + 
   labs(fill = "N<sup>o</sup> of inhabitants per km<sup>2</sup>") + 
   scico::scale_color_scico(palette = "turku", limits = c(0,1.5e4), guide = "none") +
@@ -458,7 +452,7 @@ splmaps::oslo_ward_map_b2020_default_dt %>%
         legend.direction = "horizontal")
 ```
 
-<img src="index_files/figure-gfm/plot-oslo-1.png" width="768" />
+<img src="index.markdown_strict_files/figure-markdown_strict/plot-oslo-1.png" width="768" />
 
 **BONUS**
 
@@ -467,7 +461,7 @@ An example of when you might use the `sf` data format is in interactive maps. He
 ``` r
 library(leaflet)
 
-map_sf <- splmaps::nor_nuts3_map_b2020_default_sf %>%
+map_sf <- nor_nuts3_map_b2020_default_sf %>%
   sf::st_as_sf() %>% 
   left_join(county_names, by = "location_code")
 
@@ -485,12 +479,10 @@ map_sf %>%
   )
 ```
 
-<div style="text-align:center">
-
-<iframe seamless src="leafMap.html" width="80%" height="500" frameBorder="0" style="padding-top: 1em;">
+<iframe seamless src="leafMap.html" width="100%" height="500" frameBorder="0" style="padding-top: 1em;">
 </iframe>
-
-</div>
 
 **EDIT (2022-09-04)**: Updated the blogpost to replace usage of the retiring `{fhimaps}` and `{fhidata}` packages with the newer `{splmaps}` and `{spldata}` packages from FHI. The `{fhidata}` package included a dataset on vaccination rates in Norway, but since this isn't incorporated in the new `{spldata}` package I replaced that plot with a plot about age distribution.
 In addition, I also replaced all usage of the NORMENT internal `{normentR}` package with the `{scico}` package which is available on CRAN.
+
+**EDIT (2023-06-11)**: Updated the blogpost to fix the broken links due to the deprecation of the `{spldata}` package.

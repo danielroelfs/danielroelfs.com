@@ -12,6 +12,8 @@ tags:
 description: "The Easier Way to Create a Map of Norway Using {splmaps}"
 thumbnail: images/avatar.png
 format: hugo
+editor_options:
+  chunk_output_type: console
 execute:
   fig.retina: 2
   fig.align: center
@@ -34,17 +36,17 @@ background-color: #93b8c8
 
 p.warning {
 border-radius: 5px; 
-background-color: #acc8d4; 
+background-color: #f57a95; 
 padding: 1em;
 }
 
 p.warning code {
-background-color: #93b8c8
+background-color: #f25476
 }
 ```
 
 <p class="warning">
-As of March 2023 <code>{splmaps}</code> is no longer supported. This post will in due time be updated with a new solution when I have the time.
+As of March 2023 <code>{splmaps}</code> is no longer supported. In the meantime I've saved the data that <code>{splmaps}</code> uses in a <code>{.RData}</code> file that you can download [here](https://github.com/danielroelfs/danielroelfs.com/tree/main/content/blog/2021-easy-map-norway/). Maybe in the future I'll have the time to find a more sophisticated solution. This post will in due time be updated with a new solution when I have the time.
 </p>
 
 <p class="announcement">This post was updated to include the new <code>{splmaps}</code> package since the <code>{fhimaps}</code> and <code>{fhidata}</code> package will no longer receive updates. Practically, these apps will behave the same way. Installation instructions for the <code>{splmaps}</code> and <code>{spldata}</code> packages can be found <a href="https://docs.sykdomspulsen.no/packages.html">here</a>.</p>
@@ -79,6 +81,7 @@ So let's have a look at what's included. You'll see that nearly all maps come in
 
 ```{r}
 #| label: print-map-list
+#| eval: false
 
 data(package = "splmaps") %>% 
   pluck("results") %>% 
@@ -87,14 +90,31 @@ data(package = "splmaps") %>%
   print(n = 18)
 ```
 
+<p class="warning">
+The code above is deprecated. I'll leave it here for now, but the code chunk below will load the data into the workspace.
+</p>
+
+```{r}
+#| label: load-rdata
+
+load("splmaps_data.RData")
+
+ls()[seq(10)]
+```
+
+
 A comprehensive version of this list is also included in the [reference](https://docs.sykdomspulsen.no/splmaps/reference/index.html) for this package.
 
 So let's have a look at one of those maps. For instance the one with the new fylker from 2020 with an inset of Oslo.
 
+<p class="warning">
+When the <code>{splmaps}</code> package was not deprecated yet, all data used in the <code>{splmaps}</code> package could be accessed using the <code>::</code> operator like <code>splmaps::<data></code>. Now we can simply refer to the variable of the same name in the workspace from the file that we loaded earlier.
+</p>
+
 ```{r}
 #| label: load-map
 
-map_df <- splmaps::nor_nuts3_map_b2020_insert_oslo_dt %>% 
+map_df <- nor_nuts3_map_b2020_insert_oslo_dt %>% 
   glimpse()
 ```
 
@@ -112,7 +132,7 @@ Now let's convert the awkward county numbers to the actual names of the fylker. 
 ```{r}
 #| label: fylke-names
 
-county_names <- spldata::nor_locations_names(border = 2020) %>% 
+county_names <- nor_locations_names_2020 %>% 
   filter(str_detect(location_code, "^county")) %>%
   distinct(location_code, location_name)
 
@@ -170,7 +190,7 @@ Let's also combine the map with some actual data. The `{spldata}` package contai
 ```{r}
 #| label: get-age-data
 
-age_data <- spldata::nor_population_by_age_cats(cats = list("0_18" = 0:18), border = 2020) %>%
+age_data <- nor_population_by_age_cats_2020 %>%
   filter(str_detect(location_code, "^county"), 
          calyear == max(calyear)) %>%
   pivot_wider(id_cols = location_code, names_from = age, values_from = pop_jan1_n) %>%
@@ -183,7 +203,7 @@ Let's create a map without the Oslo inset, combine it with the age distribution 
 ```{r}
 #| label: age-plot
 
-splmaps::nor_nuts3_map_b2020_default_dt %>%
+nor_nuts3_map_b2020_default_dt %>%
   left_join(age_data, by = "location_code") %>% 
   ggplot(aes(x = long, y = lat, group = group)) +
   geom_polygon(data = map_data("world") %>% filter(region != "Norway"), 
@@ -310,7 +330,7 @@ Then the next step is very similar to what we've done before. We'll use `left_jo
 ```{r}
 #| label: plot-kommune-faceted
 
-splmaps::nor_lau2_map_b2020_split_dt %>%
+nor_lau2_map_b2020_split_dt %>%
   left_join(area_use, by = "location_code") %>% 
   pivot_longer(cols = starts_with("perc"), names_to = "land_type", values_to = "percentage") %>% 
   mutate(land_type_label = case_when(str_detect(land_type, "rocks") ~ "Bare rock, gravel and rockfields",
@@ -364,7 +384,7 @@ print(bydel_data)
 ```{r}
 #| label: merge-bydel-labels
 
-bydel_centres <- splmaps::oslo_ward_position_geolabels_b2020_default_dt %>%
+bydel_centres <- oslo_ward_position_geolabels_b2020_default_dt %>%
   inner_join(bydel_data, by = "location_code")
 ```
 
@@ -373,10 +393,10 @@ Then we'll create the final plot. This will be more-or-less identical to what we
 ```{r}
 #| label: plot-oslo
 
-splmaps::oslo_ward_map_b2020_default_dt %>%
+oslo_ward_map_b2020_default_dt %>%
   left_join(bydel_data, by = "location_code") %>% 
   ggplot(aes(x = long, y = lat, group = group)) +
-  geom_polygon(aes(color = pop_density, fill = pop_density), size = 1.5) + 
+  geom_polygon(aes(color = pop_density, fill = pop_density)) + 
   geom_label(data = bydel_centres, aes(label = borough, group = 1), alpha = 0.5, label.size = 0) + 
   labs(fill = "N<sup>o</sup> of inhabitants per km<sup>2</sup>") + 
   scico::scale_color_scico(palette = "turku", limits = c(0,1.5e4), guide = "none") +
@@ -400,7 +420,7 @@ An example of when you might use the `sf` data format is in interactive maps. He
 
 library(leaflet)
 
-map_sf <- splmaps::nor_nuts3_map_b2020_default_sf %>%
+map_sf <- nor_nuts3_map_b2020_default_sf %>%
   sf::st_as_sf() %>% 
   left_join(county_names, by = "location_code")
 
@@ -439,7 +459,9 @@ map <- map_sf %>%
 htmlwidgets::saveWidget(map, str_glue("{here::here('content','blog','2021-easy-map-norway')}/leafMap.html"))
 ```
 
-<div style="text-align:center"><iframe seamless src="leafMap.html" width="80%" height="500" frameBorder="0" style="padding-top: 1em;"></iframe></div>
+<div style="text-align:center"><iframe seamless src="leafMap.html" width="100%" height="500" frameBorder="0" style="padding-top: 1em;"></iframe></div>
 
 **EDIT (2022-09-04)**: Updated the blogpost to replace usage of the retiring `{fhimaps}` and `{fhidata}` packages with the newer `{splmaps}` and `{spldata}` packages from FHI. The `{fhidata}` package included a dataset on vaccination rates in Norway, but since this isn't incorporated in the new `{spldata}` package I replaced that plot with a plot about age distribution. 
 In addition, I also replaced all usage of the NORMENT internal `{normentR}` package with the `{scico}` package which is available on CRAN.
+
+**EDIT (2023-06-11)**: Updated the blogpost to fix the broken links due to the deprecation of the `{spldata}` package.

@@ -153,9 +153,8 @@ See the website for my photography here: photography.danielroelfs.com
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/publications/</guid>
-      <description>Selection of publications. For a full list see my Google Scholar profile.
-  PREPRINT D Roelfs, O Frei, D van der Meer, E Tissink, A Shadrin, D Alnæs, OA Andreassen, LT Westlye, T Kaufmann (2022) Shared genetic architecture between mental health and the brain functional connectome in the UK Biobank. medRxiv. doi: 10.1101/2022.06.24.22276846
-  D van der Meer, T Kaufmann, AA Shadrin, C Makowski, O Frei, D Roelfs, J Monereo Sanchez, DEJ Linden, J Rokicki, D Alnæs, C de Leeuw, WK Thompson, R Loughnan, C Chieh Fan, PM Thompson, LT Westlye, OA Andreassen, AM Dale (2022) The genetic architecture of human cortical folding.</description>
+      <description>ul li p, ul li a { font-size: 80%; line-height: 1.4; }  Selection of publications. For a full list see my Google Scholar profile.
+  NB Slapø, KN Jørgensen, T Elvsåshagen, S Nerland, D Roelfs, M Valstad, CMF Timpe, G Richard, D Beck, LS Sæther, MCF Werner, TV Lagerberg, OA Andreassen, I Melle, I Agartz, LT Westlye, T Moberget, EG Jönsson (2023) Relationship between function and structure in the visual cortex in healthy individuals and in patients with severe mental disorders.</description>
     </item>
     
   </channel>

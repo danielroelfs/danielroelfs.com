@@ -105,27 +105,31 @@
 
     <style type="text/css">
 p.announcement {
-border-radius: 5px; 
-background-color: #acc8d4; 
-padding: 1em;
+  border-radius: 5px; 
+  background-color: #acc8d4; 
+  padding: 1em;
 }
 
 p.announcement code {
-background-color: #93b8c8
+  background-color: #93b8c8;
 }
 
 p.warning {
-border-radius: 5px; 
-background-color: #f57a95; 
-padding: 1em;
+  border-radius: 5px; 
+  background-color: #f57a95; 
+  padding: 1em;
 }
 
 p.warning code {
-background-color: #f25476
+  background-color: #f25476;
+}
+
+p.warning a {
+  color: #850a25;
 }
 </style>
 <p class="warning">
-As of March 2023 <code>{splmaps}</code> is no longer supported. In the meantime I've saved the data that <code>{splmaps}</code> uses in a <code>{.RData}</code> file that you can download [here](https://github.com/danielroelfs/danielroelfs.com/tree/main/content/blog/2021-easy-map-norway/). Maybe in the future I'll have the time to find a more sophisticated solution. This post will in due time be updated with a new solution when I have the time.
+As of March 2023 <code>{splmaps}</code> is no longer supported. In the meantime I've saved the data that <code>{splmaps}</code> uses in a <code>{.RData}</code> file that you can download <a href='https://github.com/danielroelfs/danielroelfs.com/tree/main/content/blog/2021-easy-map-norway/'>here</a>. Maybe in the future I'll have the time to find a more sophisticated solution. This post will in due time be updated with a new solution when I have the time.
 </p>
 <p class="announcement">
 This post was updated to include the new <code>{splmaps}</code> package since the <code>{fhimaps}</code> and <code>{fhidata}</code> package will no longer receive updates. Practically, these apps will behave the same way. Installation instructions for the <code>{splmaps}</code> and <code>{spldata}</code> packages can be found <a href="https://docs.sykdomspulsen.no/packages.html">here</a>.

@@ -13,7 +13,7 @@
       <pubDate>Tue, 24 Aug 2021 00:00:00 +0000</pubDate>
       
       <guid>/blog/the-easier-way-to-create-a-map-of-norway-using-splmaps/</guid>
-      <description>p.announcement { border-radius: 5px; background-color: #acc8d4; padding: 1em; } p.announcement code { background-color: #93b8c8 } p.warning { border-radius: 5px; background-color: #f57a95; padding: 1em; } p.warning code { background-color: #f25476 }  As of March 2023 {splmaps} is no longer supported. In the meantime I&#39;ve saved the data that {splmaps} uses in a {.RData} file that you can download [here](https://github.com/danielroelfs/danielroelfs.com/tree/main/content/blog/2021-easy-map-norway/). Maybe in the future I&#39;ll have the time to find a more sophisticated solution.</description>
+      <description>p.announcement { border-radius: 5px; background-color: #acc8d4; padding: 1em; } p.announcement code { background-color: #93b8c8; } p.warning { border-radius: 5px; background-color: #f57a95; padding: 1em; } p.warning code { background-color: #f25476; } p.warning a { color: #850a25; }  As of March 2023 {splmaps} is no longer supported. In the meantime I&#39;ve saved the data that {splmaps} uses in a {.RData} file that you can download here. Maybe in the future I&#39;ll have the time to find a more sophisticated solution.</description>
     </item>
     
   </channel>

@@ -327,7 +327,7 @@ nor_municip_map_b2020_split_dt |>
 
 ## Oslo
 
-The last thing I want to show is a map of Oslo! I haven't been able to find a JSON file of the bydeler (boroughs) of Oslo. `{csmaps}` does contain a detailed map of the bydeler at higher resolution than the large map of the municipalities or counties. Now, these bydeler are again coded and `{csdata}` doesn't contain a data frame with the corresponding names, so we'll have to find it ourselves. Luckily there's a Wikipedia page with Oslo's bydeler which contains a table with the bydel numbers, the names, and some data we can use for visualization. We'll extract the table from the website using `{rvest}`, do some data wrangling and prepare it for merging into the data frame with the map. I won't go into the wrangling much here, we're interested mainly in the plotting of the data right now.
+The last thing I want to show is a map of Oslo! `{csmaps}` contains a detailed map of the bydeler that we will use. Now, these bydeler are again coded and `{csdata}` (since it's update) now contains a [data frame](https://www.csids.no/csmaps/articles/customization.html#add-location-name-for-ward-and-population-for-oslo-map) with the corresponding names for all geography levels (fylker, municipalities, bydeler, etc.). We could get our data from there, but we also need something to visualize so we'll scrape a Wikipedia article for Oslo's bydeler which contains a table with the bydel numbers, the names, and some data we can use for visualization. We'll extract the table from the website using `{rvest}`, do some data wrangling and prepare it for merging into the data frame with the map. I won't go into the wrangling much here, we're interested mainly in the plotting of the data right now.
 
 ```{r}
 #| label: scrape-bydel-names
@@ -356,7 +356,6 @@ print(bydel_data)
 
 ```{r}
 #| label: merge-bydel-labels
-
 
 bydel_centres <- oslo_ward_position_geolabels_b2020_default_dt |>
   inner_join(bydel_data, by = "location_code")

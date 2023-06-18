@@ -8,12 +8,12 @@
     <language>en</language>
     <lastBuildDate>Tue, 24 Aug 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/map/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>The Easier Way to Create a Map of Norway Using {splmaps}</title>
-      <link>/blog/the-easier-way-to-create-a-map-of-norway-using-splmaps/</link>
+      <title>The Easier Way to Create a Map of Norway Using {csmaps}</title>
+      <link>/blog/the-easier-way-to-create-a-map-of-norway-using-csmaps/</link>
       <pubDate>Tue, 24 Aug 2021 00:00:00 +0000</pubDate>
       
-      <guid>/blog/the-easier-way-to-create-a-map-of-norway-using-splmaps/</guid>
-      <description>p.announcement { border-radius: 5px; background-color: #acc8d4; padding: 1em; } p.announcement code { background-color: #93b8c8; } p.warning { border-radius: 5px; background-color: #f57a95; padding: 1em; } p.warning code { background-color: #f25476; } p.warning a { color: #850a25; }  As of March 2023 {splmaps} is no longer supported. In the meantime I&#39;ve saved the data that {splmaps} uses in a {.RData} file that you can download here. Maybe in the future I&#39;ll have the time to find a more sophisticated solution.</description>
+      <guid>/blog/the-easier-way-to-create-a-map-of-norway-using-csmaps/</guid>
+      <description>p.announcement { border-radius: 5px; background-color: #acc8d4; padding: 1em; } p.announcement code { background-color: #93b8c8; }  As of March 2023 {fhimaps} and {splmaps} are no longer supported due to budget cuts at the institution supporting them. The amazing developers (led by Richard Aubrey White and Chi Zhang) have moved the data and functionality to a new package called {csmaps}. The code below is updated to reflect the changes.  Every now and then you discover a discover a much simpler solution to a problem you spent a lot of time solving.</description>
     </item>
     
   </channel>

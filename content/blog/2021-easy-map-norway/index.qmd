@@ -1,15 +1,15 @@
 ---
-title: The Easier Way to Create a Map of Norway Using {splmaps}
+title: The Easier Way to Create a Map of Norway Using {csmaps}
 author: Daniel Roelfs
 date: "2021-08-24"
-slug: the-easier-way-to-create-a-map-of-norway-using-splmaps
+slug: the-easier-way-to-create-a-map-of-norway-using-csmaps
 categories:
   - ggplot
 tags:
   - ggplot
   - map
   - norway
-description: "The Easier Way to Create a Map of Norway Using {splmaps}"
+description: "The Easier Way to Create a Map of Norway Using {csmaps}"
 thumbnail: images/avatar.png
 format: hugo
 editor_options:
@@ -23,7 +23,7 @@ execute:
 ---
 
 
-```{css echo=FALSE}
+```{css echo=FALSE, label='css'}
 p.announcement {
   border-radius: 5px; 
   background-color: #acc8d4; 
@@ -33,27 +33,11 @@ p.announcement {
 p.announcement code {
   background-color: #93b8c8;
 }
-
-p.warning {
-  border-radius: 5px; 
-  background-color: #f57a95; 
-  padding: 1em;
-}
-
-p.warning code {
-  background-color: #f25476;
-}
-
-p.warning a {
-  color: #850a25;
-}
 ```
 
-<p class="warning">
-As of March 2023 <code>{splmaps}</code> is no longer supported. In the meantime I've saved the data that <code>{splmaps}</code> uses in a <code>{.RData}</code> file that you can download <a href='https://github.com/danielroelfs/danielroelfs.com/tree/main/content/blog/2021-easy-map-norway/'>here</a>. Maybe in the future I'll have the time to find a more sophisticated solution. This post will in due time be updated with a new solution when I have the time.
+<p class="announcement">
+As of March 2023 <code>{fhimaps}</code> and <code>{splmaps}</code> are no longer supported due to budget cuts at the institution supporting them. The amazing developers (led by <a href="https://www.rwhite.no">Richard Aubrey White</a> and <a href="https://andreaczhang.github.io">Chi Zhang</a>) have moved the data and functionality to a new package called <code>{csmaps}</code>. The code below is updated to reflect the changes.
 </p>
-
-<p class="announcement">This post was updated to include the new <code>{splmaps}</code> package since the <code>{fhimaps}</code> and <code>{fhidata}</code> package will no longer receive updates. Practically, these apps will behave the same way. Installation instructions for the <code>{splmaps}</code> and <code>{spldata}</code> packages can be found <a href="https://docs.sykdomspulsen.no/packages.html">here</a>.</p>
 
 ```{r}
 #| label: knitr-opts
@@ -68,15 +52,16 @@ options(width = 999)
 
 Every now and then you discover a discover a much simpler solution to a problem you spent a lot of time solving. This recently happened to me on the topic of creating a map of Norway in R. In this post, I want to go through the process of what I learned.
 
-Previously, I used a JSON file and the `{geojsonio}` package to create a map of Norway and its fylker (counties) in particular. This was a very flexible and robust way of going about this, but also quite cumbersome. This method relies on a high-quality JSON file, meaning, a file that is detailed enough to display everything nicely, but not too detailed that it takes a ton of time and computing power to create a single plot. While I'll still use this method if I need to create a map for places other than Norway, I think I've found a better and easier solution for plotting Norway and the fylker and kommuner in the  [`{splmaps}`](https://docs.sykdomspulsen.no/splmaps/) package. 
+Previously, I used a JSON file and the `{geojsonio}` package to create a map of Norway and its fylker (counties) in particular. This was a very flexible and robust way of going about this, but also quite cumbersome. This method relies on a high-quality JSON file, meaning, a file that is detailed enough to display everything nicely, but not too detailed that it takes a ton of time and computing power to create a single plot. While I'll still use this method if I need to create a map for places other than Norway, I think I've found a better and easier solution for plotting Norway and the fylker and kommuner in the  [`{csmaps}`](https://www.csids.no/csmaps/) package. 
 
-The `{splmaps}` package is created by _Sykdomspulsen_ team at the Norwegian Institute for Public Health ([Folkehelseinstuttet, FHI](https://www.fhi.no)). It's part of a series of packages (which FHI refer to as the "splverse"), which includes a package containing basic FHI data ([`{spldata}`](https://docs.sykdomspulsen.no/spldata/)), one with different disease spread models ([`{spread}`](https://docs.sykdomspulsen.no/spread/)) and a few more. Here I'll dive into the `{splmaps}` package with some help from the `{spldata}` package. I'll also use the `{ggmap}` package to help with some other data and plotting. It's perhaps important to note that `{ggmap}` does contain a map of Norway as a whole, but not of the fylker and kommuner (municipalities), hence the usefulness of the `{splmaps}` package, which contains both. I'll also use `{tidyverse}` and `{ggtext}` as I always do. I won't load `{splmaps}` with the `library()` function, but will use the `::` operator instead since it'll make it easier to navigate the different datasets included.
+The `{csmaps}` package is created by the _Consortium for Statistics in Disease Surveillance_ team. It's part of a series of packages (which they refer to as the "csverse"), which includes a package containing basic health surveillance data ([`{csdata}`](https://www.csids.no/csdata/)), one for real-time analysis in disease surveillance ([`{sc9}`](https://www.csids.no/sc9/)) and a few more. Here I'll dive into the `{csmaps}` package with some help from the `{csdata}` package. I'll also use the `{ggmap}` package to help with some other data and plotting. It's perhaps important to note that `{ggmap}` does contain a map of Norway as a whole, but not of the fylker and kommuner (municipalities), hence the usefulness of the `{csmaps}` package, which contains both. I'll also use `{tidyverse}` and `{ggtext}` as I always do. I won't load `{csmaps}` with the `library()` function, but will use the `::` operator instead since it'll make it easier to navigate the different datasets included.
 
 ```{r}
 #| label: pkgs
 #| warning: false
 
 library(tidyverse)
+library(csmaps)
 library(ggtext)
 library(ggmap)
 ```
@@ -87,38 +72,21 @@ So let's have a look at what's included. You'll see that nearly all maps come in
 #| label: print-map-list
 #| eval: false
 
-data(package = "splmaps") %>% 
-  pluck("results") %>% 
-  as_tibble() %>% 
-  select(Item,Title) %>% 
+data(package = "csmaps") |> 
+  pluck("results") |> 
+  as_tibble() |> 
+  select(Item, Title) |> 
   print(n = 18)
 ```
 
-<p class="warning">
-The code above is deprecated. I'll leave it here for now, but the code chunk below will load the data into the workspace.
-</p>
-
-```{r}
-#| label: load-rdata
-
-load("splmaps_data.RData")
-
-ls()[seq(10)]
-```
-
-
-A comprehensive version of this list is also included in the [reference](https://docs.sykdomspulsen.no/splmaps/reference/index.html) for this package.
+A comprehensive version of this list is also included in the [reference](https://www.csids.no/csmaps/reference/index.html) for this package.
 
 So let's have a look at one of those maps. For instance the one with the new fylker from 2020 with an inset of Oslo.
-
-<p class="warning">
-When the <code>{splmaps}</code> package was not deprecated yet, all data used in the <code>{splmaps}</code> package could be accessed using the <code>::</code> operator like <code>splmaps::<data></code>. Now we can simply refer to the variable of the same name in the workspace from the file that we loaded earlier.
-</p>
 
 ```{r}
 #| label: load-map
 
-map_df <- nor_nuts3_map_b2020_insert_oslo_dt %>% 
+map_df <- nor_county_map_b2020_insert_oslo_dt |> 
   glimpse()
 ```
 
@@ -131,13 +99,13 @@ ggplot(map_df, aes(x = long, y = lat, group = group, fill = location_code)) +
   geom_polygon()
 ```
 
-Now let's convert the awkward county numbers to the actual names of the fylker. The `{spldata}` package has a data frame with codes and names for all the kommuner, fylker, and even regions (Øst, Vest, Nord-Norge etc.). We're only interested in the fylker here, so we'll select the unique location codes and the corresponding location names.
+Now let's convert the awkward county numbers to the actual names of the fylker. The `{csdata}` package has a data frame with codes and names for all the kommuner, fylker, and even regions (Øst, Vest, Nord-Norge etc.). We're only interested in the fylker here, so we'll select the unique location codes and the corresponding location names.
 
 ```{r}
 #| label: fylke-names
 
-county_names <- nor_locations_names_2020 %>% 
-  filter(str_detect(location_code, "^county")) %>%
+county_names <- csdata::nor_locations_names(border = 2020) |> 
+  filter(str_detect(location_code, "^county")) |>
   distinct(location_code, location_name)
 
 print(county_names)
@@ -158,8 +126,8 @@ Let's see what we can make now. We'll add the county names to the large data fra
 ```{r}
 #| label: simple-plot
 
-map_df %>% 
-  left_join(county_names, by = "location_code") %>% 
+map_df |> 
+  left_join(county_names, by = "location_code") |> 
   ggplot(aes(x = long, y = lat, fill = location_name, group = group)) + 
   geom_polygon(key_glyph = "point") + 
   labs(x = NULL,
@@ -189,17 +157,18 @@ str_glue("Range across longitude: {str_c(range(map_df$long), collapse = ', ')}")
 str_glue("Range across latitude: {str_c(range(map_df$lat), collapse = ', ')}")
 ```
 
-Let's also combine the map with some actual data. The `{spldata}` package contains some simple data on age distribution in kommuner and fylker. Let's take the data from the different fylker in the last available year and see what proportion of the total population is younger than 18.
+Let's also combine the map with some actual data. The `{csdata}` package contains some simple data on age distribution in kommuner and fylker. Let's take the data from the different fylker in the last available year and see what proportion of the total population is younger than 18.
 
 ```{r}
 #| label: get-age-data
 
-age_data <- nor_population_by_age_cats_2020 %>%
+age_data <- csdata::nor_population_by_age_cats(border = 2020, cats = list(c(0:18))) |>
   filter(str_detect(location_code, "^county"), 
-         calyear == max(calyear)) %>%
-  pivot_wider(id_cols = location_code, names_from = age, values_from = pop_jan1_n) %>%
-  janitor::clean_names() %>%
-  mutate(proportion = x0_18 / total)
+         calyear == max(calyear)) |>
+  pivot_wider(id_cols = location_code, names_from = age, values_from = pop_jan1_n) |>
+  janitor::clean_names() |>
+  rename(age_0_18 = x000_018) |> 
+  mutate(proportion = age_0_18 / total)
 ```
 
 Let's create a map without the Oslo inset, combine it with the age distribution data and plot it on top of a map of the world cropped to just Scandinavia. So for this we load another data frame and use `left_join` to merge the age distribution data into one data frame. The `{ggmap}` package has a map of the entire world, which we'll use. To avoid awkward overlap, we'll plot everything except Norway from that world map (since we'll have our own better map to use instead). We'll set the `fill` to proportion of the population under the age of 18 and set similar style elements to make the figure look nicer. I used the extremities we extracted earlier as a guideline, but we can play around with the crop of the map to get something that works best.
@@ -207,11 +176,11 @@ Let's create a map without the Oslo inset, combine it with the age distribution 
 ```{r}
 #| label: age-plot
 
-nor_nuts3_map_b2020_default_dt %>%
-  left_join(age_data, by = "location_code") %>% 
+nor_county_map_b2020_default_dt |>
+  left_join(age_data, by = "location_code") |> 
   ggplot(aes(x = long, y = lat, group = group)) +
-  geom_polygon(data = map_data("world") %>% filter(region != "Norway"), 
-               fill = "grey80", color = "grey80", size  = 1) +
+  geom_polygon(data = map_data("world") |> filter(region != "Norway"), 
+               fill = "grey80") +
   geom_polygon(aes(fill = proportion), key_glyph = "point") + 
   labs(fill = "Proportion of the population younger than 18") +
   scico::scale_fill_scico(palette = "devon", limits = c(0.15, 0.31), 
@@ -237,8 +206,8 @@ The `{ggmap}` package also has an incredibly useful function called `mutate_geoc
 #| eval: false
 
 hospitals_df <- tibble(location = c("Ullevål Sykehus, Oslo","Haukeland universitetssjukehus, Bergen","St. Olav, Trondheim",
-                                    "Universitetssykehuset Nord-Norge, Tromsø","Stavanger Universitetssjukehus","Sørlandet Hospital Kristiansand", "Hospital Lillehammer")) %>% 
-  mutate_geocode(location) %>% 
+                                    "Universitetssykehuset Nord-Norge, Tromsø","Stavanger Universitetssjukehus","Sørlandet Hospital Kristiansand", "Hospital Lillehammer")) |> 
+  mutate_geocode(location) |> 
   rename(long = lon)
 ```
 
@@ -272,11 +241,11 @@ Now let's put these on top of the map. We'll use the same map we used earlier. W
 
 set.seed(21)
 
-map_df %>% 
-  left_join(county_names, by = "location_code") %>% 
+map_df |> 
+  left_join(county_names, by = "location_code") |> 
   ggplot(aes(x = long, y = lat, fill = location_name, group = group)) + 
   geom_polygon(key_glyph = "point") + 
-  geom_segment(data = hospitals_df %>% filter(str_detect(location, "Oslo")), 
+  geom_segment(data = hospitals_df |> filter(str_detect(location, "Oslo")), 
                aes(x = long, y = lat, xend = 19.5, yend = 62), inherit.aes = FALSE) +
   geom_point(data = hospitals_df, aes(x = long, y = lat), inherit.aes = FALSE,
              shape = 18, color = "firebrick", size = 4, show.legend = FALSE) +
@@ -304,28 +273,28 @@ Let's take it a step further and now look at how we can combine our map with dat
 #| label: load-area-use
 #| message: false
 
-area_use <- read_delim("Areal.csv", delim = ";", skip = 2) %>%
+area_use <- read_delim("areal.csv", delim = ";", skip = 2) |> 
   janitor::clean_names()
 
 print(area_use)
 ```
 
-You can see there's 356 rows, each representing a different kommune in Norway. The columns here represent the surface area (in km<sup>2</sup>) with different designations (e.g. forest, health services, agriculture etc.). All data here is from 2021. Now, kommunes have different sizes, so I want to get the designations of interest as percentages of total area in the kommune. Here I assumed that the sum of all designations is equal to the total size of each kommune. I also want to extract the kommune number, since we'll use that to merge this data frame with the map later. The kommune number needs to be 4 digits, so we need to add a leading 0 in some instances. Then we'll create the `location_code` column which will match the `location_code` column in the data frame from `{splmaps}`. Then we'll calculate the percentage land use for different designations. Here I'm just interested in _"bare rock, gravel, and blockfields"_, _"wetland_, _"forest"_, and _"Open firm ground"_.
+You can see there's 356 rows, each representing a different kommune in Norway. The columns here represent the surface area (in km<sup>2</sup>) with different designations (e.g. forest, health services, agriculture etc.). All data here is from 2021. Now, kommunes have different sizes, so I want to get the designations of interest as percentages of total area in the kommune. Here I assumed that the sum of all designations is equal to the total size of each kommune. I also want to extract the kommune number, since we'll use that to merge this data frame with the map later. The kommune number needs to be 4 digits, so we need to add a leading 0 in some instances. Then we'll create the `location_code` column which will match the `location_code` column in the data frame from `{csmaps}`. Then we'll calculate the percentage land use for different designations. Here I'm just interested in _"bare rock, gravel, and blockfields"_, _"wetland_, _"forest"_, and _"Open firm ground"_.
 
 ```{r}
 #| label: wrangle-area-use
 
-area_use <- area_use %>% 
+area_use <- area_use |> 
   mutate(total_area = rowSums(across(where(is.numeric))),
          kommune_code = parse_number(region),
          kommune_code = format(kommune_code, digits = 4),
          kommune_code = str_replace_all(kommune_code, " ", "0"),
-         location_code = str_glue("municip{kommune_code}"),
+         location_code = str_glue("municip_nor{kommune_code}"),
          perc_rocks = area_2021_bare_rock_gravel_and_blockfields / total_area,
          perc_wetland = area_2021_wetland / total_area,
          perc_forest = area_2021_forest / total_area,
-         perc_open_ground = area_2021_open_firm_ground / total_area) %>% 
-  arrange(kommune_code) %>% 
+         perc_open_ground = area_2021_open_firm_ground / total_area) |> 
+  arrange(kommune_code) |> 
   glimpse()
 ```
 
@@ -334,13 +303,13 @@ Then the next step is very similar to what we've done before. We'll use `left_jo
 ```{r}
 #| label: plot-kommune-faceted
 
-nor_lau2_map_b2020_split_dt %>%
-  left_join(area_use, by = "location_code") %>% 
-  pivot_longer(cols = starts_with("perc"), names_to = "land_type", values_to = "percentage") %>% 
+nor_municip_map_b2020_split_dt |> 
+  left_join(area_use, by = "location_code") |> 
+  pivot_longer(cols = starts_with("perc"), names_to = "land_type", values_to = "percentage") |> 
   mutate(land_type_label = case_when(str_detect(land_type, "rocks") ~ "Bare rock, gravel and rockfields",
                                      str_detect(land_type, "wetland") ~ "Wetland",
                                      str_detect(land_type, "forest") ~ "Forest",
-                                     str_detect(land_type, "open_ground") ~ "Open firm ground")) %>% 
+                                     str_detect(land_type, "open_ground") ~ "Open firm ground")) |> 
   ggplot(aes(x = long, y = lat, group = group, fill = percentage)) +
   geom_polygon() + 
   labs(fill = "Percentage") +
@@ -358,37 +327,38 @@ nor_lau2_map_b2020_split_dt %>%
 
 ## Oslo
 
-The last thing I want to show is a map of Oslo! I haven't been able to find a JSON file of the bydeler (boroughs) of Oslo. `{splmaps}` does contain a detailed map of the bydeler at higher resolution than the large map of the municipalities or counties. Now, these bydeler are again coded and `{spldata}` doesn't contain a data frame with the corresponding names, so we'll have to find it ourselves. Luckily there's a Wikipedia page with Oslo's bydeler which contains a table with the bydel numbers, the names, and some data we can use for visualization. We'll extract the table from the website using `{rvest}`, do some data wrangling and prepare it for merging into the data frame with the map. I won't go into the wrangling much here, we're interested mainly in the plotting of the data right now.
+The last thing I want to show is a map of Oslo! I haven't been able to find a JSON file of the bydeler (boroughs) of Oslo. `{csmaps}` does contain a detailed map of the bydeler at higher resolution than the large map of the municipalities or counties. Now, these bydeler are again coded and `{csdata}` doesn't contain a data frame with the corresponding names, so we'll have to find it ourselves. Luckily there's a Wikipedia page with Oslo's bydeler which contains a table with the bydel numbers, the names, and some data we can use for visualization. We'll extract the table from the website using `{rvest}`, do some data wrangling and prepare it for merging into the data frame with the map. I won't go into the wrangling much here, we're interested mainly in the plotting of the data right now.
 
 ```{r}
 #| label: scrape-bydel-names
 
-bydel_data <- "https://en.wikipedia.org/wiki/List_of_boroughs_of_Oslo" %>% 
-  rvest::read_html() %>% 
-  rvest::html_table() %>% 
-  pluck(1) %>% 
-  janitor::clean_names() %>% 
+bydel_data <- "https://en.wikipedia.org/wiki/List_of_boroughs_of_Oslo" |> 
+  rvest::read_html() |> 
+  rvest::html_table() |> 
+  pluck(1) |> 
+  janitor::clean_names() |> 
   mutate(inhabitants = str_remove_all(residents, "[[:blank:]]"),
          inhabitants = as.numeric(inhabitants),
          area = str_remove_all(area, "km2"),
          area = str_replace_all(area, ",", "."),
          area = str_squish(area),
          area = as.numeric(area),
-         pop_density = inhabitants / area) %>% 
-  arrange(number) %>% 
+         pop_density = inhabitants / area) |> 
+  arrange(number) |> 
   mutate(bydel_nr = format(number, digits = 2),
          bydel_nr = str_replace_all(bydel_nr, " ", "0"),
-         location_code = str_glue("wardoslo0301{bydel_nr}"))
+         location_code = str_glue("wardoslo_nor0301{bydel_nr}"))
 
 print(bydel_data)
 ```
 
-`{splmaps}` also provides a very useful data frame containing the geographical center or best location to put a label to avoid overlap and make it as clear as possible which label corresponds to which bydel. So we'll merge those two together.
+`{csmaps}` also provides a very useful data frame containing the geographical center or best location to put a label to avoid overlap and make it as clear as possible which label corresponds to which bydel. So we'll merge those two together.
 
 ```{r}
 #| label: merge-bydel-labels
 
-bydel_centres <- oslo_ward_position_geolabels_b2020_default_dt %>%
+
+bydel_centres <- oslo_ward_position_geolabels_b2020_default_dt |>
   inner_join(bydel_data, by = "location_code")
 ```
 
@@ -397,8 +367,8 @@ Then we'll create the final plot. This will be more-or-less identical to what we
 ```{r}
 #| label: plot-oslo
 
-oslo_ward_map_b2020_default_dt %>%
-  left_join(bydel_data, by = "location_code") %>% 
+oslo_ward_map_b2020_default_dt |>
+  left_join(bydel_data, by = "location_code") |> 
   ggplot(aes(x = long, y = lat, group = group)) +
   geom_polygon(aes(color = pop_density, fill = pop_density)) + 
   geom_label(data = bydel_centres, aes(label = borough, group = 1), alpha = 0.5, label.size = 0) + 
@@ -424,13 +394,13 @@ An example of when you might use the `sf` data format is in interactive maps. He
 
 library(leaflet)
 
-map_sf <- nor_nuts3_map_b2020_default_sf %>%
-  sf::st_as_sf() %>% 
+map_sf <- csmaps::nor_county_map_b2020_default_sf |>
+  sf::st_as_sf() |> 
   left_join(county_names, by = "location_code")
 
-map_sf %>% 
-  leaflet() %>% 
-  addProviderTiles(providers$Esri.WorldStreetMap) %>%
+map_sf |> 
+  leaflet() |> 
+  addProviderTiles(providers$Esri.WorldStreetMap) |>
   addPolygons(
     fillColor = unname(county_colors),
     weight = 0.1,
@@ -447,9 +417,9 @@ map_sf %>%
 #| echo: false
 #| eval: false
 
-map <- map_sf %>% 
-  leaflet() %>% 
-  addProviderTiles(providers$Esri.WorldStreetMap) %>%
+map <- map_sf |> 
+  leaflet() |> 
+  addProviderTiles(providers$Esri.WorldStreetMap) |>
   addPolygons(
     fillColor = unname(county_colors),
     weight = 0.1,
@@ -468,4 +438,4 @@ htmlwidgets::saveWidget(map, str_glue("{here::here('content','blog','2021-easy-m
 **EDIT (2022-09-04)**: Updated the blogpost to replace usage of the retiring `{fhimaps}` and `{fhidata}` packages with the newer `{splmaps}` and `{spldata}` packages from FHI. The `{fhidata}` package included a dataset on vaccination rates in Norway, but since this isn't incorporated in the new `{spldata}` package I replaced that plot with a plot about age distribution. 
 In addition, I also replaced all usage of the NORMENT internal `{normentR}` package with the `{scico}` package which is available on CRAN.
 
-**EDIT (2023-06-11)**: Updated the blogpost to fix the broken links due to the deprecation of the `{spldata}` package.
+**EDIT (2023-06-15)**: Updated the blogpost to reflect the deprecation of the `{splmaps}` and `{spldata}` packages. Replaced them with the replacement package `{csmaps}` available on CRAN.

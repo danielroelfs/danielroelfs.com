@@ -455,4 +455,4 @@ map_sf |>
 **EDIT (2022-09-04)**: Updated the blogpost to replace usage of the retiring `{fhimaps}` and `{fhidata}` packages with the newer `{splmaps}` and `{spldata}` packages from FHI. The `{fhidata}` package included a dataset on vaccination rates in Norway, but since this isn't incorporated in the new `{spldata}` package I replaced that plot with a plot about age distribution.
 In addition, I also replaced all usage of the NORMENT internal `{normentR}` package with the `{scico}` package which is available on CRAN.
 
-**EDIT (2023-06-15)**: Updated the blogpost to reflect the deprecation of the `{splmaps}` and `{spldata}` packages. Replaced them with the replacement package `{csmaps}` available on CRAN.
+**EDIT (2023-06-18)**: Updated the blogpost to reflect the deprecation of the `{splmaps}` and `{spldata}` packages. Replaced them with the replacement package `{csmaps}` available on CRAN.

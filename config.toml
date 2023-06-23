@@ -4,7 +4,7 @@ theme = "hugo-coder-portfolio-edit" # Set the theme.
 languagecode = "en" # The site’s language code used to generate RSS.
 defaultcontentlanguage = "en" # The default content language.
 defaultContentLanguageInSubdir = true
-publishDir = "docs"
+publishDir = "public"
 
 paginate = 20 # Default number of pages per page in pagination.
 

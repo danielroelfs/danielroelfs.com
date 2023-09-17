@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>R on Daniel Roelfs</title>
+    <link>/en/tags/r/</link>
+    <description>Recent content in R on Daniel Roelfs</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 17 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="/en/tags/r/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Analysing the NYY Best Sellers list using an API</title>
+      <link>/en/blog/analysing-the-nyt-best-sellers-list-using-an-api/</link>
+      <pubDate>Sun, 17 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/en/blog/analysing-the-nyt-best-sellers-list-using-an-api/</guid>
+      <description>Using an API (an application programming interface) is a very popular tool for data scientists to pull data from a public source. I&amp;rsquo;ve done a bit of web scraping in previous blogposts where I collected data from for example Wikipedia and the Olympian Database. However, I&amp;rsquo;d much prefer using APIs whenever possible, this way the creator has more control of what data they want to share and how it is packaged.</description>
+    </item>
+    
+    <item>
+      <title>Difference in sunset times in Europe</title>
+      <link>/en/blog/difference-in-sunset-times-in-europe/</link>
+      <pubDate>Thu, 06 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/en/blog/difference-in-sunset-times-in-europe/</guid>
+      <description>Today I want to share a project that deals with data scientist&amp;rsquo;s favorite kind of data: date- and timedata involving time zones and daylight savings time. Who doesn&amp;rsquo;t love it?
+This project stems from a discussion I had with my family about living up north in Norway and when the days become longer than in the Netherlands. Intuitively, one might think that because of the prevailing snow and cold in March and occasionally April this corresponds with shorter day length.</description>
+    </item>
+    
+    <item>
+      <title>Everything is a Linear Model</title>
+      <link>/en/blog/everything-is-a-linear-model/</link>
+      <pubDate>Fri, 18 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/en/blog/everything-is-a-linear-model/</guid>
+      <description>Let&amp;rsquo;s imagine you&amp;rsquo;re incredibly lazy and you want to learn R, but you only want to learn one function to do statistics. What function do you learn? I&amp;rsquo;d recommend to learn to use the lm() function. Why? Because most common statistical tests are in fact nothing more than some variation of a linear model, from the simplest One-Sample T-test to a repeated-measures ANOVA. I think most people that have Googled for this question have found Jonas Lindeløv&amp;rsquo;s post on how common statistical tests are linear models (as they should, it&amp;rsquo;s an amazing post).</description>
+    </item>
+    
+    <item>
+      <title>Dutch performance at Olympic speed skating</title>
+      <link>/en/blog/dutch-performance-at-olympic-speed-skating/</link>
+      <pubDate>Wed, 09 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/en/blog/dutch-performance-at-olympic-speed-skating/</guid>
+      <description>The 2022 Winter Olympics started last week. I&amp;rsquo;m don&amp;rsquo;t usually follow sports (of any kind) religiously during a regular year, but I make an exception for the Winter Olympics. In particular the speed skating events I&amp;rsquo;ll watch live as much as time allows me. It&amp;rsquo;s no secret the Netherlands is a speed skating nation (although some international TV commentators don&amp;rsquo;t quite grasp why). Is it fun to watch a sport where you have a high chance of winning?</description>
+    </item>
+    
+    <item>
+      <title>A Basic Comparison Between Factor Analysis, PCA, and ICA</title>
+      <link>/en/blog/a-basic-comparison-between-factor-analysis-pca-and-ica/</link>
+      <pubDate>Tue, 14 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/en/blog/a-basic-comparison-between-factor-analysis-pca-and-ica/</guid>
+      <description>This is just a very quick blog post outlining some of the commonalities and differences between factor analysis (FA), principal component analysis (PCA), and independent component analysis (ICA). I was inspired to write some of this down through some confusion caused in the lab by SPSS&amp;rsquo; apparent dual usage of the term &amp;ldquo;factor analysis&amp;rdquo; and &amp;ldquo;principal components&amp;rdquo;. A few of my colleagues who use SPSS showed me the following screen:</description>
+    </item>
+    
+    <item>
+      <title>Running an ICA on Questionnaires</title>
+      <link>/en/blog/running-an-ica-on-questionnaires/</link>
+      <pubDate>Sat, 24 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/en/blog/running-an-ica-on-questionnaires/</guid>
+      <description>Introduction If there was a statistics magazine and it were to have ads, the ad for independent component analysis (commonly referred to as the ICA) might read something like this:
+Do you ever find yourself with a large number of highly related variables? Are you interested in studying constructs rather than specific measures? Would you rather work with a small number of variables each capturing a large amount of variance instead of a large number of variables each capturing a small amount of variance?</description>
+    </item>
+    
+    <item>
+      <title>Plotting Star Destroyers in R</title>
+      <link>/en/blog/plotting-star-destroyers-in-r/</link>
+      <pubDate>Fri, 17 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/en/blog/plotting-star-destroyers-in-r/</guid>
+      <description>Introduction Most people in my environment know R as the quintessential tool for statistical analysis and data visualization. There&amp;rsquo;s plenty of tutorials and discussions online about how to go about either. But one important aspect that is noticeably lacking is a discussion about R&amp;rsquo;s ability to simulate scenes from Star Wars. Today, we&amp;rsquo;ll set this straight. At the same time we&amp;rsquo;ll also explore how to incorporate a mathematical formula with a set of simple rules into R.</description>
+    </item>
+    
+    <item>
+      <title>How I Make QQ Plots Using ggplot</title>
+      <link>/en/blog/how-i-make-qq-plots-using-ggplot/</link>
+      <pubDate>Fri, 10 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/en/blog/how-i-make-qq-plots-using-ggplot/</guid>
+      <description>Introduction Whenever I show my colleagues in the genetics group my results, the first things they say are &amp;ldquo;can you show me the Manhattan plots?&amp;rdquo; and &amp;ldquo;can you show me the QQ plots?&amp;rdquo;. I covered how to make Manhattan plots in ggplot before (click here for a link. But now I want to go through how I make QQ plots. I&amp;rsquo;m aware that there&amp;rsquo;s a number of packages available that offer this funcionality, but I feel they&amp;rsquo;re for the most part a bit limiting compared to making the plot yourself using the {ggplot2} package.</description>
+    </item>
+    
+    <item>
+      <title>Analyzing Bach</title>
+      <link>/en/blog/analyzing-bach/</link>
+      <pubDate>Sun, 01 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/en/blog/analyzing-bach/</guid>
+      <description>Introduction A little while ago I was watching a documentary series on Dutch television about one of the most important composers in the Netherlands: Johann Sebastian Bach. The documentary discussed parts of Bach&amp;rsquo;s life and the music he wrote during it. This documentary inspired me to learn more about the pieces Bach wrote, and since this is my life now, I might as well do it in R.
+Collecting the data In my search of a dataset, I found this old website, looking like it last got a major update in 2003, made by what appeared to be a Bach enthousiast called Bryen Travis.</description>
+    </item>
+    
+    <item>
+      <title>How I Create Manhattan Plots Using ggplot</title>
+      <link>/en/blog/how-i-create-manhattan-plots-using-ggplot/</link>
+      <pubDate>Wed, 24 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/en/blog/how-i-create-manhattan-plots-using-ggplot/</guid>
+      <description>Introduction There are many ways to create a Manhattan plot. There&amp;rsquo;s a number of online tools that create Manhattan plots for you, it&amp;rsquo;s implemented in a number of toolboxes that are often used in genetics, and there&amp;rsquo;s a couple of packages for R that can create these plots. However, these options often don&amp;rsquo;t offer the customizability that some people (like me) would want. One of the most flexible ways to plot a Manhattan plot (I know of) is the {manhattan} package, but how nice would it be to have full control over the properties of the plot.</description>
+    </item>
+    
+    <item>
+      <title>How I Plot ERPs in R</title>
+      <link>/en/blog/how-i-plot-erps-in-r/</link>
+      <pubDate>Sat, 30 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/en/blog/how-i-plot-erps-in-r/</guid>
+      <description>Introduction Plotting ERPs is one of the essential skills in EEG neuroscience. There are many possible ways of going about this task, some better than others. Myself, I use either MATLAB or R to plot ERPs. In my experience, MATLAB is by far the preferred method since most of the EEG analysis takes place in MATLAB already, but I believe that there&amp;rsquo;s some merit to using R. One of my main arguments is aesthetics.</description>
+    </item>
+    
+  </channel>
+</rss>

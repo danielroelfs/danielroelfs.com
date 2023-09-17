@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>society on Daniel Roelfs</title>
+    <link>/en/tags/society/</link>
+    <description>Recent content in society on Daniel Roelfs</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 20 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="/en/tags/society/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Visualizing the State of the Amsterdam Housing Market</title>
+      <link>/en/blog/visualizing-the-state-of-the-amsterdam-housing-market/</link>
+      <pubDate>Sun, 20 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/en/blog/visualizing-the-state-of-the-amsterdam-housing-market/</guid>
+      <description>For this post, I decided to hide the code chunks by default to improve legibility. You can click the Show code-button to expand the code. Introduction I&amp;rsquo;m at the age where a lot of my peers start thinking about buying a home. It is a major conversation topic around the office, and these conversations are not often filled with optimism and excitement. Oslo is a notoriously expensive city to live in, and the housing market is very tough.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,5 +1,5 @@
 ---
-title: "Analysing the NYY Best Sellers list using an API"
+title: "Analysing the NYT Best Sellers list using an API"
 author: Daniel Roelfs
 date: "2023-09-17"
 slug: analysing-the-nyt-best-sellers-list-using-an-api
@@ -8,7 +8,7 @@ categories:
 tags:
   - Python
   - R
-description: "Analysing the NYY Best Sellers list using an API"
+description: "Analysing the NYT Best Sellers list using an API"
 format: hugo
 execute:
   fig.retina: 2

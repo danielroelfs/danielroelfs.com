@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ggplot on Daniel Roelfs</title>
+    <link>/en/categories/ggplot/</link>
+    <description>Recent content in ggplot on Daniel Roelfs</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 24 Aug 2021 00:00:00 +0000</lastBuildDate><atom:link href="/en/categories/ggplot/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Easier Way to Create a Map of Norway Using {csmaps}</title>
+      <link>/en/blog/the-easier-way-to-create-a-map-of-norway-using-csmaps/</link>
+      <pubDate>Tue, 24 Aug 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/en/blog/the-easier-way-to-create-a-map-of-norway-using-csmaps/</guid>
+      <description>As of March 2023 {fhimaps} and {splmaps} are no longer supported due to budget cuts at the institution supporting them. The amazing developers (led by Richard Aubrey White and Chi Zhang) have moved the data and functionality to a new package called {csmaps}. The code below is updated to reflect the changes. Every now and then you discover a discover a much simpler solution to a problem you spent a lot of time solving.</description>
+    </item>
+    
+  </channel>
+</rss>

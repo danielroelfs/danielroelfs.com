@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Daniel Roelfs">
+    <meta name="description" content="/">
+    <meta name="keywords" content="blog,personal,coding">
+
+    <meta property="og:site_name" content="Daniel Roelfs">
+    <meta property="og:title" content="
+  Analysing the NYY Best Sellers list using an API - Daniel Roelfs
+">
+    <meta property="og:description" content="Analysing the NYY Best Sellers list using an API">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/en/blog/analysing-the-nyt-best-sellers-list-using-an-api/">
+    <meta property="og:image" content="/">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="/en/blog/analysing-the-nyt-best-sellers-list-using-an-api/">
+    <meta name="twitter:image" content="/">
+
+    <base href="/en/blog/analysing-the-nyt-best-sellers-list-using-an-api/">
+    <title>
+  Analysing the NYY Best Sellers list using an API - Daniel Roelfs
+</title>
+
+    <link rel="canonical" href="/en/blog/analysing-the-nyt-best-sellers-list-using-an-api/">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700;1,800;1,900&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500;1,600;1,700;1,900&display=swap" rel="stylesheet">    <link rel="stylesheet" href="/css/style.min.css">
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    
+      <link rel="alternate" href="/en/index.xml" type="application/rss+xml" title="Daniel Roelfs">
+      <link href="/en/index.xml" rel="feed" type="application/rss+xml" title="Daniel Roelfs" />
+    
+
+    
+    <script async src="https://analytics-danielroelfs.netlify.app/script.js" data-website-id="da48a88a-2e87-4024-8c99-639222aab54d"></script>
+    
+
+    <meta name="generator" content="Hugo 0.116.1">
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/en/">Daniel Roelfs</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="/en/blog">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="/en/photography">Photography</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="/en/publications">Publications</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="/en/cv">Curriculum Vitæ</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="/en/about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="post-title">Analysing the NYY Best Sellers list using an API</h1> 
+      <h2 class="date">September 17, 2023</h2>
+
+      
+    </header>
+
+    <p>Using an API (an <em>application programming interface</em>) is a very popular tool for data scientists to pull data from a public source. I&rsquo;ve done a bit of web scraping in previous blogposts where I collected data from for example <a href="https://danielroelfs.com/blog/the-easier-way-to-create-a-map-of-norway-using-csmaps/">Wikipedia</a> and the <a href="https://danielroelfs.com/blog/dutch-performance-at-olympic-speed-skating/">Olympian Database</a>. However, I&rsquo;d much prefer using APIs whenever possible, this way the creator has more control of what data they want to share and how it is packaged. The most common APIs use a <a href="https://aws.amazon.com/what-is/restful-api/#:~:text=RESTful%20API%20is%20an%20interface,applications%20to%20perform%20various%20tasks.">RESTful</a> approach where the interface and communication between you and the server the data is stored on follows a predictable approach and maintains some common standards. Most RESTful APIs return data in JSON format. In this blogpost I want to show you a simple way to interact with a RESTful API through Python and of course we&rsquo;ll do some analyses on the data we collect.</p>
+<p>The API we will be working with here is the <a href="https://developer.nytimes.com/docs/books-product/1/overview">New York Times Books API</a>. This API provides us with access to the current and previous (up to 2008) New York Times Best Sellers lists. It allows ut to download each individual list (both fiction, non-fiction, children&rsquo;s, etc), including ones that are no longer updated (such as the monthly lists on Espionage and Love &amp; Relationships). Let&rsquo;s keep it simple for now and only focus on the main list on fiction, called the <a href="https://www.nytimes.com/books/best-sellers/">Combined Print &amp; E-Book Fiction</a> list which appears as the list on the home page of the Best Sellers webpage.</p>
+<p>Let&rsquo;s first setup our Python environment. We&rsquo;ll use <code>pandas</code> to store the results for easy data wrangling and the <code>numpy</code> module to get access to the <code>np.nan</code> functionality to denote missing values. The <code>requests</code> module deals with the the API calls to the server. We&rsquo;ll get into that. Since the NYT APIs require a personal API key (a key I don&rsquo;t want to share on the internet), I&rsquo;ll store my API key in a &ldquo;secrets&rdquo; file, in this case a <code>.secrets.yml</code> <a href="https://en.wikipedia.org/wiki/YAML">YAML</a> file that easily stores these kinds of data. If you&rsquo;re not familiar with YAML, it&rsquo;s the same format that Hugo, RMarkdown, and Quarto documents use to define settings and parameters. To parse YAML files, we can use the <code>yaml</code> module. We&rsquo;ll also be dealing with a few date formats, so I&rsquo;ll import a few items from the <code>datetime</code> module. Finally, we&rsquo;ll load the <code>time</code> module. Many APIs are &ldquo;rate limited&rdquo; to avoid users from submitting too many requests in a short amount of time and clogging up the server. The <code>time</code> module has a <code>sleep()</code> function that lets us wait a given number of seconds before proceding. This way we can avoid exceeding the API rate limit and interrupting the data collection.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">yaml</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">time</span>
+</span></span></code></pre></div><p>So in proper Python fashion, we&rsquo;ll encapsulate the functions as much as possible. The NYT Books API lets us download historical versions of the Best Seller lists. Therefore, we need first to get a list of dates that we can use for our API request. For this we&rsquo;ll make a simple function that takes the start and end date of the timeframe of interest which we can set by default to provide a list going back 52 weeks from today. As well as the frequency (so that we can more easily and quickly download monthly lists if we wanted to). The exact date Best Seller list was released is not important since the API will return the latest list at the requested date. To generate the date list we&rsquo;ll use a simple <code>pd.date_range()</code> function, and we&rsquo;ll format them in a default string format using a list comprehension and the <code>strftime()</code> function from the <code>datetime</code> module.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">get_list_of_dates</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">start</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">weeks</span><span class="o">=</span><span class="mi">52</span><span class="p">),</span> 
+</span></span><span class="line"><span class="cl">    <span class="n">end</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span> 
+</span></span><span class="line"><span class="cl">    <span class="n">frequency</span><span class="o">=</span><span class="s2">&#34;W&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">):</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">  Generate a list of dates
+</span></span></span><span class="line"><span class="cl"><span class="s2">  &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="n">date_list</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">frequency</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">date_list_str</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&#34;%Y-%m-</span><span class="si">%d</span><span class="s2">&#34;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">date_list</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="n">date_list_str</span>
+</span></span></code></pre></div><p>Now that we have a function that will provide a list of dates, the next ingredient we need is the API key. The NYT Books API requires a personal API key to authenticate your request. Since this key is personal I won&rsquo;t upload it the internet, but instead I stored it in a <code>.secrets.yml</code> file that I put in my <code>.gitignore</code> file to avoid uploading it to GitHub. We&rsquo;ll use the functionality from the <code>yaml</code> module to parse the file. The function will return the API key as a string.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">_get_api_key</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&#34;./.secrets.yml&#34;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">  Get the API key from the secrets file
+</span></span></span><span class="line"><span class="cl"><span class="s2">  &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&#34;r&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">secrets</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">nyt_api_key</span> <span class="o">=</span> <span class="n">secrets</span><span class="p">[</span><span class="s2">&#34;API&#34;</span><span class="p">][</span><span class="s2">&#34;NYT&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="n">nyt_api_key</span>
+</span></span></code></pre></div><p>Now we&rsquo;re ready to generate a single API query. To obtain the list we&rsquo;re interested in, we can follow the template laid out on the <a href="https://developer.nytimes.com/docs/books-product/1/routes/lists/%7Bdate%7D/%7Blist%7D.json/get">NYT Books API documentation</a>. The request starts with a base url (in this case <code>https://api.nytimes.com/svc/books/v3</code>). Then we&rsquo;ll specify both the date and list type, both of which are defined in the input arguments to the <code>generate_request()</code> function. By default we request the &ldquo;fiction&rdquo; list (that defaults to the <code>combined-print-and-e-book-fiction</code> list), providing &ldquo;non-fiction&rdquo; as input to this argument would default to the <code>combined-print-and-e-book-nonfiction</code> list. Any other list needs to use the specific name (we&rsquo;ll get back to that later). Finally, we use the <code>_get_api_key()</code> function we defined earlier to get the last parameter we need to the finalize the query.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">generate_request</span><span class="p">(</span><span class="nb">list</span><span class="o">=</span><span class="s2">&#34;fiction&#34;</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="s2">&#34;current&#34;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">  Generate the API request url
+</span></span></span><span class="line"><span class="cl"><span class="s2">  &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="n">base</span> <span class="o">=</span> <span class="s2">&#34;https://api.nytimes.com/svc/books/v3&#34;</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="nb">list</span> <span class="o">==</span> <span class="s2">&#34;fiction&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">      <span class="n">list_spec</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&#34;/lists/</span><span class="si">{</span><span class="n">date</span><span class="si">}</span><span class="s2">/combined-print-and-e-book-fiction.json&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">elif</span> <span class="nb">list</span> <span class="o">==</span> <span class="s2">&#34;non-fiction&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">      <span class="n">list_spec</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&#34;/lists/</span><span class="si">{</span><span class="n">date</span><span class="si">}</span><span class="s2">/combined-print-and-e-book-nonfiction.json&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">      <span class="n">list_spec</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&#34;/lists/</span><span class="si">{</span><span class="n">date</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">list</span><span class="si">}</span><span class="s2">.json&#34;</span>
+</span></span><span class="line"><span class="cl">      
+</span></span><span class="line"><span class="cl">  <span class="n">nyt_api_key</span> <span class="o">=</span> <span class="n">_get_api_key</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="n">api_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">base</span><span class="si">}{</span><span class="n">list_spec</span><span class="si">}</span><span class="s2">?api-key=</span><span class="si">{</span><span class="n">nyt_api_key</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="n">api_url</span>
+</span></span></code></pre></div><p>Now we get to the part where we actually download some data using the functions we created earlier. We can again define the list we&rsquo;re interested in and the date in the input arguments to this function. These will trickle down to the lower level functions. We first generate the URL by using the <code>generate_request()</code> function. Then we&rsquo;ll use the <code>requests</code> module to obtain the response from the server and get the returned data in a JSON format. The JSON contains a bunch of information, but we&rsquo;re mostly interested in the <code>books</code> part that actually lists the books in order of appearance on the specified list on the specified date. One of the other information that is not in the <code>books</code> field is the <code>published_date</code> field that shows when the list was last updated. We can parse this date so we can include it in the data frame that will be returned in the end. The <code>books</code> field contains some information is not particularly interesting (like the size of the book cover and the buy links shown on the NYT website).</p>
+<p>We&rsquo;ll parse some the data, i.e. make the <code>&quot;title&quot;</code> field title-case, replace zeroes that denote that a book wasn&rsquo;t in the list with <code>np.nan</code>, calculate the difference in ranking between each week, and add the date the list was published. Finally we&rsquo;ll reorder the columns and return a data frame.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">api_request</span><span class="p">(</span><span class="nb">list</span><span class="o">=</span><span class="s2">&#34;fiction&#34;</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="s2">&#34;current&#34;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">  Extract the data from the API
+</span></span></span><span class="line"><span class="cl"><span class="s2">  &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="n">url</span> <span class="o">=</span> <span class="n">generate_request</span><span class="p">(</span><span class="nb">list</span><span class="o">=</span><span class="nb">list</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">json_raw</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="n">nyt_list_json</span> <span class="o">=</span> <span class="n">json_raw</span><span class="p">[</span><span class="s2">&#34;results&#34;</span><span class="p">][</span><span class="s2">&#34;books&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">  <span class="n">list_publish_date</span> <span class="o">=</span> <span class="n">json_raw</span><span class="p">[</span><span class="s2">&#34;results&#34;</span><span class="p">][</span><span class="s2">&#34;published_date&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="n">df_all</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">nyt_list_json</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="n">cols_to_drop</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">      <span class="s2">&#34;book_image&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="s2">&#34;book_image_width&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="s2">&#34;book_image_height&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="s2">&#34;isbns&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="s2">&#34;buy_links&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="p">]</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="n">df</span> <span class="o">=</span> <span class="n">df_all</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">cols_to_drop</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  <span class="n">df</span><span class="p">[</span><span class="s2">&#34;title&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&#34;title&#34;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  <span class="n">df</span><span class="p">[</span><span class="s2">&#34;rank_last_week&#34;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="mi">0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">df</span><span class="p">[</span><span class="s2">&#34;list_publication_date&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="n">list_publish_date</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="n">df_out</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">&#34;rank&#34;</span><span class="p">,</span> <span class="s2">&#34;rank_last_week&#34;</span><span class="p">,</span> <span class="s2">&#34;title&#34;</span><span class="p">,</span> <span class="s2">&#34;author&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;weeks_on_list&#34;</span><span class="p">,</span> <span class="s2">&#34;list_publication_date&#34;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="n">df_out</span>
+</span></span></code></pre></div><p>Now, each of the functions above dealt with performing a single API request. Since we are interested in obtaining an historical dataset, we should run the API request for each of the weeks we returned in the <code>get_list_of_dates()</code> function. In the <code>download_bestseller_lists()</code> function, we&rsquo;ll first get the list of dates. Then we&rsquo;ll loop through the list of dates going back roughly 5 years. In each iteration we&rsquo;ll run the <code>api_request()</code> function for the specified date and concatenate the result with the existing data frame. Then, in order to avoid hitting the API rate limit we&rsquo;ll wait for 12 seconds, the NYT Books API is rate limited at 500 requests per day and 5 requests per minute so we need to wait 12 seconds between each request to avoid hitting the rate limit. Finally, we&rsquo;ll run this <code>download_bestseller_lists()</code> function for the Fiction list, and save the output in a CSV file.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">download_bestseller_lists</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">      <span class="n">list_type</span><span class="o">=</span><span class="s2">&#34;fiction&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">      <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">weeks</span><span class="o">=</span><span class="mi">5</span><span class="o">*</span><span class="mi">52</span><span class="p">),</span> 
+</span></span><span class="line"><span class="cl">      <span class="n">end_date</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">      <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="n">return_df</span><span class="o">=</span><span class="kc">False</span>
+</span></span><span class="line"><span class="cl">  <span class="p">):</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">  Download the Best Seller list from a given date
+</span></span></span><span class="line"><span class="cl"><span class="s2">  &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="n">date_list</span> <span class="o">=</span> <span class="n">get_list_of_dates</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end_date</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="n">n_dates</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">date_list</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Number of requests: </span><span class="si">{</span><span class="n">n_dates</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Estimated download time: </span><span class="si">{</span><span class="n">n_dates</span> <span class="o">*</span> <span class="mi">12</span><span class="si">}</span><span class="s2">s or </span><span class="si">{</span><span class="n">n_dates</span> <span class="o">*</span> <span class="mi">12</span> <span class="o">/</span> <span class="mi">60</span><span class="si">}</span><span class="s2">min&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="n">df_nyt_list</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">date_list</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">      <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Extracting </span><span class="si">{</span><span class="n">list_type</span><span class="si">}</span><span class="s2"> list at date </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="n">df_nyt_list</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df_nyt_list</span><span class="p">,</span> <span class="n">api_request</span><span class="p">(</span><span class="nb">list</span><span class="o">=</span><span class="n">list_type</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="n">i</span><span class="p">)])</span>
+</span></span><span class="line"><span class="cl">      <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">df_nyt_list</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;./data/nyt_list_</span><span class="si">{</span><span class="n">list_type</span><span class="si">}</span><span class="s2">.csv&#34;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="n">return_df</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">df_nyt_list</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">download_bestseller_lists</span><span class="p">(</span><span class="n">list_type</span><span class="o">=</span><span class="s2">&#34;fiction&#34;</span><span class="p">)</span>
+</span></span></code></pre></div><p>Now that we&rsquo;ve done the hard work in Python, let&rsquo;s do some data visualization in R using <code>ggplot</code>. Since the <code>download_bestseller_lists()</code> function in Python also saved the file, we can easily load it into R. Since I&rsquo;m using the <code>{reticulate}</code> package to create this, I could have also used the <code>py$&lt;variable name&gt;</code> functionality, but since the API call takes a lot of time to run, this seemed easier.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="line"><span class="cl"><span class="n">data</span> <span class="o">&lt;-</span> <span class="nf">read_csv</span><span class="p">(</span><span class="s">&#34;./data/nyt_list_fiction.csv&#34;</span><span class="p">)</span> <span class="o">|&gt;</span> 
+</span></span><span class="line"><span class="cl">  <span class="nf">glimpse</span><span class="p">()</span>
+</span></span></code></pre></div><pre><code>Rows: 3915 Columns: 7
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: &quot;,&quot;
+chr  (2): title, author
+dbl  (4): rank, rank_last_week, rank_diff, weeks_on_list
+date (1): list_publication_date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+Rows: 3,915
+Columns: 7
+$ rank                  &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 1…
+$ rank_last_week        &lt;dbl&gt; NA, 1, NA, NA, NA, 3, NA, 6, NA, 4, 5, 9, 8, 12,…
+$ rank_diff             &lt;dbl&gt; NA, -1, NA, NA, NA, -3, NA, -2, NA, -6, -6, -3, …
+$ title                 &lt;chr&gt; &quot;Leverage In Death&quot;, &quot;Crazy Rich Asians&quot;, &quot;In Hi…
+$ author                &lt;chr&gt; &quot;JD Robb&quot;, &quot;Kevin Kwan&quot;, &quot;Danielle Steel&quot;, &quot;Chri…
+$ weeks_on_list         &lt;dbl&gt; 1, 13, 1, 1, 1, 5, 1, 4, 1, 15, 4, 14, 28, 13, 1…
+$ list_publication_date &lt;date&gt; 2018-09-23, 2018-09-23, 2018-09-23, 2018-09-23,…
+</code></pre>
+<p>As mentioned, the dataset we downloaded does not include all history of the Best Sellers list due to the API rate limit. Instead we specified that we want to look about 5 years back, let&rsquo;s see what the earliest to latest dates in the dataset are.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="line"><span class="cl"><span class="n">data</span> <span class="o">|&gt;</span> 
+</span></span><span class="line"><span class="cl">  <span class="nf">summarise</span><span class="p">(</span><span class="n">from</span> <span class="o">=</span> <span class="nf">min</span><span class="p">(</span><span class="n">list_publication_date</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="n">to</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="n">list_publication_date</span><span class="p">))</span>
+</span></span></code></pre></div><pre><code># A tibble: 1 × 2
+  from       to        
+  &lt;date&gt;     &lt;date&gt;    
+1 2018-09-23 2023-09-17
+</code></pre>
+<p>The purpose of this post is mostly to show the implementation of an API call in Python, but I want to make some plots anyway because it&rsquo;s fun. Let&rsquo;s first look at what book has spend the longest on the Best Sellers list. Just to make it easier to determine the book, we&rsquo;ll create a composite variable of both the book author and title before plotting and take the 20 books that have the most occurences on the list using the <code>count()</code> function and then use the <code>slice_max()</code> to limit the dataset to 20.</p>
+<details>
+<summary>Code for the plot below</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="line"><span class="cl"><span class="n">data</span> <span class="o">|&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">count</span><span class="p">(</span><span class="n">author</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&#34;n_weeks_on_list&#34;</span><span class="p">)</span> <span class="o">|&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">mutate</span><span class="p">(</span><span class="n">book_label</span> <span class="o">=</span> <span class="nf">str_glue</span><span class="p">(</span><span class="s">&#34;{author} - {title}&#34;</span><span class="p">))</span> <span class="o">|&gt;</span> 
+</span></span><span class="line"><span class="cl">  <span class="nf">slice_max</span><span class="p">(</span><span class="n">order_by</span> <span class="o">=</span> <span class="n">n_weeks_on_list</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="m">20</span><span class="p">)</span> <span class="o">|&gt;</span> 
+</span></span><span class="line"><span class="cl">  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">n_weeks_on_list</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="nf">reorder</span><span class="p">(</span><span class="n">book_label</span><span class="p">,</span> <span class="n">n_weeks_on_list</span><span class="p">)))</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">geom_col</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;#5D7B92&#34;</span><span class="p">)</span> <span class="o">+</span> 
+</span></span><span class="line"><span class="cl">  <span class="nf">geom_text</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">label</span> <span class="o">=</span> <span class="n">n_weeks_on_list</span><span class="p">),</span> <span class="n">nudge_x</span> <span class="o">=</span> <span class="m">-7</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">            <span class="n">color</span> <span class="o">=</span> <span class="s">&#34;white&#34;</span><span class="p">,</span> <span class="n">fontface</span> <span class="o">=</span> <span class="s">&#34;bold&#34;</span><span class="p">)</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">geom_vline</span><span class="p">(</span><span class="n">xintercept</span> <span class="o">=</span> <span class="m">0</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">labs</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">title</span> <span class="o">=</span> <span class="s">&#34;Which books have spent the longest&lt;br&gt;on the NYT Best Sellers list?&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">x</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">y</span> <span class="o">=</span> <span class="kc">NULL</span>
+</span></span><span class="line"><span class="cl">  <span class="p">)</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">scale_x_continuous</span><span class="p">(</span><span class="n">position</span> <span class="o">=</span> <span class="s">&#34;top&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                     <span class="n">labels</span> <span class="o">=</span> <span class="o">~</span> <span class="nf">str_glue</span><span class="p">(</span><span class="s">&#34;{.x} wk&#34;</span><span class="p">),</span> 
+</span></span><span class="line"><span class="cl">                     <span class="n">expand</span> <span class="o">=</span> <span class="nf">expansion</span><span class="p">(</span><span class="n">add</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">20</span><span class="p">)))</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">theme_minimal</span><span class="p">()</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">theme</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">plot.title.position</span> <span class="o">=</span> <span class="s">&#34;plot&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">plot.title</span> <span class="o">=</span> <span class="nf">element_markdown</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">18</span><span class="p">,</span> <span class="n">face</span> <span class="o">=</span> <span class="s">&#34;bold&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">    <span class="n">panel.grid.major.y</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  <span class="p">)</span>
+</span></span></code></pre></div></details>
+<img src="index.markdown_strict_files/figure-markdown_strict/plot-top-weeks-1.png" width="768" />
+<p>It looks like <em>Where The Crawdads Sing</em> by Delia Owens has appeared a total of 193 times on the list in the past 5 years. The number two (<em>It Ends With Us</em>) follows with 115 weeks, but after inspection of the data that book is currently in the list, so may yet make up some ground.</p>
+<p>Let&rsquo;s also look at which authors have had the largest number of books in the list in the past 5 years using roughly the same approach.</p>
+<details>
+<summary>Code for the plot below</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="line"><span class="cl"><span class="n">data</span> <span class="o">|&gt;</span> 
+</span></span><span class="line"><span class="cl">  <span class="nf">distinct</span><span class="p">(</span><span class="n">author</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span> <span class="o">|&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">count</span><span class="p">(</span><span class="n">author</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&#34;n_books_in_list&#34;</span><span class="p">)</span> <span class="o">|&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">slice_max</span><span class="p">(</span><span class="n">order_by</span> <span class="o">=</span> <span class="n">n_books_in_list</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="m">10</span><span class="p">)</span> <span class="o">|&gt;</span> 
+</span></span><span class="line"><span class="cl">  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">n_books_in_list</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="nf">reorder</span><span class="p">(</span><span class="n">author</span><span class="p">,</span> <span class="n">n_books_in_list</span><span class="p">)))</span> <span class="o">+</span> 
+</span></span><span class="line"><span class="cl">  <span class="nf">geom_col</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;#5D7B92&#34;</span><span class="p">)</span> <span class="o">+</span> 
+</span></span><span class="line"><span class="cl">  <span class="nf">geom_text</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">label</span> <span class="o">=</span> <span class="n">n_books_in_list</span><span class="p">),</span> <span class="n">nudge_x</span> <span class="o">=</span> <span class="m">-1</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">            <span class="n">color</span> <span class="o">=</span> <span class="s">&#34;white&#34;</span><span class="p">,</span> <span class="n">fontface</span> <span class="o">=</span> <span class="s">&#34;bold&#34;</span><span class="p">)</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">geom_vline</span><span class="p">(</span><span class="n">xintercept</span> <span class="o">=</span> <span class="m">0</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">labs</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">title</span> <span class="o">=</span> <span class="s">&#34;Which books have spent the longest&lt;br&gt;on the NYT Best Sellers list?&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">x</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">y</span> <span class="o">=</span> <span class="kc">NULL</span>
+</span></span><span class="line"><span class="cl">  <span class="p">)</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">scale_x_continuous</span><span class="p">(</span><span class="n">position</span> <span class="o">=</span> <span class="s">&#34;top&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                     <span class="n">labels</span> <span class="o">=</span> <span class="o">~</span> <span class="nf">str_glue</span><span class="p">(</span><span class="s">&#34;{.x} books&#34;</span><span class="p">),</span> 
+</span></span><span class="line"><span class="cl">                     <span class="n">expand</span> <span class="o">=</span> <span class="nf">expansion</span><span class="p">(</span><span class="n">add</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">5</span><span class="p">)))</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">theme_minimal</span><span class="p">()</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">theme</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">plot.title.position</span> <span class="o">=</span> <span class="s">&#34;plot&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">plot.title</span> <span class="o">=</span> <span class="nf">element_markdown</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">18</span><span class="p">,</span> <span class="n">face</span> <span class="o">=</span> <span class="s">&#34;bold&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">    <span class="n">panel.grid.major.y</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  <span class="p">)</span>
+</span></span></code></pre></div></details>
+<img src="index.markdown_strict_files/figure-markdown_strict/plot-top-authors-1.png" width="768" />
+<p>This genuinely surprised me, I had expected some authors to have maybe 6 or 7 books on the list, but it turns out there are some really prolific authors out there, with Danielle Steel definitely taking the top spot. According to her separate (!) <a href="https://en.wikipedia.org/wiki/Danielle_Steel_bibliography">bibliography page on Wikipedia</a> she publishes several books a year to make a total of 190 published books, including 141 novels. Wikipedia also mentions a <a href="https://www.publishersweekly.com/978-0-312-11257-8">&ldquo;resounding lack of critical acclaim&rdquo;</a>, which just emphasizes the point that the New York Times Best Sellers list is not necessarily a mark of quality, but rather of popularity, although one would hope good books are also the books that sell well. Note that some authors have received critical acclaim <em>and</em> have published multiple popular books such as Colleen Hoover and Stephen King in the plot above.</p>
+<p>Since we have essentially time series data, we could also plot the trajectory of a book. So let&rsquo;s take the book that spent the longest on the Best Sellers list in our timeframe: <em>Where The Crawdads Sing</em>. We can plot rank on the list over time. We&rsquo;ll use the <code>geom_bump()</code> function from the <code>{ggbump}</code> package to get a nicer-looking curve. Since <code>geom_path()</code> and <code>geom_bump()</code> will show a continuous line for missing values and dropping those empty values looks ugly, we&rsquo;ll hide the weeks where the book wasn&rsquo;t on the Best Sellers list in an area below the plot.</p>
+<details>
+<summary>Code for the plot below</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="line"><span class="cl"><span class="n">title_of_interest</span> <span class="o">=</span> <span class="s">&#34;Where The Crawdads Sing&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">data</span> <span class="o">|&gt;</span> 
+</span></span><span class="line"><span class="cl">  <span class="nf">filter</span><span class="p">(</span><span class="n">title</span> <span class="o">==</span> <span class="n">title_of_interest</span><span class="p">)</span> <span class="o">|&gt;</span> 
+</span></span><span class="line"><span class="cl">  <span class="nf">right_join</span><span class="p">(</span><span class="n">data</span> <span class="o">|&gt;</span> <span class="nf">select</span><span class="p">(</span><span class="n">list_publication_date</span><span class="p">)</span> <span class="o">|&gt;</span> <span class="nf">distinct</span><span class="p">(),</span> 
+</span></span><span class="line"><span class="cl">             <span class="n">by</span> <span class="o">=</span> <span class="s">&#34;list_publication_date&#34;</span><span class="p">)</span> <span class="o">|&gt;</span> 
+</span></span><span class="line"><span class="cl">  <span class="nf">replace_na</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span><span class="n">rank</span> <span class="o">=</span> <span class="m">16</span><span class="p">))</span> <span class="o">|&gt;</span> 
+</span></span><span class="line"><span class="cl">  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">list_publication_date</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">rank</span><span class="p">))</span> <span class="o">+</span> 
+</span></span><span class="line"><span class="cl">  <span class="nf">geom_hline</span><span class="p">(</span><span class="n">yintercept</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&#34;grey&#34;</span><span class="p">,</span> <span class="n">linetype</span> <span class="o">=</span> <span class="s">&#34;dotted&#34;</span><span class="p">)</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="n">ggbump</span><span class="o">::</span><span class="nf">geom_bump</span><span class="p">(</span><span class="n">linewidth</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&#34;#5D7B92&#34;</span><span class="p">)</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">geom_rect</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">xmin</span> <span class="o">=</span> <span class="nf">min</span><span class="p">(</span><span class="n">data</span><span class="o">$</span><span class="n">list_publication_date</span><span class="p">),</span> 
+</span></span><span class="line"><span class="cl">                <span class="n">xmax</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="n">data</span><span class="o">$</span><span class="n">list_publication_date</span><span class="p">),</span> 
+</span></span><span class="line"><span class="cl">                <span class="n">ymin</span> <span class="o">=</span> <span class="m">15.2</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="kc">Inf</span><span class="p">),</span> <span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;#333333&#34;</span><span class="p">)</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">geom_text</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="nf">tibble</span><span class="p">(),</span> <span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="nf">mean</span><span class="p">(</span><span class="n">data</span><span class="o">$</span><span class="n">list_publication_date</span><span class="p">),</span> <span class="n">y</span> <span class="o">=</span> <span class="m">15.75</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                 <span class="n">label</span> <span class="o">=</span> <span class="s">&#34;Not on list&#34;</span><span class="p">),</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&#34;white&#34;</span><span class="p">)</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">labs</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">title</span> <span class="o">=</span> <span class="nf">str_glue</span><span class="p">(</span><span class="s">&#34;How _{title_of_interest}_ ranked over time&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">    <span class="n">x</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">y</span> <span class="o">=</span> <span class="s">&#34;Position on Best Sellers list&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">)</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">scale_y_continuous</span><span class="p">(</span><span class="n">trans</span> <span class="o">=</span> <span class="s">&#34;reverse&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">                     <span class="n">breaks</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="m">15</span><span class="p">),</span> 
+</span></span><span class="line"><span class="cl">                     <span class="n">expand</span> <span class="o">=</span> <span class="nf">expansion</span><span class="p">(</span><span class="n">add</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">0.5</span><span class="p">,</span> <span class="m">0</span><span class="p">)))</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">coord_cartesian</span><span class="p">(</span><span class="n">clip</span> <span class="o">=</span> <span class="s">&#34;off&#34;</span><span class="p">)</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">theme_minimal</span><span class="p">()</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">theme</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">plot.title.position</span> <span class="o">=</span> <span class="s">&#34;plot&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">plot.title</span> <span class="o">=</span> <span class="nf">element_markdown</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">18</span><span class="p">,</span> <span class="n">face</span> <span class="o">=</span> <span class="s">&#34;bold&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                  <span class="n">padding</span> <span class="o">=</span> <span class="nf">margin</span><span class="p">(</span><span class="n">b</span> <span class="o">=</span> <span class="m">10</span><span class="p">)),</span>
+</span></span><span class="line"><span class="cl">    <span class="n">panel.grid.minor.y</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  <span class="p">)</span>
+</span></span></code></pre></div></details>
+<img src="index.markdown_strict_files/figure-markdown_strict/plot-trajectory-1.png" width="768" />
+<p>That is quite an impressive trajectory. There are a few moments where the book leaves the Best Sellers list, but it had a spot on the list every year from 2018 when the book was published to 2023.</p>
+<p>The jump in the plot above that happens in 2022 seemed very remarkable, jumping from spot 13 to 1 within a week. I was wondering if that had anything to do with the release of the movie adaptation. So let&rsquo;s have a look. The movie was released on July 15th, 2022.</p>
+<details>
+<summary>Code for the plot below</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="line"><span class="cl"><span class="n">titles_w_adaptation</span> <span class="o">&lt;-</span> <span class="nf">tribble</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">  <span class="o">~</span><span class="n">title</span><span class="p">,</span> <span class="o">~</span><span class="n">release_date</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="s">&#34;Where The Crawdads Sing&#34;</span><span class="p">,</span> <span class="s">&#34;2022-07-15&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">data</span> <span class="o">|&gt;</span> 
+</span></span><span class="line"><span class="cl">  <span class="nf">right_join</span><span class="p">(</span><span class="n">titles_w_adaptation</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="s">&#34;title&#34;</span><span class="p">)</span> <span class="o">|&gt;</span> 
+</span></span><span class="line"><span class="cl">  <span class="nf">mutate</span><span class="p">(</span><span class="n">book_label</span> <span class="o">=</span> <span class="nf">str_glue</span><span class="p">(</span><span class="s">&#34;{author} - {title}&#34;</span><span class="p">))</span> <span class="o">|&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">right_join</span><span class="p">(</span><span class="n">data</span> <span class="o">|&gt;</span> <span class="nf">select</span><span class="p">(</span><span class="n">list_publication_date</span><span class="p">)</span> <span class="o">|&gt;</span> <span class="nf">distinct</span><span class="p">(),</span> 
+</span></span><span class="line"><span class="cl">             <span class="n">by</span> <span class="o">=</span> <span class="s">&#34;list_publication_date&#34;</span><span class="p">)</span> <span class="o">|&gt;</span> 
+</span></span><span class="line"><span class="cl">  <span class="nf">replace_na</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span><span class="n">rank</span> <span class="o">=</span> <span class="m">16</span><span class="p">))</span> <span class="o">|&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">list_publication_date</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">rank</span><span class="p">))</span> <span class="o">+</span> 
+</span></span><span class="line"><span class="cl">  <span class="nf">geom_hline</span><span class="p">(</span><span class="n">yintercept</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&#34;grey&#34;</span><span class="p">,</span> <span class="n">linetype</span> <span class="o">=</span> <span class="s">&#34;dotted&#34;</span><span class="p">)</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="n">ggbump</span><span class="o">::</span><span class="nf">geom_bump</span><span class="p">(</span><span class="n">linewidth</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&#34;#5D7B92&#34;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.25</span><span class="p">)</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">geom_rect</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">xmin</span> <span class="o">=</span> <span class="nf">min</span><span class="p">(</span><span class="n">data</span><span class="o">$</span><span class="n">list_publication_date</span><span class="p">),</span> 
+</span></span><span class="line"><span class="cl">                <span class="n">xmax</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="n">data</span><span class="o">$</span><span class="n">list_publication_date</span><span class="p">),</span> 
+</span></span><span class="line"><span class="cl">                <span class="n">ymin</span> <span class="o">=</span> <span class="m">15.2</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="kc">Inf</span><span class="p">),</span> <span class="n">fill</span> <span class="o">=</span> <span class="s">&#34;#333333&#34;</span><span class="p">,</span> <span class="n">show.legend</span> <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">geom_text</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="nf">tibble</span><span class="p">(),</span> <span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="nf">mean</span><span class="p">(</span><span class="n">data</span><span class="o">$</span><span class="n">list_publication_date</span><span class="p">),</span> <span class="n">y</span> <span class="o">=</span> <span class="m">15.75</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                 <span class="n">label</span> <span class="o">=</span> <span class="s">&#34;Not on list&#34;</span><span class="p">),</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&#34;white&#34;</span><span class="p">)</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">geom_vline</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">xintercept</span> <span class="o">=</span> <span class="nf">as.Date</span><span class="p">(</span><span class="n">release_date</span><span class="p">)),</span>
+</span></span><span class="line"><span class="cl">             <span class="n">linewidth</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&#34;#5D7B92&#34;</span><span class="p">,</span> <span class="n">linetype</span> <span class="o">=</span> <span class="s">&#34;dashed&#34;</span><span class="p">)</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">labs</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">title</span> <span class="o">=</span> <span class="s">&#34;Is there an association beteen a movie/TV&lt;br&gt;adaptation and a books popularity?&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">x</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">y</span> <span class="o">=</span> <span class="s">&#34;Position on Best Sellers list&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">color</span> <span class="o">=</span> <span class="kc">NULL</span>
+</span></span><span class="line"><span class="cl">  <span class="p">)</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">scale_y_continuous</span><span class="p">(</span><span class="n">trans</span> <span class="o">=</span> <span class="s">&#34;reverse&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">                     <span class="n">breaks</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="m">15</span><span class="p">),</span> 
+</span></span><span class="line"><span class="cl">                     <span class="n">expand</span> <span class="o">=</span> <span class="nf">expansion</span><span class="p">(</span><span class="n">add</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">0.5</span><span class="p">,</span> <span class="m">0</span><span class="p">)))</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">coord_cartesian</span><span class="p">(</span><span class="n">clip</span> <span class="o">=</span> <span class="s">&#34;off&#34;</span><span class="p">)</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">theme_minimal</span><span class="p">()</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">theme</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">plot.title.position</span> <span class="o">=</span> <span class="s">&#34;plot&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">plot.title</span> <span class="o">=</span> <span class="nf">element_markdown</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">18</span><span class="p">,</span> <span class="n">face</span> <span class="o">=</span> <span class="s">&#34;bold&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                  <span class="n">padding</span> <span class="o">=</span> <span class="nf">margin</span><span class="p">(</span><span class="n">b</span> <span class="o">=</span> <span class="m">10</span><span class="p">)),</span>
+</span></span><span class="line"><span class="cl">    <span class="n">panel.grid.minor.y</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">    <span class="n">legend.position</span> <span class="o">=</span> <span class="s">&#34;bottom&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">legend.direction</span> <span class="o">=</span> <span class="s">&#34;vertical&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">)</span>
+</span></span></code></pre></div></details>
+<img src="index.markdown_strict_files/figure-markdown_strict/plot-trajectory-adaptations-1.png" width="768" />
+<p>It seems like the movie release ensured that the book remained at number 1 on the Best Sellers list for a while, but the book was already doing very well in the time before then. It could be interesting perhaps to compare this to other books that appeared on the NYT Best Sellers list that received a movie or TV adaptation. Obviously, some adaptations are more popular than the book (e.g. <em>Normal People</em> by Sally Rooney, <em>The Hate U Give</em> by Angie Thomas, and <em>It</em> by Stephen Hawking despite being published decades earlier. It could be fun to see whether these books received a popularity boost from their respective movie or TV adaptations.</p>
+<p>This was a fun little post, I hope this little tutorial on the practical implementation of an API call was useful. There&rsquo;s <a href="https://github.com/public-apis/public-apis">a ton of public APIs</a> that you can use this method on to explore. Have fun!</p>
+
+  </article>
+
+  <br/>
+
+  
+  
+</section>
+
+      </div>
+      
+        
+<footer class="footer">
+  <script src="https://yihui.org/js/math-code.js"></script>
+  <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.min.js"></script>
+</footer>
+      
+    </main>
+
+    
+
+  <script src="/js/app.js"></script>
+  
+  </body>
+</html>

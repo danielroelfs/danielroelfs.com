@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>data science on Daniel Roelfs</title>
+    <link>/en/categories/data-science/</link>
+    <description>Recent content in data science on Daniel Roelfs</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 17 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="/en/categories/data-science/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Analysing the NYY Best Sellers list using an API</title>
+      <link>/en/blog/analysing-the-nyt-best-sellers-list-using-an-api/</link>
+      <pubDate>Sun, 17 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/en/blog/analysing-the-nyt-best-sellers-list-using-an-api/</guid>
+      <description>Using an API (an application programming interface) is a very popular tool for data scientists to pull data from a public source. I&amp;rsquo;ve done a bit of web scraping in previous blogposts where I collected data from for example Wikipedia and the Olympian Database. However, I&amp;rsquo;d much prefer using APIs whenever possible, this way the creator has more control of what data they want to share and how it is packaged.</description>
+    </item>
+    
+    <item>
+      <title>Difference in sunset times in Europe</title>
+      <link>/en/blog/difference-in-sunset-times-in-europe/</link>
+      <pubDate>Thu, 06 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/en/blog/difference-in-sunset-times-in-europe/</guid>
+      <description>Today I want to share a project that deals with data scientist&amp;rsquo;s favorite kind of data: date- and timedata involving time zones and daylight savings time. Who doesn&amp;rsquo;t love it?
+This project stems from a discussion I had with my family about living up north in Norway and when the days become longer than in the Netherlands. Intuitively, one might think that because of the prevailing snow and cold in March and occasionally April this corresponds with shorter day length.</description>
+    </item>
+    
+  </channel>
+</rss>

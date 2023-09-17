@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Bach on Daniel Roelfs</title>
+    <link>/en/tags/bach/</link>
+    <description>Recent content in Bach on Daniel Roelfs</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 01 Dec 2019 00:00:00 +0000</lastBuildDate><atom:link href="/en/tags/bach/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Analyzing Bach</title>
+      <link>/en/blog/analyzing-bach/</link>
+      <pubDate>Sun, 01 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/en/blog/analyzing-bach/</guid>
+      <description>Introduction A little while ago I was watching a documentary series on Dutch television about one of the most important composers in the Netherlands: Johann Sebastian Bach. The documentary discussed parts of Bach&amp;rsquo;s life and the music he wrote during it. This documentary inspired me to learn more about the pieces Bach wrote, and since this is my life now, I might as well do it in R.
+Collecting the data In my search of a dataset, I found this old website, looking like it last got a major update in 2003, made by what appeared to be a Bach enthousiast called Bryen Travis.</description>
+    </item>
+    
+  </channel>
+</rss>

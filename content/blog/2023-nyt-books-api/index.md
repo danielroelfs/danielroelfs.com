@@ -162,7 +162,7 @@ def download_bestseller_lists(
 download_bestseller_lists(list_type="fiction")
 ```
 
-Now that we've done the hard work in Python, let's do some data visualization in R using `ggplot`. Since the `download_bestseller_lists()` function in Python also saved the file, we can easily load it into R. Since I'm using the `{reticulate}` package to create this, I could have also used the `py$<variable name>` functionality, but since the API call takes a lot of time to run, this seemed easier.
+Now that we've done the hard work in Python, let's do some data visualization in R using `ggplot` and a few other `{tidyverse}` and plotting related packages (`{ggtext}` and `{patchwork}`). Since the `download_bestseller_lists()` function in Python also saved the file, we can easily load it into R. Since I'm using the `{reticulate}` package to create this, I could have also used the `py$<variable name>` functionality, but since the API call takes a lot of time to run, this seemed easier.
 
 ``` r
 data <- read_csv("./data/nyt_list_fiction.csv") |> 
@@ -294,7 +294,7 @@ data |>
   ggbump::geom_bump(linewidth = 1, color = "#5D7B92") +
   geom_rect(aes(xmin = min(data$list_publication_date), 
                 xmax = max(data$list_publication_date), 
-                ymin = 15.2, ymax = Inf), fill = "#333333") +
+                ymin = 15.2, ymax = Inf), fill = "grey40") +
   geom_text(data = tibble(), aes(x = mean(data$list_publication_date), y = 15.75,
                                  label = "Not on list"), color = "white") +
   labs(
@@ -321,7 +321,7 @@ data |>
 
 That is quite an impressive trajectory. There are a few moments where the book leaves the Best Sellers list, but it had a spot on the list every year from 2018 when the book was published to 2023.
 
-The jump in the plot above that happens in 2022 seemed very remarkable, jumping from spot 13 to 1 within a week. I was wondering if that had anything to do with the release of the movie adaptation. So let's have a look. The movie was released on July 15th, 2022.
+The jump in the plot above that happens in 2022 seemed very remarkable, jumping from spot 13 to 1 within a week. I was wondering if that had anything to do with the release of the movie adaptation. So let's have a look. The movie was released on July 15th, 2022. Let's also look at a few other books I know were on the Best Sellers list that have gotten an adaptation. This is just anecdotal and hand-picked evidence of course so needs to be taken with a grain of salt. Perhaps another time I'll find a more systematic way of testing this. In addition to [*Where The Crawdads Sing*](https://www.imdb.com/title/tt9411972/), I've picked two other movies and three TV series. The other two movies are [*Bird Box*](https://www.imdb.com/title/tt2737304/) released in late 2018 and [*It Chapter Two*](https://www.imdb.com/title/tt7349950/), the second installment of the adaptation of *It* by Stephen King. For the TV series I'll look at the wonderful [*Normal People*](https://www.imdb.com/title/tt9059760/) based on the novel by Sally Rooney (who also has writing credits on the series!), initially released in 2020, [*The Outsider*](https://www.imdb.com/title/tt8550800/) also based on a book by Stephen King, and [*The Handmaid's Tale*](https://www.imdb.com/title/tt5834204/) based on the book by Margaret Atwood.
 
 <details>
 <summary>Code for the plot below</summary>
@@ -329,50 +329,98 @@ The jump in the plot above that happens in 2022 seemed very remarkable, jumping 
 ``` r
 titles_w_adaptation <- tribble(
   ~title, ~release_date,
-  "Where The Crawdads Sing", "2022-07-15"
-  )
+  "Where The Crawdads Sing", "2022-07-15",
+  "Bird Box", "2018-12-14",
+  "It", "2019-09-06",
+  "Normal People", "2020-04-26",
+  "The Outsider", "2020-01-06",
+  "The Handmaid'S Tale", "2019-6-5"
+)
 
-data |> 
-  right_join(titles_w_adaptation, by = "title") |> 
-  mutate(book_label = str_glue("{author} - {title}")) |>
-  right_join(data |> select(list_publication_date) |> distinct(), 
-             by = "list_publication_date") |> 
-  replace_na(list(rank = 16)) |>
-  ggplot(aes(x = list_publication_date, y = rank)) + 
-  geom_hline(yintercept = 1, color = "grey", linetype = "dotted") +
-  ggbump::geom_bump(linewidth = 1, color = "#5D7B92", alpha = 0.25) +
-  geom_rect(aes(xmin = min(data$list_publication_date), 
-                xmax = max(data$list_publication_date), 
-                ymin = 15.2, ymax = Inf), fill = "#333333", show.legend = FALSE) +
-  geom_text(data = tibble(), aes(x = mean(data$list_publication_date), y = 15.75,
-                                 label = "Not on list"), color = "white") +
-  geom_vline(aes(xintercept = as.Date(release_date)),
-             linewidth = 1, color = "#5D7B92", linetype = "dashed") +
-  labs(
-    title = "Is there an association beteen a movie/TV<br>adaptation and a books popularity?",
-    x = NULL,
-    y = "Position on Best Sellers list",
-    color = NULL
-  ) +
-  scale_y_continuous(trans = "reverse", 
-                     breaks = seq(15), 
-                     expand = expansion(add = c(0.5, 0))) +
-  coord_cartesian(clip = "off") +
-  theme_minimal() +
-  theme(
-    plot.title.position = "plot",
-    plot.title = element_markdown(size = 18, face = "bold",
-                                  padding = margin(b = 10)),
-    panel.grid.minor.y = element_blank(),
-    legend.position = "bottom",
-    legend.direction = "vertical"
-  )
+rplot = list()
+for (i in seq(nrow(titles_w_adaptation))) {
+  
+  book_title <- titles_w_adaptation |> 
+    slice(i) |> 
+    mutate(title = str_replace(title, "'S", "'s")) |> 
+    pull(title)
+  
+  rplot[[i]] <- data |> 
+    right_join(titles_w_adaptation |> slice(i), by = "title") |> 
+    right_join(data |> select(list_publication_date) |> distinct(), 
+               by = "list_publication_date") |> 
+    replace_na(list(rank = 16)) |> 
+    ggplot(aes(x = list_publication_date, y = rank)) + 
+    geom_hline(yintercept = 1, color = "grey", linetype = "dotted") +
+    ggbump::geom_bump(linewidth = 1, alpha = 0.25) +
+    geom_rect(aes(xmin = min(data$list_publication_date), 
+                  xmax = max(data$list_publication_date), 
+                  ymin = 15.2, ymax = Inf), fill = "grey40", show.legend = FALSE) +
+    geom_text(data = tibble(), aes(x = mean(data$list_publication_date), y = 15.75,
+                                   label = "Not on list"), color = "white") +
+    geom_vline(aes(xintercept = as.Date(release_date)),
+               linewidth = 1, linetype = "dashed") +
+    labs(
+      title = str_glue("Ranking of _{book_title}_<br>
+                       and the date of its adaptation"),
+      x = NULL,
+      y = "Rank on list",
+      color = NULL
+    ) +
+    scale_y_continuous(trans = "reverse", 
+                       breaks = seq(15), 
+                       expand = expansion(add = c(0.5, 0))) +
+    coord_cartesian(clip = "off") +
+    theme_minimal() +
+    theme(
+      plot.title.position = "plot",
+      plot.title = element_markdown(size = 14, face = "bold",
+                                    padding = margin(b = 10)),
+      panel.grid.minor.y = element_blank(),
+      legend.position = "bottom",
+      legend.direction = "vertical"
+    )
+  
+}
+
+(rplot[[1]] + rplot[[2]]) / (rplot[[3]] + rplot[[4]]) / (rplot[[5]] + rplot[[6]])
 ```
 
 </details>
 
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-trajectory-adaptations-1.png" width="768" />
 
-It seems like the movie release ensured that the book remained at number 1 on the Best Sellers list for a while, but the book was already doing very well in the time before then. It could be interesting perhaps to compare this to other books that appeared on the NYT Best Sellers list that received a movie or TV adaptation. Obviously, some adaptations are more popular than the book (e.g. *Normal People* by Sally Rooney, *The Hate U Give* by Angie Thomas, and *It* by Stephen Hawking despite being published decades earlier. It could be fun to see whether these books received a popularity boost from their respective movie or TV adaptations.
+It seems that for *Where The Crawdads Sing*, the movie release ensured that the book remained at number 1 on the Best Sellers list for a while, even though the book was already doing very well in the list before the movie release. For both *Bird Box* and *It* their movie releases seemed to have caused a boost in sales of the book that made them reappear in the list for a short time. I'd guess the fact that the book *Where The Crawdads Sing* was already very popular prior to the movie release caused a boost in popularity that lingered longer. Both *Bird Box* and *It* had a brief reappearance in the list following their movie release, but I'd guess that a publisher cannot rely on a successful movie release (like *Bird Box* or *It*) to boost the sales of a book. It cannot compensate for the success of an already popular and well-received book like *Where The Crawdads Sing*.
 
-This was a fun little post, I hope this little tutorial on the practical implementation of an API call was useful. There's [a ton of public APIs](https://github.com/public-apis/public-apis) that you can use this method on to explore. Have fun!
+For the TV series I looked at, the pattern looks very similar to the previous two movies. The book *Normal People* had already appeared briefly on the Best Sellers list, but reappeared after the initial release of the popular HBO series for slightly longer. The same is true for both *The Outsider* and *The Handmaid's Tale*. Although *The Handmaid's Tale* was initially published in 1985, it reappeared briefly in the list following the release of the third season of the HBO series. *The Outsider* was initially published in 2018, and it's series adaptation release in early 2020 cause a short boost in popularity also.
+
+This was a fun little post, I hope this little tutorial on the practical implementation of an API call was useful. If you want to explore other lists other than the "Combined Print and E-Book Fiction" list, the code below shows how you can download all lists available in the API using a similar approach as above.
+
+<details>
+<summary>Code to download a list of all lists available in the NYT API</summary>
+
+``` python
+def get_nyt_lists(save=True, return_df=False):
+  """
+  Get an overview of all best-seller lists
+  """
+
+  response = requests.get(
+    f"https://api.nytimes.com/svc/books/v3/lists/names.json?api-key={_get_api_key()}"
+  )
+  json_raw = response.json()
+  list_names = json_raw["results"]
+  df_names = pd.DataFrame().from_dict(list_names)
+
+  if save:
+    df_names.to_csv(f"./data/nyt_all_lists.csv", index=False)
+    
+  if return_df:
+    return df_names
+
+get_nyt_lists()
+```
+
+</details>
+
+If you wish to explore other APIs, there's [a ton of public APIs](https://github.com/public-apis/public-apis) that you can explore using the approach discussed here. Thanks for reading, and thanks sticking all the way through! Happy coding!

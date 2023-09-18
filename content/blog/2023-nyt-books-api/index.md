@@ -321,14 +321,14 @@ data |>
 
 That is quite an impressive trajectory. There are a few moments where the book leaves the Best Sellers list, but it had a spot on the list every year from 2018 when the book was published to 2023.
 
-The jump in the plot above that happens in 2022 seemed very remarkable, jumping from spot 13 to 1 within a week. I was wondering if that had anything to do with the release of the movie adaptation. So let's have a look. The movie was released on July 15th, 2022. Let's also look at a few other books I know were on the Best Sellers list that have gotten an adaptation. This is just anecdotal and hand-picked evidence of course so needs to be taken with a grain of salt. Perhaps another time I'll find a more systematic way of testing this. In addition to [*Where The Crawdads Sing*](https://www.imdb.com/title/tt9411972/), I've picked two other movies and three TV series. The other two movies are [*Bird Box*](https://www.imdb.com/title/tt2737304/) released in late 2018 and [*It Chapter Two*](https://www.imdb.com/title/tt7349950/), the second installment of the adaptation of *It* by Stephen King. For the TV series I'll look at the wonderful [*Normal People*](https://www.imdb.com/title/tt9059760/) based on the novel by Sally Rooney (who also has writing credits on the series!), initially released in 2020, [*The Outsider*](https://www.imdb.com/title/tt8550800/) also based on a book by Stephen King, and [*The Handmaid's Tale*](https://www.imdb.com/title/tt5834204/) based on the book by Margaret Atwood.
+The jump in the plot above that happens in 2022 seemed very remarkable, jumping from spot 13 to 1 within a week. I was wondering if that had anything to do with the release of the movie adaptation. So let's have a look. The movie was released on July 15th, 2022. Let's also look at a few other books I know were on the Best Sellers list that have gotten an adaptation. This is just anecdotal and hand-picked evidence of course so needs to be taken with a grain of salt. Perhaps another time I'll find a more systematic way of testing this. In addition to [*Where The Crawdads Sing*](https://www.imdb.com/title/tt9411972/), I've picked two other movies and three TV series. The other two movies are [*Bird Box*](https://www.imdb.com/title/tt2737304/) released in late 2018 and [*It Chapter Two*](https://www.imdb.com/title/tt7349950/), the second installment of the adaptation of *It* by Stephen King. For the TV series I'll look at the wonderful [*Normal People*](https://www.imdb.com/title/tt9059760/) based on the novel by Sally Rooney (who also has writing credits on the series!), initially released in 2020, [*The Outsider*](https://www.imdb.com/title/tt8550800/) also based on a book by Stephen King, and [*The Handmaid's Tale*](https://www.imdb.com/title/tt5834204/) based on the book by Margaret Atwood. In the plots below the vertical dashed line indicates the release date of the adaptation.
 
 <details>
 <summary>Code for the plot below</summary>
 
 ``` r
 titles_w_adaptation <- tribble(
-  ~title, ~release_date,
+  ~title, ~screen_release_date,
   "Where The Crawdads Sing", "2022-07-15",
   "Bird Box", "2018-12-14",
   "It", "2019-09-06",
@@ -358,11 +358,10 @@ for (i in seq(nrow(titles_w_adaptation))) {
                   ymin = 15.2, ymax = Inf), fill = "grey40", show.legend = FALSE) +
     geom_text(data = tibble(), aes(x = mean(data$list_publication_date), y = 15.75,
                                    label = "Not on list"), color = "white") +
-    geom_vline(aes(xintercept = as.Date(release_date)),
+    geom_vline(aes(xintercept = as.Date(screen_release_date)),
                linewidth = 1, linetype = "dashed") +
     labs(
-      title = str_glue("Ranking of _{book_title}_<br>
-                       and the date of its adaptation"),
+      title = str_glue("Ranking of _{book_title}_"),
       x = NULL,
       y = "Rank on list",
       color = NULL
@@ -383,7 +382,13 @@ for (i in seq(nrow(titles_w_adaptation))) {
   
 }
 
-(rplot[[1]] + rplot[[2]]) / (rplot[[3]] + rplot[[4]]) / (rplot[[5]] + rplot[[6]])
+(rplot[[1]] + rplot[[2]]) / 
+  (rplot[[3]] + rplot[[4]]) / 
+  (rplot[[5]] + rplot[[6]]) + 
+  plot_annotation(
+    caption = "Vertical dashed line indicates the adaptation's release date"
+  ) &
+  theme(plot.caption = element_markdown(size = 12))
 ```
 
 </details>

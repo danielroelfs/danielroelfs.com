@@ -1,5 +1,6 @@
 ---
 title: "Photography"
+hidetopnav: true
 ---
 
 <style type="text/css">
@@ -8,7 +9,12 @@ body > * {
 }
 
 #content {
-    width: 34rem;
+    width: 38rem;
+    padding-bottom: 2rem;
+}
+
+iframe {
+    margin-left: -1rem;
 }
 </style>
 

@@ -1,5 +1,6 @@
 ---
 title: "Curriculum Vitæ"
+hidetopnav: true
 ---
 
 ```{css}
@@ -11,7 +12,12 @@ body > * {
 }
 
 #content {
-    width: 35rem;
+    width: 38rem;
+    padding-bottom: 2rem;
+}
+
+iframe {
+    margin-left: -1rem;
 }
 ```
 
@@ -20,6 +26,6 @@ body > * {
 #| echo: FALSE
 
 htmltools::tags$iframe(src = "https://danielroelfs.github.io/cv", 
-                       onload = "this.width='100%';this.height=screen.height*0.5;",
+                       onload = "this.width='100%';this.height=screen.height*0.6;",
                        frameBorder="0")
 ```

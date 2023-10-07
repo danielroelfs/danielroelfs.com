@@ -1,7 +1,6 @@
 baseurl = "/"
 title = "Daniel Roelfs"
 theme = "typography"
-publishDir = "public"
 
 ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "index\\.html", "about\\.html", "static/blog/\\*_files/", "README.md"] 
 
@@ -23,60 +22,61 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "i
 
     customcss = ["custom_style.css"]
     
-# Social links
-[[params.social]]
-    name = "Twitter"
-    icon = "twitter"
-    weight = 1
-    url = "https://twitter.com/dthroelfs/"
-[[params.social]]
-    name = "GitHub"
-    icon = "github"
-    weight = 2
-    url = "https://github.com/danielroelfs/"
-[[params.social]]
-    name = "ORCID"
-    icon = "user"
-    weight = 3
-    url = "https://orcid.org/0000-0002-1083-002X"
-[[params.social]]
-    name = "Google Scholar"
-    icon = "book-open"
-    weight = 4
-    url = "https://scholar.google.com/citations?user=QmVQcsAAAAAJ&hl=en"
-[[params.social]]
-    name = "LinkedIn"
-    icon = "linkedin"
-    weight = 5
-    url = "https://www.linkedin.com/in/danielroelfs/"
-[[params.social]]
-    name = "Mail"
-    icon = "mail"
-    weight = 7
-    url = "mailto:daniel.roelfs@medisin.uio.no"
+    # Social links
+    [[params.social]]
+        name = "Twitter"
+        icon = "twitter"
+        weight = 1
+        url = "https://twitter.com/dthroelfs/"
+    [[params.social]]
+        name = "GitHub"
+        icon = "github"
+        weight = 2
+        url = "https://github.com/danielroelfs/"
+    [[params.social]]
+        name = "ORCID"
+        icon = "user"
+        weight = 3
+        url = "https://orcid.org/0000-0002-1083-002X"
+    [[params.social]]
+        name = "Google Scholar"
+        icon = "book-open"
+        weight = 4
+        url = "https://scholar.google.com/citations?user=QmVQcsAAAAAJ&hl=en"
+    [[params.social]]
+        name = "LinkedIn"
+        icon = "linkedin"
+        weight = 5
+        url = "https://www.linkedin.com/in/danielroelfs/"
+    [[params.social]]
+        name = "Mail"
+        icon = "mail"
+        weight = 7
+        url = "mailto:daniel.roelfs@medisin.uio.no"
 
 # Menu links
-[[menu.main]]
-    name = "Home"
-    weight = 1
-    url  = "/"
-[[menu.main]]
-    name = "Blog"
-    weight = 2
-    url  = "/blog"
-[[menu.main]]
-    name = "Photography"
-    weight = 3
-    url = "/photography"    
-[[menu.main]]
-    name = "Publications"
-    weight = 4
-    url = "/publications"
-[[menu.main]]
-    name = "CV"
-    weight = 5
-    url = "/cv"
-[[menu.main]]
-    name = "About"
-    weight = 6
-    url = "/about"
+[menu]
+    [[menu.main]]
+        name = "Home"
+        url  = "/"
+        weight = 1
+    [[menu.main]]
+        name = "Blog"
+        url  = "/blog"
+        weight = 2
+    [[menu.main]]
+        name = "Photography"
+        url = "/photography"    
+        weight = 3
+    [[menu.main]]
+        name = "Publications"
+        url = "/publications"
+        weight = 4
+    [[menu.main]]
+        name = "CV"
+        url = "/cv"
+        weight = 5
+    [[menu.main]]
+        name = "About"
+        url = "/about"
+        weight = 6

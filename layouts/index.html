@@ -1,0 +1,24 @@
+{{ define "main" }}
+<h1 class="title">{{ .Title | markdownify }}</h1>
+<div style="height: 2rem;"></div>
+{{ if .Site.Params.intro }}
+    <img src="about/avatar.png" class="sidenote" alt="avatar" style="width: 5rem; min-width: initial; margin-left: 2rem; margin-top: 1rem;">
+    <p class="intro-text">{{ .Site.Params.intro | markdownify }}</p>
+    <div style="height: 2.5rem;"></div>
+{{ end }}
+<div class="sidenote" style="margin-top: 0.5rem;">pages</div>
+{{ range .Site.Menus.main }}
+    {{- if ne .Name "Home" -}}
+    <h3 class="list"><a class="title" href="{{ .URL }}">{{ .Name | lower | markdownify }}</a></h3>
+    {{ end }}
+{{ end }}
+<div style="height: 2.5rem;"></div>
+<div class="sidenote">socials</div>
+<div class="social-icons" style="margin-top: 0.5rem;">
+    {{ range .Site.Params.social }}
+        <a href="{{ .url }}" {{ .html_attributes | safeHTMLAttr }}>
+          <i data-feather="{{ .icon }}" style="margin-right: 0.5rem;"></i>
+        </a>
+    {{ end }}
+</div>
+{{ end }}

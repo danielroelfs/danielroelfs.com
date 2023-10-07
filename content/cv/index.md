@@ -10,7 +10,7 @@ body > * {
 
 #content {
     width: 38rem;
-    padding-bottom: 2rem;
+    padding-bottom: 4rem;
 }
 
 iframe {

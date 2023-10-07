@@ -1,0 +1,6 @@
+@media all and (min-width: 801px) {
+  img {
+    margin-left: -6rem;
+    min-width: 120%;
+  }
+}

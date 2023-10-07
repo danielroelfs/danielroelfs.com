@@ -1,14 +1,18 @@
 ---
-description: "publications"
-slug: "publications"
-thumbnail: "images/avatar.png"
 title: "Publications"
-author: "Daniel Roelfs"
-format: hugo
 engine: knitr
 ---
 
 <style type="text/css">
+ul li:before {
+  content: "";
+  margin: 0;
+}
+
+ul li p {
+  margin-left: 0;
+}
+
 ul li p, ul li a {
   font-size: 80%;
   line-height: 1.4;

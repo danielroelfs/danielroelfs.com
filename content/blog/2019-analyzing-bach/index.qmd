@@ -1,7 +1,6 @@
 ---
 title: Analyzing Bach
-author: Daniel Roelfs
-date: '2019-12-01'
+date: 2019-12-01
 slug: analyzing-bach
 categories:
   - coding
@@ -9,9 +8,6 @@ tags:
   - ggplot
   - R
   - Bach
-description: 'Analyzing Bach'
-thumbnail: images/avatar.png
-format: hugo
 execute:
   fig.retina: 2
   fig.align: center
@@ -20,7 +16,10 @@ execute:
   out.width: 80%
 ---
 
-```{css, echo=FALSE}
+```{css}
+#| label: style
+#| echo: false
+
 @import url('https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400;1,700&family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&display=swap');
 
 h1 {
@@ -78,14 +77,14 @@ Let's collect the BWVs:
 #| label: scrape-index
 
 index_url <- "http://www.bachcentral.com/BWV/index.html"
-BWVs <- paste(readLines(index_url), collapse = "\n") %>%
-  str_match_all("<a href=\"(.*?)\"") %>%
-  unlist() %>%
-  unique() %>%
-  str_extract_all("[0-9]+.html") %>%
-  unlist() %>%
-  unique() %>%
-  str_extract_all("[0-9]+") %>%
+BWVs <- paste(readLines(index_url), collapse = "\n") |>
+  str_match_all("<a href=\"(.*?)\"") |>
+  unlist() |>
+  unique() |>
+  str_extract_all("[0-9]+.html") |>
+  unlist() |>
+  unique() |>
+  str_extract_all("[0-9]+") |>
   as.character()
 str(BWVs)
 ```
@@ -119,11 +118,11 @@ for (i in 1:length(BWVs)) {
   url <- sprintf("http://www.bachcentral.com/BWV/%s.html", BWVs[i])
   webpage <- read_html(url)
   
-  text <- webpage %>%
-    html_nodes("ul") %>%
-    html_text() %>%
-    gsub('[\t]', '', .) %>%
-    strsplit(., "\\n") %>%
+  text <- webpage |>
+    html_nodes("ul") |>
+    html_text() |>
+    gsub('[\t]', '', .) |>
+    strsplit(., "\\n") |>
     unlist()
   
   values <- text[seq(2,length(text),2)]
@@ -157,14 +156,14 @@ The character arrays are appropriate, but for further analyes I'd prefer to make
 ```{r}
 #| label: clean-scraped
 
-data <- scraped_data %>%
+data <- scraped_data |>
   mutate(BWV = as.numeric(BWV),
          category1 = factor(category1),
          category2 = factor(category2),
          category3 = factor(category3),
          cantate_cat1 = substring(cantate_cat1,4),
-         CLC_BWV_w_epifix = str_replace(CLC_BWV_w_epifix, " ", "")) %>%
-  rename(BWV_w_epifix = CLC_BWV_w_epifix) %>%
+         CLC_BWV_w_epifix = str_replace(CLC_BWV_w_epifix, " ", "")) |>
+  rename(BWV_w_epifix = CLC_BWV_w_epifix) |>
   select(BWV, BWV_epifix, BWV_w_epifix, everything())
 str(data)
 ```
@@ -178,9 +177,9 @@ The first descritive I wanted to see was what kind of work Bach wrote and in wha
 ```{r}
 #| label: lollipop-cat1
 
-data %>%
-  group_by(category1) %>%
-  summarise(n = n()) %>%
+data |>
+  group_by(category1) |>
+  summarise(n = n()) |>
   ggplot(aes(x = category1, y = n, color = category1)) +
   geom_segment(aes(xend = category1, yend = 0), size = 12, 
                color = "grey40", alpha = 0.9) +
@@ -202,9 +201,9 @@ It seems Bach didn't have a strong preference for either instrumental or choral 
 ```{r}
 #| label: lollipop-cat2
 
-data %>%
-  group_by(category2) %>%
-  summarise(n = n()) %>%
+data |>
+  group_by(category2) |>
+  summarise(n = n()) |>
   ggplot(aes(x = reorder(category2,-n), y = n, color = category2)) +
   geom_segment(aes(xend = category2, yend = 0), size = 6, 
                color = "grey40", alpha = 0.9) +
@@ -227,10 +226,10 @@ From this it seems that most of the intrumental pieces are made up by just solo 
 #| label: waffle
 #| fig-width: 12
 
-data %>%
-  group_by(category2) %>%
-  summarise(n = n()) %>%
-  mutate(category2 = sprintf("%s (%s)", category2, n)) %>%
+data |>
+  group_by(category2) |>
+  summarise(n = n()) |>
+  mutate(category2 = sprintf("%s (%s)", category2, n)) |>
   ggplot(aes(fill = category2, values = n)) +
   geom_waffle(n_rows = 17, size = 0.2, colour = "#FFFFFC", flip = FALSE, na.rm = TRUE) +
   scale_fill_daniel(palette = "staalmeesters", name = NULL) +
@@ -248,12 +247,12 @@ data %>%
 #| eval: false
 
 library(tidytext)
-title_words <- data %>% 
-  select(Title) %>%
-  unnest_tokens(output = word, input = Title) %>%
-  anti_join(get_stopwords(language = "de")) %>%
-  count(word, sort = TRUE) %>%
-  mutate(nchar = nchar(word)) %>%
+title_words <- data |> 
+  select(Title) |>
+  unnest_tokens(output = word, input = Title) |>
+  anti_join(get_stopwords(language = "de")) |>
+  count(word, sort = TRUE) |>
+  mutate(nchar = nchar(word)) |>
   filter(nchar >= 3)
 ```
 
@@ -267,9 +266,9 @@ The dataset I just created was comprehensive and clean, but it didn't contain an
 url <- "https://en.wikipedia.org/wiki/List_of_compositions_by_Johann_Sebastian_Bach"
 webpage <- read_html(url)
 
-wikitext <- webpage %>%
-  html_nodes(xpath='//*[@id="TOP"]') %>%
-  html_table(fill = TRUE) %>%
+wikitext <- webpage |>
+  html_nodes(xpath='//*[@id="TOP"]') |>
+  html_table(fill = TRUE) |>
   as.data.frame()
 ```
 
@@ -279,10 +278,10 @@ Then I cleaned the data somewhat and extracted the number from the BWV columns.
 #| label: clean-wiki
 #| warning: false
 
-wikidata <- wikitext %>%
-  rename(BWV_full = BWV) %>%
+wikidata <- wikitext |>
+  rename(BWV_full = BWV) |>
   mutate(BWV = sub('.*(\\d{3}).*', '\\1', BWV_full),
-         BWV = parse_integer(BWV)) %>%
+         BWV = parse_integer(BWV)) |>
   filter(!rev(duplicated(rev(BWV))))
 ```
 
@@ -292,7 +291,7 @@ Then I merged the data. I lost a number of compositions in the process, but I wa
 #| label: merge-scraped
 #| warning: false
 
-merged_data <- merge(data, wikidata, by = "BWV") %>%
+merged_data <- merge(data, wikidata, by = "BWV") |>
   mutate(year = sub(".*(\\d{4}).*", "\\1", Date),
          year = as.numeric(year),
          age = year - 1685)
@@ -306,9 +305,9 @@ I noticed that some entries in the `year` column exceeded the year of Bach's dea
 #| message: false
 #| fig-width: 12
 
-BWVperyear <- merged_data %>%
-  filter(!is.na(year)) %>%
-  group_by(year,age) %>%
+BWVperyear <- merged_data |>
+  filter(!is.na(year)) |>
+  group_by(year,age) |>
   summarise(n = n())
 
 palette <- daniel_pal("staalmeesters")(6)
@@ -363,15 +362,15 @@ The Wikipedia page also contained information on the key of most of the composit
 ```{r}
 #| label: colplot-key-cat1
 
-summ_key_cat1 <- merged_data %>%
-  group_by(category1, Key) %>%
-  summarise(n = n()) %>%
-  filter(nchar(Key) > 1) %>%
+summ_key_cat1 <- merged_data |>
+  group_by(category1, Key) |>
+  summarise(n = n()) |>
+  filter(nchar(Key) > 1) |>
   mutate(Key = sub("\u266D", "b", Key),
          Key = sub("\U266F", "#", Key),
          Key = ifelse(nchar(Key) > 10, substring(Key,1,nchar(Key)/2), Key)
-  ) %>%
-  group_by(category1, Key) %>%
+  ) |>
+  group_by(category1, Key) |>
   summarise(n = sum(n))
 
 ggplot(summ_key_cat1, aes(x = reorder(Key,-n), y = n, fill = category1)) +
@@ -394,19 +393,19 @@ I noticed that there were no double keys, as in B flat is the same as A sharp. T
 #| warning: false
 #| fig-width: 12
 
-summ_key_cat2 <- merged_data %>%
-  group_by(category2, Key) %>%
-  summarise(n = n()) %>%
-  filter(nchar(Key) > 1) %>%
+summ_key_cat2 <- merged_data |>
+  group_by(category2, Key) |>
+  summarise(n = n()) |>
+  filter(nchar(Key) > 1) |>
   mutate(Key = sub("\u266D", "b", Key),
          Key = sub("\U266F", "#", Key),
          Key = ifelse(nchar(Key) > 10, substring(Key,1,nchar(Key)/2), Key)
-  ) %>%
-  group_by(category2, Key) %>%
+  ) |>
+  group_by(category2, Key) |>
   summarise(n = sum(n))
 
-plotdat <- rbind(summ_key_cat1 %>% rename(category2 = category1),
-                 summ_key_cat2) %>%
+plotdat <- rbind(summ_key_cat1 |> rename(category2 = category1),
+                 summ_key_cat2) |>
   cbind(gr = c(rep(1,nrow(summ_key_cat1)),
                rep(2,nrow(summ_key_cat2)))
         )
@@ -443,8 +442,8 @@ places <- data_frame(
   city = c("Eisenach","Ohrdruf","Lüneburg","Weimar","Arnstadt","Mühlhausen","Weimar","Köthen","Leipzig"),
   year_from = c(1685,1695,1700,1702,1703,1707,1708,1717,1723),
   year_to = c(1695,1700,1702,1703,1707,1708,1717,1723,1750)
-) %>%
-  mutate_geocode(city) %>%
+) |>
+  mutate_geocode(city) |>
   mutate(duration = year_to - year_from)
 ```
 
@@ -470,13 +469,13 @@ Since this time I wanted to visualize whether Bach was more productive in certai
 #| echo: false
 #| fig-width: 12
 
-places_plot <- places %>%
+places_plot <- places |>
   mutate(meanyear = year_from + ((year_to - year_from)/2))
 
 ggplot(places_plot) +
   geom_rect(aes(xmin = year_from + 0.5, xmax = year_to + 0.5, ymin = 0, ymax = 60, fill = reorder(city,year_from)),
             alpha = 0.75) +
-  stat_smooth(data = BWVperyear %>% filter(year < 1751), mapping = aes(x = year + 0.5, y = n, group = 1), fill = "black", geom = 'area', method = 'loess', span = 0.225, alpha = 0.75) +
+  stat_smooth(data = BWVperyear |> filter(year < 1751), mapping = aes(x = year + 0.5, y = n, group = 1), fill = "black", geom = 'area', method = 'loess', span = 0.225, alpha = 0.75) +
   geom_text(aes(x = meanyear, label = city, y = 62.5), 
             family = "Alegreya", angle = 60, hjust = 0) +
   labs(x = NULL,
@@ -498,8 +497,8 @@ Lastly, just for fun, I created a map.
 ```{r}
 #| label: mapplot
 
-places_unique <- places %>%
-  distinct(., city, .keep_all = TRUE)
+places_unique <- places |>
+  distinct(city, .keep_all = TRUE)
 
 ggplot(places_unique, aes(x = lon, y = lat)) + 
   borders("world", colour = palette[3], fill = palette[4], alpha = 1) +

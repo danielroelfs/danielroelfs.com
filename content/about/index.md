@@ -1,18 +1,15 @@
 ---
-description: "about"
-slug: "about"
-thumbnail: "images/avatar.png"
 title: "About"
-author: "Daniel Roelfs"
-format: hugo
 ---
 
+{{< sidenote >}}
 <img style="position: relative;
     top: 15px;
     padding: 0 15px; 
     float: right;" 
   src="avatar.png" width="33%"
 />
+{{< /sidenote >}}
 
 I'm Daniel Roelfs, currently working as a Data Scientist at the Norwegian bank DNB. Prior to this I was a PhD candidate working at the Norwegian Centre for Mental Disorders Research (NORMENT) in Oslo. My doctoral research focused on the intersection between neuroimaging and genetics to discover more about the human brain and the biology underlying psychiatric disorders.
 

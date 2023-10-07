@@ -1,16 +1,12 @@
 ---
 title: How I Make QQ Plots Using ggplot
-author: Daniel Roelfs
-date: '2020-04-10'
+date: 2020-04-10
 slug: how-i-make-qq-plots-using-ggplot
 categories:
   - coding
 tags:
   - ggplot
   - R
-description: 'How I Make QQ Plots Using ggplot'
-thumbnail: images/avatar.png
-format: hugo
 execute:
   fig.retina: 2
   fig.align: center
@@ -77,11 +73,11 @@ Now we have a data frame that contains all the information we need for plotting.
 Since the majority of SNPs have a p-value that's between 1 and 0.01, plotting all these individual SNPs is unnecessary. Similar to what one would do in a Manhattan plot, we're going to filter out a large number of SNPs that have a p-value higher than 0.01. Recall that the -log<sub>10</sub> of 0.01 is equal to 2, so we're going to take a subset of all expected values equal to or lower than 2. If this step causes some issue due to inflation etc., it will be easily visible in the plot later.
 
 ``` r
-plotdata_sub <- plotdata %>%
-  filter(expected <= 2) %>%
+plotdata_sub <- plotdata |>
+  filter(expected <= 2) |>
   sample_frac(0.01)
 
-plotdata_sup <- plotdata %>%
+plotdata_sup <- plotdata |>
   filter(expected > 2)
 
 plotdata_small <- rbind(plotdata_sub, plotdata_sup)

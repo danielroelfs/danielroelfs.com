@@ -1,17 +1,25 @@
 ---
-description: "cv"
-slug: "cv"
-thumbnail: "images/avatar.png"
 title: "Curriculum Vitæ"
-author: "Daniel Roelfs"
-format: hugo
 ---
+
+```{css}
+#| label: style
+#| echo: FALSE
+
+body > * {
+    margin-left: 3rem;
+}
+
+#content {
+    width: 35rem;
+}
+```
 
 ```{r}
 #| label: iframe
 #| echo: FALSE
 
 htmltools::tags$iframe(src = "https://danielroelfs.github.io/cv", 
-                       onload = "this.width='100%';this.height=screen.height*0.6;",
+                       onload = "this.width='100%';this.height=screen.height*0.5;",
                        frameBorder="0")
 ```

@@ -19,6 +19,7 @@ jobs:
         with:
           ref: update-theme
           fetch-depth: 1
+          submodules: recursive
       - name: Use Node.js
         uses: actions/setup-node@master
         with:

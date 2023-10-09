@@ -12,38 +12,3 @@
     min-width: 120%;
   }
 }
-
-.article-nav-outer {
-  position: absolute;
-  width: 38rem;
-  margin-left: -9rem;
-  margin-top: -2.81rem;
-}
-
-.article-nav-inner {
-  position: absolute;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-content: center;
-  align-items: center;
-  opacity: 0.9;
-}
-
-.article-nav-inner a.internal {
-  display: block;
-  font-size: 75%;
-  text-transform: uppercase;
-  text-align: center;
-  box-sizing: content-box;
-  padding: 0.2rem;
-  padding-top: 0.4rem;
-  padding-right: 0.3rem;
-}
-
-.article-nav-inner a.internal:hover {
-  background-color: rgba(166, 140, 145, 0.5);
-  transition: opacity 0.5s;
-  border-radius: 0;
-}

@@ -6,8 +6,8 @@
 @media all and (max-width: 600px){html {font-size: 18px;}}
 @media all and (max-width: 480px){html {font-size: 17px;}}
 
-@media all and (min-width: 801px) {
-  img {
+@media all and (min-width: 1200px) {
+  img:not(.icon) {
     margin-left: -6rem;
     min-width: 120%;
   }

@@ -14,33 +14,34 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "i
     introtag = "introduction"
     intro = "PhD Candidate in Brain Imaging & Genetics, Data Scientist within Anti-Money Laundering at DNB"
 
-    favicon = "images/avatar.png" # default sns thumbnail
+    favicon = "avatar.png"
 
-    description = "Daniel Roelfs' personal website" # Site description.
-    keywords = "blog,personal,coding" # Site keywords.
-    avatarurl = "images/avatar.png" # Contain the path of the optional avatar in the static folder.
+    iconsource = "simple-icons"
+
+    description = "Daniel Roelfs' personal website"
+    keywords = "blog, personal, coding"
 
     customcss = ["custom_style.css"]
     
     # Social links
     [[params.social]]
-        name = "Twitter"
-        icon = "twitter"
-        weight = 1
-        url = "https://twitter.com/dthroelfs/"
-    [[params.social]]
         name = "GitHub"
         icon = "github"
-        weight = 2
+        weight = 1
         url = "https://github.com/danielroelfs/"
     [[params.social]]
+        name = "Twitter"
+        icon = "x"
+        weight = 2
+        url = "https://twitter.com/dthroelfs/"
+    [[params.social]]
         name = "ORCID"
-        icon = "user"
+        icon = "orcid"
         weight = 3
         url = "https://orcid.org/0000-0002-1083-002X"
     [[params.social]]
         name = "Google Scholar"
-        icon = "book-open"
+        icon = "googlescholar"
         weight = 4
         url = "https://scholar.google.com/citations?user=QmVQcsAAAAAJ&hl=en"
     [[params.social]]
@@ -49,8 +50,13 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "i
         weight = 5
         url = "https://www.linkedin.com/in/danielroelfs/"
     [[params.social]]
+        name = "GoodReads"
+        icon = "goodreads"
+        weight = 6
+        url = "mailto:daniel.roelfs@medisin.uio.no"
+    [[params.social]]
         name = "Mail"
-        icon = "mail"
+        icon = "minutemailer"
         weight = 7
         url = "mailto:daniel.roelfs@medisin.uio.no"
 

@@ -1,3 +1,4 @@
 [submodule "themes/typography"]
 	path = themes/typography
 	url = https://github.com/danielroelfs/hugo-theme-typography.git
+	branch = dev

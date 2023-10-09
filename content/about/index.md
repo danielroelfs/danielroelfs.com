@@ -8,7 +8,7 @@ hidetopnav: true
     top: 15px;
     padding: 0 15px; 
     float: right;" 
-  src="avatar.png" width="33%"
+  src="/avatar.png" width="33%"
 />
 {{< /sidenote >}}
 

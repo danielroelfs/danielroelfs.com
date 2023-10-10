@@ -22,6 +22,9 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "i
     keywords = "blog, personal, coding"
 
     customcss = ["custom_style.css"]
+
+    umamilink   = "https://analytics.example.com/umami.js"
+    umamiid     = "1234567-abcd-efgh-0000-abcdefg1234"
     
     # Social links
     [[params.social]]

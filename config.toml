@@ -23,6 +23,7 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "i
 
     customcss = ["custom_style.css"]
 
+    umami       = true
     umamilink   = "https://analytics.example.com/umami.js"
     umamiid     = "1234567-abcd-efgh-0000-abcdefg1234"
     
@@ -38,29 +39,24 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "i
         weight = 2
         url = "https://twitter.com/dthroelfs/"
     [[params.social]]
+        name = "LinkedIn"
+        icon = "linkedin"
+        weight = 3
+        url = "https://www.linkedin.com/in/danielroelfs/"
+    [[params.social]]
         name = "ORCID"
         icon = "orcid"
-        weight = 3
+        weight = 4
         url = "https://orcid.org/0000-0002-1083-002X"
     [[params.social]]
         name = "Google Scholar"
         icon = "googlescholar"
-        weight = 4
-        url = "https://scholar.google.com/citations?user=QmVQcsAAAAAJ&hl=en"
-    [[params.social]]
-        name = "LinkedIn"
-        icon = "linkedin"
         weight = 5
-        url = "https://www.linkedin.com/in/danielroelfs/"
-    [[params.social]]
-        name = "GoodReads"
-        icon = "goodreads"
-        weight = 6
-        url = "mailto:daniel.roelfs@medisin.uio.no"
+        url = "https://scholar.google.com/citations?user=QmVQcsAAAAAJ&hl=en"
     [[params.social]]
         name = "Mail"
         icon = "minutemailer"
-        weight = 7
+        weight = 6
         url = "mailto:daniel.roelfs@medisin.uio.no"
 
 # Menu links
@@ -77,6 +73,7 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "i
         name = "Photography"
         url = "/photography"    
         weight = 3
+        identifier = "hide-from-nav"
     [[menu.main]]
         name = "Publications"
         url = "/publications"

@@ -1,11 +1,3 @@
-@media all {html {font-size: 21px;}}
-@media all and (max-width: 1600px){html {font-size: 22px;}}
-@media all and (max-width: 1000px){html {font-size: 21px;}}
-@media all and (max-width: 880px){html {font-size: 20px;}}
-@media all and (max-width: 800px){html {font-size: 19px;}}
-@media all and (max-width: 600px){html {font-size: 18px;}}
-@media all and (max-width: 480px){html {font-size: 17px;}}
-
 @media all and (min-width: 1200px) {
   img:not(.icon) {
     margin-left: -6rem;

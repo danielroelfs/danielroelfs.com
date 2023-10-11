@@ -1,16 +1,13 @@
 ---
 title: A Basic Comparison Between Factor Analysis, PCA, and ICA
-author: Daniel Roelfs
-date: "2021-09-14"
+date: 2021-09-14
+description: A Basic Comparison Between Factor Analysis, PCA, and ICA
 slug: a-basic-comparison-between-factor-analysis-pca-and-ica
 categories:
   - statistics
 tags:
   - statistics
   - R
-description: "A Basic Comparison Between Factor Analysis, PCA, and ICA"
-thumbnail: images/avatar.png
-format: hugo
 execute:
   fig.retina: 2
   fig.align: center
@@ -21,9 +18,7 @@ execute:
 
 This is just a very quick blog post outlining some of the commonalities and differences between factor analysis (FA), principal component analysis (PCA), and independent component analysis (ICA). I was inspired to write some of this down through some confusion caused in the lab by SPSS' apparent dual usage of the term "factor analysis" and "principal components". A few of my colleagues who use SPSS showed me the following screen:
 
-<p align="center">
-<img src="spss-screenshot.png"/>
-</p>
+{{< image src="spss-screenshot.png" alt="spss screenshot" >}}
 
 This screen shows up when you click `Analyze` -\> `Dimension Reduction` -\> `Factor`, which then opens a window called "Factor Analysis: Extraction" which lets you pick "Principal components" as a method. To put the (apparent) PCA method as a sub-section of factor analysis is misleading at best, and straight-up erronious at worst. The other options for the method here is "Principal axis factoring" (which is closer to traditional factor analysis) and "Maximum likelihood" ([source for screenshot and SPSS interface](https://stats.idre.ucla.edu/spss/seminars/efa-spss/)). If you're wondering if you're the first one to be confused by SPSS' choice to present this in such a way, you're not ([link](https://stats.stackexchange.com/questions/1576/what-are-the-differences-between-factor-analysis-and-principal-component-analysi), [link](https://stats.stackexchange.com/questions/24781/interpreting-discrepancies-between-r-and-spss-with-exploratory-factor-analysis)).
 
@@ -46,8 +41,8 @@ theme_set(theme_minimal())
 We'll load the data into R, clean up the variable names, convert the outcome variable (`ca_cervix`) to a factor. We'll have a look at the dataset using some functions from `{skimr}`. This function will give us summary statistics and basic histograms of the different variables.
 
 ``` r
-data <- read_csv("sobar-72.csv") %>% 
-  janitor::clean_names() %>% 
+data <- read_csv("sobar-72.csv") |>
+  janitor::clean_names() |> 
   mutate(ca_cervix = as_factor(ca_cervix))
 
 skim_summ <- skimr::skim_with(base = skimr::sfl())
@@ -101,8 +96,8 @@ Data summary
 Now let's only select the variables containing the risk factors (called features from here on). We'll also scale all the features to have a mean of 0 and a standard deviation of 1 using the `scale()` function. We can check what the new variable looks like using the `summary()` function.
 
 ``` r
-data_features <- data %>% 
-  select(-ca_cervix) %>% 
+data_features <- data |> 
+  select(-ca_cervix) |> 
   mutate(across(everything(), ~ scale(.x)))
 
 summary(data_features$attitude_consistency)
@@ -119,11 +114,11 @@ summary(data_features$attitude_consistency)
 So now we have a data frame with 72 entries and 19 normalized columns, each representing a feature that may or may not predict cervical cancer. We can create a correlation matrix to visualize the degree of correlation between the different features. For this we simply run `cor()` on the data frame with the features, transform the output to a data frame in long format and then visualize it using `ggplot()` and `geom_tile()`.
 
 ``` r
-cor(data_features) %>% 
-  as_tibble() %>% 
-  mutate(feature_y = names(.)) %>% 
-  pivot_longer(cols = -feature_y, names_to = "feature_x", values_to = "correlation") %>% 
-  mutate(feature_y = fct_rev(feature_y)) %>% 
+cor(data_features) |> 
+  as_tibble() %>%
+  mutate(feature_y = names(.)) |> 
+  pivot_longer(cols = -feature_y, names_to = "feature_x", values_to = "correlation") |> 
+  mutate(feature_y = fct_rev(feature_y)) |> 
   ggplot(aes(x = feature_x, y = feature_y, fill = correlation)) + 
   geom_tile() + 
   labs(x = NULL,
@@ -242,7 +237,7 @@ We may be tempted to immediately look at the *p*-value at the end of the output.
 The "Loadings" section of the results show a make-shift weight matrix, but in order to further interpret these results, let's create a plot showing the weight matrix. We'll get the results from the factor analysis model we created earlier using the `tidy()` function from `{broom}` and convert it to long format. We'll then create a weight matrix much in the same way we did earlier.
 
 ``` r
-fa_weight_matrix <- broom::tidy(fa_model) %>% 
+fa_weight_matrix <- broom::tidy(fa_model) |> 
   pivot_longer(starts_with("fl"), names_to = "factor", values_to = "loading")
 
 fa_loading_plot <- ggplot(fa_weight_matrix, aes(x = factor, y = variable, fill = loading)) + 
@@ -263,11 +258,11 @@ Here we can more easily see that there's two strong clusters in Factor 1 and Fac
 Lastly, I think it would be interesting to see how the different factors relate to each other. We'll take the Bartlett's scores and correlate them with each other much like before and create a correlation matrix like before.
 
 ``` r
-fa_model$scores %>% 
-  cor() %>% 
-  data.frame() %>% 
-  rownames_to_column("factor_x") %>% 
-  pivot_longer(cols = -factor_x, names_to = "factor_y", values_to = "correlation") %>% 
+fa_model$scores |> 
+  cor() |> 
+  data.frame() |> 
+  rownames_to_column("factor_x") |> 
+  pivot_longer(cols = -factor_x, names_to = "factor_y", values_to = "correlation") |> 
   ggplot(aes(x = factor_x, y = factor_y, fill = correlation)) + 
   geom_tile() +
   geom_text(aes(label = round(correlation,4)), color = "white") +
@@ -301,12 +296,12 @@ pc_model$variance <- pc_model$sdev^2
 Next we can make a simple scree plot using the variance we calculate above. We'll create a plot with the principal components on the x-axis and the eigenvalue on the y-axis. The scree plot is a very popular plot to visualize features of a PCA. In this plot the elbow is quite clearly at principal component 3, but as discussed, the scree plot is not the best nor the only way to determine the optimal number of components. In the code below I also added a calculation for the cumulative variance (`cum_variance`) which showed that a little more than 80% of the variance is captured in the first 7 components, while the first 3 components combined capture only 56%.
 
 ``` r
-pc_model$variance %>% 
-  as_tibble() %>%
-  rename(eigenvalue = value) %>% 
-  rownames_to_column("comp") %>% 
+pc_model$variance |> 
+  as_tibble() |>
+  rename(eigenvalue = value) |> 
+  rownames_to_column("comp") |> 
   mutate(comp = parse_number(comp),
-         cum_variance = cumsum(eigenvalue)/sum(eigenvalue)) %>% 
+         cum_variance = cumsum(eigenvalue)/sum(eigenvalue)) |> 
   ggplot(aes(x = comp, y = eigenvalue)) + 
   geom_hline(yintercept = 1) +
   geom_line(size = 1) + 
@@ -321,13 +316,13 @@ pc_model$variance %>%
 We'll also create a weight matrix again, based on the rotation from the PCA. We'll create the weight matrix much in the same way as before. A PCA by its very nature returns an equal number of components as the number of variables put in, however, we're interested in just the first 7 components, so we'll select just those using the `filter()` function.
 
 ``` r
-pc_weight_matrix <- pc_model$rotation %>% 
-  data.frame() %>% 
-  rownames_to_column("variable") %>% 
+pc_weight_matrix <- pc_model$rotation |> 
+  data.frame() |> 
+  rownames_to_column("variable") |> 
   pivot_longer(starts_with("PC"), names_to = "prin_comp", values_to = "loading")
 
-pca_loading_plot <- pc_weight_matrix %>% 
-  filter(parse_number(prin_comp) <= n_comps) %>% 
+pca_loading_plot <- pc_weight_matrix |> 
+  filter(parse_number(prin_comp) <= n_comps) |> 
   ggplot(aes(x = reorder(prin_comp, parse_number(prin_comp)), y = variable, fill = loading)) +
   geom_tile() + 
   labs(title = "PCA loadings",
@@ -346,13 +341,13 @@ One thing that immediately jumps out is that PC1 and PC2 are nearly identical to
 We can also make a correlation matrix for the different principal components. We'll use the `x` field and otherwise create the correlation matrix the same way as before:
 
 ``` r
-pc_model$x %>% 
-  cor() %>% 
-  data.frame() %>% 
-  rownames_to_column("comp_x") %>% 
-  pivot_longer(cols = starts_with("PC"), names_to = "comp_y", values_to = "correlation") %>% 
+pc_model$x |> 
+  cor() |> 
+  data.frame() |> 
+  rownames_to_column("comp_x") |> 
+  pivot_longer(cols = starts_with("PC"), names_to = "comp_y", values_to = "correlation") |> 
   filter(parse_number(comp_x) <= n_comps,
-         parse_number(comp_y) <= n_comps) %>% 
+         parse_number(comp_y) <= n_comps) |> 
   ggplot(aes(x = comp_x, y = comp_y, fill = correlation)) + 
   geom_tile() +
   geom_text(aes(label = round(correlation,4)), color = "white") +
@@ -392,8 +387,8 @@ pc_manual <- as.matrix(data_features) %*% eigenvector
 Let's look at the scree plot:
 
 ``` r
-tibble(eigenvalues) %>% 
-  ggplot(aes(x = seq_along(eigenvalues),  y = eigenvalues)) + 
+tibble(eigenvalues) |> 
+  ggplot(aes(x = seq_along(eigenvalues), y = eigenvalues)) + 
   geom_hline(yintercept = 1) +
   geom_line(size = 1) + 
   geom_point(size = 3)
@@ -404,7 +399,7 @@ tibble(eigenvalues) %>%
 Looks identical to the previous one. Let's also look at the correlation matrix between the principal components.
 
 ``` r
-data.frame(pc_manual) %>% 
+data.frame(pc_manual) |> 
   cor() %>% 
   round(., 4)
 ```
@@ -443,9 +438,9 @@ ica_model <- fastICA(data_features, n.comp = n_comps)
 Let's create a weight matrix again. The output from the `fastICA()` doesn't provide useful names, but the [documentation](https://www.rdocumentation.org/packages/fastICA/versions/1.2-2/topics/fastICA) provides sufficient information. To create the weight matrix we take the `A` field, transpose it, get the right names to the right places and then create the plot like we've done several times now.
 
 ``` r
-ica_weight_matrix <- data.frame(t(ica_model$A)) %>% 
-  rename_with(~ str_glue("IC{seq(.)}")) %>%
-  mutate(variable = names(data_features)) %>%
+ica_weight_matrix <- data.frame(t(ica_model$A)) |> 
+  rename_with(~ str_glue("IC{seq(.)}")) |>
+  mutate(variable = names(data_features)) |>
   pivot_longer(cols = starts_with("IC"), names_to = "ic", values_to = "loading")
 
 ica_loading_plot <- ggplot(ica_weight_matrix, aes(x = ic, y = variable, fill = loading)) +
@@ -466,11 +461,11 @@ The FastICA method doesn't rank the components based on variance like factor ana
 Again, we can also visualize the correlation between the different components.
 
 ``` r
-ica_model$S %>% 
-  cor() %>% 
-  data.frame() %>% 
-  rownames_to_column("comp_x") %>% 
-  pivot_longer(cols = starts_with("X"), names_to = "comp_y", values_to = "correlation") %>% 
+ica_model$S |> 
+  cor() |> 
+  data.frame() |> 
+  rownames_to_column("comp_x") |> 
+  pivot_longer(cols = starts_with("X"), names_to = "comp_y", values_to = "correlation") |> 
   ggplot(aes(x = comp_x, y = comp_y, fill = correlation)) + 
   geom_tile() +
   geom_text(aes(label = round(correlation,4)), color = "white") +
@@ -489,21 +484,21 @@ Okay, let's now compare the three approaches and put the loading matrices side b
 
 ``` r
 all_weight_matrices <- bind_rows(
-  fa_weight_matrix %>% 
-    rename(comp = factor) %>% 
+  fa_weight_matrix |> 
+    rename(comp = factor) |> 
     mutate(alg = "FA"),
-  pc_weight_matrix %>% 
-    rename(comp = prin_comp) %>% 
+  pc_weight_matrix |> 
+    rename(comp = prin_comp) |> 
     mutate(alg = "PCA"), 
-  ica_weight_matrix %>% 
-    rename(comp = ic) %>% 
+  ica_weight_matrix |> 
+    rename(comp = ic) |> 
     mutate(alg = "ICA")
 )
 
-all_weight_matrices %>% 
-  filter(parse_number(comp) <= n_comps) %>% 
+all_weight_matrices |> 
+  filter(parse_number(comp) <= n_comps) |> 
   mutate(alg = str_glue("{alg} loadings"),
-         alg = as_factor(alg)) %>% 
+         alg = as_factor(alg)) |> 
   ggplot(aes(x = comp, y = variable, fill = loading)) +
   geom_tile() + 
   labs(x = NULL,
@@ -555,10 +550,10 @@ Let's look at how the clusters are made up according to the hierarchical cluster
 
 ``` r
 hclust_weight_matrix %>% 
-  data.frame() %>% 
-  janitor::clean_names() %>% 
-  rename(cluster = x) %>% 
-  rownames_to_column("variable") %>% 
+  data.frame() |> 
+  janitor::clean_names() |> 
+  rename(cluster = x) |> 
+  rownames_to_column("variable") |> 
   ggplot(aes(x = as_factor(cluster), y = variable, fill = as_factor(cluster))) +
   geom_tile() + 
   labs(x = NULL,

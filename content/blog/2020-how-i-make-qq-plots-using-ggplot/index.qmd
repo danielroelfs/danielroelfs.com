@@ -1,16 +1,13 @@
 ---
 title: How I Make QQ Plots Using ggplot
-author: Daniel Roelfs
-date: '2020-04-10'
+date: 2020-04-10
+description: How I Make QQ Plots Using ggplot
 slug: how-i-make-qq-plots-using-ggplot
 categories:
   - coding
 tags:
   - ggplot
   - R
-description: 'How I Make QQ Plots Using ggplot'
-thumbnail: images/avatar.png
-format: hugo
 execute:
   fig.retina: 2
   fig.align: center
@@ -75,11 +72,11 @@ Since the majority of SNPs have a p-value that's between 1 and 0.01, plotting al
 ```{r}
 #| label: reduce-size
 
-plotdata_sub <- plotdata %>%
-  filter(expected <= 2) %>%
+plotdata_sub <- plotdata |>
+  filter(expected <= 2) |>
   sample_frac(0.01)
 
-plotdata_sup <- plotdata %>%
+plotdata_sup <- plotdata |>
   filter(expected > 2)
 
 plotdata_small <- rbind(plotdata_sub, plotdata_sup)

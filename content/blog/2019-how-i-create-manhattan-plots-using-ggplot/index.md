@@ -1,16 +1,13 @@
 ---
 title: How I Create Manhattan Plots Using ggplot
-author: Daniel Roelfs
-date: '2019-04-24'
+date: 2019-04-24
+description: How I Create Manhattan Plots Using ggplot
 slug: how-i-create-manhattan-plots-using-ggplot
 categories:
   - coding
 tags:
   - ggplot
   - R
-description: 'How I Create Manhattan Plots Using ggplot'
-thumbnail: images/avatar.png
-format: hugo
 execute:
   fig.retina: 2
   fig.align: center
@@ -36,7 +33,7 @@ library(normentR)
 ``` r
 set.seed(2404)
 
-gwas_data_load <- simulateGWAS(nSNPs = 1e6, nSigCols = 3) %>% 
+gwas_data_load <- simulateGWAS(nSNPs = 1e6, nSigCols = 3) |> 
   janitor::clean_names()
 ```
 
@@ -58,11 +55,11 @@ This will create a dataframe with as many rows as there are SNPs in the summary 
 A vast majority of the datapoints will overlap in the non-significant region of the Manhattan plot, these data points are not particularly informative, and it's possible to select a random number of SNPs in this region to make it less computationally heavy. The data I used here does not have such a large volume, so I only needed to filter a small number of SNPs (10% in this case).
 
 ``` r
-sig_data <- gwas_data_load %>% 
+sig_data <- gwas_data_load |> 
   subset(p < 0.05)
-notsig_data <- gwas_data_load %>% 
-  subset(p >= 0.05) %>%
-  group_by(chr) %>% 
+notsig_data <- gwas_data_load |> 
+  subset(p >= 0.05) |>
+  group_by(chr) |> 
   sample_frac(0.1)
 gwas_data <- bind_rows(sig_data, notsig_data)
 ```
@@ -72,27 +69,27 @@ gwas_data <- bind_rows(sig_data, notsig_data)
 Since the only columns we have indicating position are the chromosome number and the base pair position of the SNP on that chromosome, we want to combine those so that we have one column with position that we can use for the x-axis. So, what we want to do is to create a column with cumulative base pair position in a way that puts the SNPs on the first chromosome first, and the SNPs on chromosome 22 last. I create a data frame frame called `data_cum` (for cumulative), which selects the largest position for each chromosome, and then calculates the cumulative sum of those. Since we don't need to add anything to the first chromosome, we move everything one row down (using the `lag()` function). We then merge this data frame with the original dataframe and calculate a the cumulative basepair position for each SNP by adding the relative position and the adding factor together. This will create a column (here called `bp_cum`) in which the relative base pair position is the position as if it was stitched together. This code is shown below:
 
 ``` r
-data_cum <- gwas_data %>% 
-  group_by(chr) %>% 
-  summarise(max_bp = max(bp)) %>% 
-  mutate(bp_add = lag(cumsum(max_bp), default = 0)) %>% 
+data_cum <- gwas_data |> 
+  group_by(chr) |> 
+  summarise(max_bp = max(bp)) |> 
+  mutate(bp_add = lag(cumsum(max_bp), default = 0)) |> 
   select(chr, bp_add)
 
-gwas_data <- gwas_data %>% 
-  inner_join(data_cum, by = "chr") %>% 
+gwas_data <- gwas_data |> 
+  inner_join(data_cum, by = "chr") |> 
   mutate(bp_cum = bp + bp_add)
 ```
 
 When this is done, the next thing I want to do is to get a couple of parameters that I'll use for the plot later. First, I want the centre position of each chromosome. This position I'll use later to place the labels on the x-axis of the Manhattan plot neatly in the middle of each chromosome. In order to get this position, I'll pipe the `gwas_data` dataframe into this powerful `{dplyr}` function which I then ask to calculate the difference between the maximum and minimum cumulative base pair position for each chromosome and divide it by two to get the middle of each chromosome. I also want to set the limit of the y-axis, as not to cut off any highly significant SNPs. If you want to compare multiple GWAS statistics, then I highly recommend to hard code the limit of the y-axis, and then explore the data beforehand to make sure your chosen limit does not cut off any SNPs. Since the y-axis will be log transformed, we need an integer that is lower than the largest negative exponent. But since the y-axis will be linear and positive, I transform the largest exponent to positive and add 2, to give some extra space on the top edge of the plot. When plotting, I actually convert it back to a log scale, but it's a bit easier to add a constant to it by transforming it to a regular integer first. Then, we also want to indicate the significance threshold, I prefer to save this in a variable. Here, I choose to get a Bonferroni-corrected threshold, which is 0.05 divided by the number of SNPs in the summary statistics. I believe many scientists will use the "standard" threshold of 0.05 divided by 1e-6, which is 5e-8. However, in the data I had I believed it to be best to use the Bonferroni-corrected threshold since the sample encompassed different populations, and because it contained less than a million SNPs were used in the association testing, which would make a standard correction overly conservative. These three parameters were calculated as follows:
 
 ``` r
-axis_set <- gwas_data %>% 
-  group_by(chr) %>% 
+axis_set <- gwas_data |> 
+  group_by(chr) |> 
   summarize(center = mean(bp_cum))
 
-ylim <- gwas_data %>% 
-  filter(p == min(p)) %>% 
-  mutate(ylim = abs(floor(log10(p))) + 2) %>% 
+ylim <- gwas_data |> 
+  filter(p == min(p)) |> 
+  mutate(ylim = abs(floor(log10(p))) + 2) |> 
   pull(ylim)
 
 sig <- 5e-8

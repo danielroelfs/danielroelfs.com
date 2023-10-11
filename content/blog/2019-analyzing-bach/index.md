@@ -1,17 +1,13 @@
 ---
 title: Analyzing Bach
-author: Daniel Roelfs
-date: '2019-12-01'
+date: 2019-12-01
+description: Analyzing Bach with R
 slug: analyzing-bach
 categories:
   - coding
 tags:
   - ggplot
   - R
-  - Bach
-description: 'Analyzing Bach'
-thumbnail: images/avatar.png
-format: hugo
 execute:
   fig.retina: 2
   fig.align: center
@@ -64,14 +60,14 @@ Let's collect the BWVs:
 
 ``` r
 index_url <- "http://www.bachcentral.com/BWV/index.html"
-BWVs <- paste(readLines(index_url), collapse = "\n") %>%
-  str_match_all("<a href=\"(.*?)\"") %>%
-  unlist() %>%
-  unique() %>%
-  str_extract_all("[0-9]+.html") %>%
-  unlist() %>%
-  unique() %>%
-  str_extract_all("[0-9]+") %>%
+BWVs <- paste(readLines(index_url), collapse = "\n") |>
+  str_match_all("<a href=\"(.*?)\"") |>
+  unlist() |>
+  unique() |>
+  str_extract_all("[0-9]+.html") |>
+  unlist() |>
+  unique() |>
+  str_extract_all("[0-9]+") |>
   as.character()
 str(BWVs)
 ```
@@ -103,11 +99,11 @@ for (i in 1:length(BWVs)) {
   url <- sprintf("http://www.bachcentral.com/BWV/%s.html", BWVs[i])
   webpage <- read_html(url)
   
-  text <- webpage %>%
-    html_nodes("ul") %>%
-    html_text() %>%
-    gsub('[\t]', '', .) %>%
-    strsplit(., "\\n") %>%
+  text <- webpage |>
+    html_nodes("ul") |>
+    html_text() |>
+    gsub('[\t]', '', .) |>
+    strsplit(., "\\n") |>
     unlist()
   
   values <- text[seq(2,length(text),2)]
@@ -144,14 +140,14 @@ All columns are currently character arrays, and this is appropriate for most of 
 The character arrays are appropriate, but for further analyes I'd prefer to make at least the categories explicitely factorial. Then I'll also rename awkwardly named columns, and reorder the columns to start with the BWV instead of the number title.
 
 ``` r
-data <- scraped_data %>%
+data <- scraped_data |>
   mutate(BWV = as.numeric(BWV),
          category1 = factor(category1),
          category2 = factor(category2),
          category3 = factor(category3),
          cantate_cat1 = substring(cantate_cat1,4),
-         CLC_BWV_w_epifix = str_replace(CLC_BWV_w_epifix, " ", "")) %>%
-  rename(BWV_w_epifix = CLC_BWV_w_epifix) %>%
+         CLC_BWV_w_epifix = str_replace(CLC_BWV_w_epifix, " ", "")) |>
+  rename(BWV_w_epifix = CLC_BWV_w_epifix) |>
   select(BWV, BWV_epifix, BWV_w_epifix, everything())
 str(data)
 ```
@@ -177,9 +173,9 @@ Now we have this data, we can do some descriptive visualizations of the data. Ov
 The first descritive I wanted to see was what kind of work Bach wrote and in what numbers. First the main category, which differentiates between choral pieces and instrumental pieces.
 
 ``` r
-data %>%
-  group_by(category1) %>%
-  summarise(n = n()) %>%
+data |>
+  group_by(category1) |>
+  summarise(n = n()) |>
   ggplot(aes(x = category1, y = n, color = category1)) +
   geom_segment(aes(xend = category1, yend = 0), size = 12, 
                color = "grey40", alpha = 0.9) +
@@ -204,9 +200,9 @@ data %>%
 It seems Bach didn't have a strong preference for either instrumental or choral music. I suppose he didn't have infinite freedom with what to compose, since his employer might also request him to compose certain types of music. I wanted to see the same for the secondary category, which differentias between the type of composition (e.g. cantate, passions, organ pieces, symphonies, and so on).
 
 ``` r
-data %>%
-  group_by(category2) %>%
-  summarise(n = n()) %>%
+data |>
+  group_by(category2) |>
+  summarise(n = n()) |>
   ggplot(aes(x = reorder(category2,-n), y = n, color = category2)) +
   geom_segment(aes(xend = category2, yend = 0), size = 6, 
                color = "grey40", alpha = 0.9) +
@@ -228,10 +224,10 @@ data %>%
 From this it seems that most of the intrumental pieces are made up by just solo pieces for organ and the harpsichord and that the choral pieces are made up mostly by cantates and chorales for four voices. While I appreciate the information dissemination qualities of a barplot (or lollipop plot) like this, in that it's good in communicating absolute quantities (while I admit that this could also be displayed in a table). One thing it is less good at, is communicating the subjective volume of the works. There's more than a thousand pieces in the BWV, and I feel that the plots above don't do a good enough job at communicating just how many pieces this is. Therefore, I created a tile plot (using `{waffle}`), where every tile represents one piece. I colored again based on the secondary category. In order to still maintain the quantities of each category, I added the number of compositions to the legend.
 
 ``` r
-data %>%
-  group_by(category2) %>%
-  summarise(n = n()) %>%
-  mutate(category2 = sprintf("%s (%s)", category2, n)) %>%
+data |>
+  group_by(category2) |>
+  summarise(n = n()) |>
+  mutate(category2 = sprintf("%s (%s)", category2, n)) |>
   ggplot(aes(fill = category2, values = n)) +
   geom_waffle(n_rows = 17, size = 0.2, colour = "#FFFFFC", flip = FALSE, na.rm = TRUE) +
   scale_fill_daniel(palette = "staalmeesters", name = NULL) +
@@ -253,26 +249,26 @@ The dataset I just created was comprehensive and clean, but it didn't contain an
 url <- "https://en.wikipedia.org/wiki/List_of_compositions_by_Johann_Sebastian_Bach"
 webpage <- read_html(url)
 
-wikitext <- webpage %>%
-  html_nodes(xpath='//*[@id="TOP"]') %>%
-  html_table(fill = TRUE) %>%
+wikitext <- webpage |>
+  html_nodes(xpath='//*[@id="TOP"]') |>
+  html_table(fill = TRUE) |>
   as.data.frame()
 ```
 
 Then I cleaned the data somewhat and extracted the number from the BWV columns.
 
 ``` r
-wikidata <- wikitext %>%
-  rename(BWV_full = BWV) %>%
+wikidata <- wikitext |>
+  rename(BWV_full = BWV) |>
   mutate(BWV = sub('.*(\\d{3}).*', '\\1', BWV_full),
-         BWV = parse_integer(BWV)) %>%
+         BWV = parse_integer(BWV)) |>
   filter(!rev(duplicated(rev(BWV))))
 ```
 
 Then I merged the data. I lost a number of compositions in the process, but I was okay with it, mostly because it took me too much time and effort to try and fix it. Hurray for laziness. I extracted the year from the slightly messy `Date` column. Some strings in this column contain two dates, one for the first compilation and one for the date of completion. I extracted the last number, the year of completion.
 
 ``` r
-merged_data <- merge(data, wikidata, by = "BWV") %>%
+merged_data <- merge(data, wikidata, by = "BWV") |>
   mutate(year = sub(".*(\\d{4}).*", "\\1", Date),
          year = as.numeric(year),
          age = year - 1685)
@@ -281,9 +277,9 @@ merged_data <- merge(data, wikidata, by = "BWV") %>%
 I noticed that some entries in the `year` column exceeded the year of Bach's death. Bach died in 1750. I assumed that these years indicated the year of first performance or publication. In this scenario, it would be possible that certain pieces were lost and rediscovered at a later date and only then published. I thought to make a barplot of the number of compositions Bach over the course of his life, trying to see if there was any period where he was particularly productive. I also added some annotations to give the plot some context.
 
 ``` r
-BWVperyear <- merged_data %>%
-  filter(!is.na(year)) %>%
-  group_by(year,age) %>%
+BWVperyear <- merged_data |>
+  filter(!is.na(year)) |>
+  group_by(year,age) |>
   summarise(n = n())
 
 palette <- daniel_pal("staalmeesters")(6)
@@ -338,15 +334,15 @@ It seems there were two particularly productive years. But since the year column
 The Wikipedia page also contained information on the key of most of the compositions (21 were missing). I was wondering if Bach had a particular preference for a specific key. So I calculated the number of compositions written in each key, and separated based on the first category.
 
 ``` r
-summ_key_cat1 <- merged_data %>%
-  group_by(category1, Key) %>%
-  summarise(n = n()) %>%
-  filter(nchar(Key) > 1) %>%
+summ_key_cat1 <- merged_data |>
+  group_by(category1, Key) |>
+  summarise(n = n()) |>
+  filter(nchar(Key) > 1) |>
   mutate(Key = sub("\u266D", "b", Key),
          Key = sub("\U266F", "#", Key),
          Key = ifelse(nchar(Key) > 10, substring(Key,1,nchar(Key)/2), Key)
-  ) %>%
-  group_by(category1, Key) %>%
+  ) |>
+  group_by(category1, Key) |>
   summarise(n = sum(n))
 ```
 
@@ -374,19 +370,19 @@ ggplot(summ_key_cat1, aes(x = reorder(Key,-n), y = n, fill = category1)) +
 I noticed that there were no double keys, as in B flat is the same as A sharp. The person who compiled the table must have taken it into account since it's very unlikely that this was by chance. I also wanted to make the same comparison for the second category. Since I didn't like the idea of a large number of very skinny barplots, or the idea of a stacked barplot, I thought the best way to go about this is to make it into a tile plot. Since the tile plot is quite an efficient way of disseminating information, I could also include the counts from the primary category.
 
 ``` r
-summ_key_cat2 <- merged_data %>%
-  group_by(category2, Key) %>%
-  summarise(n = n()) %>%
-  filter(nchar(Key) > 1) %>%
+summ_key_cat2 <- merged_data |>
+  group_by(category2, Key) |>
+  summarise(n = n()) |>
+  filter(nchar(Key) > 1) |>
   mutate(Key = sub("\u266D", "b", Key),
          Key = sub("\U266F", "#", Key),
          Key = ifelse(nchar(Key) > 10, substring(Key,1,nchar(Key)/2), Key)
-  ) %>%
-  group_by(category2, Key) %>%
+  ) |>
+  group_by(category2, Key) |>
   summarise(n = sum(n))
 
-plotdat <- rbind(summ_key_cat1 %>% rename(category2 = category1),
-                 summ_key_cat2) %>%
+plotdat <- rbind(summ_key_cat1 |> rename(category2 = category1),
+                 summ_key_cat2) |>
   cbind(gr = c(rep(1,nrow(summ_key_cat1)),
                rep(2,nrow(summ_key_cat2)))
         )
@@ -422,8 +418,8 @@ places <- data_frame(
   city = c("Eisenach","Ohrdruf","Lüneburg","Weimar","Arnstadt","Mühlhausen","Weimar","Köthen","Leipzig"),
   year_from = c(1685,1695,1700,1702,1703,1707,1708,1717,1723),
   year_to = c(1695,1700,1702,1703,1707,1708,1717,1723,1750)
-) %>%
-  mutate_geocode(city) %>%
+) |>
+  mutate_geocode(city) |>
   mutate(duration = year_to - year_from)
 ```
 
@@ -440,8 +436,8 @@ It's obvious that Bach lived in Leipzich the longest. He had a few productive pe
 Lastly, just for fun, I created a map.
 
 ``` r
-places_unique <- places %>%
-  distinct(., city, .keep_all = TRUE)
+places_unique <- places |>
+  distinct(city, .keep_all = TRUE)
 
 ggplot(places_unique, aes(x = lon, y = lat)) + 
   borders("world", colour = palette[3], fill = palette[4], alpha = 1) +

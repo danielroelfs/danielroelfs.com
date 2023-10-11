@@ -1,7 +1,7 @@
 ---
 title: How I Plot ERPs in R
-author: Daniel Roelfs
-date: '2019-03-30'
+date: 2019-03-30
+description: How I Plot ERPs in R
 slug: how-i-plot-erps-in-r
 categories:
   - coding
@@ -9,9 +9,6 @@ tags:
   - R
   - ggplot
   - ERP
-description: 'How I Plot ERPs in R'
-thumbnail: images/avatar.png
-format: hugo
 execute:
   fig.retina: 2
   fig.align: center
@@ -70,16 +67,16 @@ Since I didn't include any headers in my file, I rename them here. I give the th
 ```{r}
 #| label: prep-data
 
-ERPdata <- data %>%
+ERPdata <- data |>
   rename(Channel = V1,
          ID = V2,
-         Condition = V3) %>%
+         Condition = V3) |>
   mutate(ID = factor(ID),
          Condition = factor(Condition))
 
 oldnames <- sprintf("V%s", 1:ncol(times) + 3)
 
-ERPdata <- ERPdata %>% 
+ERPdata <- ERPdata |> 
   rename_at(vars(all_of(oldnames)), ~ as.character(times))
 ```
 
@@ -87,7 +84,7 @@ ERPdata <- ERPdata %>%
 #| label: remove-empty-col
 #| echo: false
 
-ERPdata <- ERPdata %>%
+ERPdata <- ERPdata |>
   select(-V824)
 ```
 
@@ -106,15 +103,15 @@ Then I calculate the means across channels and conditions. This goes in two step
 ```{r}
 #| label: calculate-grand-averages
 
-ERPdata_mChan <- ERPdata %>%
-  filter(Channel %in% coi) %>%
+ERPdata_mChan <- ERPdata |>
+  filter(Channel %in% coi) |>
   group_by(ID,Condition,Channel) %>%
-  summarise_at(vars(names(.)[4:ncol(.)]), list(~ mean(., na.rm = TRUE))) %>%
+  summarise_at(vars(names(.)[4:ncol(.)]), list(~ mean(., na.rm = TRUE))) |>
   ungroup()
 
-ERPdata_mCond <- ERPdata_mChan %>%
+ERPdata_mCond <- ERPdata_mChan |>
   group_by(ID,Condition) %>%
-  summarise_at(vars(names(.)[4:ncol(.)]), list(~ mean(., na.rm = TRUE))) %>%
+  summarise_at(vars(names(.)[4:ncol(.)]), list(~ mean(., na.rm = TRUE))) |>
   ungroup()
 
 MeanERPs <- ERPdata_mCond
@@ -127,10 +124,10 @@ The next piece of code calculates the grand average. I will also calculate the c
 ```{r}
 #| label: long-format
 
-ERP_plotdata <- MeanERPs %>%
-  pivot_longer(-c(ID,Condition), names_to = "Time", values_to = "Amplitude") %>%
-  mutate(Time = as.numeric(Time)) %>%
-  group_by(Condition,Time) %>%
+ERP_plotdata <- MeanERPs |>
+  pivot_longer(-c(ID,Condition), names_to = "Time", values_to = "Amplitude") |>
+  mutate(Time = as.numeric(Time)) |>
+  group_by(Condition,Time) |>
   summarise(Mean_Amplitude = mean(Amplitude),
             CIlower = Rmisc::CI(Amplitude, ci = 0.95)["lower"],
             CIupper = Rmisc::CI(Amplitude, ci = 0.95)["upper"])

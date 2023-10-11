@@ -1,7 +1,7 @@
 ---
 title: Difference in sunset times in Europe
-author: Daniel Roelfs
-date: "2023-04-06"
+date: 2023-04-06
+description: Difference in sunset times in Europe
 slug: difference-in-sunset-times-in-europe
 categories:
   - data science
@@ -9,9 +9,6 @@ tags:
   - Python
   - R
   - data visualization
-description: "Difference in sunset times in Europe"
-thumbnail: images/avatar.png
-format: hugo
 execute:
   fig.retina: 2
   fig.align: center
@@ -89,7 +86,7 @@ def get_sun_data(
     Get sunset data from location
     '''
     
-    geolocator = Nominatim(user_agent="geoapiExercises")
+    geolocator = Nominatim(user_agent="sunset-sunrise-app")
     
     df = pd.DataFrame()
     for i, city in enumerate(cities):
@@ -196,7 +193,7 @@ data <- parse_sun_data(reticulate::py$df)
 
 data |> 
   ggplot(aes(x = date, y = sunset, color = city, group = city)) + 
-  geom_line(size = 2, lineend = "round", key_glyph = "point") + 
+  geom_line(linewidth = 2, lineend = "round", key_glyph = "point") + 
   labs(x = NULL,
        y = "Sunset time",
        color = NULL) +
@@ -204,9 +201,6 @@ data |>
   ggthemes::scale_color_tableau(guide = guide_legend(override.aes = list(size = 4))) +
   theme_custom()
 ```
-
-    Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-    ℹ Please use `linewidth` instead.
 
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-sunset-1.png" width="768" />
 
@@ -217,7 +211,7 @@ rnaturalearth::ne_countries(scale = "medium",
                             returnclass = "sf", 
                             continent = "Europe") |> 
   ggplot() + 
-  geom_sf(color = "grey60", fill = "#DDD5C7", size = 0.1) +
+  geom_sf(color = "grey60", fill = "#DDD5C7", linewidth = 0.1) +
   geom_point(data = data |> distinct(city, lat, long), 
              aes(x = long, y = lat, color = city),
              shape = 18, size = 4) +
@@ -229,6 +223,15 @@ rnaturalearth::ne_countries(scale = "medium",
         legend.direction = "vertical",
         panel.grid.major = element_line(size = 0.1))
 ```
+
+    The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,
+    which was just loaded, will retire in October 2023.
+    Please refer to R-spatial evolution reports for details, especially
+    https://r-spatial.org/r/2023/05/15/evolution4.html.
+    It may be desirable to make the sf package available;
+    package maintainers should consider adding sf to Suggests:.
+    The sp package is now running under evolution status 2
+         (status 2 uses the sf package in place of rgdal)
 
     Warning: The `size` argument of `element_line()` is deprecated as of ggplot2 3.4.0.
     ℹ Please use the `linewidth` argument instead.
@@ -259,6 +262,9 @@ parse_sun_data(reticulate::py$df_deux) |>
   theme_custom()
 ```
 
+    Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+    ℹ Please use `linewidth` instead.
+
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-day-length-areas-1.png" width="768" />
 
 As you see, in neither cities 12:00 in the afternoon is perfectly in the middle between sunrise and sunset, although this trend is slightly enhanced for Oslo (again due to longitude differences). We can also see that the length of days in Oslo is longer in summer particularly because the mornings start earlier. We'll get back to the distance between sunset and dusk, which is also a lot larger in Oslo which means darkness sets in much later in Oslo despite sunset happening around the same time. This means it's lighter outside longer than in Amsterdam.
@@ -286,11 +292,6 @@ parse_sun_data(reticulate::py$df_deux) |>
         axis.title.y = element_markdown(),
         legend.position = c(0.85, 0.85))
 ```
-
-    Warning in do_once((if (is_R_CMD_check()) stop else warning)("The function
-    xfun::isFALSE() will be deprecated in the future. Please ", : The function
-    xfun::isFALSE() will be deprecated in the future. Please consider using
-    base::isFALSE(x) or identical(x, FALSE) instead.
 
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-day-length-curve-1.png" width="768" />
 
@@ -342,8 +343,8 @@ Finally, let's look at the effect of longitude (how far east or west a place is)
 ``` r
 data |> 
   ggplot(aes(x = date, y = noon, group = city, color = city)) +
-  geom_hline(yintercept = hms::hms(hours = 12), size = 1) +
-  geom_line(size = 2, key_glyph = "point") +
+  geom_hline(yintercept = hms::hms(hours = 12), linewidth = 1) +
+  geom_line(linewidth = 2, key_glyph = "point") +
   labs(title = "What time is solar noon?",
        color = NULL) +
   scale_x_date(expand = expansion(add = 0)) + 

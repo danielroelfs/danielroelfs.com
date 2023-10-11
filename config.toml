@@ -1,18 +1,8 @@
-baseurl = "/" # Hostname (and path) to the root.
-title = "Daniel Roelfs" # Site title.
-theme = "hugo-coder-portfolio-edit" # Set the theme.
-languagecode = "en" # The site’s language code used to generate RSS.
-defaultcontentlanguage = "en" # The default content language.
-defaultContentLanguageInSubdir = true
+baseurl = "/"
+title = "Daniel Roelfs"
+theme = "typography"
 
-paginate = 20 # Default number of pages per page in pagination.
-
-PygmentsStyle = "monokai" # Color-theme or style for syntax highlighting.
-PygmentsCodeFences = true # Enable code fence background highlighting.
-PygmentsCodeFencesGuessSyntax = false # Enable syntax guessing for code fences without specified language.
-PygmentsUseClasses = true # new add
-
-ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "index\\.html", "about\\.html", "static/blog/\\*_files/", "README"] 
+ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "index\\.html", "about\\.html", "static/blog/\\*_files/", "README.md"] 
 
 [markup]
   defaultMarkdownHandler = "goldmark"
@@ -20,93 +10,79 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "i
     [markup.goldmark.renderer]
       unsafe = true
 
-[params] # theme parameters
-    author = "Daniel Roelfs" # Author's name.
-    info = "PhD Candidate in Brain Imaging & Genetics" # Author's job title or info.
-    description = "Daniel Roelfs' personal website" # Site description.
-    keywords = "blog,personal,coding" # Site keywords.
-    avatarurl = "images/avatar.png" # Contain the path of the optional avatar in the static folder.
+[params]
+    introtag = "introduction"
+    intro = "PhD Candidate in Brain Imaging & Genetics, Data Scientist within Anti-Money Laundering at DNB"
 
-    # Whether you want to hide copyright and credits in the footer.
-    hideCredits = true
-    hideCopyright = true
+    favicon = "avatar.png"
 
-    # Custom CSS
-    custom_css = []
+    iconsource = "simple-icons"
 
-    # Alignment of Mobile Menu items
-    itemscentered = true
+    description = "Daniel Roelfs' personal website"
+    keywords = "blog, personal, coding"
 
-    # RTL support
-    rtl = false
+    customcss = ["custom_style.css"]
 
-    # Bottom sns share
-    snsShare = true # new add
-    # Popular sns share
-    # if you want add sns. please message!
-    enableTwitterShare = false  # new add
-    enableFacebookShare = false # new add
-    enableHatenaShare = false   # new add
-    enableLineShare = false     # new add
-    enableLinkedInShare = false # new add
-
-    thumbnail = "images/avatar.png" # default sns thumbnail
+    umami       = true
+    umamilink   = "https://analytics-danielroelfs.netlify.app/script.js"
+    umamiid     = "da48a88a-2e87-4024-8c99-639222aab54d"
     
-# Social links
-[[params.social]]
-    name = "Twitter"
-    icon = "fab fa-twitter"
-    weight = 1
-    url = "https://twitter.com/dthroelfs/"
-[[params.social]]
-    name = "GitHub"
-    icon = "fab fa-github"
-    weight = 2
-    url = "https://github.com/danielroelfs/"
-[[params.social]]
-    name = "ORCID"
-    icon = "fab fa-orcid"
-    weight = 3
-    url = "https://orcid.org/0000-0002-1083-002X"
-[[params.social]]
-    name = "Google Scholar"
-    icon = "fas fa-graduation-cap"
-    weight = 4
-    url = "https://scholar.google.com/citations?user=QmVQcsAAAAAJ&hl=en"
-[[params.social]]
-    name = "LinkedIn"
-    icon = "fab fa-linkedin"
-    weight = 5
-    url = "https://www.linkedin.com/in/danielroelfs/"
-[[params.social]]
-    name = "Mastodon"
-    icon = "fab fa-mastodon"
-    weight = 6
-    url = "https://mastodon.online/@danielroelfs#"
-[[params.social]]
-    name = "Mail"
-    icon = "fas fa-envelope"
-    weight = 7
-    url = "mailto:daniel.roelfs@medisin.uio.no"
+    # Social links
+    [[params.social]]
+        name = "GitHub"
+        icon = "github"
+        weight = 1
+        url = "https://github.com/danielroelfs/"
+    [[params.social]]
+        name = "Twitter"
+        icon = "x"
+        weight = 2
+        url = "https://twitter.com/dthroelfs/"
+    [[params.social]]
+        name = "LinkedIn"
+        icon = "linkedin"
+        weight = 3
+        url = "https://www.linkedin.com/in/danielroelfs/"
+    [[params.social]]
+        name = "ORCID"
+        icon = "orcid"
+        weight = 4
+        url = "https://orcid.org/0000-0002-1083-002X"
+    [[params.social]]
+        name = "Google Scholar"
+        icon = "googlescholar"
+        weight = 5
+        url = "https://scholar.google.com/citations?user=QmVQcsAAAAAJ&hl=en"
+    [[params.social]]
+        name = "Mail"
+        icon = "minutemailer"
+        weight = 6
+        url = "mailto:daniel.roelfs@medisin.uio.no"
 
 # Menu links
-[[menu.main]]
-    name = "Blog"
-    weight = 1
-    url  = "blog"
-[[menu.main]]
-    name = "Photography"
-    weight = 2
-    url = "photography"    
-[[menu.main]]
-    name = "Publications"
-    weight = 3
-    url = "publications"
-[[menu.main]]
-    name = "Curriculum Vitæ"
-    weight = 4
-    url = "cv"
-[[menu.main]]
-    name = "About"
-    weight = 5
-    url = "about"
+[menu]
+    [[menu.main]]
+        name = "Home"
+        url  = "/"
+        weight = 1
+    [[menu.main]]
+        name = "Blog"
+        url  = "/blog"
+        weight = 2
+    [[menu.main]]
+        name = "Photography"
+        url = "/photography"    
+        weight = 3
+        identifier = "hide-from-nav"
+    [[menu.main]]
+        name = "Publications"
+        url = "/publications"
+        weight = 4
+    [[menu.main]]
+        name = "CV"
+        url = "/cv"
+        weight = 5
+    [[menu.main]]
+        name = "About"
+        url = "/about"
+        weight = 6

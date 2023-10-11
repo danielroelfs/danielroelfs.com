@@ -1,16 +1,13 @@
 ---
 title: Plotting Star Destroyers in R
-author: Daniel Roelfs
-date: '2020-04-17'
+date: 2020-04-17
+description: Plotting Star Destroyers in R
 slug: plotting-star-destroyers-in-r
 categories:
   - coding
 tags:
   - ggplot
   - R
-description: 'Plotting Star Destroyers in R'
-thumbnail: images/avatar.png
-format: hugo
 execute:
   fig.retina: 2
   fig.align: center
@@ -140,7 +137,14 @@ And that's balanced ternary enumeration.
 
 So obviously we are lazy, and don't want to do this process manually for thousands of values. that's why we're going to code it. For this step I translated some Python code to R syntax. The function I wrote to do one step of balanced ternary enumartion is shown below. The first value is always 0 (since it's a 0 in the first position, hence `$1*0 = 0$`). After this, we can incorporate the two steps (of converting into ternary and the enumeration) into one. The formula for this looks like this:
 
-`$$\begin{aligned} a(0) &= 0\\ a(3n) &= 3 * a(n)\\ a(3n + 1) &= 3 * a(n) + 1\\ a(3n + 2) &= 3 * a(n) - 1\\ \end{aligned}$$`
+$$
+\begin{aligned}
+a(0) &= 0\newline
+a(3n) &= 3 * a(n)\newline
+a(3n + 1) &= 3 * a(n) + 1\newline
+a(3n + 2) &= 3 * a(n) - 1
+\end{aligned}
+$$
 
 The Python code for this function came from a website that collects mathematical functions and sequences and can be found [here](https://oeis.org/A117966). I've adapted it to work in R. Since 0 will always result in 0, this is hard coded in. Afterwards it is a nested function (I know, we all love it) where it iteratively calls itself until the input to the function is 0 and it stops. At that point we have out balanced ternary. This function only performs the calculation for one value. So getting a sequence means putting it in a `map()` function.
 
@@ -169,7 +173,7 @@ BTE(3)
 
     [1] 3
 
-Let's also look at a few other examples using the `map()` function again. Since the `BTE()` function outputs only integers, I use `map_dbl()`. Let's input a few exampels:
+Let's also look at a few other examples using the `map()` function again. Since the `BTE()` function outputs only integers, I use `map_dbl()`. Let's input a few examples:
 
 ``` r
 example_vector <- c(0,seq(10),500,1500,9999)

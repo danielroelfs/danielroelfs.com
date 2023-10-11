@@ -1,5 +1,5 @@
 ---
-title: "Curriculum Vitæ"
+title: "Curriculum Vitae"
 hidetopnav: true
 ---
 

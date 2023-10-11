@@ -24,8 +24,8 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "i
     customcss = ["custom_style.css"]
 
     umami       = true
-    umamilink   = "https://analytics.example.com/umami.js"
-    umamiid     = "1234567-abcd-efgh-0000-abcdefg1234"
+    umamilink   = "https://analytics-danielroelfs.netlify.app/script.js"
+    umamiid     = "da48a88a-2e87-4024-8c99-639222aab54d"
     
     # Social links
     [[params.social]]

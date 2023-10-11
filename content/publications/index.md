@@ -1,5 +1,6 @@
 ---
-title: "Publications"
+title: Publications
+description: Publications
 engine: knitr
 hidetopnav: true
 ---

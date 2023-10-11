@@ -1,6 +1,7 @@
 ---
 title: How I Make QQ Plots Using ggplot
 date: 2020-04-10
+description: How I Make QQ Plots Using ggplot
 slug: how-i-make-qq-plots-using-ggplot
 categories:
   - coding

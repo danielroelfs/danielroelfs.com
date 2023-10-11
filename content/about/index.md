@@ -1,5 +1,6 @@
 ---
-title: "About"
+title: About
+description: About
 hidetopnav: true
 ---
 
@@ -11,4 +12,4 @@ Hi, I'm Daniel Roelfs! I'm currently working as a Data Scientist at the Norwegia
 
 Born and raised in the Netherlands, I have also studied in France and Sweden before moving to Norway. In my free time I run, ski, hike, and take photos. This blog serves as a way to share some of the code I write in R and Python for personal and professional interests.
 
-If you have any questions or comments about the tutorials and posts here, or just want to get in touch, please send me an e-mail at <a href="mailto:daniel.roelfs@medisin.uio.no">daniel.roelfs\[a\]medisin.uio.no</a>.
+If you have any questions or comments about the tutorials and posts here, or just want to get in touch, please send me an e-mail at [daniel.roelfs\[a\]medisin.uio.no](mailto:daniel.roelfs@medisin.uio.no).

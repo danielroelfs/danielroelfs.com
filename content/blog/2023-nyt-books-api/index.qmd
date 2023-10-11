@@ -1,6 +1,7 @@
 ---
 title: Analysing the NYT Best Sellers list using an API
 date: 2023-09-17
+description: Analysing the NYT Best Sellers list using an API
 slug: analysing-the-nyt-best-sellers-list-using-an-api
 categories:
   - data science

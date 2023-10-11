@@ -1,6 +1,7 @@
 ---
 title: Everything is a Linear Model
 date: 2022-03-18
+description: Everything is a Linear Model
 slug: everything-is-a-linear-model
 categories:
   - statistics

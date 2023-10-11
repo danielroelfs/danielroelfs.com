@@ -1,5 +1,6 @@
 ---
-title: "Photography"
+title: Photography
+description: Photography
 hidetopnav: true
 ---
 

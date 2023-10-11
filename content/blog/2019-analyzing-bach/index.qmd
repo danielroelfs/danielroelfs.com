@@ -1,13 +1,13 @@
 ---
 title: Analyzing Bach
 date: 2019-12-01
+description: Analyzing Bach with R
 slug: analyzing-bach
 categories:
   - coding
 tags:
   - ggplot
   - R
-  - Bach
 execute:
   fig.retina: 2
   fig.align: center

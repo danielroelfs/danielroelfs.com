@@ -1,6 +1,7 @@
 ---
 title: The Easier Way to Create a Map of Norway Using {csmaps}
 date: 2021-08-24
+description: The Easier Way to Create a Map of Norway Using {csmaps}
 slug: the-easier-way-to-create-a-map-of-norway-using-csmaps
 categories:
   - ggplot

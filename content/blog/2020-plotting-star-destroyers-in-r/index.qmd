@@ -1,6 +1,7 @@
 ---
 title: Plotting Star Destroyers in R
 date: 2020-04-17
+description: Plotting Star Destroyers in R
 slug: plotting-star-destroyers-in-r
 categories:
   - coding

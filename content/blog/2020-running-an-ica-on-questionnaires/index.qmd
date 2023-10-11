@@ -1,7 +1,7 @@
 ---
 title: Running an ICA on Questionnaires
-author: Daniel Roelfs
-date: '2020-10-24'
+date: 2020-10-24
+description: Running an ICA on Questionnaires
 slug: running-an-ica-on-questionnaires
 categories:
   - coding
@@ -9,9 +9,6 @@ tags:
   - statistics
   - R
   - ICA
-description: 'Running an ICA on Questionnaires'
-thumbnail: images/avatar.png
-format: hugo
 execute:
   fig.retina: 2
   fig.align: center
@@ -51,10 +48,10 @@ There are two files we need, one with the actual data (we'll call this `loaddata
 #| message: false
 #| warning: false
 
-loaddata <- read_delim("data.csv", delim = "\t") %>% 
+loaddata <- read_delim("data.csv", delim = "\t") |> 
   mutate(id = row_number())
 
-loadcodes <- read_delim("codebook_clean.txt", delim = "\t", col_names = FALSE) %>%
+loadcodes <- read_delim("codebook_clean.txt", delim = "\t", col_names = FALSE) |>
   rename(qnum = X1,
          question = X2)
 ```
@@ -68,8 +65,8 @@ Next, we want to prune the data. We want to exclude questions that have a low de
 ```{r}
 #| label: make-long
 
-questdata <- loaddata %>%
-  select(starts_with("Q")) %>%
+questdata <- loaddata |>
+  select(starts_with("Q")) |>
   pivot_longer(cols = everything(), names_to = "question", values_to = "score")
 ```
 
@@ -78,9 +75,9 @@ We'll first find if there's any unanswered questions. These are rows where `scor
 ```{r}
 #| label: find-nas
 
-questdata %>%
-  filter(is.na(score)) %>%
-  nrow(.)
+questdata |>
+  filter(is.na(score)) |>
+  nrow()
 ```
 
 We find that there's no missing values (crazy, I know!). If there were any missing values we could possibly impute the scores in the original (wide) data (e.g. using k-nearest neighbor imputation) or we could remove these items (e.g. using `drop_na()`).
@@ -90,13 +87,13 @@ The next step is to find if there are questions with insufficient variation in a
 ```{r}
 #| label: excl-vars
 
-less15var <- questdata %>%
-  group_by(question, score) %>%
-  count() %>%
-  group_by(question) %>% 
-  mutate(perc = n / sum(n)) %>%
-  arrange(question, -perc) %>%
-  slice(2) %>%
+less15var <- questdata |>
+  group_by(question, score) |>
+  count() |>
+  group_by(question) |> 
+  mutate(perc = n / sum(n)) |>
+  arrange(question, -perc) |>
+  slice(2) |>
   filter(perc < 0.15)
 
 print(less15var)
@@ -107,7 +104,7 @@ So no question has too little variance. If there was, I'd remove that question l
 ```{r}
 #| label: remove-low-var
 
-data <- loaddata %>% 
+data <- loaddata |> 
   select(-less15var$question)
 ```
 
@@ -116,14 +113,14 @@ Next we want to normalize the data. Usually you'd do this to ensure that all ans
 ```{r}
 #| label: normalize-data
 
-data <- data %>%
-  pivot_longer(starts_with("Q"), names_to = "qnum", values_to = "score") %>%
-  group_by(qnum) %>%
+data <- data |>
+  pivot_longer(starts_with("Q"), names_to = "qnum", values_to = "score") |>
+  group_by(qnum) |>
   mutate(score_z = scale(score))
 
-data %>%
-  ungroup() %>%
-  select(score_z) %>%
+data |>
+  ungroup() |>
+  select(score_z) |>
   summarise(mean = mean(score_z), 
             sd = sd(score_z), 
             min = min(score_z),
@@ -141,9 +138,9 @@ The PCA is implemented in the `prcomp()` function. This function doesn't accept 
 ```{r}
 #| label: run-pca
 
-mat <- data %>%
-  pivot_wider(names_from = "qnum", values_from = "score_z", id_cols = "id") %>%
-  select(starts_with("Q")) %>%
+mat <- data |>
+  pivot_wider(names_from = "qnum", values_from = "score_z", id_cols = "id") |>
+  select(starts_with("Q")) |>
   as.matrix()
 
 pca_data <- prcomp(mat)
@@ -181,8 +178,8 @@ It can be a bit hard to see from the plot how many components have an eigenvalue
 ```{r}
 #| label: get-n-ics
 
-nICs <- pca_stats %>%
-  filter(var > 1) %>%
+nICs <- pca_stats |>
+  filter(var > 1) |>
   nrow()
 print(nICs)
 ```
@@ -241,7 +238,7 @@ What we can see from the dendrogram is that for instance question 16 (_"I gravit
 ```{r}
 #| label: select-qs
 
-codes <- loadcodes %>%
+codes <- loadcodes |>
   filter(str_detect(qnum, "Q"))
 ```
 
@@ -250,9 +247,9 @@ Next we'll plot the weight matrix. For that we first create a column with the qu
 ```{r}
 #| label: create-plotdata
 
-weight_matrix_long <- weight_matrix %>%
-  mutate(qnum = sprintf("Q%s",row_number())) %>%
-  inner_join(codes, by = "qnum") %>%
+weight_matrix_long <- weight_matrix |>
+  mutate(qnum = str_glue("Q{row_number()}")) |>
+  inner_join(codes, by = "qnum") |>
   pivot_longer(cols = starts_with("IC"), names_to = "IC", values_to = "loading") %>%
   mutate(question = as_factor(question),
          question = fct_relevel(question, unique(.$question)[clust$order]))

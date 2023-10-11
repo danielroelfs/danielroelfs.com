@@ -1,15 +1,13 @@
 ---
-title: "Analysing the NYT Best Sellers list using an API"
-author: Daniel Roelfs
-date: "2023-09-17"
+title: Analysing the NYT Best Sellers list using an API
+date: 2023-09-17
+description: Analysing the NYT Best Sellers list using an API
 slug: analysing-the-nyt-best-sellers-list-using-an-api
 categories:
   - data science
 tags:
   - Python
   - R
-description: "Analysing the NYT Best Sellers list using an API"
-format: hugo
 execute:
   fig.retina: 2
   fig.align: center
@@ -169,25 +167,24 @@ data <- read_csv("./data/nyt_list_fiction.csv") |>
   glimpse()
 ```
 
-    Rows: 3915 Columns: 7
+    Rows: 3900 Columns: 6
     ── Column specification ────────────────────────────────────────────────────────
     Delimiter: ","
     chr  (2): title, author
-    dbl  (4): rank, rank_last_week, rank_diff, weeks_on_list
+    dbl  (3): rank, rank_last_week, weeks_on_list
     date (1): list_publication_date
 
     ℹ Use `spec()` to retrieve the full column specification for this data.
     ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 
-    Rows: 3,915
-    Columns: 7
+    Rows: 3,900
+    Columns: 6
     $ rank                  <dbl> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 1…
-    $ rank_last_week        <dbl> NA, 1, NA, NA, NA, 3, NA, 6, NA, 4, 5, 9, 8, 12,…
-    $ rank_diff             <dbl> NA, -1, NA, NA, NA, -3, NA, -2, NA, -6, -6, -3, …
-    $ title                 <chr> "Leverage In Death", "Crazy Rich Asians", "In Hi…
-    $ author                <chr> "JD Robb", "Kevin Kwan", "Danielle Steel", "Chri…
-    $ weeks_on_list         <dbl> 1, 13, 1, 1, 1, 5, 1, 4, 1, 15, 4, 14, 28, 13, 1…
-    $ list_publication_date <date> 2018-09-23, 2018-09-23, 2018-09-23, 2018-09-23,…
+    $ rank_last_week        <dbl> NA, NA, NA, 5, 1, 4, 8, NA, 10, NA, 3, NA, 9, NA…
+    $ title                 <chr> "Vince Flynn: Red War", "An Absolutely Remarkabl…
+    $ author                <chr> "Kyle Mills", "Hank Green", "Kate Atkinson", "Ke…
+    $ weeks_on_list         <dbl> 1, 1, 1, 16, 2, 3, 3, 1, 4, 1, 31, 15, 8, 1, 7, …
+    $ list_publication_date <date> 2018-10-14, 2018-10-14, 2018-10-14, 2018-10-14,…
 
 As mentioned, the dataset we downloaded does not include all history of the Best Sellers list due to the API rate limit. Instead we specified that we want to look about 5 years back, let's see what the earliest to latest dates in the dataset are.
 
@@ -200,7 +197,7 @@ data |>
     # A tibble: 1 × 2
       from       to        
       <date>     <date>    
-    1 2018-09-23 2023-09-17
+    1 2018-10-14 2023-10-01
 
 The purpose of this post is mostly to show the implementation of an API call in Python, but I want to make some plots anyway because it's fun. Let's first look at what book has spend the longest on the Best Sellers list. Just to make it easier to determine the book, we'll create a composite variable of both the book author and title before plotting and take the 20 books that have the most occurences on the list using the `count()` function and then use the `slice_max()` to limit the dataset to 20.
 

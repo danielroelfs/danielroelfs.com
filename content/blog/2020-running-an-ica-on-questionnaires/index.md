@@ -1,7 +1,7 @@
 ---
 title: Running an ICA on Questionnaires
-author: Daniel Roelfs
-date: '2020-10-24'
+date: 2020-10-24
+description: Running an ICA on Questionnaires
 slug: running-an-ica-on-questionnaires
 categories:
   - coding
@@ -9,9 +9,6 @@ tags:
   - statistics
   - R
   - ICA
-description: 'Running an ICA on Questionnaires'
-thumbnail: images/avatar.png
-format: hugo
 execute:
   fig.retina: 2
   fig.align: center
@@ -44,10 +41,10 @@ library(fastICA)
 There are two files we need, one with the actual data (we'll call this `loaddata`), and one with the list of questions (we'll call this `loadcodes`).
 
 ``` r
-loaddata <- read_delim("data.csv", delim = "\t") %>% 
+loaddata <- read_delim("data.csv", delim = "\t") |> 
   mutate(id = row_number())
 
-loadcodes <- read_delim("codebook_clean.txt", delim = "\t", col_names = FALSE) %>%
+loadcodes <- read_delim("codebook_clean.txt", delim = "\t", col_names = FALSE) |>
   rename(qnum = X1,
          question = X2)
 ```
@@ -59,17 +56,17 @@ After cleaning, we still have more than 250.000 individual records left. This is
 Next, we want to prune the data. We want to exclude questions that have a low degree of variance and we might want to remove or impute questions with a large number of `NA`s. Our first step is to get the data in a format that's easier to work with, in this case, the long format. We'll select all questions, and put the question number in a column called `question` and the values in a column called `score`.
 
 ``` r
-questdata <- loaddata %>%
-  select(starts_with("Q")) %>%
+questdata <- loaddata |>
+  select(starts_with("Q")) |>
   pivot_longer(cols = everything(), names_to = "question", values_to = "score")
 ```
 
 We'll first find if there's any unanswered questions. These are rows where `score` is `NA`.
 
 ``` r
-questdata %>%
-  filter(is.na(score)) %>%
-  nrow(.)
+questdata |>
+  filter(is.na(score)) |>
+  nrow()
 ```
 
     [1] 0
@@ -79,13 +76,13 @@ We find that there's no missing values (crazy, I know!). If there were any missi
 The next step is to find if there are questions with insufficient variation in answers. For this we'll calculate the percentage that each answer on the Likert scale represents in the total variance of the dataset. We'll take our long-format data, group by the question and the answers on the question (`score`). Count the number of times that answer has been given to that question (using `count()`). Then we'll calculate the percentage that this answer represented within each question (using `perc = n / sum(n)`). Then we'll sort the answers within the questions on the percentage (with the answer that's been answered the most on top, and the answer that's answered the least on the bottom (`arrange(question, -perc)`)). Then we'll take the second-most common answer (`slice(2)`) and select the questions where the second-most answer represented less than 15% of the answers (`perc < 0.15`). The threshold of 15% is fairly arbitrary. Usually I'd go for 10%, but due to the source of the data, I'm being a bit more stringent here. The output from these steps will give us the questions that we might want to exclude due to low variance.
 
 ``` r
-less15var <- questdata %>%
-  group_by(question, score) %>%
-  count() %>%
-  group_by(question) %>% 
-  mutate(perc = n / sum(n)) %>%
-  arrange(question, -perc) %>%
-  slice(2) %>%
+less15var <- questdata |>
+  group_by(question, score) |>
+  count() |>
+  group_by(question) |> 
+  mutate(perc = n / sum(n)) |>
+  arrange(question, -perc) |>
+  slice(2) |>
   filter(perc < 0.15)
 
 print(less15var)
@@ -98,21 +95,21 @@ print(less15var)
 So no question has too little variance. If there was, I'd remove that question like so:
 
 ``` r
-data <- loaddata %>% 
+data <- loaddata |> 
   select(-less15var$question)
 ```
 
 Next we want to normalize the data. Usually you'd do this to ensure that all answers on a questionnaire are in the same domain. Let's imagine a scenario where some questions are scored from 0 to 10, others are scored from 0 to 5, and a third is scored from 80 to 120. The ICA is then biased towards questions that have larger values, like the third question in the example above. That's why we want to normalize the data. The statistical term for this is z-score normalization. The defining property of z-scored transformed data is that the mean is 0 and the standard deviation is one. The z-score transformation is obtained by subtracting the mean from each individual value and then dividing by the standard deviation. This is implemented in R with the `scale()` function. We'll also check if it worked afterwards.
 
 ``` r
-data <- data %>%
-  pivot_longer(starts_with("Q"), names_to = "qnum", values_to = "score") %>%
-  group_by(qnum) %>%
+data <- data |>
+  pivot_longer(starts_with("Q"), names_to = "qnum", values_to = "score") |>
+  group_by(qnum) |>
   mutate(score_z = scale(score))
 
-data %>%
-  ungroup() %>%
-  select(score_z) %>%
+data |>
+  ungroup() |>
+  select(score_z) |>
   summarise(mean = mean(score_z), 
             sd = sd(score_z), 
             min = min(score_z),
@@ -133,9 +130,9 @@ There's two clustering approaches we'll use. One will actually help us do the ot
 The PCA is implemented in the `prcomp()` function. This function doesn't accept a data frame, but instead it requires a matrix. So we'll have to make that first. We'll transform the long-format data that we created earlier back into wide format (using `pivot_wider()`), then select only the columns that we want to include in the analysis (i.e. the questions (`select(starts_with("Q"))`)), and then we'll turn it into a matrix (using `as.matrix()`). Then we'll put the resulting matrix into the `prcomp()` function.
 
 ``` r
-mat <- data %>%
-  pivot_wider(names_from = "qnum", values_from = "score_z", id_cols = "id") %>%
-  select(starts_with("Q")) %>%
+mat <- data |>
+  pivot_wider(names_from = "qnum", values_from = "score_z", id_cols = "id") |>
+  select(starts_with("Q")) |>
   as.matrix()
 
 pca_data <- prcomp(mat)
@@ -172,8 +169,8 @@ ggplot(pca_stats, aes(x = seq(var), y = var)) +
 It can be a bit hard to see from the plot how many components have an eigenvalue larger than 1. But we can calulate it. The number of components with an eigenvalue larger than 1 will be the number of independent components we'll request from the ICA.
 
 ``` r
-nICs <- pca_stats %>%
-  filter(var > 1) %>%
+nICs <- pca_stats |>
+  filter(var > 1) |>
   nrow()
 print(nICs)
 ```
@@ -201,9 +198,9 @@ glimpse(ica_model)
     List of 5
      $ X: num [1:14955, 1:26] -0.8724 0.0298 0.932 0.932 0.0298 ...
      $ K: num [1:26, 1:6] -0.0843 -0.0791 -0.0755 -0.0875 -0.0968 ...
-     $ W: num [1:6, 1:6] 0.7508 -0.0758 0.1641 0.5859 0.245 ...
-     $ A: num [1:6, 1:26] -0.283 0.13 -0.284 -0.142 0.58 ...
-     $ S: num [1:14955, 1:6] -1.037 -0.541 -1.086 -0.663 -0.431 ...
+     $ W: num [1:6, 1:6] 0.5122 0.2571 0.2286 -0.744 0.0655 ...
+     $ A: num [1:6, 1:26] -0.283 0.131 -0.387 0.127 -0.583 ...
+     $ S: num [1:14955, 1:6] -0.3649 1.0887 -1.2281 -0.1592 -0.0618 ...
 
 These names aren't very informative. In this function, `X` represens the pre-processed data matrix, `K` is the pre-whitening matrix, `W` is the estimated un-mixing matrix, `A` is the estimating mixing matrix (the loadings of the items on the independent components), and `S` is the source matrix (the individual IC loadings for all participants).
 
@@ -214,18 +211,18 @@ cor(ica_model$S)
 ```
 
                   [,1]          [,2]          [,3]          [,4]          [,5]
-    [1,]  1.000000e+00 -1.416697e-14  4.240505e-15  2.487685e-14  4.087139e-16
-    [2,] -1.416697e-14  1.000000e+00  1.135678e-14  1.159897e-14  1.131390e-15
-    [3,]  4.240505e-15  1.135678e-14  1.000000e+00 -3.638422e-14  8.887895e-15
-    [4,]  2.487685e-14  1.159897e-14 -3.638422e-14  1.000000e+00 -1.976354e-15
-    [5,]  4.087139e-16  1.131390e-15  8.887895e-15 -1.976354e-15  1.000000e+00
-    [6,]  3.711451e-15 -7.321958e-15  1.306657e-14  2.869582e-14  2.511484e-14
+    [1,]  1.000000e+00  1.008510e-14 -1.701048e-14  3.537856e-14 -8.652989e-15
+    [2,]  1.008510e-14  1.000000e+00  9.286019e-15 -9.827378e-15 -1.197023e-15
+    [3,] -1.701048e-14  9.286019e-15  1.000000e+00  2.328882e-14  2.402569e-14
+    [4,]  3.537856e-14 -9.827378e-15  2.328882e-14  1.000000e+00 -3.206080e-15
+    [5,] -8.652989e-15 -1.197023e-15  2.402569e-14 -3.206080e-15  1.000000e+00
+    [6,]  1.354061e-15 -6.944827e-15 -1.626536e-15 -2.241246e-14 -3.859294e-15
                   [,6]
-    [1,]  3.711451e-15
-    [2,] -7.321958e-15
-    [3,]  1.306657e-14
-    [4,]  2.869582e-14
-    [5,]  2.511484e-14
+    [1,]  1.354061e-15
+    [2,] -6.944827e-15
+    [3,] -1.626536e-15
+    [4,] -2.241246e-14
+    [5,] -3.859294e-15
     [6,]  1.000000e+00
 
 The data we're interested in for now is the estimated mixing matrix (stored in `ica_model$A`). This is the loadings of the individual questions (i.e. the columns of the matrix) that we put in the ICA algorithm on the independent components. For any further analyses with individual data, you'd take the estimated source matrix, which is the loading of each independent component on each individual (i.e. the rows of the matrix).
@@ -248,16 +245,16 @@ plot(clust)
 What we can see from the dendrogram is that for instance question 16 (*"I gravitate towards introspection"*) and question 17 (*"I am more comfortable interacting online than in person"*) on the left are very similar. Question 3 (*"I like to play RPGs. (Ex. D&D)"*) is somewhat similar, but not as much as question 16 and 17. The same goes for question 1 and 4, question 11 and 19, and so on.
 
 ``` r
-codes <- loadcodes %>%
+codes <- loadcodes |>
   filter(str_detect(qnum, "Q"))
 ```
 
 Next we'll plot the weight matrix. For that we first create a column with the question number, we'll then merge the matrix with the list of questions so we can plot the actual question asked instead of the question number. Next, we'll put the data frame in a long format. Finally, we'll also reorder the questions to match the order determined by the hierarchical clustering.
 
 ``` r
-weight_matrix_long <- weight_matrix %>%
-  mutate(qnum = sprintf("Q%s",row_number())) %>%
-  inner_join(codes, by = "qnum") %>%
+weight_matrix_long <- weight_matrix |>
+  mutate(qnum = str_glue("Q{row_number()}")) |>
+  inner_join(codes, by = "qnum") |>
   pivot_longer(cols = starts_with("IC"), names_to = "IC", values_to = "loading") %>%
   mutate(question = as_factor(question),
          question = fct_relevel(question, unique(.$question)[clust$order]))

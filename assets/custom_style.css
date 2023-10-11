@@ -1,0 +1,6 @@
+@media all and (min-width: 1200px) {
+  img:not(.icon) {
+    margin-left: -6rem;
+    min-width: 120%;
+  }
+}

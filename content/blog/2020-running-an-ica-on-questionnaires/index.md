@@ -41,12 +41,14 @@ library(fastICA)
 There are two files we need, one with the actual data (we'll call this `loaddata`), and one with the list of questions (we'll call this `loadcodes`).
 
 ``` r
-loaddata <- read_delim("data.csv", delim = "\t") |> 
+loaddata <- read_delim("data.csv", delim = "\t") |>
   mutate(id = row_number())
 
 loadcodes <- read_delim("codebook_clean.txt", delim = "\t", col_names = FALSE) |>
-  rename(qnum = X1,
-         question = X2)
+  rename(
+    qnum = X1,
+    question = X2
+  )
 ```
 
 After cleaning, we still have more than 250.000 individual records left. This is great! Now we're going to have to do some preprocessing before we run the ICA.
@@ -79,7 +81,7 @@ The next step is to find if there are questions with insufficient variation in a
 less15var <- questdata |>
   group_by(question, score) |>
   count() |>
-  group_by(question) |> 
+  group_by(question) |>
   mutate(perc = n / sum(n)) |>
   arrange(question, -perc) |>
   slice(2) |>
@@ -95,7 +97,7 @@ print(less15var)
 So no question has too little variance. If there was, I'd remove that question like so:
 
 ``` r
-data <- loaddata |> 
+data <- loaddata |>
   select(-less15var$question)
 ```
 
@@ -110,10 +112,12 @@ data <- data |>
 data |>
   ungroup() |>
   select(score_z) |>
-  summarise(mean = mean(score_z), 
-            sd = sd(score_z), 
-            min = min(score_z),
-            max = max(score_z))
+  summarise(
+    mean = mean(score_z),
+    sd = sd(score_z),
+    min = min(score_z),
+    max = max(score_z)
+  )
 ```
 
     # A tibble: 1 × 4
@@ -144,20 +148,24 @@ Then we can calculate a few other parameters. We want to calculate the variance 
 pca_data$var <- pca_data$sdev^2
 pca_data$varexpl <- pca_data$var / sum(pca_data$var)
 
-pca_stats <- tibble(sdev = pca_data$sdev, 
-                    var = pca_data$var, 
-                    varexpl = pca_data$varexpl)
+pca_stats <- tibble(
+  sdev = pca_data$sdev,
+  var = pca_data$var,
+  varexpl = pca_data$varexpl
+)
 ```
 
 We can visualize the variance captured in each component by creating a [scree plot](https://en.wikipedia.org/wiki/Scree_plot). This plot shows the components on the x-axis and the variance on the y-axis. Scree plots also typically include a horizontal line to indicate the eigenvalue of 1. Scree plots are typically interpreted based on the "elbow" in the plot, where the variance decreases. This can be a bit subjective. That's where the horizontal line comes in.
 
 ``` r
-ggplot(pca_stats, aes(x = seq(var), y = var)) + 
-  geom_line(color = "grey30", size = 1) + 
-  geom_point(color = "grey30", size = 2) + 
+ggplot(pca_stats, aes(x = seq(var), y = var)) +
+  geom_line(color = "grey30", size = 1) +
+  geom_point(color = "grey30", size = 2) +
   geom_hline(yintercept = 1, linetype = "dashed") +
-  labs(x = "Principal component",
-       y = "Variance (eigenvalue)") +
+  labs(
+    x = "Principal component",
+    y = "Variance (eigenvalue)"
+  ) +
   theme_minimal()
 ```
 
@@ -169,10 +177,10 @@ ggplot(pca_stats, aes(x = seq(var), y = var)) +
 It can be a bit hard to see from the plot how many components have an eigenvalue larger than 1. But we can calulate it. The number of components with an eigenvalue larger than 1 will be the number of independent components we'll request from the ICA.
 
 ``` r
-nICs <- pca_stats |>
+n_ics <- pca_stats |>
   filter(var > 1) |>
   nrow()
-print(nICs)
+print(n_ics)
 ```
 
     [1] 6
@@ -183,8 +191,10 @@ Now we're ready to run the ICA! We'll use the `fastICA()` function. The function
 
 ``` r
 set.seed(2020)
-ica_model <- fastICA(mat, n.comp = nICs, alg.typ = "parallel",
-                     fun = "exp", method = "C", maxit = 5000)
+ica_model <- fastICA(mat,
+  n.comp = n_ics, alg.typ = "parallel",
+  fun = "exp", method = "C", maxit = 5000
+)
 ```
 
 ### Create Weight Matrix
@@ -233,7 +243,7 @@ Then we can also have a quick look at hierarchical clustering. This is a process
 
 ``` r
 weight_matrix <- data.frame(t(ica_model$A))
-names(weight_matrix) <- paste0("IC",seq(weight_matrix))
+names(weight_matrix) <- paste0("IC", seq(weight_matrix))
 
 dist_matrix <- dist(as.matrix(weight_matrix))
 clust <- hclust(dist_matrix)
@@ -256,20 +266,26 @@ weight_matrix_long <- weight_matrix |>
   mutate(qnum = str_glue("Q{row_number()}")) |>
   inner_join(codes, by = "qnum") |>
   pivot_longer(cols = starts_with("IC"), names_to = "IC", values_to = "loading") %>%
-  mutate(question = as_factor(question),
-         question = fct_relevel(question, unique(.$question)[clust$order]))
+  mutate(
+    question = as_factor(question),
+    question = fct_relevel(question, unique(.$question)[clust$order])
+  )
 ```
 
 So let's see what the ICA spit out. We'll make a plot where the questions are shown along the y-axis and where the x-axis shows their loading onto the different independent components. The orientation of the loading between the components does not have meaning, but within the components it can indicate that some questions have opposing effects. We'll reorder the x- and y-axis to order it based on the loading strength.
 
 ``` r
 ggplot(weight_matrix_long, aes(x = IC, y = question, fill = loading)) +
-  geom_tile() + 
-  labs(x = NULL,
-       y = NULL,
-       fill = NULL) +
-  scale_fill_gradient2(low = "#FF729F", mid = "black", high = "#7EE8FA", limits = c(-1, 1), 
-                       guide = guide_colorbar(barwidth = 0.5, barheight = 15, ticks = FALSE)) +
+  geom_tile() +
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = NULL
+  ) +
+  scale_fill_gradient2(
+    low = "#FF729F", mid = "black", high = "#7EE8FA", limits = c(-1, 1),
+    guide = guide_colorbar(barwidth = 0.5, barheight = 15, ticks = FALSE)
+  ) +
   theme_minimal(base_size = 8) +
   theme(
     legend.position = "right",

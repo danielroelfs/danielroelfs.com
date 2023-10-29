@@ -60,20 +60,24 @@ font_add_google(name = "Nunito Sans", family = "nunito-sans")
 showtext_auto()
 
 theme_set(ggthemes::theme_economist(base_family = "nunito-sans") +
-            theme(rect = element_rect(fill = "#EBEBEB", color = "transparent"),
-                  plot.background = element_rect(fill = "#EBEBEB", color = "transparent"),
-                  panel.background = element_rect(fill = "#EBEBEB", color = "transparent"),
-                  plot.title = element_textbox(margin = margin(0,0,5,0,"pt")),
-                  plot.title.position = "plot",
-                  plot.subtitle = element_textbox(hjust = 0, margin = margin(0,0,15,0,"pt")),
-                  plot.caption = element_textbox(hjust = 1),
-                  plot.caption.position = "plot",
-                  axis.title.y = element_textbox(orientation = "left-rotated", face = "bold",
-                                                 margin = margin(0,0,5,0,"pt")),
-                  axis.text.y = element_text(hjust = 1),
-                  legend.position = "bottom",
-                  legend.box = "vertical",
-                  legend.text = element_text(size = 10)))
+  theme(
+    rect = element_rect(fill = "#EBEBEB", color = "transparent"),
+    plot.background = element_rect(fill = "#EBEBEB", color = "transparent"),
+    panel.background = element_rect(fill = "#EBEBEB", color = "transparent"),
+    plot.title = element_textbox(margin = margin(0, 0, 5, 0, "pt")),
+    plot.title.position = "plot",
+    plot.subtitle = element_textbox(hjust = 0, margin = margin(0, 0, 15, 0, "pt")),
+    plot.caption = element_textbox(hjust = 1),
+    plot.caption.position = "plot",
+    axis.title.y = element_textbox(
+      orientation = "left-rotated", face = "bold",
+      margin = margin(0, 0, 5, 0, "pt")
+    ),
+    axis.text.y = element_text(hjust = 1),
+    legend.position = "bottom",
+    legend.box = "vertical",
+    legend.text = element_text(size = 10)
+  ))
 ```
 
 </details>
@@ -88,59 +92,75 @@ You can look at the code I used to load and merge the files. It's a bit of a mes
 <summary>Show code</summary>
 
 ``` r
-asking_price <- readxl::read_xlsx("MVA_kwartaalcijfers.xlsx", sheet = 2) |> 
-  janitor::clean_names() |> 
-  mutate(type_woning = as_factor(type_woning),
-         across(where(is.double), ~ .x * 1e3),
-         across(where(is.character), ~ parse_number(str_remove_all(.x, fixed(" "))))) |> 
+asking_price <- readxl::read_xlsx("MVA_kwartaalcijfers.xlsx", sheet = 2) |>
+  janitor::clean_names() |>
+  mutate(
+    type_woning = as_factor(type_woning),
+    across(where(is.double), ~ .x * 1e3),
+    across(where(is.character), ~ parse_number(str_remove_all(.x, fixed(" "))))
+  ) |>
   pivot_longer(starts_with("x"), names_to = "date", values_to = "asking_price")
 
-transaction_price <- readxl::read_xlsx("MVA_kwartaalcijfers.xlsx", sheet = 3) |> 
-  janitor::clean_names() |> 
-  mutate(type_woning = as_factor(type_woning),
-         across(where(is.character), ~ parse_number(str_remove_all(.x, fixed(" "))))) |> 
+transaction_price <- readxl::read_xlsx("MVA_kwartaalcijfers.xlsx", sheet = 3) |>
+  janitor::clean_names() |>
+  mutate(
+    type_woning = as_factor(type_woning),
+    across(where(is.character), ~ parse_number(str_remove_all(.x, fixed(" "))))
+  ) |>
   pivot_longer(starts_with("x"), names_to = "date", values_to = "transaction_price")
 
-price_per_m2 <- readxl::read_xlsx("MVA_kwartaalcijfers.xlsx", sheet = 4) |> 
-  janitor::clean_names() |> 
-  mutate(type_woning = as_factor(type_woning),
-         across(where(is.double), ~ .x * 1e3),
-         across(where(is.character), ~ parse_number(str_remove_all(.x, fixed(" "))))) |> 
+price_per_m2 <- readxl::read_xlsx("MVA_kwartaalcijfers.xlsx", sheet = 4) |>
+  janitor::clean_names() |>
+  mutate(
+    type_woning = as_factor(type_woning),
+    across(where(is.double), ~ .x * 1e3),
+    across(where(is.character), ~ parse_number(str_remove_all(.x, fixed(" "))))
+  ) |>
   pivot_longer(starts_with("x"), names_to = "date", values_to = "price_per_m2")
 
-n_offered <- readxl::read_xlsx("MVA_kwartaalcijfers.xlsx", sheet = 5) |> 
-  janitor::clean_names() |> 
-  mutate(type_woning = as_factor(type_woning),
-         across(where(is.character), ~ parse_number(str_remove_all(.x, fixed(" "))))) |> 
+n_offered <- readxl::read_xlsx("MVA_kwartaalcijfers.xlsx", sheet = 5) |>
+  janitor::clean_names() |>
+  mutate(
+    type_woning = as_factor(type_woning),
+    across(where(is.character), ~ parse_number(str_remove_all(.x, fixed(" "))))
+  ) |>
   pivot_longer(starts_with("x"), names_to = "date", values_to = "n_offered")
 
-n_sold <- readxl::read_xlsx("MVA_kwartaalcijfers.xlsx", sheet = 6) |> 
-  janitor::clean_names() |> 
-  mutate(type_woning = as_factor(type_woning),
-         across(where(is.character), ~ parse_number(str_remove_all(.x, fixed(" "))))) |> 
+n_sold <- readxl::read_xlsx("MVA_kwartaalcijfers.xlsx", sheet = 6) |>
+  janitor::clean_names() |>
+  mutate(
+    type_woning = as_factor(type_woning),
+    across(where(is.character), ~ parse_number(str_remove_all(.x, fixed(" "))))
+  ) |>
   pivot_longer(starts_with("x"), names_to = "date", values_to = "n_sold")
 
-mortgage_months <- readxl::read_xlsx("MVA_kwartaalcijfers.xlsx", sheet = 7) |> 
-  janitor::clean_names() |> 
-  mutate(type_woning = as_factor(type_woning),
-         across(where(is.character), ~ parse_number(str_remove_all(.x, fixed(" "))))) |> 
+mortgage_months <- readxl::read_xlsx("MVA_kwartaalcijfers.xlsx", sheet = 7) |>
+  janitor::clean_names() |>
+  mutate(
+    type_woning = as_factor(type_woning),
+    across(where(is.character), ~ parse_number(str_remove_all(.x, fixed(" "))))
+  ) |>
   pivot_longer(starts_with("x"), names_to = "date", values_to = "mortgage_months")
 
-tightness_index <- readxl::read_xlsx("MVA_kwartaalcijfers.xlsx", sheet = 8) |> 
-  janitor::clean_names() |> 
-  mutate(type_woning = as_factor(type_woning),
-         across(where(is.character), ~ parse_number(str_replace_all(.x, ",", ".")))) |> 
+tightness_index <- readxl::read_xlsx("MVA_kwartaalcijfers.xlsx", sheet = 8) |>
+  janitor::clean_names() |>
+  mutate(
+    type_woning = as_factor(type_woning),
+    across(where(is.character), ~ parse_number(str_replace_all(.x, ",", ".")))
+  ) |>
   pivot_longer(starts_with("x"), names_to = "date", values_to = "tightness_index")
 
-data_merged <- inner_join(asking_price, transaction_price) |> 
-  inner_join(price_per_m2) |> 
-  inner_join(n_offered) |> 
-  inner_join(n_sold) |> 
-  inner_join(mortgage_months) |> 
-  inner_join(tightness_index) |> 
-  mutate(asking_price = ifelse(asking_price < 1e5, asking_price * 1e3, asking_price),
-         transaction_price = ifelse(transaction_price < 1e5, transaction_price * 1e3, transaction_price),
-         price_per_m2 = ifelse(price_per_m2 > 1e4, price_per_m2 / 1e3, price_per_m2))
+data_merged <- inner_join(asking_price, transaction_price) |>
+  inner_join(price_per_m2) |>
+  inner_join(n_offered) |>
+  inner_join(n_sold) |>
+  inner_join(mortgage_months) |>
+  inner_join(tightness_index) |>
+  mutate(
+    asking_price = ifelse(asking_price < 1e5, asking_price * 1e3, asking_price),
+    transaction_price = ifelse(transaction_price < 1e5, transaction_price * 1e3, transaction_price),
+    price_per_m2 = ifelse(price_per_m2 > 1e4, price_per_m2 / 1e3, price_per_m2)
+  )
 
 write_rds(data_merged, "data_merged.rds")
 ```
@@ -178,28 +198,34 @@ From this dataset, I want to create a few new variables. I want to create a date
 <summary>Show code</summary>
 
 ``` r
-data <- data_merged |> 
-  rename(type = type_woning) |> 
-  mutate(quarter = str_extract(date, pattern = "x(.*?)e"),
-         quarter = parse_number(quarter),
-         year = str_extract(date, pattern = "kw_(.*)"),
-         year = parse_number(year),
-         date = as.Date(str_glue("{year}-{(quarter * 3)}-01")),
-         diff_ask_paid = transaction_price - asking_price,
-         diff_ask_paid_perc = diff_ask_paid / asking_price,
-         diff_offered_sold = n_offered - n_sold,
-         diff_offered_sold_perc = diff_offered_sold / n_offered,
-         perc_sold = n_sold / n_offered,
-         type = case_when(str_detect(type,"Totaal") ~ "Total",
-                          str_detect(type,"<= 1970") ~ "Apartments (pre-1970)",
-                          str_detect(type,"> 1970") ~ "Apartments (post-1970)",
-                          str_detect(type,"Tussenwoning") ~ "Terraced house",
-                          str_detect(type,"Hoekwoning") ~ "Corner house",
-                          str_detect(type,"Vrijstaand") ~ "Detached house",
-                          str_detect(type,"2-onder-1-kap") ~ "Semi-detached house"),
-         type = factor(type, levels = c("Apartments (pre-1970)","Apartments (post-1970)",
-                                        "Terraced house","Corner house","Detached house",
-                                        "Semi-detached house","Total"))) |> 
+data <- data_merged |>
+  rename(type = type_woning) |>
+  mutate(
+    quarter = str_extract(date, pattern = "x(.*?)e"),
+    quarter = parse_number(quarter),
+    year = str_extract(date, pattern = "kw_(.*)"),
+    year = parse_number(year),
+    date = as.Date(str_glue("{year}-{(quarter * 3)}-01")),
+    diff_ask_paid = transaction_price - asking_price,
+    diff_ask_paid_perc = diff_ask_paid / asking_price,
+    diff_offered_sold = n_offered - n_sold,
+    diff_offered_sold_perc = diff_offered_sold / n_offered,
+    perc_sold = n_sold / n_offered,
+    type = case_when(
+      str_detect(type, "Totaal") ~ "Total",
+      str_detect(type, "<= 1970") ~ "Apartments (pre-1970)",
+      str_detect(type, "> 1970") ~ "Apartments (post-1970)",
+      str_detect(type, "Tussenwoning") ~ "Terraced house",
+      str_detect(type, "Hoekwoning") ~ "Corner house",
+      str_detect(type, "Vrijstaand") ~ "Detached house",
+      str_detect(type, "2-onder-1-kap") ~ "Semi-detached house"
+    ),
+    type = factor(type, levels = c(
+      "Apartments (pre-1970)", "Apartments (post-1970)",
+      "Terraced house", "Corner house", "Detached house",
+      "Semi-detached house", "Total"
+    ))
+  ) |>
   glimpse()
 ```
 
@@ -230,33 +256,43 @@ The first thing that seems interesting to do is to plot the percentage differenc
 <summary>Show code</summary>
 
 ``` r
-colors <- c("#019868","#9dd292","#ec0b88","#651eac","#e18a1e","#2b7de5")
+colors <- c("#019868", "#9dd292", "#ec0b88", "#651eac", "#e18a1e", "#2b7de5")
 
-data |> 
-  filter(type != "Total") |> 
-  group_by(type) |> 
-  mutate(n_total = sum(n_sold),
-         type_label = str_glue("{type} (n={format(n_total, big.mark = \".\", decimal.mark = \",\")})"),
-         type_label = str_replace(type_label,"\\) \\(", ", ")) |> 
-  arrange(type) |> 
-  mutate(type_label = factor(type_label)) |> 
-  ggplot(aes(x = date, y = diff_ask_paid_perc, color = type_label)) + 
+data |>
+  filter(type != "Total") |>
+  group_by(type) |>
+  mutate(
+    n_total = sum(n_sold),
+    type_label = str_glue("{type} (n={format(n_total, big.mark = \".\", decimal.mark = \",\")})"),
+    type_label = str_replace(type_label, "\\) \\(", ", ")
+  ) |>
+  arrange(type) |>
+  mutate(type_label = factor(type_label)) |>
+  ggplot(aes(x = date, y = diff_ask_paid_perc, color = type_label)) +
   geom_hline(yintercept = 0, color = "grey30", size = 1) +
-  geom_line(size = 1.2, alpha = 0.8, lineend = "round", key_glyph = "point") + 
-  labs(title = "Overbidding has become the new normal",
-       subtitle = "_Paying as much as 5% over asking price is common the past few years_",
-       x = NULL,
-       y = "Percentage difference between\nasking price and price paid",
-       color = NULL,
-       caption = "_**Data**: MVA_") +
-  scale_y_continuous(labels = scales::label_percent()) + 
-  scale_color_manual(values = colors,
-                     guide = guide_legend(title.position = "top", title.hjust = 0.5, nrow = 2,
-                                          label.position = "right", 
-                                          override.aes = list(fill = "transparent", size = 6, alpha = 1))) +
-  theme(plot.title = element_textbox(size = 20),
-        axis.title.y = element_textbox(width = grid::unit(2.5, "in")),
-        legend.key = element_rect(fill = "transparent", color = "transparent"))
+  geom_line(size = 1.2, alpha = 0.8, lineend = "round", key_glyph = "point") +
+  labs(
+    title = "Overbidding has become the new normal",
+    subtitle = "_Paying as much as 5% over asking price is common the past few years_",
+    x = NULL,
+    y = "Percentage difference between\nasking price and price paid",
+    color = NULL,
+    caption = "_**Data**: MVA_"
+  ) +
+  scale_y_continuous(labels = scales::label_percent()) +
+  scale_color_manual(
+    values = colors,
+    guide = guide_legend(
+      title.position = "top", title.hjust = 0.5, nrow = 2,
+      label.position = "right",
+      override.aes = list(fill = "transparent", size = 6, alpha = 1)
+    )
+  ) +
+  theme(
+    plot.title = element_textbox(size = 20),
+    axis.title.y = element_textbox(width = grid::unit(2.5, "in")),
+    legend.key = element_rect(fill = "transparent", color = "transparent")
+  )
 ```
 
 </details>
@@ -269,27 +305,31 @@ Prior to 2014, most properties in Amsterdam were sold at about 6% below asking p
 <summary>Show code</summary>
 
 ``` r
-data |> 
-  filter(type != "Total",
-         date == max(date)) |> 
-  select(type, diff_ask_paid_perc, diff_ask_paid, transaction_price, n_sold) |> 
-  arrange(-diff_ask_paid_perc) |> 
-  gt() |> 
-  cols_align(columns = "type", align = "left") |> 
-  fmt_percent(columns = "diff_ask_paid_perc") |> 
-  fmt_currency(columns = "diff_ask_paid", currency = "EUR", decimals = 0, sep_mark = " ") |> 
-  fmt_currency(columns = "transaction_price", currency = "EUR", decimals = 0, sep_mark = " ") |> 
-  fmt_number(columns = "n_sold", sep_mark = " ", drop_trailing_zeros = TRUE) |> 
+data |>
+  filter(
+    type != "Total",
+    date == max(date)
+  ) |>
+  select(type, diff_ask_paid_perc, diff_ask_paid, transaction_price, n_sold) |>
+  arrange(-diff_ask_paid_perc) |>
+  gt() |>
+  cols_align(columns = "type", align = "left") |>
+  fmt_percent(columns = "diff_ask_paid_perc") |>
+  fmt_currency(columns = "diff_ask_paid", currency = "EUR", decimals = 0, sep_mark = " ") |>
+  fmt_currency(columns = "transaction_price", currency = "EUR", decimals = 0, sep_mark = " ") |>
+  fmt_number(columns = "n_sold", sep_mark = " ", drop_trailing_zeros = TRUE) |>
   cols_label(
     type = html("<h5>Property type</h5>"),
     diff_ask_paid_perc = html("<h5>Percentage overpay</h5>"),
     diff_ask_paid = html("<h5>Mean overpay</h5>"),
     transaction_price = html("<h5>Mean transaction price</h5>"),
     n_sold = html("<h5>Number of properties<br>sold in period</h5>")
-  ) |> 
-  tab_header(title = html("<h3 style='margin-bottom: 0'>Difference between<br>asking price and price paid</h3>"),
-             subtitle = html("<h4 style='margin-top: 0'><em>Data from the first quarter of 2021</em></h4>")) |> 
-  tab_source_note(source_note = md("_**Data**: MVA_")) |> 
+  ) |>
+  tab_header(
+    title = html("<h3 style='margin-bottom: 0'>Difference between<br>asking price and price paid</h3>"),
+    subtitle = html("<h4 style='margin-top: 0'><em>Data from the first quarter of 2021</em></h4>")
+  ) |>
+  tab_source_note(source_note = md("_**Data**: MVA_")) |>
   tab_options(table.background.color = "#EBEBEB") |>
   gtsave("overpay-table.png", expand = 0)
 ```
@@ -302,42 +342,60 @@ What contributed to this price increase? A simple supply-and-demand plays a part
 <summary>Show code</summary>
 
 ``` r
-data |> 
-  filter(type != "Total") |> 
-  group_by(type) |> 
-  mutate(n_total = sum(n_sold),
-         type_label = str_glue("{type} (n={format(n_total, big.mark = \".\", decimal.mark = \",\")})"),
-         type_label = str_replace(type_label,"\\) \\(", ", ")) |> 
-  arrange(type) |> 
-  mutate(type_label = factor(type_label)) |> 
-  ggplot(aes(x = date, y = tightness_index, color = type_label)) + 
-  geom_rect(data = tibble(), 
-            aes(xmin = as.Date(-Inf), xmax = as.Date(Inf), ymin = c(0,5,10), ymax = c(5,10,Inf), 
-                fill = c("Sellers market", "Balanced market", "Buyers market")),
-            color = "transparent", alpha = 0.2, key_glyph = "point", inherit.aes = FALSE) +
+data |>
+  filter(type != "Total") |>
+  group_by(type) |>
+  mutate(
+    n_total = sum(n_sold),
+    type_label = str_glue("{type} (n={format(n_total, big.mark = \".\", decimal.mark = \",\")})"),
+    type_label = str_replace(type_label, "\\) \\(", ", ")
+  ) |>
+  arrange(type) |>
+  mutate(type_label = factor(type_label)) |>
+  ggplot(aes(x = date, y = tightness_index, color = type_label)) +
+  geom_rect(
+    data = tibble(),
+    aes(
+      xmin = as.Date(-Inf), xmax = as.Date(Inf), ymin = c(0, 5, 10), ymax = c(5, 10, Inf),
+      fill = c("Sellers market", "Balanced market", "Buyers market")
+    ),
+    color = "transparent", alpha = 0.2, key_glyph = "point", inherit.aes = FALSE
+  ) +
   geom_hline(yintercept = 0, color = "grey30", size = 1) +
-  geom_line(size = 1.2, alpha = 0.8, lineend = "round", key_glyph = "point") + 
-  labs(title = "Amsterdam has had a sellers market for nearly 5 years",
-       x = NULL,
-       y = "Indicator of _\"density\"_ on the housing market",
-       color = NULL,
-       fill = "Type of market:",
-       caption = "_**Data**: MVA_") +
-  scale_x_date(expand = c(0,0)) +
-  scale_y_continuous(trans = "reverse", expand = c(0,0)) + 
-  scale_color_manual(values = colors,
-                     guide = guide_legend(title.position = "top", title.hjust = 0.5, nrow = 2,
-                                          label.position = "right", order = 1,
-                                          override.aes = list(fill = "transparent", size = 6, alpha = 1))) +
-  scale_fill_manual(values = c("#F5E000","#00B300","#D1000E"), 
-                    limits = c("Buyers market","Balanced market","Sellers market"), 
-                    guide = guide_legend(order = 2, override.aes = list(shape = 21, size = 6, alpha = 1, stroke = 0))) +
+  geom_line(size = 1.2, alpha = 0.8, lineend = "round", key_glyph = "point") +
+  labs(
+    title = "Amsterdam has had a sellers market for nearly 5 years",
+    x = NULL,
+    y = "Indicator of _\"density\"_ on the housing market",
+    color = NULL,
+    fill = "Type of market:",
+    caption = "_**Data**: MVA_"
+  ) +
+  scale_x_date(expand = c(0, 0)) +
+  scale_y_continuous(trans = "reverse", expand = c(0, 0)) +
+  scale_color_manual(
+    values = colors,
+    guide = guide_legend(
+      title.position = "top", title.hjust = 0.5, nrow = 2,
+      label.position = "right", order = 1,
+      override.aes = list(fill = "transparent", size = 6, alpha = 1)
+    )
+  ) +
+  scale_fill_manual(
+    values = c("#F5E000", "#00B300", "#D1000E"),
+    limits = c("Buyers market", "Balanced market", "Sellers market"),
+    guide = guide_legend(order = 2, override.aes = list(shape = 21, size = 6, alpha = 1, stroke = 0))
+  ) +
   coord_cartesian(clip = "off") +
-  theme(plot.title = element_textbox(size = 16),
-        plot.subtitle = element_textbox(size = 10),
-        axis.title.y = element_textbox(orientation = "left-rotated",
-                                       width = grid::unit(2, "in")),
-        legend.key = element_rect(fill = "transparent"))
+  theme(
+    plot.title = element_textbox(size = 16),
+    plot.subtitle = element_textbox(size = 10),
+    axis.title.y = element_textbox(
+      orientation = "left-rotated",
+      width = grid::unit(2, "in")
+    ),
+    legend.key = element_rect(fill = "transparent")
+  )
 ```
 
 </details>
@@ -353,29 +411,39 @@ A new phenomenon that entered the scene a little while ago may indicate how skew
 <summary>Show code</summary>
 
 ``` r
-data |> 
-  filter(type != "Total") |> 
-  ggplot(aes(x = date, y = perc_sold, fill = type)) + 
-  geom_col(key_glyph = "point") + 
+data |>
+  filter(type != "Total") |>
+  ggplot(aes(x = date, y = perc_sold, fill = type)) +
+  geom_col(key_glyph = "point") +
   geom_hline(yintercept = 1, linetype = "dashed", color = "grey20") +
-  labs(title = "Some years, more houses are sold than are being put on the market",
-       x = NULL,
-       y = "Percentage of offered houses sold",
-       fill = NULL,
-       caption = "_**Data**: MVA_") +
+  labs(
+    title = "Some years, more houses are sold than are being put on the market",
+    x = NULL,
+    y = "Percentage of offered houses sold",
+    fill = NULL,
+    caption = "_**Data**: MVA_"
+  ) +
   coord_cartesian(clip = "off") +
-  scale_y_continuous(labels = scales::label_percent(), expand = c(0,NA), n.breaks = 4) + 
-  scale_fill_manual(values = colors,
-                    guide = guide_legend(title.position = "top", title.hjust = 0.5, nrow = 2,
-                                         label.position = "right", 
-                                         override.aes = list(shape = 21, size = 6, alpha = 1, stroke = 0))) +
-  theme(plot.title = element_textbox(size = 20,
-                                     width = grid::unit(6,"in")),
-        plot.subtitle = element_textbox(size = 10),
-        strip.text.x = element_markdown(face = "bold", padding = margin(10,0,5,0,"pt")),
-        strip.background = element_rect(fill = "transparent"),
-        legend.key = element_rect(fill = "transparent")) +
-  facet_wrap(~ type, strip.position = "top", scales = "free_x")
+  scale_y_continuous(labels = scales::label_percent(), expand = c(0, NA), n.breaks = 4) +
+  scale_fill_manual(
+    values = colors,
+    guide = guide_legend(
+      title.position = "top", title.hjust = 0.5, nrow = 2,
+      label.position = "right",
+      override.aes = list(shape = 21, size = 6, alpha = 1, stroke = 0)
+    )
+  ) +
+  theme(
+    plot.title = element_textbox(
+      size = 20,
+      width = grid::unit(6, "in")
+    ),
+    plot.subtitle = element_textbox(size = 10),
+    strip.text.x = element_markdown(face = "bold", padding = margin(10, 0, 5, 0, "pt")),
+    strip.background = element_rect(fill = "transparent"),
+    legend.key = element_rect(fill = "transparent")
+  ) +
+  facet_wrap(~type, strip.position = "top", scales = "free_x")
 ```
 
 </details>
@@ -389,55 +457,77 @@ This adds fuel to the fire. I guess I'm trying to show that there are a number o
 
 ``` r
 decades <- tibble(
-  x1 = seq(1920,2020,10),
+  x1 = seq(1920, 2020, 10),
   x2 = x1 + 10
-) |> 
-  slice(seq(1,1e2,2)) |> 
+) |>
+  slice(seq(1, 1e2, 2)) |>
   filter(x2 < 2030)
 
-hist_data_homes <- cbsodataR::cbs_get_data("82235NED") |> 
-  janitor::clean_names() |> 
-  rename(stock_end = eindstand_voorraad_8) |> 
-  mutate(year = parse_number(perioden),
-         stock_end = stock_end * 1e3,
-         diff = stock_end - lag(stock_end))
+hist_data_homes <- cbsodataR::cbs_get_data("82235NED") |>
+  janitor::clean_names() |>
+  rename(stock_end = eindstand_voorraad_8) |>
+  mutate(
+    year = parse_number(perioden),
+    stock_end = stock_end * 1e3,
+    diff = stock_end - lag(stock_end)
+  )
 
-total_hist_plot <- hist_data_homes |> 
+total_hist_plot <- hist_data_homes |>
   ggplot(aes(x = year, y = stock_end)) +
-  geom_rect(data = tibble(), aes(xmin = 1940.01, xmax = 1945, ymin = -Inf, ymax = Inf),
-            fill = "red", alpha = 0.2, inherit.aes = FALSE) + 
-  geom_text(data = tibble(), aes(x = 1942.5, y = max(hist_data_homes$stock_end, na.rm = TRUE), vjust = 0, label = "WWII"), size = 3,
-            fontface = "bold", family = "nunito-sans", inherit.aes = FALSE) +
-  geom_rect(data = decades, aes(xmin = x1, xmax = x2, ymin = -Inf, ymax = Inf), 
-            fill = "grey30", alpha = 0.2, color = "transparent", inherit.aes = FALSE) +
+  geom_rect(
+    data = tibble(), aes(xmin = 1940.01, xmax = 1945, ymin = -Inf, ymax = Inf),
+    fill = "red", alpha = 0.2, inherit.aes = FALSE
+  ) +
+  geom_text(
+    data = tibble(),
+    aes(x = 1942.5, y = max(hist_data_homes$stock_end, na.rm = TRUE)),
+    label = "WWII", fontface = "bold", family = "nunito-sans",
+    vjust = 0, size = 3, inherit.aes = FALSE
+  ) +
+  geom_rect(
+    data = decades, aes(xmin = x1, xmax = x2, ymin = -Inf, ymax = Inf),
+    fill = "grey30", alpha = 0.2, color = "transparent", inherit.aes = FALSE
+  ) +
   geom_line(color = "darkred", size = 1.5, lineend = "round") +
-  labs(x = NULL,
-       y = "Total number of homes") +
-  scale_x_continuous(expand = c(0,0), breaks = c(decades$x1,decades$x2,2020)) + 
+  labs(
+    x = NULL,
+    y = "Total number of homes"
+  ) +
+  scale_x_continuous(expand = c(0, 0), breaks = c(decades$x1, decades$x2, 2020)) +
   scale_y_continuous(labels = scales::label_number()) +
   coord_cartesian(clip = "off")
 
-diff_hist_plot <- hist_data_homes |> 
+diff_hist_plot <- hist_data_homes |>
   ggplot(aes(x = year, y = diff)) +
   geom_hline(yintercept = 0.5, color = "grey30", size = 1) +
-  geom_rect(data = tibble(), aes(xmin = 1940.01, xmax = 1945, ymin = -Inf, ymax = Inf),
-            fill = "red", alpha = 0.2, inherit.aes = FALSE) + 
-  geom_text(data = tibble(), aes(x = 1942.5, y = max(hist_data_homes$diff, na.rm = TRUE), vjust = 0, label = "WWII"), size = 3,
-            fontface = "bold", family = "nunito-sans", inherit.aes = FALSE) +
-  geom_rect(data = decades, aes(xmin = x1, xmax = x2, ymin = -Inf, ymax = Inf), 
-            fill = "grey30", alpha = 0.2, color = "transparent", inherit.aes = FALSE) +
+  geom_rect(
+    data = tibble(), aes(xmin = 1940.01, xmax = 1945, ymin = -Inf, ymax = Inf),
+    fill = "red", alpha = 0.2, inherit.aes = FALSE
+  ) +
+  geom_text(
+    data = tibble(), aes(x = 1942.5, y = max(hist_data_homes$diff, na.rm = TRUE), vjust = 0, label = "WWII"), size = 3,
+    fontface = "bold", family = "nunito-sans", inherit.aes = FALSE
+  ) +
+  geom_rect(
+    data = decades, aes(xmin = x1, xmax = x2, ymin = -Inf, ymax = Inf),
+    fill = "grey30", alpha = 0.2, color = "transparent", inherit.aes = FALSE
+  ) +
   geom_line(color = "grey30", alpha = 0.5, size = 1.5, lineend = "round") +
   geom_smooth(color = "darkred", size = 1.5, se = FALSE) +
-  labs(x = NULL,
-       y = "Net homes added per year") +
-  scale_x_continuous(expand = c(0,0), breaks = c(decades$x1,decades$x2,2020)) + 
+  labs(
+    x = NULL,
+    y = "Net homes added per year"
+  ) +
+  scale_x_continuous(expand = c(0, 0), breaks = c(decades$x1, decades$x2, 2020)) +
   scale_y_continuous(labels = scales::label_number_auto()) +
   coord_cartesian(clip = "off")
 
 total_hist_plot / diff_hist_plot +
-  plot_annotation(title = "Number of houses available",
-                  subtitle = "Data covers development in the Netherlands nationwide",
-                  caption = "**Data**: CBS") &
+  plot_annotation(
+    title = "Number of houses available",
+    subtitle = "Data covers development in the Netherlands nationwide",
+    caption = "**Data**: CBS"
+  ) &
   theme(plot.title = element_textbox(size = 20))
 ```
 
@@ -456,7 +546,8 @@ But that's not all, there's a few other features that contribute to the gridlock
 
 ``` r
 house_mutations_in <- tribble(
-  ~year, ~buy_to_rent_corp, ~buy_to_rent_other, ~rent_corp_to_buy, ~rent_corp_to_rent_other, ~rent_other_to_buy, ~rent_other_to_rent_corp,
+  ~year, ~buy_to_rent_corp, ~buy_to_rent_other, ~rent_corp_to_buy,
+  ~rent_corp_to_rent_other, ~rent_other_to_buy, ~rent_other_to_rent_corp,
   2012, 900, 58000, 14600, 5500, 50600, 4900,
   2013, 800, 62200, 15200, 11500, 50900, 6000,
   2014, 1000, 62200, 15400, 9300, 59900, 39000,
@@ -465,19 +556,25 @@ house_mutations_in <- tribble(
   2017, 1600, 98900, 6400, 11000, 7300, 9000
 )
 
-house_mutations <- house_mutations_in |> 
-  pivot_longer(cols = -year, names_to = "mutation", values_to = "n_mutations") |> 
-  mutate(from = str_extract(mutation, "(.*?)_to"),
-         from = str_remove_all(from, "_to"),
-         to = str_extract(mutation, "to_(.*?)$"),
-         to = str_remove_all(to, "to_")) |> 
-  group_by(year) |> 
-  mutate(total_mutations = sum(n_mutations),
-         perc_mutations = n_mutations / total_mutations,
-         across(c(from,to), ~ case_when(str_detect(.x,"buy") ~ "buy",
-                                        str_detect(.x,"rent_corp") ~ "rent (corporation)",
-                                        str_detect(.x,"rent_other") ~ "rent (other)")),
-         mutation_label = str_glue("From {from} to {to}")) |> 
+house_mutations <- house_mutations_in |>
+  pivot_longer(cols = -year, names_to = "mutation", values_to = "n_mutations") |>
+  mutate(
+    from = str_extract(mutation, "(.*?)_to"),
+    from = str_remove_all(from, "_to"),
+    to = str_extract(mutation, "to_(.*?)$"),
+    to = str_remove_all(to, "to_")
+  ) |>
+  group_by(year) |>
+  mutate(
+    total_mutations = sum(n_mutations),
+    perc_mutations = n_mutations / total_mutations,
+    across(c(from, to), ~ case_when(
+      str_detect(.x, "buy") ~ "buy",
+      str_detect(.x, "rent_corp") ~ "rent (corporation)",
+      str_detect(.x, "rent_other") ~ "rent (other)"
+    )),
+    mutation_label = str_glue("From {from} to {to}")
+  ) |>
   ungroup()
 ```
 
@@ -489,46 +586,62 @@ So not every year there's the same number of "mutations" (transformations of pur
 <summary>Show code</summary>
 
 ``` r
-mutations_n_plot <- house_mutations |> 
-  arrange(from,to) |> 
-  mutate(mutation_label = fct_inorder(mutation_label)) |> 
+mutations_n_plot <- house_mutations |>
+  arrange(from, to) |>
+  mutate(mutation_label = fct_inorder(mutation_label)) |>
   ggplot(aes(x = year, y = n_mutations, alluvium = mutation_label, fill = mutation_label)) +
   geom_point(shape = 21, color = "transparent", size = NA) +
   ggalluvial::geom_flow(width = 0, show.legend = FALSE) +
-  labs(x = NULL,
-       y = "Number of mutations",
-       fill = NULL) + 
-  scale_x_continuous(expand = c(0,0)) +
-  scale_y_continuous(labels = scales::label_number_auto(), expand = c(0,0)) + 
-  scale_fill_manual(values = rev(colors),
-                    guide = guide_legend(title.position = "top", title.hjust = 0.5, nrow = 2,
-                                         label.position = "right", 
-                                         override.aes = list(color = "transparent", size = 6, alpha = 1, stroke = 0))) +
+  labs(
+    x = NULL,
+    y = "Number of mutations",
+    fill = NULL
+  ) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(labels = scales::label_number_auto(), expand = c(0, 0)) +
+  scale_fill_manual(
+    values = rev(colors),
+    guide = guide_legend(
+      title.position = "top", title.hjust = 0.5, nrow = 2,
+      label.position = "right",
+      override.aes = list(color = "transparent", size = 6, alpha = 1, stroke = 0)
+    )
+  ) +
   theme(legend.key = element_rect(fill = "transparent"))
 
-mutations_perc_plot <- house_mutations |> 
-  arrange(from,to) |> 
-  mutate(mutation_label = fct_inorder(mutation_label)) |> 
+mutations_perc_plot <- house_mutations |>
+  arrange(from, to) |>
+  mutate(mutation_label = fct_inorder(mutation_label)) |>
   ggplot(aes(x = year, y = perc_mutations, alluvium = mutation_label, fill = mutation_label)) +
   geom_point(shape = 21, color = "transparent", size = NA) +
   ggalluvial::geom_flow(width = 0, show.legend = FALSE) +
-  labs(x = NULL, 
-       y = "Percentage of total mutations per quarter",
-       fill = NULL) +
-  scale_x_continuous(expand = c(0,0)) +
-  scale_y_continuous(labels = scales::label_percent(), expand = c(0,0)) + 
-  scale_fill_manual(values = rev(colors),
-                    guide = guide_legend(title.position = "top", title.hjust = 0.5, nrow = 2,
-                                         label.position = "right", 
-                                         override.aes = list(color = "transparent", size = 6, alpha = 1, stroke = 0))) +
-  theme(axis.title.y = element_textbox(width = grid::unit(2,"in")),
-        legend.key = element_rect(fill = "transparent"))
+  labs(
+    x = NULL,
+    y = "Percentage of total mutations per quarter",
+    fill = NULL
+  ) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(labels = scales::label_percent(), expand = c(0, 0)) +
+  scale_fill_manual(
+    values = rev(colors),
+    guide = guide_legend(
+      title.position = "top", title.hjust = 0.5, nrow = 2,
+      label.position = "right",
+      override.aes = list(color = "transparent", size = 6, alpha = 1, stroke = 0)
+    )
+  ) +
+  theme(
+    axis.title.y = element_textbox(width = grid::unit(2, "in")),
+    legend.key = element_rect(fill = "transparent")
+  )
 
 mutations_n_plot / mutations_perc_plot +
-  plot_annotation(title = "Shift to a renters market",
-                  subtitle = "_A lot more houses meant for sale are being transformed into rental properties than vice versa_",
-                  caption = "_**Data**: CBS_") +
-  plot_layout(guides = 'collect') &
+  plot_annotation(
+    title = "Shift to a renters market",
+    subtitle = "_A lot more houses meant for sale are being transformed into rental properties than vice versa_",
+    caption = "_**Data**: CBS_"
+  ) +
+  plot_layout(guides = "collect") &
   theme(plot.title = element_textbox(size = 20))
 ```
 
@@ -544,51 +657,65 @@ We can look at the net number of houses added to the rental market by adding up 
 <summary>Show code</summary>
 
 ``` r
-net_house_mutations <- house_mutations |> 
-  mutate(across(c(from,to), ~ case_when(str_detect(.x, "rent") ~ "rent",
-                                        str_detect(.x, "buy") ~ "buy"))) |>
-  group_by(year) |> 
-  filter(from != to) |> 
-  mutate(total_mutations = sum(n_mutations)) |> 
-  group_by(year, from, to) |> 
-  summarise(n_mutations = sum(n_mutations),
-            total_mutations = first(total_mutations)) |> 
-  pivot_wider(id_cols = c(year,total_mutations), names_from = c(from,to), values_from = n_mutations, 
-              names_sep = "_to_") |> 
-  mutate(net_buy_to_rent = buy_to_rent - rent_to_buy,
-         perc_buy_to_rent = buy_to_rent / total_mutations) 
+net_house_mutations <- house_mutations |>
+  mutate(across(c(from, to), ~ case_when(
+    str_detect(.x, "rent") ~ "rent",
+    str_detect(.x, "buy") ~ "buy"
+  ))) |>
+  group_by(year) |>
+  filter(from != to) |>
+  mutate(total_mutations = sum(n_mutations)) |>
+  group_by(year, from, to) |>
+  summarise(
+    n_mutations = sum(n_mutations),
+    total_mutations = first(total_mutations)
+  ) |>
+  pivot_wider(
+    id_cols = c(year, total_mutations), names_from = c(from, to), values_from = n_mutations,
+    names_sep = "_to_"
+  ) |>
+  mutate(
+    net_buy_to_rent = buy_to_rent - rent_to_buy,
+    perc_buy_to_rent = buy_to_rent / total_mutations
+  )
 
-net_mutation_plot <- net_house_mutations |> 
-  ggplot(aes(x = year, y = net_buy_to_rent)) + 
+net_mutation_plot <- net_house_mutations |>
+  ggplot(aes(x = year, y = net_buy_to_rent)) +
   geom_hline(yintercept = 0, color = "grey30", size = 1) +
-  #geom_ribbon(aes(ymin = 0, ymax = net_buy_to_rent), fill = "grey30", alpha = 0.2) +
+  # geom_ribbon(aes(ymin = 0, ymax = net_buy_to_rent), fill = "grey30", alpha = 0.2) +
   geom_line(color = "darkred", size = 1.5, lineend = "round") +
-  #geom_textbox(data = tibble(), aes(x = 2014, y = 4e4, 
-  #                                  label = "Net number of properties meant for sale withdrawn from the market"), 
-  #             family = "nunito-sans", size = 4, fill = "transparent", 
+  # geom_textbox(data = tibble(), aes(x = 2014, y = 4e4,
+  #                                  label = "Net number of properties meant for sale withdrawn from the market"),
+  #             family = "nunito-sans", size = 4, fill = "transparent",
   #             maxwidth = grid::unit(2,"in"), hjust = 0.5, vjust = 0) +
-  #geom_curve(data = tibble(), aes(x = 2014, y = 4e4, xend = 2016.5, yend = 2.5e4), 
+  # geom_curve(data = tibble(), aes(x = 2014, y = 4e4, xend = 2016.5, yend = 2.5e4),
   #           curvature = 0.3, size = 0.75, arrow = arrow(length = unit(2,"mm")),
   #           lineend = "round") +
-  labs(x = NULL,
-       y = "**Net number of properties changed from properties meant for sale to rental properties**") +
+  labs(
+    x = NULL,
+    y = "**Net number of properties changed from properties meant for sale to rental properties**"
+  ) +
   scale_y_continuous(labels = scales::label_number_auto(), limits = c(-3e4, NA), n.breaks = 5) +
-  theme(axis.title.y = element_textbox(width = grid::unit(3.5,"in")))
+  theme(axis.title.y = element_textbox(width = grid::unit(3.5, "in")))
 
-perc_mutation_plot <- net_house_mutations |> 
-  ggplot(aes(x = year, y = perc_buy_to_rent)) + 
+perc_mutation_plot <- net_house_mutations |>
+  ggplot(aes(x = year, y = perc_buy_to_rent)) +
   geom_hline(yintercept = 0.5, color = "grey30", size = 1) +
   geom_line(color = "darkred", size = 1.5, lineend = "round") +
-  labs(x = NULL,
-       y = "**Percentage of mutations that changed properties meant for sale to rental properties**") +
-  scale_y_continuous(labels = scales::label_percent(), limits = c(0,1), expand = c(0,0)) +
+  labs(
+    x = NULL,
+    y = "**Percentage of mutations that changed properties meant for sale to rental properties**"
+  ) +
+  scale_y_continuous(labels = scales::label_percent(), limits = c(0, 1), expand = c(0, 0)) +
   coord_cartesian(clip = "off") +
-  theme(axis.title.y = element_textbox(width = grid::unit(3.5,"in")))
+  theme(axis.title.y = element_textbox(width = grid::unit(3.5, "in")))
 
-net_mutation_plot + perc_mutation_plot + 
-  plot_annotation(title = "Major net shift towards rental market",
-                  subtitle = "_A lot more houses meant for sale are being transformed into rental properties than vice versa_",
-                  caption = "_**Data**: CBS_") &
+net_mutation_plot + perc_mutation_plot +
+  plot_annotation(
+    title = "Major net shift towards rental market",
+    subtitle = "_A lot more houses meant for sale are being transformed into rental properties than vice versa_",
+    caption = "_**Data**: CBS_"
+  ) &
   theme(plot.title = element_textbox(size = 20))
 ```
 
@@ -602,36 +729,42 @@ So in 2017 nearly 90 000 houses were mutated from sale to rental properties. In 
 <summary>Show code</summary>
 
 ``` r
-house_mutations |> 
-  filter(year == max(year)) |> 
-  select(from, to, n_mutations, perc_mutations) |> 
-  mutate(across(c(from,to), ~ str_to_sentence(.x))) |> 
-  arrange(-perc_mutations) |> 
-  gt() |> 
-  fmt_number(columns = "n_mutations", sep_mark = " ", drop_trailing_zeros = TRUE) |> 
-  fmt_percent(columns = "perc_mutations") |> 
+house_mutations |>
+  filter(year == max(year)) |>
+  select(from, to, n_mutations, perc_mutations) |>
+  mutate(across(c(from, to), ~ str_to_sentence(.x))) |>
+  arrange(-perc_mutations) |>
+  gt() |>
+  fmt_number(columns = "n_mutations", sep_mark = " ", drop_trailing_zeros = TRUE) |>
+  fmt_percent(columns = "perc_mutations") |>
   grand_summary_rows(
     columns = "n_mutations",
     fns = list(total = "sum"),
     formatter = fmt_number,
     sep_mark = " ",
-    drop_trailing_zeros = TRUE) |> 
+    drop_trailing_zeros = TRUE
+  ) |>
   grand_summary_rows(
     columns = "perc_mutations",
     fns = list(total = "sum"),
-    formatter = fmt_percent, 
-    missing_text = "") |> 
+    formatter = fmt_percent,
+    missing_text = ""
+  ) |>
   cols_label(
     from = html("<h5>From</h5>"),
     to = html("<h5>To</h5>"),
     n_mutations = html("<h5>Number of mutations</h5>"),
     perc_mutations = html("<h5>Percentage of total mutations</h5>")
-  ) |> 
-  tab_header(title = html("<h3 style='margin-bottom: 0'>Mutations in the Dutch housing market</h3>"),
-             subtitle = html("<h4 style='margin-top: 0'><em>Data from the year 2017</em></h4>")) |> 
-  tab_source_note(source_note = md("_**Data**: CBS_")) |> 
-  tab_options(table.background.color = "#EBEBEB",
-              grand_summary_row.text_transform = "capitalize") |>
+  ) |>
+  tab_header(
+    title = html("<h3 style='margin-bottom: 0'>Mutations in the Dutch housing market</h3>"),
+    subtitle = html("<h4 style='margin-top: 0'><em>Data from the year 2017</em></h4>")
+  ) |>
+  tab_source_note(source_note = md("_**Data**: CBS_")) |>
+  tab_options(
+    table.background.color = "#EBEBEB",
+    grand_summary_row.text_transform = "capitalize"
+  ) |>
   gtsave("mutations-table.png", expand = 0)
 ```
 
@@ -648,36 +781,46 @@ So what's the result of all these phenomena? The figure below shows the housing 
 <summary>Show code</summary>
 
 ``` r
-asking_start <- data |> 
-  filter(type != "Total",
-         date == min(date)) |> 
-  rename(asking_start = asking_price) |> 
+asking_start <- data |>
+  filter(
+    type != "Total",
+    date == min(date)
+  ) |>
+  rename(asking_start = asking_price) |>
   select(type, asking_start)
 
-data_asking_index <- data |> 
-  filter(type != "Total") |> 
-  left_join(asking_start) |> 
+data_asking_index <- data |>
+  filter(type != "Total") |>
+  left_join(asking_start) |>
   mutate(asking_index = asking_price / asking_start)
 
-data_asking_index |> 
-  ggplot(aes(x = date, y = asking_index, color = type, group = type)) + 
-  geom_line(size = 2, alpha = 0.15, lineend = "round", show.legend = FALSE) + 
+data_asking_index |>
+  ggplot(aes(x = date, y = asking_index, color = type, group = type)) +
+  geom_line(size = 2, alpha = 0.15, lineend = "round", show.legend = FALSE) +
   geom_smooth(se = FALSE, show.legend = FALSE) +
-  geom_point(size = NA) + 
-  labs(title = "Price development over the past decade",
-       subtitle = "_On average, properties doubled in value since 2012_",
-       x = NULL,
-       y = "Price development relative to early 2012",
-       color = NULL,
-       caption = "_**Data**: MVA_") +
-  scale_y_continuous(labels = scales::label_percent()) + 
-  scale_color_manual(values = colors,
-                     guide = guide_legend(title.position = "top", title.hjust = 0.5, nrow = 2,
-                                          label.position = "right", 
-                                          override.aes = list(fill = "transparent", size = 6, alpha = 1))) +
-  theme(plot.title = element_textbox(size = 20),
-        axis.title.y = element_textbox(width = grid::unit(2.5, "in")),
-        legend.key = element_rect(fill = "transparent", color = "transparent"))
+  geom_point(size = NA) +
+  labs(
+    title = "Price development over the past decade",
+    subtitle = "_On average, properties doubled in value since 2012_",
+    x = NULL,
+    y = "Price development relative to early 2012",
+    color = NULL,
+    caption = "_**Data**: MVA_"
+  ) +
+  scale_y_continuous(labels = scales::label_percent()) +
+  scale_color_manual(
+    values = colors,
+    guide = guide_legend(
+      title.position = "top", title.hjust = 0.5, nrow = 2,
+      label.position = "right",
+      override.aes = list(fill = "transparent", size = 6, alpha = 1)
+    )
+  ) +
+  theme(
+    plot.title = element_textbox(size = 20),
+    axis.title.y = element_textbox(width = grid::unit(2.5, "in")),
+    legend.key = element_rect(fill = "transparent", color = "transparent")
+  )
 ```
 
 </details>

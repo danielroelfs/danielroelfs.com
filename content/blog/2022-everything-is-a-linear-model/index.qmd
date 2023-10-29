@@ -69,7 +69,7 @@ this formula would like like this when implemented in R:
 ```{r}
 #| label: sd-calc
 
-sqrt( sum(abs(concentration - mean(concentration))^2) / (n - 1) )
+sqrt(sum(abs(concentration - mean(concentration))^2) / (n - 1))
 ```
 
 But of course in any normal setting, you'd use the `sd()` function, which will give the same result as the code above, but I just wanted to show it for illustrative purposes. Anywhere else I'll use the `sd()` function. Now let's calculate the *t*-value. In formula form this would look like this:
@@ -122,7 +122,7 @@ Now we'll apply the same logic we used for the One-Sample T-test to show how an 
 n <- 30
 data <- tibble(
   concentration = c(rnorm(n, mean = 4, sd = 1.5), rnorm(n, mean = 6, sd = 2)),
-  group = rep(c("HC","PAT"), each = n)
+  group = rep(c("HC", "PAT"), each = n)
 )
 ```
 
@@ -137,14 +137,14 @@ It's a bit too complex to describe in a sentence, but the definitions are perhap
 ```{r}
 #| label: tst-t-calc
 
-g1 <- data |> 
-  filter(group == "HC") |> 
+g1 <- data |>
+  filter(group == "HC") |>
   pull(concentration)
-g2 <- data |> 
-  filter(group == "PAT") |> 
+g2 <- data |>
+  filter(group == "PAT") |>
   pull(concentration)
 
-(mean(g1) - mean(g2)) / sqrt( (sd(g1)^2 / length(g1)) + (sd(g2)^2 / length(g2)) )
+(mean(g1) - mean(g2)) / sqrt((sd(g1)^2 / length(g1)) + (sd(g2)^2 / length(g2)))
 ```
 
 Then running the regular T-test is easy.
@@ -165,7 +165,7 @@ ggplot(data, aes(x = group, y = concentration, fill = group)) +
   geom_boxplot(width = 0.2) +
   geom_jitter(width = 5e-2, size = 2, alpha = 0.75) +
   scico::scale_fill_scico_d(palette = "hawaii") +
-  theme_minimal() + 
+  theme_minimal() +
   theme(legend.position = "none")
 ```
 
@@ -180,10 +180,14 @@ mean_concentration <- data |>
 
 ggplot(data, aes(x = group)) +
   geom_jitter(aes(y = concentration), width = 5e-2, size = 2, alpha = 0.75) +
-  geom_point(data = mean_concentration, aes(y = mean_conc), 
-             color = "violet", size = 5) +
-  geom_line(data = mean_concentration, aes(y = mean_conc), group = 1,
-            linewidth = 2, color = "violet") +
+  geom_point(
+    data = mean_concentration, aes(y = mean_conc),
+    color = "violet", size = 5
+  ) +
+  geom_line(
+    data = mean_concentration, aes(y = mean_conc), group = 1,
+    linewidth = 2, color = "violet"
+  ) +
   theme_minimal()
 ```
 
@@ -239,18 +243,30 @@ Which as you'll notice is one thousandths-decimal place off, which is due to rou
 
 ggplot(data, aes(x = group)) +
   geom_jitter(aes(y = concentration), width = 5e-2, size = 2, alpha = 0.75) +
-  geom_point(data = mean_concentration, aes(y = mean_conc), 
-             color = "violet", size = 5) +
-  geom_line(data = mean_concentration, aes(y = mean_conc), group = 1,
-            linewidth = 2, color = "violet") +
-  geom_segment(data = NULL, aes(x = 0.4, xend = 0.925, y = mean(g1), yend = mean(g1)),
-               color = "grey", linewidth = 0.2) +
-  geom_segment(data = NULL, aes(x = 0.4, xend = 1.925, y = mean(g2), yend = mean(g2)),
-               color = "grey", linewidth = 0.2) +
-  geom_text(data = data.frame(), aes(x = 1.45, y = 0.18 + (mean(g1) + mean(g2))/2), 
-            label = "a = 1.6177", angle = 21) +
-  scale_y_continuous(breaks = round(c(seq(2.5,10,2.5), mean(g1), mean(g2)), 4),
-                     minor_breaks = seq(1.25,8.75,2.5)) +
+  geom_point(
+    data = mean_concentration, aes(y = mean_conc),
+    color = "violet", size = 5
+  ) +
+  geom_line(
+    data = mean_concentration, aes(y = mean_conc), group = 1,
+    linewidth = 2, color = "violet"
+  ) +
+  geom_segment(
+    data = NULL, aes(x = 0.4, xend = 0.925, y = mean(g1), yend = mean(g1)),
+    color = "grey", linewidth = 0.2
+  ) +
+  geom_segment(
+    data = NULL, aes(x = 0.4, xend = 1.925, y = mean(g2), yend = mean(g2)),
+    color = "grey", linewidth = 0.2
+  ) +
+  geom_text(
+    data = data.frame(), aes(x = 1.45, y = 0.18 + (mean(g1) + mean(g2)) / 2),
+    label = "a = 1.6177", angle = 21
+  ) +
+  scale_y_continuous(
+    breaks = round(c(seq(2.5, 10, 2.5), mean(g1), mean(g2)), 4),
+    minor_breaks = seq(1.25, 8.75, 2.5)
+  ) +
   theme_minimal()
 ```
 
@@ -264,11 +280,15 @@ Based on what we did in the previous section, you may already predict what we'll
 #| label: aov-setup
 
 n <- 30
-data <- tibble(score = round(c(rnorm(n, mean = 75, sd = 30), 
-                               rnorm(n, mean = 60, sd = 35),
-                               rnorm(n, mean = 30, sd = 17),
-                               rnorm(n, mean = 45, sd = 32))),
-               group = rep(c("SCZ", "BD", "MDD", "ASD"), each = n)) |>
+data <- tibble(
+  score = round(c(
+    rnorm(n, mean = 75, sd = 30),
+    rnorm(n, mean = 60, sd = 35),
+    rnorm(n, mean = 30, sd = 17),
+    rnorm(n, mean = 45, sd = 32)
+  )),
+  group = rep(c("SCZ", "BD", "MDD", "ASD"), each = n)
+) |>
   mutate(group = as_factor(group))
 ```
 
@@ -295,24 +315,30 @@ The first thing you might notice is that the *F*-statistic and the *p*-value are
 ```{r}
 #| label: aov-plot
 
-ref_mean <- data |> 
-  filter(group == "SCZ") |> 
-  pull(score) |> 
+ref_mean <- data |>
+  filter(group == "SCZ") |>
+  pull(score) |>
   mean()
 
-anova_group_means <- data |> 
-  group_by(group) |> 
-  summarise(score = mean(score)) |> 
-  mutate(ref_mean = ref_mean,
-         mean_adj = score - ref_mean)
+anova_group_means <- data |>
+  group_by(group) |>
+  summarise(score = mean(score)) |>
+  mutate(
+    ref_mean = ref_mean,
+    mean_adj = score - ref_mean
+  )
 
-ggplot(data, aes(x = group, y = score - ref_mean)) + 
-  stat_summary(fun = mean, geom = "point", 
-               size = 10, color = "violet", shape = 18) + 
-  geom_jitter(width = 0.2) + 
-  ggtext::geom_richtext(data = anova_group_means,
-                        aes(label = str_glue("x&#772; = {round(mean_adj, 2)}")), 
-                        fill = "#ffffff80", nudge_x = 1/3) + 
+ggplot(data, aes(x = group, y = score - ref_mean)) +
+  stat_summary(
+    fun = mean, geom = "point",
+    size = 10, color = "violet", shape = 18
+  ) +
+  geom_jitter(width = 0.2) +
+  ggtext::geom_richtext(
+    data = anova_group_means,
+    aes(label = str_glue("x&#772; = {round(mean_adj, 2)}")),
+    fill = "#ffffff80", nudge_x = 1 / 3
+  ) +
   theme_minimal()
 ```
 
@@ -332,17 +358,21 @@ We can do both calculations in one go with the following quick code:
 ```{r}
 #| label: aov-calc-ss
 
-data |> 
-  mutate(overall_mean = mean(score)) |> 
-  group_by(group) |> 
-  summarise(group_mean = mean(score),
-            group_n = n(),
-            overall_mean = first(overall_mean),
-            sq_group = group_n * (group_mean - overall_mean)^2,
-            sq_error = sum((score - group_mean)^2)) |> 
-  ungroup() |> 
-  summarise(ss_group = sum(sq_group),
-            ss_error = sum(sq_error))
+data |>
+  mutate(overall_mean = mean(score)) |>
+  group_by(group) |>
+  summarise(
+    group_mean = mean(score),
+    group_n = n(),
+    overall_mean = first(overall_mean),
+    sq_group = group_n * (group_mean - overall_mean)^2,
+    sq_error = sum((score - group_mean)^2)
+  ) |>
+  ungroup() |>
+  summarise(
+    ss_group = sum(sq_group),
+    ss_error = sum(sq_error)
+  )
 ```
 
 Now look back at the output from `summary(aov_model)` and we'll find the same values! I'll leave it here for now, but we'll come back to sum of squares (of different varieties later).
@@ -357,9 +387,12 @@ I don't think I need a lot of effort to convince anyone that a linear model is a
 #| label: lm-setup
 
 n <- 20
-data <- tibble(age = round(runif(n = n, min = 18, max = 60)),
-               sex = factor(sample(c("Male", "Female"), size = n, replace = TRUE), 
-                            levels = c("Male", "Female"))) |>
+data <- tibble(
+  age = round(runif(n = n, min = 18, max = 60)),
+  sex = factor(sample(c("Male", "Female"), size = n, replace = TRUE),
+    levels = c("Male", "Female")
+  )
+) |>
   mutate(measure = 1e-2 * age + sqrt(1e-2) * rnorm(n))
 ```
 
@@ -380,7 +413,7 @@ We find that there is a significant association between age and our measure, and
 ggplot(data, aes(x = age, y = measure)) +
   geom_point(size = 4, alpha = 0.8) +
   geom_smooth(method = "lm", color = "grey30") +
-  scale_x_continuous(limits = c(18,60)) +
+  scale_x_continuous(limits = c(18, 60)) +
   theme_minimal()
 ```
 
@@ -391,7 +424,7 @@ Back to our data. We know that a linear models fits a line that "predicts" outco
 ```{r}
 #| label: lm-predict
 
-data <- data |> 
+data <- data |>
   mutate(measure_pred = predict.lm(lm_model))
 ```
 
@@ -423,8 +456,10 @@ We can check that this is correct too by comparing the residuals we calculated w
 ```{r}
 #| label: lm-compare-residuals
 
-tibble(residual_manual = data$residual,
-       residual_lm = residuals(lm_model)) |> 
+tibble(
+  residual_manual = data$residual,
+  residual_lm = residuals(lm_model)
+) |>
   glimpse()
 ```
 
@@ -444,14 +479,15 @@ We can visualize the residuals using the `geom_smooth()` function. First I just 
 #| message: false
 
 ggplot(data, aes(x = age)) +
-  geom_smooth(aes(y = measure), method = 'lm', color = "grey30") +
+  geom_smooth(aes(y = measure), method = "lm", color = "grey30") +
   geom_point(aes(y = measure), size = 4, alpha = 0.8) +
   geom_point(aes(y = measure_pred), alpha = 0.5, size = 2.5) +
-  geom_segment(aes(xend = age, y = measure, yend = measure_pred), 
-               arrow = arrow(length = unit(4, "points")), 
-               color = "black", alpha = 0.8, show.legend = FALSE) +
-  scale_x_continuous(limits = c(18,60)) +
-  scico::scale_color_scico_d() + 
+  geom_segment(aes(xend = age, y = measure, yend = measure_pred),
+    arrow = arrow(length = unit(4, "points")),
+    color = "black", alpha = 0.8, show.legend = FALSE
+  ) +
+  scale_x_continuous(limits = c(18, 60)) +
+  scico::scale_color_scico_d() +
   theme_minimal()
 ```
 
@@ -463,22 +499,31 @@ You might have noticed now that the size of the arrow is defined as the differen
 #| message: false
 
 ggplot(data, aes(x = age)) +
-  geom_smooth(aes(y = measure), method = 'lm', color = "grey30") +
+  geom_smooth(aes(y = measure), method = "lm", color = "grey30") +
   geom_point(aes(y = measure), size = 4, alpha = 0.8) +
   geom_point(aes(y = measure_pred), alpha = 0.5, size = 2.5) +
-  geom_segment(aes(xend = age, y = measure, yend = measure_pred), 
-               arrow = arrow(length = unit(4, "points")), 
-               color = "black", alpha = 0.8, show.legend = FALSE) +
-  geom_rect(data = . %>% filter(age < 35 & age > 30), 
-            aes(xmin = age, xmax = age - (1.6 * residual * age), 
-                ymin = measure_pred, ymax = measure),
-            alpha = 0.5, color = "grey30") +
-  geom_rect(data = . %>% filter(age == 50), 
-            aes(xmin = age, xmax = age - (1.1 * residual * age), 
-                ymin = measure_pred, ymax = measure),
-            alpha = 0.5, color = "grey30") +
-  scale_x_continuous(limits = c(18,60)) +
-  scico::scale_color_scico_d() + 
+  geom_segment(aes(xend = age, y = measure, yend = measure_pred),
+    arrow = arrow(length = unit(4, "points")),
+    color = "black", alpha = 0.8, show.legend = FALSE
+  ) +
+  geom_rect(
+    data = . %>% filter(age < 35 & age > 30),
+    aes(
+      xmin = age, xmax = age - (1.6 * residual * age),
+      ymin = measure_pred, ymax = measure
+    ),
+    alpha = 0.5, color = "grey30"
+  ) +
+  geom_rect(
+    data = . %>% filter(age == 50),
+    aes(
+      xmin = age, xmax = age - (1.1 * residual * age),
+      ymin = measure_pred, ymax = measure
+    ),
+    alpha = 0.5, color = "grey30"
+  ) +
+  scale_x_continuous(limits = c(18, 60)) +
+  scico::scale_color_scico_d() +
   theme_minimal()
 ```
 
@@ -511,13 +556,14 @@ We've already plotted the sum of squared error, now we'll also illustrate sum of
 #| message: false
 
 ggplot(data, aes(x = age)) +
-  geom_smooth(aes(y = measure), method = 'lm', color = "grey95", alpha = 0.1) +
+  geom_smooth(aes(y = measure), method = "lm", color = "grey95", alpha = 0.1) +
   geom_hline(yintercept = mean(data$measure), color = "grey30", linewidth = 1) +
   geom_point(aes(y = measure), size = 4, alpha = 0.8) +
   geom_point(aes(y = mean(measure)), alpha = 0.5, size = 2.5) +
-  geom_segment(aes(xend = age, y = measure, yend = mean(measure)), 
-               arrow = arrow(length = unit(4, "points")), 
-               color = "black", alpha = 0.8, show.legend = FALSE) +
+  geom_segment(aes(xend = age, y = measure, yend = mean(measure)),
+    arrow = arrow(length = unit(4, "points")),
+    color = "black", alpha = 0.8, show.legend = FALSE
+  ) +
   theme_minimal()
 ```
 
@@ -526,9 +572,11 @@ We already calculated the difference with the regression line, then to calculate
 ```{r}
 #| label: lm-calc-differences
 
-data <- data |> 
-  mutate(measure_mean = mean(measure),
-         difference_mean = measure - measure_mean)
+data <- data |>
+  mutate(
+    measure_mean = mean(measure),
+    difference_mean = measure - measure_mean
+  )
 ```
 
 Sidenote, if you wanted to calculate the total variance the formula for that would look like this:

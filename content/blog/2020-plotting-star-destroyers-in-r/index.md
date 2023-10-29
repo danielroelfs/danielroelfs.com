@@ -60,9 +60,9 @@ In a ternary system, this same principle applies as in the binary system, except
 Unlike MATLAB (`dec2bin()`) or Python (`bin()`), R doesn't have a natural built-in function to convert decimal numbers to binary (unless you want to use the weird `intToBits()` function). So I wrote a function instead which continually appends the modulus while it loops through the digits of the numbers by dividing it in half continuously. The modulus is what is left after division of number x by number y. Let's take the number 13 as an example. In the first loop, the modulus of 13 when divided by 2 is 1. So that goes in the first position, representing value 1. The next digit in the binary system represents the value 2. So we divide our initial value by 2 (and round it to the lower integer it in case we get decimal points) and take the modulus again. So the modulus of 6 when divided by 2 is 0. So that's the second digit. The next loop will result in another 1 (`$x = 6; \lfloor x/2 \rfloor\ mod\ 2 = 1$`, `$\lfloor x \rfloor$` represents rounding `$x$` to the nearest lower integer, i.e. floor), and then in the final loop, we take half of 3 and take the modulus again (`$x = 3; \lfloor x/2 \rfloor\ mod\ 2 = 1$`). After this, when we floor 0.5, the loop cancels since from here on it will just produce an infinite amount of leading zero's. This function now gives us the value 1101, which corresponds to the table above. The code for this function looks like this:
 
 ``` r
-ConvertToBinary <- function(x) {
+convert_to_binary <- function(x) {
   out <- mod <- NULL
-  while (x > 0 | is.null(mod)) {
+  while (x > 0 || is.null(mod)) {
     mod <- x %% 2
     out <- paste0(mod, out)
     x <- floor(x / 2)
@@ -74,7 +74,7 @@ ConvertToBinary <- function(x) {
 Let's run this function:
 
 ``` r
-ConvertToBinary(13)
+convert_to_binary(13)
 ```
 
     [1] "1101"
@@ -82,12 +82,12 @@ ConvertToBinary(13)
 Now in this function we've hard coded that the base is 2, but this code works for any base up to base 10 with just a simple rewrite of the code. If we go higher, e.g. base 11, we are going to have to start using letters to represent values, which I'm too lazy to implement right now. We can specify the base as an input variable.
 
 ``` r
-ConvertToBase <- function(x, base = NULL) {
+convert_to_base_n <- function(x, base = NULL) {
   if (base > 10) {
     stop("Function not defined for bases higher than 10")
   }
   out <- mod <- NULL
-  while (x > 0 | is.null(mod)) {
+  while (x > 0 || is.null(mod)) {
     mod <- x %% base
     out <- paste0(mod, out)
     x <- floor(x / base)
@@ -99,15 +99,15 @@ ConvertToBase <- function(x, base = NULL) {
 These functions only accepts a single value, but to get the transformed value for a vector of integers we can use the `map()` function from `{purrr}`. `map()` as default outputs a list, but we can also ask for a character vector. We can then convert a number of values to binary like this:
 
 ``` r
-example_vector <- c(0:4,10,13,22,50,75,100)
-map_chr(example_vector, ConvertToBinary)
+example_vector <- c(0:4, 10, 13, 22, 50, 75, 100)
+map_chr(example_vector, convert_to_binary)
 ```
 
      [1] "0"       "1"       "10"      "11"      "100"     "1010"    "1101"   
      [8] "10110"   "110010"  "1001011" "1100100"
 
 ``` r
-map_chr(example_vector, base = 3, ConvertToBase)
+map_chr(example_vector, base = 3, convert_to_base_n)
 ```
 
      [1] "0"     "1"     "2"     "10"    "11"    "101"   "111"   "211"   "1212" 
@@ -118,7 +118,7 @@ map_chr(example_vector, base = 3, ConvertToBase)
 Okay, so here's the rules of the *balanced ternary enumeration* game We write all integers in base 3, and replace all digits that are 2 with -1 and then sum the outcome. Let's look at the first ten numbers in ternary:
 
 ``` r
-map_chr(seq(10), base = 3, ConvertToBase)
+map_chr(seq(10), base = 3, convert_to_base_n)
 ```
 
      [1] "1"   "2"   "10"  "11"  "12"  "20"  "21"  "22"  "100" "101"
@@ -149,35 +149,35 @@ $$
 The Python code for this function came from a website that collects mathematical functions and sequences and can be found [here](https://oeis.org/A117966). I've adapted it to work in R. Since 0 will always result in 0, this is hard coded in. Afterwards it is a nested function (I know, we all love it) where it iteratively calls itself until the input to the function is 0 and it stops. At that point we have out balanced ternary. This function only performs the calculation for one value. So getting a sequence means putting it in a `map()` function.
 
 ``` r
-BTE <- function(x) {
+bte <- function(x) {
   if (x == 0) {
     return(0)
   }
   if (x %% 3 == 0) {
-    return(3 * BTE(x / 3))
+    return(3 * bte(x / 3))
   } else if (x %% 3 == 1) {
-    return(3 * BTE((x - 1) / 3) + 1)
+    return(3 * bte((x - 1) / 3) + 1)
   } else if (x %% 3 == 2) {
-    return(3 * BTE((x - 2) / 3) - 1)
+    return(3 * bte((x - 2) / 3) - 1)
   }
 }
 ```
 
-Let's go through one iteration of this code. Let's say `x <- 3`. 3 modulo 3 is equal to 0, so we enter the first condition. The result of this is 3 multiplied by the outcome of the same function, except the input now is x divided by three, or 3/3, or 1, in our example. This becomes the new input for the function. 1 modulo 3 is equal to 1. So now we enter the second condition. Now the input to the `BTE()` function is 1 minus 1, divided by 3. This is 0, so we return 3 \* 0 + 1, which is equal to 3.
+Let's go through one iteration of this code. Let's say `x <- 3`. 3 modulo 3 is equal to 0, so we enter the first condition. The result of this is 3 multiplied by the outcome of the same function, except the input now is x divided by three, or 3/3, or 1, in our example. This becomes the new input for the function. 1 modulo 3 is equal to 1. So now we enter the second condition. Now the input to the `bte()` function is 1 minus 1, divided by 3. This is 0, so we return 3 \* 0 + 1, which is equal to 3.
 
 If we plug the number 3 into the formula, we will get the same result:
 
 ``` r
-BTE(3)
+bte(3)
 ```
 
     [1] 3
 
-Let's also look at a few other examples using the `map()` function again. Since the `BTE()` function outputs only integers, I use `map_dbl()`. Let's input a few examples:
+Let's also look at a few other examples using the `map()` function again. Since the `bte()` function outputs only integers, I use `map_dbl()`. Let's input a few examples:
 
 ``` r
-example_vector <- c(0,seq(10),500,1500,9999)
-map_dbl(example_vector, BTE)
+example_vector <- c(0, seq(10), 500, 1500, 9999)
+map_dbl(example_vector, bte)
 ```
 
      [1]    0    1   -1    3    4    2   -3   -2   -4    9   10 -232 -696 9270
@@ -185,7 +185,7 @@ map_dbl(example_vector, BTE)
 This corresponds to the values we created earlier, and the larger numbers make sense also. Okay, let's now create an entire sequence. We'll do 59.048 iterations (it'll become clear later why this specific number). We'll save the output in a variable called `starwars_seq` (forgotten yet that this thing started with Star Wars?).
 
 ``` r
-starwars_seq <- map_dbl(seq(59048), BTE)
+starwars_seq <- map_dbl(seq(59048), bte)
 ```
 
 ### Plotting the Star Destroyers
@@ -211,7 +211,7 @@ length(starwars_seq) == length(unique(starwars_seq))
 The first point of each "squadron" of star destroyers starts with a value that is the same in decimal system as it is in balanced ternary enumeration. Remember the length of the `starwars_seq` variable was 59 048? I chose that because it would start plotting a new squadron at x = 59 049. Let's confirm this:
 
 ``` r
-BTE(59049)
+bte(59049)
 ```
 
     [1] 59049
@@ -223,15 +223,23 @@ Anyway, the plot! It is cool and all, but let's make it look a bit more like Sta
 ``` r
 set.seed(1983)
 ggplot(data = NULL, aes(x = seq(starwars_seq), y = starwars_seq)) +
-  geom_point(aes(x = sample(seq(-1e4,length(starwars_seq) + 1e4), 1e3),
-                 y = sample(seq(min(starwars_seq)-1e4,max(starwars_seq) + 1e4), 1e3),
-                 size = sample(runif(length(starwars_seq) + 1e4), 1e3)), 
-             shape = 18, color = "yellow") +
-  geom_point(aes(x = sample(seq(starwars_seq), 1),
-                 y = sample(starwars_seq, 1)), 
-             shape = 19, size = 12, color = "darkslategray") +
+  geom_point(
+    aes(
+      x = sample(seq(-1e4, length(starwars_seq) + 1e4), 1e3),
+      y = sample(seq(min(starwars_seq) - 1e4, max(starwars_seq) + 1e4), 1e3),
+      size = sample(runif(length(starwars_seq) + 1e4), 1e3)
+    ),
+    shape = 18, color = "yellow"
+  ) +
+  geom_point(
+    aes(
+      x = sample(seq(starwars_seq), 1),
+      y = sample(starwars_seq, 1)
+    ),
+    shape = 19, size = 12, color = "darkslategray"
+  ) +
   geom_point(size = 4, color = "grey90") +
-  scale_size_continuous(range = c(1e-3,5e-1)) +
+  scale_size_continuous(range = c(1e-3, 5e-1)) +
   theme_void() +
   theme(
     legend.position = "none",
@@ -249,7 +257,7 @@ We can create another plot (nothing related to Star Wars perhaps), that looks ni
 
 ``` r
 ggplot(data = NULL, aes(x = seq(starwars_seq), y = starwars_seq)) +
-  geom_line() + 
+  geom_line() +
   theme_minimal()
 ```
 

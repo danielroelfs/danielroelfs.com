@@ -163,7 +163,7 @@ download_bestseller_lists(list_type="fiction")
 Now that we've done the hard work in Python, let's do some data visualization in R using `ggplot` and a few other `{tidyverse}` and plotting related packages (`{ggtext}` and `{patchwork}`). Since the `download_bestseller_lists()` function in Python also saved the file, we can easily load it into R. Since I'm using the `{reticulate}` package to create this, I could have also used the `py$<variable name>` functionality, but since the API call takes a lot of time to run, this seemed easier.
 
 ``` r
-data <- read_csv("./data/nyt_list_fiction.csv") |> 
+data <- read_csv("./data/nyt_list_fiction.csv") |>
   glimpse()
 ```
 
@@ -189,9 +189,11 @@ data <- read_csv("./data/nyt_list_fiction.csv") |>
 As mentioned, the dataset we downloaded does not include all history of the Best Sellers list due to the API rate limit. Instead we specified that we want to look about 5 years back, let's see what the earliest to latest dates in the dataset are.
 
 ``` r
-data |> 
-  summarise(from = min(list_publication_date),
-            to = max(list_publication_date))
+data |>
+  summarise(
+    from = min(list_publication_date),
+    to = max(list_publication_date)
+  )
 ```
 
     # A tibble: 1 × 2
@@ -207,21 +209,25 @@ The purpose of this post is mostly to show the implementation of an API call in 
 ``` r
 data |>
   count(author, title, name = "n_weeks_on_list") |>
-  mutate(book_label = str_glue("{author} - {title}")) |> 
-  slice_max(order_by = n_weeks_on_list, n = 20) |> 
+  mutate(book_label = str_glue("{author} - {title}")) |>
+  slice_max(order_by = n_weeks_on_list, n = 20) |>
   ggplot(aes(x = n_weeks_on_list, y = reorder(book_label, n_weeks_on_list))) +
-  geom_col(fill = "#5D7B92") + 
-  geom_text(aes(label = n_weeks_on_list), nudge_x = -7, 
-            color = "white", fontface = "bold") +
+  geom_col(fill = "#5D7B92") +
+  geom_text(aes(label = n_weeks_on_list),
+    nudge_x = -7,
+    color = "white", fontface = "bold"
+  ) +
   geom_vline(xintercept = 0, linewidth = 1) +
   labs(
     title = "Which books have spent the longest<br>on the NYT Best Sellers list?",
     x = NULL,
     y = NULL
   ) +
-  scale_x_continuous(position = "top",
-                     labels = ~ str_glue("{.x} wk"), 
-                     expand = expansion(add = c(0, 20))) +
+  scale_x_continuous(
+    position = "top",
+    labels = ~ str_glue("{.x} wk"),
+    expand = expansion(add = c(0, 20))
+  ) +
   theme_minimal() +
   theme(
     plot.title.position = "plot",
@@ -242,23 +248,27 @@ Let's also look at which authors have had the largest number of books in the lis
 <summary>Code for the plot below</summary>
 
 ``` r
-data |> 
+data |>
   distinct(author, title) |>
   count(author, name = "n_books_in_list") |>
-  slice_max(order_by = n_books_in_list, n = 10) |> 
-  ggplot(aes(x = n_books_in_list, y = reorder(author, n_books_in_list))) + 
-  geom_col(fill = "#5D7B92") + 
-  geom_text(aes(label = n_books_in_list), nudge_x = -1, 
-            color = "white", fontface = "bold") +
+  slice_max(order_by = n_books_in_list, n = 10) |>
+  ggplot(aes(x = n_books_in_list, y = reorder(author, n_books_in_list))) +
+  geom_col(fill = "#5D7B92") +
+  geom_text(aes(label = n_books_in_list),
+    nudge_x = -1,
+    color = "white", fontface = "bold"
+  ) +
   geom_vline(xintercept = 0, linewidth = 1) +
   labs(
     title = "Which books have spent the longest<br>on the NYT Best Sellers list?",
     x = NULL,
     y = NULL
   ) +
-  scale_x_continuous(position = "top",
-                     labels = ~ str_glue("{.x} books"), 
-                     expand = expansion(add = c(0, 5))) +
+  scale_x_continuous(
+    position = "top",
+    labels = ~ str_glue("{.x} books"),
+    expand = expansion(add = c(0, 5))
+  ) +
   theme_minimal() +
   theme(
     plot.title.position = "plot",
@@ -279,35 +289,44 @@ Since we have essentially time series data, we could also plot the trajectory of
 <summary>Code for the plot below</summary>
 
 ``` r
-title_of_interest = "Where The Crawdads Sing"
+title_of_interest <- "Where The Crawdads Sing"
 
-data |> 
-  filter(title == title_of_interest) |> 
-  right_join(data |> select(list_publication_date) |> distinct(), 
-             by = "list_publication_date") |> 
-  replace_na(list(rank = 16)) |> 
-  ggplot(aes(x = list_publication_date, y = rank)) + 
+data |>
+  filter(title == title_of_interest) |>
+  right_join(data |> select(list_publication_date) |> distinct(),
+    by = "list_publication_date"
+  ) |>
+  replace_na(list(rank = 16)) |>
+  ggplot(aes(x = list_publication_date, y = rank)) +
   geom_hline(yintercept = 1, color = "grey", linetype = "dotted") +
   ggbump::geom_bump(linewidth = 1, color = "#5D7B92") +
-  geom_rect(aes(xmin = min(data$list_publication_date), 
-                xmax = max(data$list_publication_date), 
-                ymin = 15.2, ymax = Inf), fill = "grey40") +
-  geom_text(data = tibble(), aes(x = mean(data$list_publication_date), y = 15.75,
-                                 label = "Not on list"), color = "white") +
+  geom_rect(aes(
+    xmin = min(data$list_publication_date),
+    xmax = max(data$list_publication_date),
+    ymin = 15.2, ymax = Inf
+  ), fill = "grey40") +
+  geom_text(data = tibble(), aes(
+    x = mean(data$list_publication_date), y = 15.75,
+    label = "Not on list"
+  ), color = "white") +
   labs(
     title = str_glue("How _{title_of_interest}_ ranked over time"),
     x = NULL,
     y = "Position on Best Sellers list"
   ) +
-  scale_y_continuous(trans = "reverse", 
-                     breaks = seq(15), 
-                     expand = expansion(add = c(0.5, 0))) +
+  scale_y_continuous(
+    trans = "reverse",
+    breaks = seq(15),
+    expand = expansion(add = c(0.5, 0))
+  ) +
   coord_cartesian(clip = "off") +
   theme_minimal() +
   theme(
     plot.title.position = "plot",
-    plot.title = element_markdown(size = 18, face = "bold",
-                                  padding = margin(b = 10)),
+    plot.title = element_markdown(
+      size = 18, face = "bold",
+      padding = margin(b = 10)
+    ),
     panel.grid.minor.y = element_blank()
   )
 ```
@@ -334,54 +353,63 @@ titles_w_adaptation <- tribble(
   "The Handmaid'S Tale", "2019-6-5"
 )
 
-rplot = list()
-for (i in seq(nrow(titles_w_adaptation))) {
-  
-  book_title <- titles_w_adaptation |> 
-    slice(i) |> 
-    mutate(title = str_replace(title, "'S", "'s")) |> 
+rplot <- list()
+for (i in seq_len(nrow(titles_w_adaptation))) {
+  book_title <- titles_w_adaptation |>
+    slice(i) |>
+    mutate(title = str_replace(title, "'S", "'s")) |>
     pull(title)
-  
-  rplot[[i]] <- data |> 
-    right_join(titles_w_adaptation |> slice(i), by = "title") |> 
-    right_join(data |> select(list_publication_date) |> distinct(), 
-               by = "list_publication_date") |> 
-    replace_na(list(rank = 16)) |> 
-    ggplot(aes(x = list_publication_date, y = rank)) + 
+
+  rplot[[i]] <- data |>
+    right_join(titles_w_adaptation |>
+                 slice(i), by = "title") |>
+    right_join(data |> select(list_publication_date) |> distinct(),
+      by = "list_publication_date"
+    ) |>
+    replace_na(list(rank = 16)) |>
+    ggplot(aes(x = list_publication_date, y = rank)) +
     geom_hline(yintercept = 1, color = "grey", linetype = "dotted") +
     ggbump::geom_bump(linewidth = 1, alpha = 0.25) +
-    geom_rect(aes(xmin = min(data$list_publication_date), 
-                  xmax = max(data$list_publication_date), 
-                  ymin = 15.2, ymax = Inf), fill = "grey40", show.legend = FALSE) +
-    geom_text(data = tibble(), aes(x = mean(data$list_publication_date), y = 15.75,
-                                   label = "Not on list"), color = "white") +
+    geom_rect(aes(
+      xmin = min(data$list_publication_date),
+      xmax = max(data$list_publication_date),
+      ymin = 15.2, ymax = Inf
+    ), fill = "grey40", show.legend = FALSE) +
+    geom_text(data = tibble(), aes(
+      x = mean(data$list_publication_date), y = 15.75,
+      label = "Not on list"
+    ), color = "white") +
     geom_vline(aes(xintercept = as.Date(screen_release_date)),
-               linewidth = 1, linetype = "dashed") +
+      linewidth = 1, linetype = "dashed"
+    ) +
     labs(
       title = str_glue("Ranking of _{book_title}_"),
       x = NULL,
       y = "Rank on list",
       color = NULL
     ) +
-    scale_y_continuous(trans = "reverse", 
-                       breaks = seq(15), 
-                       expand = expansion(add = c(0.5, 0))) +
+    scale_y_continuous(
+      trans = "reverse",
+      breaks = seq(15),
+      expand = expansion(add = c(0.5, 0))
+    ) +
     coord_cartesian(clip = "off") +
     theme_minimal() +
     theme(
       plot.title.position = "plot",
-      plot.title = element_markdown(size = 14, face = "bold",
-                                    padding = margin(b = 10)),
+      plot.title = element_markdown(
+        size = 14, face = "bold",
+        padding = margin(b = 10)
+      ),
       panel.grid.minor.y = element_blank(),
       legend.position = "bottom",
       legend.direction = "vertical"
     )
-  
 }
 
-(rplot[[1]] + rplot[[2]]) / 
-  (rplot[[3]] + rplot[[4]]) / 
-  (rplot[[5]] + rplot[[6]]) + 
+(rplot[[1]] + rplot[[2]]) /
+  (rplot[[3]] + rplot[[4]]) /
+  (rplot[[5]] + rplot[[6]]) +
   plot_annotation(
     caption = "Vertical dashed line indicates the adaptation's release date"
   ) &

@@ -43,16 +43,20 @@ I also have a file with the timepoints for each value. i.e. with epoch of 500 m
 Since I didn't include any headers in my file, I rename them here. I give the the identifying columns their appropriate names, and for the amplitudes, I attach the values from the `times` variable as names to these columns, so -100 will be one column, -99 will be another, and so on.
 
 ``` r
-ERPdata <- data |>
-  rename(Channel = V1,
-         ID = V2,
-         Condition = V3) |>
-  mutate(ID = factor(ID),
-         Condition = factor(Condition))
+erp_data <- data |>
+  rename(
+    Channel = V1,
+    ID = V2,
+    Condition = V3
+  ) |>
+  mutate(
+    ID = factor(ID),
+    Condition = factor(Condition)
+  )
 
-oldnames <- sprintf("V%s", 1:ncol(times) + 3)
+oldnames <- sprintf("V%s", seq_len(ncol(times)) + 3)
 
-ERPdata <- ERPdata |> 
+erp_data <- erp_data |>
   rename_at(vars(all_of(oldnames)), ~ as.character(times))
 ```
 
@@ -61,24 +65,24 @@ ERPdata <- ERPdata |>
 Then I specify a variable with the channels of interest. These will be the channels I'll average across later.
 
 ``` r
-coi <- c("P1", "P2", "Pz", "P3", "P4", "PO3", "PO4", "POz");
+coi <- c("P1", "P2", "Pz", "P3", "P4", "PO3", "PO4", "POz")
 ```
 
 Then I calculate the means across channels and conditions. This goes in two steps. First I'll select only the channels of interest, then I'll group by ID, condition, and channel. And then calculate the average of every other column, in this case column 4 to the end of the file. Then I'll do the same, except now I'll group by ID and condition. So then we have one average ERP for every condition in all participants.
 
 ``` r
-ERPdata_mChan <- ERPdata |>
+erp_data_chan_mean <- erp_data |>
   filter(Channel %in% coi) |>
-  group_by(ID,Condition,Channel) %>%
+  group_by(ID, Condition, Channel) %>%
   summarise_at(vars(names(.)[4:ncol(.)]), list(~ mean(., na.rm = TRUE))) |>
   ungroup()
 
-ERPdata_mCond <- ERPdata_mChan |>
-  group_by(ID,Condition) %>%
+erp_data_cond_mean <- erp_data_chan_mean |>
+  group_by(ID, Condition) %>%
   summarise_at(vars(names(.)[4:ncol(.)]), list(~ mean(., na.rm = TRUE))) |>
   ungroup()
 
-MeanERPs <- ERPdata_mCond
+mean_erp <- erp_data_cond_mean
 ```
 
 ## Calculate grand average and confidence interval
@@ -86,13 +90,15 @@ MeanERPs <- ERPdata_mCond
 The next piece of code calculates the grand average. I will also calculate the confidence interval and then transform it from the interval relative to the mean to the absolute values representing the upper and lower boundaries of the confidence interval. Here I use a confidence interval of 95%. We first transform from wide to long format using the `pivot_longer()` function from the `{tidyr}` package. Then we convert the (now character) `Time` variable to numeric. Then we will calculate the average amplitude per time point. Then using the `CI()` function from the `{Rmisc}` package, we calculate the upper and lower bounds of the confidence interval.
 
 ``` r
-ERP_plotdata <- MeanERPs |>
-  pivot_longer(-c(ID,Condition), names_to = "Time", values_to = "Amplitude") |>
+erp_plotdata <- mean_erp |>
+  pivot_longer(-c(ID, Condition), names_to = "Time", values_to = "Amplitude") |>
   mutate(Time = as.numeric(Time)) |>
-  group_by(Condition,Time) |>
-  summarise(Mean_Amplitude = mean(Amplitude),
-            CIlower = Rmisc::CI(Amplitude, ci = 0.95)["lower"],
-            CIupper = Rmisc::CI(Amplitude, ci = 0.95)["upper"])
+  group_by(Condition, Time) |>
+  summarise(
+    Mean_Amplitude = mean(Amplitude),
+    CIlower = Rmisc::CI(Amplitude, ci = 0.95)["lower"],
+    CIupper = Rmisc::CI(Amplitude, ci = 0.95)["upper"]
+  )
 ```
 
     `summarise()` has grouped output by 'Condition'. You can override using the
@@ -111,21 +117,26 @@ After running the chunk below, we have a beautiful ERP with a nice confidence in
 ``` r
 colors <- norment_pal(palette = "logo")(2)
 
-ERPplot <- ggplot(ERP_plotdata, aes(x = Time, y = Mean_Amplitude, 
-                           colour = Condition, group = Condition)) + 
-  geom_ribbon(aes(ymin = CIlower, ymax = CIupper, fill = Condition), 
-              alpha = 0.1, linetype = 0) + 
-  geom_line(size = 0.75) + 
-  scale_color_manual(values = colors) + 
-  scale_fill_manual(values = colors) + 
-  scale_x_continuous(breaks = c(seq(-2000,2000,500))) + 
-  scale_y_continuous(breaks = c(seq(-12,-1,2), seq(2,12,2))) + 
+erp_plot <- ggplot(erp_plotdata, aes(
+  x = Time, y = Mean_Amplitude,
+  colour = Condition, group = Condition
+)) +
+  geom_ribbon(aes(ymin = CIlower, ymax = CIupper, fill = Condition),
+    alpha = 0.1, linetype = 0
+  ) +
+  geom_line(size = 0.75) +
+  scale_color_manual(values = colors) +
+  scale_fill_manual(values = colors) +
+  scale_x_continuous(breaks = c(seq(-2000, 2000, 500))) +
+  scale_y_continuous(breaks = c(seq(-12, -1, 2), seq(2, 12, 2))) +
   coord_cartesian() +
-  labs(x = "Time (ms)", 
-       y = "Amplitude (µV)") + 
+  labs(
+    x = "Time (ms)",
+    y = "Amplitude (µV)"
+  ) +
   theme_norment(ticks = TRUE, grid = FALSE) +
   theme(
-    legend.position = c(0.9,0.1),
+    legend.position = c(0.9, 0.1),
     axis.text.x = element_text(vjust = -0.1)
   )
 ```
@@ -134,7 +145,7 @@ ERPplot <- ggplot(ERP_plotdata, aes(x = Time, y = Mean_Amplitude,
     ℹ Please use `linewidth` instead.
 
 ``` r
-shift_axes(ERPplot, x = 0, y = 0)
+shift_axes(erp_plot, x = 0, y = 0)
 ```
 
 <img src="index.markdown_strict_files/figure-markdown_strict/erp-plot-1.png" width="1152" />

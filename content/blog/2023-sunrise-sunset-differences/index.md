@@ -28,15 +28,17 @@ library(tidyverse)
 library(lubridate)
 library(ggtext)
 
-reticulate::use_virtualenv('./.venv', required = TRUE)
+reticulate::use_virtualenv("./.venv", required = TRUE)
 
-theme_custom <- function(...){
+theme_custom <- function(...) {
   ggthemes::theme_fivethirtyeight(...) +
-  theme(plot.background = element_rect(fill = "transparent"),
-        panel.background = element_rect(fill = "transparent"),
-        legend.background = element_rect(fill = "transparent"),
-        legend.key = element_rect(fill = "transparent"))
-  }
+    theme(
+      plot.background = element_rect(fill = "transparent"),
+      panel.background = element_rect(fill = "transparent"),
+      legend.background = element_rect(fill = "transparent"),
+      legend.key = element_rect(fill = "transparent")
+    )
+}
 ```
 
 For the Python part, we'll use `pandas` as usual, the `datetime` and `time` module to deal with date- and timedata. The `dateutil` module to deal with time zones. And to get the actual raw data we'll use the `astral` module to get the sunrise and sunset times for different locations. Unfortunately, not all cities are included, it includes all capital cities plus some additional cities in the UK and USA. To get the coordinates for the cities we want to look at, we'll use the `geopy` module which allows you to look up the longitude, latitude of a given location without needing to create an account somewhere or dealing with an API (directly). To deal with some wrangling of strings we'll use the `re` module.
@@ -174,14 +176,16 @@ Here's where we'll define a function to get everything into R and create a data 
 ``` r
 parse_sun_data <- function(df) {
   #' Get the data frame from Python into R
-  
-  data <- tibble(df) |> 
-    relocate(c("city","date"), .before = "dawn") |> 
-    mutate(date = parse_date(date, "%Y-%m-%d"),
-           across(dawn:dusk, ~ parse_time(.x, format = "%H:%M:%S")),
-           day_length = hms::as_hms(sunset - sunrise),
-           city = fct_reorder(city, city_no))
-  
+
+  data <- tibble(df) |>
+    relocate(c("city", "date"), .before = "dawn") |>
+    mutate(
+      date = parse_date(date, "%Y-%m-%d"),
+      across(dawn:dusk, ~ parse_time(.x, format = "%H:%M:%S")),
+      day_length = hms::as_hms(sunset - sunrise),
+      city = fct_reorder(city, city_no)
+    )
+
   return(data)
 }
 ```
@@ -189,14 +193,16 @@ parse_sun_data <- function(df) {
 Let's have a look at when sunset happens throughout the year for these cities. I deliberately picked a few cities on extreme ends of the Central European time zone to show the variety within a single time zone. We'll include the [DST](https://en.wikipedia.org/wiki/Daylight_saving_time) also.
 
 ``` r
-data <- parse_sun_data(reticulate::py$df) 
+data <- parse_sun_data(reticulate::py$df)
 
-data |> 
-  ggplot(aes(x = date, y = sunset, color = city, group = city)) + 
-  geom_line(linewidth = 2, lineend = "round", key_glyph = "point") + 
-  labs(x = NULL,
-       y = "Sunset time",
-       color = NULL) +
+data |>
+  ggplot(aes(x = date, y = sunset, color = city, group = city)) +
+  geom_line(linewidth = 2, lineend = "round", key_glyph = "point") +
+  labs(
+    x = NULL,
+    y = "Sunset time",
+    color = NULL
+  ) +
   scale_x_date(labels = scales::label_date(format = "%B")) +
   ggthemes::scale_color_tableau(guide = guide_legend(override.aes = list(size = 4))) +
   theme_custom()
@@ -207,31 +213,28 @@ data |>
 As expected, the latitude (how far north or south a location is) has the most to say about sunset times in summer in winter. Oslo has both the earliest and latest sunsets in winter and summer. And also predictable, the longitude (how far east or west a location is) merely shifts the curve up or down. Madrid has later sunsets in summer than Warsaw (which is further north) but also later sunsets in winter and a flatter curve overall. Oslo has a much steeper curve than e.g. Amsterdam while simultaneously also having the curve slightly shifted due to Oslo being further east than Amsterdam. The plot below shows the locations of of the cities in this analysis.
 
 ``` r
-rnaturalearth::ne_countries(scale = "medium", 
-                            returnclass = "sf", 
-                            continent = "Europe") |> 
-  ggplot() + 
+rnaturalearth::ne_countries(
+  scale = "medium",
+  returnclass = "sf",
+  continent = "Europe"
+) |>
+  ggplot() +
   geom_sf(color = "grey60", fill = "#DDD5C7", linewidth = 0.1) +
-  geom_point(data = data |> distinct(city, lat, long), 
-             aes(x = long, y = lat, color = city),
-             shape = 18, size = 4) +
-  labs(color = NULL) + 
+  geom_point(
+    data = data |> distinct(city, lat, long),
+    aes(x = long, y = lat, color = city),
+    shape = 18, size = 4
+  ) +
+  labs(color = NULL) +
   ggthemes::scale_color_tableau() +
   coord_sf(xlim = c(-15, 25), ylim = c(35, 65)) +
-  theme_custom() + 
-  theme(legend.position = "right", 
-        legend.direction = "vertical",
-        panel.grid.major = element_line(size = 0.1))
+  theme_custom() +
+  theme(
+    legend.position = "right",
+    legend.direction = "vertical",
+    panel.grid.major = element_line(size = 0.1)
+  )
 ```
-
-    The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,
-    which was just loaded, will retire in October 2023.
-    Please refer to R-spatial evolution reports for details, especially
-    https://r-spatial.org/r/2023/05/15/evolution4.html.
-    It may be desirable to make the sf package available;
-    package maintainers should consider adding sf to Suggests:.
-    The sp package is now running under evolution status 2
-         (status 2 uses the sf package in place of rgdal)
 
     Warning: The `size` argument of `element_line()` is deprecated as of ggplot2 3.4.0.
     ℹ Please use the `linewidth` argument instead.
@@ -243,22 +246,31 @@ Perhaps we can have a look at day length to get a better reflection of the isola
 We'll create the plot using the `geom_ribbon()` function to shade the area between sunrise and sunset.
 
 ``` r
-parse_sun_data(reticulate::py$df_deux) |> 
-  ggplot(aes(xmin = date, x = date, xmax = date, 
-             ymin = sunrise, y = noon, ymax = sunset, 
-             fill = city, color = city, group = city)) + 
-  geom_hline(yintercept = parse_time("12:00", "%H:%M"),
-             size = 1) +
+parse_sun_data(reticulate::py$df_deux) |>
+  ggplot(aes(
+    xmin = date, x = date, xmax = date,
+    ymin = sunrise, y = noon, ymax = sunset,
+    fill = city, color = city, group = city
+  )) +
+  geom_hline(
+    yintercept = parse_time("12:00", "%H:%M"),
+    size = 1
+  ) +
   geom_ribbon(alpha = 0.5, color = NA, key_glyph = "point") +
-  labs(x = NULL,
-       y = NULL,
-       color = NULL,
-       fill = NULL) +
-  scale_x_date(expand = expansion(add = 0)) + 
-  scale_y_time(limits = hms::hms(hours = c(0, 24)),
-               breaks = hms::hms(hours = seq(0, 24, 2))) +
+  labs(
+    x = NULL,
+    y = NULL,
+    color = NULL,
+    fill = NULL
+  ) +
+  scale_x_date(expand = expansion(add = 0)) +
+  scale_y_time(
+    limits = hms::hms(hours = c(0, 24)),
+    breaks = hms::hms(hours = seq(0, 24, 2))
+  ) +
   ggthemes::scale_fill_tableau(guide = guide_legend(
-    override.aes = list(shape = 21, alpha = 0.5, size = 8))) +
+    override.aes = list(shape = 21, alpha = 0.5, size = 8)
+  )) +
   theme_custom()
 ```
 
@@ -272,25 +284,32 @@ As you see, in neither cities 12:00 in the afternoon is perfectly in the middle 
 So let's also squish everything on the bottom axis and just look at day length in total.
 
 ``` r
-parse_sun_data(reticulate::py$df_deux) |> 
-  mutate(day_length = hms::as_hms(sunset - sunrise)) |> 
-  ggplot(aes(x = date, y = day_length, fill = city, group = city)) + 
+parse_sun_data(reticulate::py$df_deux) |>
+  mutate(day_length = hms::as_hms(sunset - sunrise)) |>
+  ggplot(aes(x = date, y = day_length, fill = city, group = city)) +
   geom_area(position = "identity", alpha = 0.5, key_glyph = "point") +
-  labs(title = "Comparison in day length across the year",
-       x = NULL,
-       y = "Day length (_hours_)",
-       fill = NULL) +
+  labs(
+    title = "Comparison in day length across the year",
+    x = NULL,
+    y = "Day length (_hours_)",
+    fill = NULL
+  ) +
   scale_x_date(labels = scales::label_date(format = "%B")) +
-  scale_y_time(labels = scales::label_time(format = "%H hours"),
-               limits = parse_time(c("00:00", "23:59"), "%H:%M"),
-               breaks = hms::hms(hours = seq(0, 24, 4)),
-               expand = expansion(add = 0)) +
+  scale_y_time(
+    labels = scales::label_time(format = "%H hours"),
+    limits = parse_time(c("00:00", "23:59"), "%H:%M"),
+    breaks = hms::hms(hours = seq(0, 24, 4)),
+    expand = expansion(add = 0)
+  ) +
   ggthemes::scale_fill_tableau(guide = guide_legend(
-    override.aes = list(shape = 21, size = 8), direction = "vertical")) +
+    override.aes = list(shape = 21, size = 8), direction = "vertical"
+  )) +
   theme_custom() +
-  theme(plot.title.position = "plot",
-        axis.title.y = element_markdown(),
-        legend.position = c(0.85, 0.85))
+  theme(
+    plot.title.position = "plot",
+    axis.title.y = element_markdown(),
+    legend.position = c(0.85, 0.85)
+  )
 ```
 
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-day-length-curve-1.png" width="768" />
@@ -298,12 +317,14 @@ parse_sun_data(reticulate::py$df_deux) |>
 Now I'm curious when the largest difference occurs and when the days are roughly equal. Let's select the relevant columns and get the day length in Oslo and Amsterdam next to each other using the `pivot_wider()` function so we can easily compare. Let's then select the largest and smallest differences.
 
 ``` r
-day_length_diff <- parse_sun_data(reticulate::py$df_deux) |> 
-  select(city, date, day_length) |> 
-  group_by(city) |> 
-  pivot_wider(id_cols = date, names_from = city, values_from = day_length,
-              names_glue = "day_length_{city}") |> 
-  janitor::clean_names() |> 
+day_length_diff <- parse_sun_data(reticulate::py$df_deux) |>
+  select(city, date, day_length) |>
+  group_by(city) |>
+  pivot_wider(
+    id_cols = date, names_from = city, values_from = day_length,
+    names_glue = "day_length_{city}"
+  ) |>
+  janitor::clean_names() |>
   mutate(difference = hms::as_hms(day_length_oslo - day_length_amsterdam))
 
 print("Biggest positive difference:")
@@ -341,17 +362,22 @@ Seems like the largest difference occur around the 20th of June when Oslo gets a
 Finally, let's look at the effect of longitude (how far east or west a place is) on the sunset/sunrise times. The easiest way to look at this is to compare the time solar noon happens. Due to (most of) mainland Europe being in the same time zone ([CET](https://en.wikipedia.org/wiki/Central_European_Time)), it's 12:00 at the same time across central Europe. However, the sun did not get the note and still travels (from Earth perspective) in a very consistent pace from east to west. This means that the sun arrives first in Poland and leaves last in Spain. This means that solar noon (the time the sun is at its highest point in the sky) is unequal across the continent. Let's look at when solar noon happens across the four cities in this analysis.
 
 ``` r
-data |> 
+data |>
   ggplot(aes(x = date, y = noon, group = city, color = city)) +
   geom_hline(yintercept = hms::hms(hours = 12), linewidth = 1) +
   geom_line(linewidth = 2, key_glyph = "point") +
-  labs(title = "What time is solar noon?",
-       color = NULL) +
-  scale_x_date(expand = expansion(add = 0)) + 
-  scale_y_time(limits = hms::hms(hours = c(11, 15)),
-               breaks = hms::hms(hours = seq(11, 15, 0.5))) +
+  labs(
+    title = "What time is solar noon?",
+    color = NULL
+  ) +
+  scale_x_date(expand = expansion(add = 0)) +
+  scale_y_time(
+    limits = hms::hms(hours = c(11, 15)),
+    breaks = hms::hms(hours = seq(11, 15, 0.5))
+  ) +
   ggthemes::scale_color_tableau(guide = guide_legend(
-    override.aes = list(size = 4))) +
+    override.aes = list(size = 4)
+  )) +
   ggthemes::scale_fill_tableau() +
   theme_custom()
 ```

@@ -48,7 +48,7 @@ We'll load the data into R, clean up the variable names, convert the outcome var
 #| message: false
 
 data <- read_csv("sobar-72.csv") |>
-  janitor::clean_names() |> 
+  janitor::clean_names() |>
   mutate(ca_cervix = as_factor(ca_cervix))
 
 skim_summ <- skimr::skim_with(base = skimr::sfl())
@@ -60,8 +60,8 @@ Now let's only select the variables containing the risk factors (called features
 ```{r}
 #| label: scale-data
 
-data_features <- data |> 
-  select(-ca_cervix) |> 
+data_features <- data |>
+  select(-ca_cervix) |>
   mutate(across(everything(), ~ scale(.x)))
 
 summary(data_features$attitude_consistency)
@@ -72,17 +72,19 @@ So now we have a data frame with 72 entries and 19 normalized columns, each repr
 ```{r}
 #| label: corr-matrix-original
 
-cor(data_features) |> 
+cor(data_features) |>
   as_tibble() %>%
-  mutate(feature_y = names(.)) |> 
-  pivot_longer(cols = -feature_y, names_to = "feature_x", values_to = "correlation") |> 
-  mutate(feature_y = fct_rev(feature_y)) |> 
-  ggplot(aes(x = feature_x, y = feature_y, fill = correlation)) + 
-  geom_tile() + 
-  labs(x = NULL,
-       y = NULL) +
-  scico::scale_fill_scico(palette = "berlin", limits = c(-1,1)) + 
-  coord_fixed() + 
+  mutate(feature_y = names(.)) |>
+  pivot_longer(cols = -feature_y, names_to = "feature_x", values_to = "correlation") |>
+  mutate(feature_y = fct_rev(feature_y)) |>
+  ggplot(aes(x = feature_x, y = feature_y, fill = correlation)) +
+  geom_tile() +
+  labs(
+    x = NULL,
+    y = NULL
+  ) +
+  scico::scale_fill_scico(palette = "berlin", limits = c(-1, 1)) +
+  coord_fixed() +
   theme(axis.text.x = element_text(hjust = 1, angle = 30))
 ```
 
@@ -123,16 +125,18 @@ The "Loadings" section of the results show a make-shift weight matrix, but in or
 ```{r}
 #| label: fa-weight-matrix
 
-fa_weight_matrix <- broom::tidy(fa_model) |> 
+fa_weight_matrix <- broom::tidy(fa_model) |>
   pivot_longer(starts_with("fl"), names_to = "factor", values_to = "loading")
 
-fa_loading_plot <- ggplot(fa_weight_matrix, aes(x = factor, y = variable, fill = loading)) + 
-  geom_tile() + 
-  labs(title = "FA loadings",
-       x = NULL,
-       y = NULL) + 
-  scico::scale_fill_scico(palette = "cork", limits = c(-1,1)) + 
-  coord_fixed(ratio = 1/2)
+fa_loading_plot <- ggplot(fa_weight_matrix, aes(x = factor, y = variable, fill = loading)) +
+  geom_tile() +
+  labs(
+    title = "FA loadings",
+    x = NULL,
+    y = NULL
+  ) +
+  scico::scale_fill_scico(palette = "cork", limits = c(-1, 1)) +
+  coord_fixed(ratio = 1 / 2)
 
 print(fa_loading_plot)
 ```
@@ -144,18 +148,20 @@ Lastly, I think it would be interesting to see how the different factors relate 
 ```{r}
 #| label: fa-corr-matrix
 
-fa_model$scores |> 
-  cor() |> 
-  data.frame() |> 
-  rownames_to_column("factor_x") |> 
-  pivot_longer(cols = -factor_x, names_to = "factor_y", values_to = "correlation") |> 
-  ggplot(aes(x = factor_x, y = factor_y, fill = correlation)) + 
+fa_model$scores |>
+  cor() |>
+  data.frame() |>
+  rownames_to_column("factor_x") |>
+  pivot_longer(cols = -factor_x, names_to = "factor_y", values_to = "correlation") |>
+  ggplot(aes(x = factor_x, y = factor_y, fill = correlation)) +
   geom_tile() +
-  geom_text(aes(label = round(correlation,4)), color = "white") +
-  labs(title = "Correlation between FA scores",
-       x = NULL,
-       y = NULL) +
-  scico::scale_fill_scico(palette = "berlin", limits = c(-1,1)) + 
+  geom_text(aes(label = round(correlation, 4)), color = "white") +
+  labs(
+    title = "Correlation between FA scores",
+    x = NULL,
+    y = NULL
+  ) +
+  scico::scale_fill_scico(palette = "berlin", limits = c(-1, 1)) +
   coord_equal()
 ```
 
@@ -185,15 +191,17 @@ Next we can make a simple scree plot using the variance we calculate above. We'l
 ```{r}
 #| label: pca-scree
 
-pc_model$variance |> 
+pc_model$variance |>
   as_tibble() |>
-  rename(eigenvalue = value) |> 
-  rownames_to_column("comp") |> 
-  mutate(comp = parse_number(comp),
-         cum_variance = cumsum(eigenvalue)/sum(eigenvalue)) |> 
-  ggplot(aes(x = comp, y = eigenvalue)) + 
+  rename(eigenvalue = value) |>
+  rownames_to_column("comp") |>
+  mutate(
+    comp = parse_number(comp),
+    cum_variance = cumsum(eigenvalue) / sum(eigenvalue)
+  ) |>
+  ggplot(aes(x = comp, y = eigenvalue)) +
   geom_hline(yintercept = 1) +
-  geom_line(size = 1) + 
+  geom_line(size = 1) +
   geom_point(size = 3)
 ```
 
@@ -202,20 +210,22 @@ We'll also create a weight matrix again, based on the rotation from the PCA. We'
 ```{r}
 #| label: pca-weight-matrix
 
-pc_weight_matrix <- pc_model$rotation |> 
-  data.frame() |> 
-  rownames_to_column("variable") |> 
+pc_weight_matrix <- pc_model$rotation |>
+  data.frame() |>
+  rownames_to_column("variable") |>
   pivot_longer(starts_with("PC"), names_to = "prin_comp", values_to = "loading")
 
-pca_loading_plot <- pc_weight_matrix |> 
-  filter(parse_number(prin_comp) <= n_comps) |> 
+pca_loading_plot <- pc_weight_matrix |>
+  filter(parse_number(prin_comp) <= n_comps) |>
   ggplot(aes(x = reorder(prin_comp, parse_number(prin_comp)), y = variable, fill = loading)) +
-  geom_tile() + 
-  labs(title = "PCA loadings",
-       x = NULL,
-       y = NULL) +
-  scico::scale_fill_scico(palette = "cork", limits = c(-1,1)) + 
-  coord_fixed(ratio = 1/2)
+  geom_tile() +
+  labs(
+    title = "PCA loadings",
+    x = NULL,
+    y = NULL
+  ) +
+  scico::scale_fill_scico(palette = "cork", limits = c(-1, 1)) +
+  coord_fixed(ratio = 1 / 2)
 
 print(pca_loading_plot)
 ```
@@ -227,20 +237,24 @@ We can also make a correlation matrix for the different principal components. We
 ```{r}
 #| label: pca-corr-matrix
 
-pc_model$x |> 
-  cor() |> 
-  data.frame() |> 
-  rownames_to_column("comp_x") |> 
-  pivot_longer(cols = starts_with("PC"), names_to = "comp_y", values_to = "correlation") |> 
-  filter(parse_number(comp_x) <= n_comps,
-         parse_number(comp_y) <= n_comps) |> 
-  ggplot(aes(x = comp_x, y = comp_y, fill = correlation)) + 
+pc_model$x |>
+  cor() |>
+  data.frame() |>
+  rownames_to_column("comp_x") |>
+  pivot_longer(cols = starts_with("PC"), names_to = "comp_y", values_to = "correlation") |>
+  filter(
+    parse_number(comp_x) <= n_comps,
+    parse_number(comp_y) <= n_comps
+  ) |>
+  ggplot(aes(x = comp_x, y = comp_y, fill = correlation)) +
   geom_tile() +
-  geom_text(aes(label = round(correlation,4)), color = "white") +
-  labs(title = "Correlation between PCs",
-       x = NULL,
-       y = NULL) +
-  scico::scale_fill_scico(palette = "berlin", limits = c(-1,1)) + 
+  geom_text(aes(label = round(correlation, 4)), color = "white") +
+  labs(
+    title = "Correlation between PCs",
+    x = NULL,
+    y = NULL
+  ) +
+  scico::scale_fill_scico(palette = "berlin", limits = c(-1, 1)) +
   coord_equal()
 ```
 
@@ -275,10 +289,10 @@ Let's look at the scree plot:
 ```{r}
 #| label: pca-manual-scree
 
-tibble(eigenvalues) |> 
-  ggplot(aes(x = seq_along(eigenvalues), y = eigenvalues)) + 
+tibble(eigenvalues) |>
+  ggplot(aes(x = seq_along(eigenvalues), y = eigenvalues)) +
   geom_hline(yintercept = 1) +
-  geom_line(size = 1) + 
+  geom_line(size = 1) +
   geom_point(size = 3)
 ```
 
@@ -290,25 +304,29 @@ Looks identical to the previous one. Let's also look at the correlation matrix b
 #| eval: false
 
 data.frame(pc_manual) |>
-  rename_with(~ str_glue("PC{parse_number(.x)}")) |> 
-  rownames_to_column("participant") |> 
-  pivot_longer(starts_with("PC"), names_to = "prin_comp", values_to = "loading") |> 
-  filter(parse_number(prin_comp) <= n_comps) |> 
-  ggplot(aes(x = reorder(prin_comp, parse_number(prin_comp)), 
-             y = parse_number(participant), fill = loading)) +
-  geom_tile() + 
-  labs(title = "Individual loadings",
-       x = NULL,
-       y = NULL) +
-  scico::scale_fill_scico(palette = "berlin") + 
-  coord_fixed(1/5)
+  rename_with(~ str_glue("PC{parse_number(.x)}")) |>
+  rownames_to_column("participant") |>
+  pivot_longer(starts_with("PC"), names_to = "prin_comp", values_to = "loading") |>
+  filter(parse_number(prin_comp) <= n_comps) |>
+  ggplot(aes(
+    x = reorder(prin_comp, parse_number(prin_comp)),
+    y = parse_number(participant), fill = loading
+  )) +
+  geom_tile() +
+  labs(
+    title = "Individual loadings",
+    x = NULL,
+    y = NULL
+  ) +
+  scico::scale_fill_scico(palette = "berlin") +
+  coord_fixed(1 / 5)
 ```
 
 ```{r}
 #| label: pca-manual-corr-matrix
 
-data.frame(pc_manual) |> 
-  cor() %>% 
+data.frame(pc_manual) |>
+  cor() %>%
   round(., 4)
 ```
 
@@ -330,18 +348,20 @@ Let's create a weight matrix again. The output from the `fastICA()` doesn't prov
 ```{r}
 #| label: ica-weight-matrix
 
-ica_weight_matrix <- data.frame(t(ica_model$A)) |> 
+ica_weight_matrix <- data.frame(t(ica_model$A)) |>
   rename_with(~ str_glue("IC{seq(.)}")) |>
   mutate(variable = names(data_features)) |>
   pivot_longer(cols = starts_with("IC"), names_to = "ic", values_to = "loading")
 
 ica_loading_plot <- ggplot(ica_weight_matrix, aes(x = ic, y = variable, fill = loading)) +
-  geom_tile() + 
-  labs(title = "ICA loadings",
-       x = NULL,
-       y = NULL) + 
-  scico::scale_fill_scico(palette = "cork", limits = c(-1,1)) + 
-  coord_fixed(ratio = 1/2)
+  geom_tile() +
+  labs(
+    title = "ICA loadings",
+    x = NULL,
+    y = NULL
+  ) +
+  scico::scale_fill_scico(palette = "cork", limits = c(-1, 1)) +
+  coord_fixed(ratio = 1 / 2)
 
 print(ica_loading_plot)
 ```
@@ -353,18 +373,20 @@ Again, we can also visualize the correlation between the different components.
 ```{r}
 #| label: ica-corr-matrix
 
-ica_model$S |> 
-  cor() |> 
-  data.frame() |> 
-  rownames_to_column("comp_x") |> 
-  pivot_longer(cols = starts_with("X"), names_to = "comp_y", values_to = "correlation") |> 
-  ggplot(aes(x = comp_x, y = comp_y, fill = correlation)) + 
+ica_model$S |>
+  cor() |>
+  data.frame() |>
+  rownames_to_column("comp_x") |>
+  pivot_longer(cols = starts_with("X"), names_to = "comp_y", values_to = "correlation") |>
+  ggplot(aes(x = comp_x, y = comp_y, fill = correlation)) +
   geom_tile() +
-  geom_text(aes(label = round(correlation,4)), color = "white") +
-  labs(title = "Correlation between ICs",
-       x = NULL,
-       y = NULL) +
-  scico::scale_fill_scico(palette = "berlin", limits = c(-1,1)) + 
+  geom_text(aes(label = round(correlation, 4)), color = "white") +
+  labs(
+    title = "Correlation between ICs",
+    x = NULL,
+    y = NULL
+  ) +
+  scico::scale_fill_scico(palette = "berlin", limits = c(-1, 1)) +
   coord_equal()
 ```
 
@@ -377,27 +399,31 @@ Okay, let's now compare the three approaches and put the loading matrices side b
 #| out.width: 100%
 
 all_weight_matrices <- bind_rows(
-  fa_weight_matrix |> 
-    rename(comp = factor) |> 
+  fa_weight_matrix |>
+    rename(comp = factor) |>
     mutate(alg = "FA"),
-  pc_weight_matrix |> 
-    rename(comp = prin_comp) |> 
-    mutate(alg = "PCA"), 
-  ica_weight_matrix |> 
-    rename(comp = ic) |> 
+  pc_weight_matrix |>
+    rename(comp = prin_comp) |>
+    mutate(alg = "PCA"),
+  ica_weight_matrix |>
+    rename(comp = ic) |>
     mutate(alg = "ICA")
 )
 
-all_weight_matrices |> 
-  filter(parse_number(comp) <= n_comps) |> 
-  mutate(alg = str_glue("{alg} loadings"),
-         alg = as_factor(alg)) |> 
+all_weight_matrices |>
+  filter(parse_number(comp) <= n_comps) |>
+  mutate(
+    alg = str_glue("{alg} loadings"),
+    alg = as_factor(alg)
+  ) |>
   ggplot(aes(x = comp, y = variable, fill = loading)) +
-  geom_tile() + 
-  labs(x = NULL,
-       y = NULL) + 
-  scico::scale_fill_scico(palette = "cork", limits = c(-1,1)) + 
-  facet_wrap(~ alg, scales = "free_x")
+  geom_tile() +
+  labs(
+    x = NULL,
+    y = NULL
+  ) +
+  scico::scale_fill_scico(palette = "cork", limits = c(-1, 1)) +
+  facet_wrap(~alg, scales = "free_x")
 ```
 
 Here we can most clearly see the overlap between the three methods, Factor 1, PC1, and IC 6 capture essentially the same information. The same goes for Factor 2, PC2, and IC 4. Other than that we can see that the other components vary quite markedly. I wouldn't be comfortable calling any of the other components "fairly similar" to another. You could see how some variables load together with multiple methods, but then the components those are captured in also have other information or miss information. We already discussed IC7 consisting mostly of a single variable, and a similar thing happens with Factor 4, but for a different variable. 
@@ -437,7 +463,7 @@ The `cutree()` function assigns a cluster to each of the variables. It looks at 
 ```{r}
 #| label: dendrogram-w-line
 
-ggdendro::ggdendrogram(hclust_model) + 
+ggdendro::ggdendrogram(hclust_model) +
   geom_hline(yintercept = 10.5, color = "firebrick")
 ```
 
@@ -446,16 +472,18 @@ Let's look at how the clusters are made up according to the hierarchical cluster
 ```{r}
 #| label: hclust-weight-matrix
 
-hclust_weight_matrix %>% 
-  data.frame() |> 
-  janitor::clean_names() |> 
-  rename(cluster = x) |> 
-  rownames_to_column("variable") |> 
+hclust_weight_matrix %>%
+  data.frame() |>
+  janitor::clean_names() |>
+  rename(cluster = x) |>
+  rownames_to_column("variable") |>
   ggplot(aes(x = as_factor(cluster), y = variable, fill = as_factor(cluster))) +
-  geom_tile() + 
-  labs(x = NULL,
-       y = NULL,
-       fill = "cluster") + 
+  geom_tile() +
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = "cluster"
+  ) +
   scico::scale_fill_scico_d(palette = "batlow")
 ```
 

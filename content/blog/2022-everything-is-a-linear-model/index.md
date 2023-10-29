@@ -62,7 +62,7 @@ $$
 this formula would like like this when implemented in R:
 
 ``` r
-sqrt( sum(abs(concentration - mean(concentration))^2) / (n - 1) )
+sqrt(sum(abs(concentration - mean(concentration))^2) / (n - 1))
 ```
 
     [1] 1.157324
@@ -152,7 +152,7 @@ Now we'll apply the same logic we used for the One-Sample T-test to show how an 
 n <- 30
 data <- tibble(
   concentration = c(rnorm(n, mean = 4, sd = 1.5), rnorm(n, mean = 6, sd = 2)),
-  group = rep(c("HC","PAT"), each = n)
+  group = rep(c("HC", "PAT"), each = n)
 )
 ```
 
@@ -165,14 +165,14 @@ $$
 It's a bit too complex to describe in a sentence, but the definitions are perhaps familiar: $\overline{x}$ for group means, *σ* for group standard deviations, and *n* for group size. I find that the simplest way to implement this in R is by first separating the groups and then adding them in the formula.
 
 ``` r
-g1 <- data |> 
-  filter(group == "HC") |> 
+g1 <- data |>
+  filter(group == "HC") |>
   pull(concentration)
-g2 <- data |> 
-  filter(group == "PAT") |> 
+g2 <- data |>
+  filter(group == "PAT") |>
   pull(concentration)
 
-(mean(g1) - mean(g2)) / sqrt( (sd(g1)^2 / length(g1)) + (sd(g2)^2 / length(g2)) )
+(mean(g1) - mean(g2)) / sqrt((sd(g1)^2 / length(g1)) + (sd(g2)^2 / length(g2)))
 ```
 
     [1] -5.268195
@@ -203,7 +203,7 @@ ggplot(data, aes(x = group, y = concentration, fill = group)) +
   geom_boxplot(width = 0.2) +
   geom_jitter(width = 5e-2, size = 2, alpha = 0.75) +
   scico::scale_fill_scico_d(palette = "hawaii") +
-  theme_minimal() + 
+  theme_minimal() +
   theme(legend.position = "none")
 ```
 
@@ -218,10 +218,14 @@ mean_concentration <- data |>
 
 ggplot(data, aes(x = group)) +
   geom_jitter(aes(y = concentration), width = 5e-2, size = 2, alpha = 0.75) +
-  geom_point(data = mean_concentration, aes(y = mean_conc), 
-             color = "violet", size = 5) +
-  geom_line(data = mean_concentration, aes(y = mean_conc), group = 1,
-            linewidth = 2, color = "violet") +
+  geom_point(
+    data = mean_concentration, aes(y = mean_conc),
+    color = "violet", size = 5
+  ) +
+  geom_line(
+    data = mean_concentration, aes(y = mean_conc), group = 1,
+    linewidth = 2, color = "violet"
+  ) +
   theme_minimal()
 ```
 
@@ -300,11 +304,15 @@ Based on what we did in the previous section, you may already predict what we'll
 
 ``` r
 n <- 30
-data <- tibble(score = round(c(rnorm(n, mean = 75, sd = 30), 
-                               rnorm(n, mean = 60, sd = 35),
-                               rnorm(n, mean = 30, sd = 17),
-                               rnorm(n, mean = 45, sd = 32))),
-               group = rep(c("SCZ", "BD", "MDD", "ASD"), each = n)) |>
+data <- tibble(
+  score = round(c(
+    rnorm(n, mean = 75, sd = 30),
+    rnorm(n, mean = 60, sd = 35),
+    rnorm(n, mean = 30, sd = 17),
+    rnorm(n, mean = 45, sd = 32)
+  )),
+  group = rep(c("SCZ", "BD", "MDD", "ASD"), each = n)
+) |>
   mutate(group = as_factor(group))
 ```
 
@@ -352,24 +360,30 @@ summary(anova_lm_model)
 The first thing you might notice is that the *F*-statistic and the *p*-value are the same in both models.
 
 ``` r
-ref_mean <- data |> 
-  filter(group == "SCZ") |> 
-  pull(score) |> 
+ref_mean <- data |>
+  filter(group == "SCZ") |>
+  pull(score) |>
   mean()
 
-anova_group_means <- data |> 
-  group_by(group) |> 
-  summarise(score = mean(score)) |> 
-  mutate(ref_mean = ref_mean,
-         mean_adj = score - ref_mean)
+anova_group_means <- data |>
+  group_by(group) |>
+  summarise(score = mean(score)) |>
+  mutate(
+    ref_mean = ref_mean,
+    mean_adj = score - ref_mean
+  )
 
-ggplot(data, aes(x = group, y = score - ref_mean)) + 
-  stat_summary(fun = mean, geom = "point", 
-               size = 10, color = "violet", shape = 18) + 
-  geom_jitter(width = 0.2) + 
-  ggtext::geom_richtext(data = anova_group_means,
-                        aes(label = str_glue("x&#772; = {round(mean_adj, 2)}")), 
-                        fill = "#ffffff80", nudge_x = 1/3) + 
+ggplot(data, aes(x = group, y = score - ref_mean)) +
+  stat_summary(
+    fun = mean, geom = "point",
+    size = 10, color = "violet", shape = 18
+  ) +
+  geom_jitter(width = 0.2) +
+  ggtext::geom_richtext(
+    data = anova_group_means,
+    aes(label = str_glue("x&#772; = {round(mean_adj, 2)}")),
+    fill = "#ffffff80", nudge_x = 1 / 3
+  ) +
   theme_minimal()
 ```
 
@@ -389,17 +403,21 @@ Just briefly, the first formula takes the mean value for the group in question, 
 We can do both calculations in one go with the following quick code:
 
 ``` r
-data |> 
-  mutate(overall_mean = mean(score)) |> 
-  group_by(group) |> 
-  summarise(group_mean = mean(score),
-            group_n = n(),
-            overall_mean = first(overall_mean),
-            sq_group = group_n * (group_mean - overall_mean)^2,
-            sq_error = sum((score - group_mean)^2)) |> 
-  ungroup() |> 
-  summarise(ss_group = sum(sq_group),
-            ss_error = sum(sq_error))
+data |>
+  mutate(overall_mean = mean(score)) |>
+  group_by(group) |>
+  summarise(
+    group_mean = mean(score),
+    group_n = n(),
+    overall_mean = first(overall_mean),
+    sq_group = group_n * (group_mean - overall_mean)^2,
+    sq_error = sum((score - group_mean)^2)
+  ) |>
+  ungroup() |>
+  summarise(
+    ss_group = sum(sq_group),
+    ss_error = sum(sq_error)
+  )
 ```
 
     # A tibble: 1 × 2
@@ -417,9 +435,12 @@ I don't think I need a lot of effort to convince anyone that a linear model is a
 
 ``` r
 n <- 20
-data <- tibble(age = round(runif(n = n, min = 18, max = 60)),
-               sex = factor(sample(c("Male", "Female"), size = n, replace = TRUE), 
-                            levels = c("Male", "Female"))) |>
+data <- tibble(
+  age = round(runif(n = n, min = 18, max = 60)),
+  sex = factor(sample(c("Male", "Female"), size = n, replace = TRUE),
+    levels = c("Male", "Female")
+  )
+) |>
   mutate(measure = 1e-2 * age + sqrt(1e-2) * rnorm(n))
 ```
 
@@ -435,19 +456,19 @@ summary(lm_model)
     lm(formula = measure ~ age, data = data)
 
     Residuals:
-         Min       1Q   Median       3Q      Max 
-    -0.11593 -0.08740  0.00416  0.02975  0.20023 
+          Min        1Q    Median        3Q       Max 
+    -0.148243 -0.079997 -0.002087  0.053822  0.234803 
 
     Coefficients:
-                Estimate Std. Error t value Pr(>|t|)    
-    (Intercept) 0.093800   0.089076   1.053 0.306255    
-    age         0.008074   0.002010   4.017 0.000808 ***
+                 Estimate Std. Error t value Pr(>|t|)    
+    (Intercept) -0.049454   0.089850  -0.550    0.589    
+    age          0.011142   0.002026   5.499  3.2e-05 ***
     ---
     Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-    Residual standard error: 0.09828 on 18 degrees of freedom
-    Multiple R-squared:  0.4728,    Adjusted R-squared:  0.4435 
-    F-statistic: 16.14 on 1 and 18 DF,  p-value: 0.0008079
+    Residual standard error: 0.1083 on 18 degrees of freedom
+    Multiple R-squared:  0.6268,    Adjusted R-squared:  0.6061 
+    F-statistic: 30.24 on 1 and 18 DF,  p-value: 3.196e-05
 
 We find that there is a significant association between age and our measure, and the R<sup>2</sup> is about 47%. Recall that R<sup>2</sup> denotes the amount of variance explained by the predictor, or age in our case. We can plot the linear model in `ggplot` with the `geom_smooth()` function, and then setting the `method` to `"lm"`:
 
@@ -455,7 +476,7 @@ We find that there is a significant association between age and our measure, and
 ggplot(data, aes(x = age, y = measure)) +
   geom_point(size = 4, alpha = 0.8) +
   geom_smooth(method = "lm", color = "grey30") +
-  scale_x_continuous(limits = c(18,60)) +
+  scale_x_continuous(limits = c(18, 60)) +
   theme_minimal()
 ```
 
@@ -468,7 +489,7 @@ The line in the figure above shows the line that best fits the points with a rib
 Back to our data. We know that a linear models fits a line that "predicts" outcome based on some other variable. This is heavily simplified, but it'll make clear what we'll do next. So what we did before with the best fit line was create one line that best fits all the data points, but now we want to relate that back to our data points. What would our values be if they would be exactly on this line? To get this, all we have to do is calculate the difference between the current data point and the value of the best fit line at the corresponding "predictor" value. We could do it by hand, but since this section is quite long already, I'll skip straight to the R function, which is appropriately called `predict.lm()`. It takes the linear model we created with the `lm()` function earlier as input. It outputs a vector with the predicted values based on the model.
 
 ``` r
-data <- data |> 
+data <- data |>
   mutate(measure_pred = predict.lm(lm_model))
 ```
 
@@ -484,7 +505,7 @@ or in R terms (the degrees of freedom is 18 here, too complicated to explain for
 sqrt(sum((data$measure - data$measure_pred)^2) / 18)
 ```
 
-    [1] 0.09827566
+    [1] 0.1082947
 
 So that checks out. What we can then also do is calculate the difference between the observed and the predicted values values, this is called the residual:
 
@@ -496,15 +517,17 @@ data <- data |>
 We can check that this is correct too by comparing the residuals we calculated with the output from the `predict.lm()` function to the output of the `residuals(lm_model)`:
 
 ``` r
-tibble(residual_manual = data$residual,
-       residual_lm = residuals(lm_model)) |> 
+tibble(
+  residual_manual = data$residual,
+  residual_lm = residuals(lm_model)
+) |>
   glimpse()
 ```
 
     Rows: 20
     Columns: 2
-    $ residual_manual <dbl> -0.022378283, 0.092888415, -0.106844019, -0.047841680,…
-    $ residual_lm     <dbl> -0.022378283, 0.092888415, -0.106844019, -0.047841680,…
+    $ residual_manual <dbl> 0.020849595, 0.144178221, -0.075260734, -0.036675981, …
+    $ residual_lm     <dbl> 0.020849595, 0.144178221, -0.075260734, -0.036675981, …
 
 Predictably, when we sum all the individual differences (or residuals) we would get 0 (allowing for rounding errors) since the regression line perfectly fits in between the datapoints.
 
@@ -512,7 +535,7 @@ Predictably, when we sum all the individual differences (or residuals) we would 
 sum(data$residual)
 ```
 
-    [1] 9.992007e-16
+    [1] 1.970646e-15
 
 We can visualize the residuals using the `geom_smooth()` function. First I just want to show the difference visually in the scatter plot we had before. I added points along the regression line to indicate where each point will move to, and an arrow to indicate the size and the direction of the difference between the observed and the predicted value:
 
@@ -550,9 +573,11 @@ We've already plotted the sum of squared error, now we'll also illustrate sum of
 We already calculated the difference with the regression line, then to calculate the difference with the mean is simple:
 
 ``` r
-data <- data |> 
-  mutate(measure_mean = mean(measure),
-         difference_mean = measure - measure_mean)
+data <- data |>
+  mutate(
+    measure_mean = mean(measure),
+    difference_mean = measure - measure_mean
+  )
 ```
 
 Sidenote, if you wanted to calculate the total variance the formula for that would look like this:
@@ -569,7 +594,7 @@ To calculate the squared regression coefficient (R<sup>2</sup>) from the formula
 1 - sum(data$residual^2) / sum(data$difference_mean^2)
 ```
 
-    [1] 0.4727552
+    [1] 0.6268363
 
 And there we have it, the regression coefficient R<sup>2</sup>! You can check that it's the same by scrolling up to where we ran `summary(lm_model)` and you'll find the same number. We could also calculate the F-statistic and the *t*- and *p*-values, but I think this tutorial has drained enough cognitive energy. For this last section, I hope it's become clear what we mean when we talk about "residuals", "sum of squares", and "variance" in the context of linear models. I also hope it's enlightened you a bit on what a linear model does and how it works.
 
@@ -612,23 +637,23 @@ sessionInfo()
     [1] stats     graphics  grDevices datasets  utils     methods   base     
 
     other attached packages:
-     [1] patchwork_1.1.2 lubridate_1.9.2 forcats_1.0.0   stringr_1.5.0  
+     [1] patchwork_1.1.3 lubridate_1.9.3 forcats_1.0.0   stringr_1.5.0  
      [5] dplyr_1.1.3     purrr_1.0.2     readr_2.1.4     tidyr_1.3.0    
-     [9] tibble_3.2.1    ggplot2_3.4.3   tidyverse_2.0.0
+     [9] tibble_3.2.1    ggplot2_3.4.4   tidyverse_2.0.0
 
     loaded via a namespace (and not attached):
-     [1] utf8_1.2.3       generics_0.1.3   renv_0.17.3      xml2_1.3.4      
-     [5] lattice_0.21-9   stringi_1.7.12   hms_1.1.3        digest_0.6.33   
-     [9] magrittr_2.0.3   evaluate_0.22    grid_4.3.0       timechange_0.2.0
-    [13] fastmap_1.1.1    Matrix_1.6-1.1   jsonlite_1.8.7   ggtext_0.1.2    
-    [17] mgcv_1.9-0       fansi_1.0.4      scales_1.2.1     scico_1.4.0     
-    [21] cli_3.6.1        rlang_1.1.1      splines_4.3.0    commonmark_1.9.0
-    [25] munsell_0.5.0    withr_2.5.1      yaml_2.3.7       tools_4.3.0     
-    [29] tzdb_0.4.0       colorspace_2.1-0 vctrs_0.6.3      R6_2.5.1        
-    [33] lifecycle_1.0.3  pkgconfig_2.0.3  pillar_1.9.0     gtable_0.3.4    
-    [37] glue_1.6.2       Rcpp_1.0.11      xfun_0.40        tidyselect_1.2.0
-    [41] rstudioapi_0.14  knitr_1.44       farver_2.1.1     nlme_3.1-163    
-    [45] htmltools_0.5.6  rmarkdown_2.25   labeling_0.4.3   compiler_4.3.0  
-    [49] markdown_1.7     gridtext_0.1.5  
+     [1] utf8_1.2.4        generics_0.1.3    renv_1.0.3        xml2_1.3.5       
+     [5] lattice_0.22-5    stringi_1.7.12    hms_1.1.3         digest_0.6.33    
+     [9] magrittr_2.0.3    evaluate_0.22     grid_4.3.0        timechange_0.2.0 
+    [13] fastmap_1.1.1     Matrix_1.6-1.1    jsonlite_1.8.7    ggtext_0.1.2     
+    [17] mgcv_1.9-0        fansi_1.0.5       scales_1.2.1      scico_1.5.0      
+    [21] cli_3.6.1         rlang_1.1.1       splines_4.3.0     commonmark_1.9.0 
+    [25] munsell_0.5.0     withr_2.5.1       yaml_2.3.7        tools_4.3.0      
+    [29] tzdb_0.4.0        colorspace_2.1-0  vctrs_0.6.4       R6_2.5.1         
+    [33] lifecycle_1.0.3   pkgconfig_2.0.3   pillar_1.9.0      gtable_0.3.4     
+    [37] glue_1.6.2        Rcpp_1.0.11       xfun_0.40         tidyselect_1.2.0 
+    [41] rstudioapi_0.15.0 knitr_1.44        farver_2.1.1      nlme_3.1-163     
+    [45] htmltools_0.5.6.1 rmarkdown_2.25    labeling_0.4.3    compiler_4.3.0   
+    [49] markdown_1.11     gridtext_0.1.5   
 
 </details>

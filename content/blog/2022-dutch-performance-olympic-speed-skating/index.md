@@ -178,70 +178,75 @@ I said before that the data is neatly organized, which is true except for a few 
 
 ``` r
 parse_json <- function(json) {
-  
-  t_df <- jsonlite::fromJSON(json) |> 
-    as_tibble() |> 
-    unnest() |> 
-    janitor::clean_names() %>% 
+  t_df <- jsonlite::fromJSON(json) |>
+    as_tibble() |>
+    unnest() |>
+    janitor::clean_names() %>%
     slice(seq(3, nrow(.) - 2))
-  
+
   if (str_detect(json, "Men's Team pursuit 2018")) {
-    
-    t_df_out <- t_df |> 
-      filter(is.na(x0)) |> 
-      rename(ranking = x0,
-             athlete = x1,
-             country = x3,
-             time = x4,
-             comment = x5) |> 
-      mutate(ranking = rep(seq(3), each = 4),
-             ranking = str_glue("{ranking}.")) |> 
+    t_df_out <- t_df |>
+      filter(is.na(x0)) |>
+      rename(
+        ranking = x0,
+        athlete = x1,
+        country = x3,
+        time = x4,
+        comment = x5
+      ) |>
+      mutate(
+        ranking = rep(seq(3), each = 4),
+        ranking = str_glue("{ranking}.")
+      ) |>
       fill(country, time, comment) |>
-      group_by(ranking) |> 
+      group_by(ranking) |>
       mutate(athlete = toString(athlete)) |>
-      ungroup() |> 
-      distinct() |> 
+      ungroup() |>
+      distinct() |>
       select(-x2)
-    
   } else if (str_detect(json, "Men's Team pursuit|Women's Team pursuit")) {
-    
-    t_df_tp <- t_df |> 
-      rename(ranking = x0,
-             country = x1,
-             time = x3,
-             comment = x4,
-             ranking2 = x5,
-             country2 = x6,
-             time2 = x8,
-             comment2 = x9) |> 
-      select(seq(10),
-             -c(x2,x7)) |> 
+    t_df_tp <- t_df |>
+      rename(
+        ranking = x0,
+        country = x1,
+        time = x3,
+        comment = x4,
+        ranking2 = x5,
+        country2 = x6,
+        time2 = x8,
+        comment2 = x9
+      ) |>
+      select(
+        seq(10),
+        -c(x2, x7)
+      ) |>
       slice(seq(0, min(which(nchar(ranking) > 3)) - 1))
-    
-    t_df_out <- bind_rows(t_df_tp |> 
-                            select(seq(4)),
-                          t_df_tp |> 
-                            select(seq(5,last_col())) |> 
-                            rename_with( ~ c("ranking","country","time","comment")))
-    
+
+    t_df_out <- bind_rows(
+      t_df_tp |>
+        select(seq(4)),
+      t_df_tp |>
+        select(seq(5, last_col())) |>
+        rename_with(~ c("ranking", "country", "time", "comment"))
+    )
   } else {
-    
-    t_df <- t_df |> 
-      rename(ranking = x0,
-             athlete = x1,
-             country = x3,
-             time = x4,
-             comment = x5) |> 
+    t_df <- t_df |>
+      rename(
+        ranking = x0,
+        athlete = x1,
+        country = x3,
+        time = x4,
+        comment = x5
+      ) |>
       select(-x2)
-    
+
     if (str_detect(json, "Men's 10000 m 1928", negate = TRUE)) {
       t_df[seq(3), "ranking"] <- str_glue("{seq(3)}.")
     }
-    
+
     t_df_out <- t_df
-    
   }
-  
+
   return(t_df_out)
 }
 ```
@@ -258,22 +263,24 @@ Then we'll also create two vectors that contain the breaks we'll use later for t
 <summary>Show code</summary>
 
 ``` r
-data_load <- jsonlite::fromJSON("./all_events.json") |> 
+data_load <- jsonlite::fromJSON("./all_events.json") |>
   mutate(df = map(table, ~ parse_json(.x)))
 
-data <- data_load |> 
-  select(-table) |> 
-  unnest(df) |> 
-  group_by(year, distance, sex) |> 
-  mutate(ranking = ifelse(str_detect(ranking, "-"), NA, ranking)) |> 
-  fill(ranking) |> 
-  ungroup() |> 
-  mutate(ranking = parse_number(ranking),
-         ranking = ifelse(str_detect(time, "d"), NA, ranking),
-         comment = ifelse(str_detect(time, "d"), time, comment),
-         time = parse_number(time)) |> 
-  filter(nchar(country) < 4) |> 
-  arrange(year) |> 
+data <- data_load |>
+  select(-table) |>
+  unnest(df) |>
+  group_by(year, distance, sex) |>
+  mutate(ranking = ifelse(str_detect(ranking, "-"), NA, ranking)) |>
+  fill(ranking) |>
+  ungroup() |>
+  mutate(
+    ranking = parse_number(ranking),
+    ranking = ifelse(str_detect(time, "d"), NA, ranking),
+    comment = ifelse(str_detect(time, "d"), time, comment),
+    time = parse_number(time)
+  ) |>
+  filter(nchar(country) < 4) |>
+  arrange(year) |>
   glimpse()
 ```
 
@@ -298,7 +305,7 @@ data <- data_load |>
 ``` r
 game_years <- unique(data$year)
 
-event_lims <- c("500 m", "1000 m", "1500 m", "3000 m", "5000 m",  "10000 m", "Combined", "Team pursuit", "Mass Start")
+event_lims <- c("500 m", "1000 m", "1500 m", "3000 m", "5000 m", "10000 m", "Combined", "Team pursuit", "Mass Start")
 ```
 
 </details>
@@ -309,31 +316,40 @@ Then we can finally create some plots. Not all speed skating events were present
 <summary>Show code</summary>
 
 ``` r
-data |> 
-  select(year, distance, sex) |> 
+data |>
+  select(year, distance, sex) |>
   distinct() |>
-  mutate(distance = fct_relevel(distance, ~ event_lims)) |> 
-  group_by(distance, sex) |> 
-  arrange(year) |> 
-  summarise(first_year = min(year),
-            last_year = max(year)) |> 
-  ggplot(aes(x = first_year, y = distance)) + 
+  mutate(distance = fct_relevel(distance, ~event_lims)) |>
+  group_by(distance, sex) |>
+  arrange(year) |>
+  summarise(
+    first_year = min(year),
+    last_year = max(year)
+  ) |>
+  ggplot(aes(x = first_year, y = distance)) +
   geom_segment(aes(xend = last_year, yend = distance, color = distance),
-               linewidth = 8, lineend = "round", alpha = 0.4) +
-  geom_point(data = . %>% filter(first_year == last_year),
-             aes(color = distance),
-             size = 8, alpha = 0.5) + 
-  geom_text(aes(x = first_year, label = first_year), 
-            color = "#333333", size = 3, family = "custom", nudge_y = -0.25) +
-  geom_text(aes(x = 2018, label = distance), 
-            size = 10, color = "grey30", fontface = "bold",
-            family = "custom", hjust = 1, nudge_y = 0.2) +
+    linewidth = 8, lineend = "round", alpha = 0.4
+  ) +
+  geom_point(
+    data = . %>% filter(first_year == last_year),
+    aes(color = distance),
+    size = 8, alpha = 0.5
+  ) +
+  geom_text(aes(x = first_year, label = first_year),
+    color = "#333333", size = 3, family = "custom", nudge_y = -0.25
+  ) +
+  geom_text(aes(x = 2018, label = distance),
+    size = 10, color = "grey30", fontface = "bold",
+    family = "custom", hjust = 1, nudge_y = 0.2
+  ) +
   scale_y_discrete(limits = rev(event_lims)) +
   scico::scale_color_scico_d(guide = "none") +
-  facet_wrap(~ sex, scales = "free", strip.position = "top") + 
-  theme_void(base_family = "custom") + 
-  theme(text = element_text(color = "#333333"),
-        strip.text = element_text(face = "bold", size = 42))
+  facet_wrap(~sex, scales = "free", strip.position = "top") +
+  theme_void(base_family = "custom") +
+  theme(
+    text = element_text(color = "#333333"),
+    strip.text = element_text(face = "bold", size = 42)
+  )
 ```
 
 </details>
@@ -348,33 +364,49 @@ Now, let's dive into the medals. First let's create a simple barplot with the to
 <summary>Show code</summary>
 
 ``` r
-data |> 
-  filter(year >= 1960,
-         ranking %in% seq(3)) |> 
-  mutate(country_long = countrycode::countrycode(country, origin = "ioc", destination = "country.name"),
-         country_long = case_when(str_detect(country, "URS") ~ "Soviet Union",
-                                  str_detect(country, "GDR") ~ "East Germany",
-                                  str_detect(country, "FRG") ~ "West Germany",
-                                  str_detect(country, "OAR") ~ "Olympic Athletes from Russia",
-                                  TRUE ~ country_long),
-         country_label = str_glue("{country_long} ({country})")) |> 
-  count(country_label, sort = TRUE) |> 
-  mutate(highlight_col = ifelse(str_detect(country_label, "NED"), "#FF9B00", "grey")) |> 
-  ggplot(aes(x = n, y = reorder(country_label, n))) + 
-  geom_col(aes(fill = highlight_col)) + 
-  geom_vline(xintercept = 0, linewidth = 1) + 
-  geom_richtext(data = tibble(), aes(x = 24, y = 15, 
-                                     label = "Total number of medals won per country since 1960"),
-                family = "custom", size = 7, fontface = "bold", hjust = 0, 
-                label.padding = unit(0.75,"lines"), label.color = NA) + 
-  geom_richtext(data = tibble(), aes(x = 24, y = 13, 
-                                     label = "The Netherlands has won more than twice as many medals as the runner-up"),
-                family = "custom", size = 4, hjust = 0,
-                label.padding = unit(0.75,"lines"), label.color = NA) + 
-  labs(x = NULL,
-       y = NULL) + 
-  scale_x_continuous(expand = expansion(add = c(0,9)), position = "top") +
-  scale_fill_identity() + 
+data |>
+  filter(
+    year >= 1960,
+    ranking %in% seq(3)
+  ) |>
+  mutate(
+    country_long = countrycode::countrycode(country, origin = "ioc", destination = "country.name"),
+    country_long = case_when(
+      str_detect(country, "URS") ~ "Soviet Union",
+      str_detect(country, "GDR") ~ "East Germany",
+      str_detect(country, "FRG") ~ "West Germany",
+      str_detect(country, "OAR") ~ "Olympic Athletes from Russia",
+      TRUE ~ country_long
+    ),
+    country_label = str_glue("{country_long} ({country})")
+  ) |>
+  count(country_label, sort = TRUE) |>
+  mutate(highlight_col = ifelse(str_detect(country_label, "NED"), "#FF9B00", "grey")) |>
+  ggplot(aes(x = n, y = reorder(country_label, n))) +
+  geom_col(aes(fill = highlight_col)) +
+  geom_vline(xintercept = 0, linewidth = 1) +
+  geom_richtext(
+    data = tibble(), aes(
+      x = 24, y = 15,
+      label = "Total number of medals won per country since 1960"
+    ),
+    family = "custom", size = 7, fontface = "bold", hjust = 0,
+    label.padding = unit(0.75, "lines"), label.color = NA
+  ) +
+  geom_richtext(
+    data = tibble(), aes(
+      x = 24, y = 13,
+      label = "The Netherlands has won more than twice as many medals as the runner-up"
+    ),
+    family = "custom", size = 4, hjust = 0,
+    label.padding = unit(0.75, "lines"), label.color = NA
+  ) +
+  labs(
+    x = NULL,
+    y = NULL
+  ) +
+  scale_x_continuous(expand = expansion(add = c(0, 9)), position = "top") +
+  scale_fill_identity() +
   theme_minimal(base_family = "custom") +
   theme(panel.grid.major.y = element_blank())
 ```
@@ -391,37 +423,51 @@ Let's look at how this distribution is spread out across the different Olympic e
 <summary>Show code</summary>
 
 ``` r
-data |> 
-  filter(ranking %in% seq(3),
-         year >= 1960) |> 
-  group_by(year) |> 
-  mutate(total_medals = n()) |> 
-  group_by(year, country) |> 
-  summarise(medals_won = n(),
-            total_medals = first(total_medals)) |> 
-  mutate(perc_won = medals_won / total_medals,
-         perc_label = str_glue("{round(perc_won * 100)}%"),
-         highlight_col = ifelse(country == "NED", "#FF9B00", "grey"),
-         country = tidytext::reorder_within(country, perc_won, year)) |> 
-  slice_max(perc_won, n = 5) |> 
-  ggplot(aes(x = perc_won, y = country)) + 
-  geom_col(aes(fill = highlight_col)) + 
-  geom_text(aes(label = perc_label), family = "custom", 
-            size = 2, hjust = 0, nudge_x = 0.01) +
-  labs(title = "**Most medals won per country per Olympic Game**",
-       subtitle = "The Netherlands has won the largest proportion (shared in 1994 and 2002) of speed skating medals **every Game since 1994**",
-       x = "Percentage of all medals won",
-       y = NULL) + 
+data |>
+  filter(
+    ranking %in% seq(3),
+    year >= 1960
+  ) |>
+  group_by(year) |>
+  mutate(total_medals = n()) |>
+  group_by(year, country) |>
+  summarise(
+    medals_won = n(),
+    total_medals = first(total_medals)
+  ) |>
+  mutate(
+    perc_won = medals_won / total_medals,
+    perc_label = str_glue("{round(perc_won * 100)}%"),
+    highlight_col = ifelse(country == "NED", "#FF9B00", "grey"),
+    country = tidytext::reorder_within(country, perc_won, year)
+  ) |>
+  slice_max(perc_won, n = 5) |>
+  ggplot(aes(x = perc_won, y = country)) +
+  geom_col(aes(fill = highlight_col)) +
+  geom_text(aes(label = perc_label),
+    family = "custom",
+    size = 2, hjust = 0, nudge_x = 0.01
+  ) +
+  labs(
+    title = "**Most medals won per country per Olympic Game**",
+    subtitle = "The Netherlands has won the largest proportion (shared in 1994 and 2002) of speed skating medals **every Game since 1994**",
+    x = "Percentage of all medals won",
+    y = NULL
+  ) +
   tidytext::scale_y_reordered() +
-  scale_x_continuous(limits = c(0, 0.7),
-                     labels = scales::label_percent()) +
+  scale_x_continuous(
+    limits = c(0, 0.7),
+    labels = scales::label_percent()
+  ) +
   scale_fill_identity() +
-  facet_wrap(~ year, scales = "free_y") + 
+  facet_wrap(~year, scales = "free_y") +
   theme_minimal(base_family = "custom") +
-  theme(plot.title = element_markdown(size = 26),
-        plot.subtitle = element_markdown(size = 12),
-        strip.text = element_text(size = 16, face = "bold"),
-        panel.grid.major.y = element_blank())
+  theme(
+    plot.title = element_markdown(size = 26),
+    plot.subtitle = element_markdown(size = 12),
+    strip.text = element_text(size = 16, face = "bold"),
+    panel.grid.major.y = element_blank()
+  )
 ```
 
 </details>
@@ -436,46 +482,62 @@ But of course, not all medals are created equal. In Olympic rankings or medal ta
 <summary>Show code</summary>
 
 ``` r
-data |> 
-  filter(year >= 1960,
-         ranking %in% seq(3)) |> 
-  group_by(country, ranking) |> 
-  summarise(n_medals = n()) |> 
-  ungroup() |> 
-  complete(country, ranking) |> 
-  replace_na(list(n_medals = 0)) |> 
-  mutate(country_long = countrycode::countrycode(country, origin = "ioc", destination = "country.name"),
-         country_long = case_when(str_detect(country, "URS") ~ "Soviet Union",
-                                  str_detect(country, "GDR") ~ "East Germany",
-                                  TRUE ~ country_long),
-         country_label = str_glue("{country_long} ({country})"),
-         ranking_color = case_when(ranking == 1 ~ "#F8CC46",
-                                 ranking == 2 ~ "#DFDFE7",
-                                 ranking == 3 ~ "#D8B581"),
-         rank_mult = case_when(ranking == 1 ~ 100,
-                               ranking == 2 ~ 10,
-                               ranking == 3 ~ 1),
-         rank_score = n_medals * rank_mult) |>
-  group_by(country) |> 
-  mutate(country_rank = sum(rank_score)) |> 
+data |>
+  filter(
+    year >= 1960,
+    ranking %in% seq(3)
+  ) |>
+  group_by(country, ranking) |>
+  summarise(n_medals = n()) |>
   ungroup() |>
-  slice_max(country_rank, n = 30) |> 
-  ggplot(aes(x = ranking, y = reorder(country_label, country_rank),
-             fill = ranking_color, alpha = n_medals)) + 
-  geom_point(shape = 21, size = 10, stroke = 0, show.legend = FALSE) + 
+  complete(country, ranking) |>
+  replace_na(list(n_medals = 0)) |>
+  mutate(
+    country_long = countrycode::countrycode(country, origin = "ioc", destination = "country.name"),
+    country_long = case_when(
+      str_detect(country, "URS") ~ "Soviet Union",
+      str_detect(country, "GDR") ~ "East Germany",
+      TRUE ~ country_long
+    ),
+    country_label = str_glue("{country_long} ({country})"),
+    ranking_color = case_when(
+      ranking == 1 ~ "#F8CC46",
+      ranking == 2 ~ "#DFDFE7",
+      ranking == 3 ~ "#D8B581"
+    ),
+    rank_mult = case_when(
+      ranking == 1 ~ 100,
+      ranking == 2 ~ 10,
+      ranking == 3 ~ 1
+    ),
+    rank_score = n_medals * rank_mult
+  ) |>
+  group_by(country) |>
+  mutate(country_rank = sum(rank_score)) |>
+  ungroup() |>
+  slice_max(country_rank, n = 30) |>
+  ggplot(aes(
+    x = ranking, y = reorder(country_label, country_rank),
+    fill = ranking_color, alpha = n_medals
+  )) +
+  geom_point(shape = 21, size = 10, stroke = 0, show.legend = FALSE) +
   geom_text(aes(label = n_medals), alpha = 1, family = "custom") +
-  labs(title = "**Medal table since 1960**",
-       subtitle = "Ten countries with the highest total ranking",
-       x = NULL,
-       y = NULL) +
+  labs(
+    title = "**Medal table since 1960**",
+    subtitle = "Ten countries with the highest total ranking",
+    x = NULL,
+    y = NULL
+  ) +
   scale_x_discrete(position = "top") +
-  scale_fill_identity() + 
-  coord_fixed(ratio = 1/2) +
-  theme_void(base_family = "custom") + 
-  theme(plot.title.position = "plot",
-        plot.title = element_markdown(size = 26),
-        plot.subtitle = element_markdown(size = 13),
-        axis.text.y = element_text(hjust = 1))
+  scale_fill_identity() +
+  coord_fixed(ratio = 1 / 2) +
+  theme_void(base_family = "custom") +
+  theme(
+    plot.title.position = "plot",
+    plot.title = element_markdown(size = 26),
+    plot.subtitle = element_markdown(size = 13),
+    axis.text.y = element_text(hjust = 1)
+  )
 ```
 
 </details>
@@ -488,36 +550,41 @@ To show that a country is dominant in a particular competition it helps to show 
 <summary>Show code</summary>
 
 ``` r
-data |> 
-  filter(year >= 1960,
-         ranking %in% seq(3)) |> 
-  group_by(year, distance, sex, country) |> 
-  count(year, distance, sex, country, name = "medals_won") |> 
-  filter(medals_won == 3) |> 
-  mutate(sweeps = medals_won / 3) |> 
-  ggplot(aes(x = year, y = sweeps, fill = country)) + 
-  geom_col(key_glyph = "point") + 
+data |>
+  filter(
+    year >= 1960,
+    ranking %in% seq(3)
+  ) |>
+  group_by(year, distance, sex, country) |>
+  count(year, distance, sex, country, name = "medals_won") |>
+  filter(medals_won == 3) |>
+  mutate(sweeps = medals_won / 3) |>
+  ggplot(aes(x = year, y = sweeps, fill = country)) +
+  geom_col(key_glyph = "point") +
   geom_hline(yintercept = 0) +
-  labs(title = "**Podium sweeps since 1960**",
-       subtitle = "The Netherlands had 7 out 13 podium sweeps (winning gold, silver, **and** bronze in a single event),<br> including 4 at the 2014 Olympics in Sochi",
-       x = NULL,
-       y = "Number of podium sweeps",
-       fill = NULL) +
+  labs(
+    title = "**Podium sweeps since 1960**",
+    subtitle = "The Netherlands had 7 out 13 podium sweeps (winning gold, silver, **and** bronze in a single event),<br> including 4 at the 2014 Olympics in Sochi",
+    x = NULL,
+    y = "Number of podium sweeps",
+    fill = NULL
+  ) +
   scale_x_continuous(limits = c(1960, NA), breaks = game_years) +
-  scale_y_continuous(expand = expansion(mult = c(0,0.05))) +
-  scico::scale_fill_scico_d(palette = "batlow", guide = guide_legend(
-    override.aes = c(shape = 21, size = 4)
-  )) + 
-  theme_minimal(base_family = "custom") + 
-  theme(plot.title = element_markdown(size = 26),
-        legend.text = element_text(size = 10),
-        legend.key.height = unit(0.75, "lines"),
-        plot.subtitle = element_markdown(size = 13, lineheight = 0.5),
-        axis.text.x = element_text(size = 7),
-        axis.text.y = element_text(size = 12),
-        axis.title.y = element_text(size = 12),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor = element_blank())
+  scale_y_continuous(expand = expansion(mult = c(0, 0.05))) +
+  scico::scale_fill_scico_d(palette = "batlow",
+                            guide = guide_legend(override.aes = c(shape = 21, size = 4))) +
+  theme_minimal(base_family = "custom") +
+  theme(
+    plot.title = element_markdown(size = 26),
+    legend.text = element_text(size = 10),
+    legend.key.height = unit(0.75, "lines"),
+    plot.subtitle = element_markdown(size = 13, lineheight = 0.5),
+    axis.text.x = element_text(size = 7),
+    axis.text.y = element_text(size = 12),
+    axis.title.y = element_text(size = 12),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank()
+  )
 ```
 
 </details>
@@ -530,41 +597,51 @@ As you might gather, from this and the previous plot, the Winter Olympic Games f
 <summary>Show code</summary>
 
 ``` r
-data |> 
-  mutate(distance = fct_relevel(distance, ~ event_lims)) |> 
-  filter(str_detect(comment, "OR"),
-         distance != "Combined") |> 
-  group_by(distance, sex) |> 
-  arrange(year) |> 
-  mutate(no = row_number()) |> 
-  ggplot(aes(x = year, y = no, color = distance)) + 
-  geom_vline(xintercept = c(1940, 1944), linetype = "dashed", color = "grey92") + 
-  geom_step(linewidth = 1.5, alpha = 0.4, show.legend = FALSE) + 
+data |>
+  mutate(distance = fct_relevel(distance, ~event_lims)) |>
+  filter(
+    str_detect(comment, "OR"),
+    distance != "Combined"
+  ) |>
+  group_by(distance, sex) |>
+  arrange(year) |>
+  mutate(no = row_number()) |>
+  ggplot(aes(x = year, y = no, color = distance)) +
+  geom_vline(xintercept = c(1940, 1944), linetype = "dashed", color = "grey92") +
+  geom_step(linewidth = 1.5, alpha = 0.4, show.legend = FALSE) +
   geom_point(size = 4, alpha = 0.75, stroke = 0) +
-  ggrepel::geom_text_repel(data = . |> filter(no == max(no)), 
-                           aes(label = country), show.legend = FALSE, seed = 2,
-                           color = "#333333", size = 4, 
-                           family = "custom", fontface = "bold") +
-  labs(title = "**Olympic Records over the years**",
-       subtitle = "The Netherlands hold 4/6 olympic records with the men, and 3/6 records with the women.<br>
+  ggrepel::geom_text_repel(
+    data = . |> filter(no == max(no)),
+    aes(label = country), show.legend = FALSE, seed = 2,
+    color = "#333333", size = 4,
+    family = "custom", fontface = "bold"
+  ) +
+  labs(
+    title = "**Olympic Records over the years**",
+    subtitle = "The Netherlands hold 4/6 olympic records with the men, and 3/6 records with the women.<br>
        Current record holder indicated with the IOC abbreviation",
-       x = "Winter Games",
-       y = NULL,
-       color = NULL) + 
-  scale_x_continuous(breaks = game_years,
-                     labels = str_replace(game_years, "^19|^20", "'")) +
+    x = "Winter Games",
+    y = NULL,
+    color = NULL
+  ) +
+  scale_x_continuous(
+    breaks = game_years,
+    labels = str_replace(game_years, "^19|^20", "'")
+  ) +
   scale_y_continuous(breaks = NULL) +
   scico::scale_color_scico_d(guide = guide_legend(override.aes = c(size = 4, alpha = 1))) +
-  facet_wrap(~ sex, nrow = 2, strip.position = "left") +
-  theme_minimal(base_family = "custom") + 
-  theme(text = element_text(color = "#333333"),
-        legend.position = c(0.2, 0.25),
-        legend.key.height = unit(0.75, "lines"),
-        plot.title = element_markdown(size = 26),
-        plot.subtitle = element_markdown(size = 13),
-        strip.text = element_text(size = 24, face = "bold"),
-        panel.grid.major.y = element_blank(), 
-        panel.grid.minor = element_blank())
+  facet_wrap(~sex, nrow = 2, strip.position = "left") +
+  theme_minimal(base_family = "custom") +
+  theme(
+    text = element_text(color = "#333333"),
+    legend.position = c(0.2, 0.25),
+    legend.key.height = unit(0.75, "lines"),
+    plot.title = element_markdown(size = 26),
+    plot.subtitle = element_markdown(size = 13),
+    strip.text = element_text(size = 24, face = "bold"),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank()
+  )
 ```
 
 </details>
@@ -575,15 +652,17 @@ Next, I want to highlight one athlete in particular. The Dutch team is a powerho
 <summary>Show code</summary>
 
 ``` r
-data_wust <- data |> 
-  filter(str_detect(athlete, "Ireen") | 
+data_wust <- data |>
+  filter(str_detect(athlete, "Ireen") |
            str_detect(title, "Women's Team pursuit") &
-           country == "NED") |> 
-  add_row(tibble(year = 2022,
-                 distance = "1500 m",
-                 sex = "Women",
-                 ranking = 1,
-                 comment = "OR")) |> 
+             country == "NED") |>
+  add_row(tibble(
+    year = 2022,
+    distance = "1500 m",
+    sex = "Women",
+    ranking = 1,
+    comment = "OR"
+  )) |>
   glimpse()
 ```
 
@@ -608,37 +687,46 @@ So Ireen participated in 18 events across 5 Olympic Games. She participated in a
 <summary>Show code</summary>
 
 ``` r
-data_wust |> 
-  group_by(year, medals_won = ranking %in% seq(3)) |> 
-  mutate(medals_won = ifelse(medals_won, "medals_won", "medals_not_won")) |> 
-  count() |> 
-  ungroup() |> 
-  complete(year, medals_won, fill = list(n = 0)) |> 
-  pivot_wider(names_from = medals_won, values_from = n) |> 
-  mutate(total_events = medals_won + medals_not_won,
-         perc_won = medals_won / total_events,
-         perc_won_label = str_glue("{round(perc_won * 100,1)}%"),
-         perc_won_label = ifelse(year == 2022, str_glue("{perc_won_label}*"), perc_won_label),
-         year = as_factor(year),
-         year = fct_rev(year)) |> 
-  ggplot(aes(x = perc_won, y = year)) + 
+data_wust |>
+  group_by(year, medals_won = ranking %in% seq(3)) |>
+  mutate(medals_won = ifelse(medals_won, "medals_won", "medals_not_won")) |>
+  count() |>
+  ungroup() |>
+  complete(year, medals_won, fill = list(n = 0)) |>
+  pivot_wider(names_from = medals_won, values_from = n) |>
+  mutate(
+    total_events = medals_won + medals_not_won,
+    perc_won = medals_won / total_events,
+    perc_won_label = str_glue("{round(perc_won * 100,1)}%"),
+    perc_won_label = ifelse(year == 2022, str_glue("{perc_won_label}*"), perc_won_label),
+    year = as_factor(year),
+    year = fct_rev(year)
+  ) |>
+  ggplot(aes(x = perc_won, y = year)) +
   geom_segment(aes(x = 0, xend = perc_won, yend = year),
-               linewidth = 10, lineend = "round", color = "#FF9B00") + 
+    linewidth = 10, lineend = "round", color = "#FF9B00"
+  ) +
   geom_text(aes(label = perc_won_label), size = 4, family = "custom", hjust = 1) +
-  labs(title = "**Will Ireen win a medal if she shows up?**",
-       subtitle = "Of all the events Ireen Wüst participated in, how often did she win a medal (of any color)?<br>2022 Olympics is still ongoing, shown is win rate **so far***",
-       caption = "*As of time of writing (09/02/2022)",
-       x = NULL,
-       y = NULL) + 
-  scale_x_continuous(breaks = NULL,
-                     expand = expansion(add = c(0,0.05))) +
-  coord_fixed(1/12) +
-  theme_minimal(base_family = "custom") + 
-  theme(plot.title.position = "plot",
-        plot.title = element_markdown(size = 26),
-        plot.subtitle = element_markdown(size = 13),
-        axis.text.y = element_markdown(size = 13),
-        panel.grid.major.y = element_blank())
+  labs(
+    title = "**Will Ireen win a medal if she shows up?**",
+    subtitle = "Of all the events Ireen Wüst participated in, how often did she win a medal (of any color)?<br>2022 Olympics is still ongoing, shown is win rate **so far***",
+    caption = "*As of time of writing (09/02/2022)",
+    x = NULL,
+    y = NULL
+  ) +
+  scale_x_continuous(
+    breaks = NULL,
+    expand = expansion(add = c(0, 0.05))
+  ) +
+  coord_fixed(1 / 12) +
+  theme_minimal(base_family = "custom") +
+  theme(
+    plot.title.position = "plot",
+    plot.title = element_markdown(size = 26),
+    plot.subtitle = element_markdown(size = 13),
+    axis.text.y = element_markdown(size = 13),
+    panel.grid.major.y = element_blank()
+  )
 ```
 
 </details>
@@ -653,39 +741,59 @@ Finally, we can also visualize the individual medals she won. Again, I'll take s
 <summary>Show code</summary>
 
 ``` r
-data_wust |> 
-  filter(ranking %in% seq(3)) |> 
-  mutate(ranking_color = case_when(ranking == 1 ~ "#F8CC46",
-                                 ranking == 2 ~ "#DFDFE7",
-                                 ranking == 3 ~ "#D8B581"),
-         label = str_glue("{sex}'s {distance}")) |> 
-  group_by(year) |> 
-  arrange(ranking) |> 
-  mutate(y = row_number()) |> 
-  ggplot(aes(x = year, y = -y)) + 
-  geom_point(aes(color = ranking_color), size = 12) + 
-  geom_text(aes(label =  label), size = 4, family = "custom", hjust = 0.1) +
-  geom_richtext(data = tibble(), aes(x = 2004.5, y = -3.5, 
-                                     label = "**Medals earned by Ireen Wüst**"),
-                family = "custom", size = 8, hjust = 0, label.color = NA) + 
-  geom_richtext(data = tibble(), aes(x = 2004.5, y = -4.2, 
-                                     label = "Ireen Wüst earned **12 medals*** (of which 6 gold) across<br>5 Olympic games, the first Winter Olympian in history<br>to reach this milestone"),
-                family = "custom", size = 4, hjust = 0, label.color = NA,
-                lineheight = 1) + 
-  labs(x = NULL,
-       y = NULL,
-       caption = "*As of time of writing (09/02/2022)") +
-  scale_x_continuous(breaks = c(game_years, 2022), position = "top",
-                     expand = expansion(add = c(1,2.5))) +
-  scale_y_continuous(breaks = FALSE,
-                     expand = expansion(add = c(0.5, 0.5))) +
-  scale_color_identity() + 
+data_wust |>
+  filter(ranking %in% seq(3)) |>
+  mutate(
+    ranking_color = case_when(
+      ranking == 1 ~ "#F8CC46",
+      ranking == 2 ~ "#DFDFE7",
+      ranking == 3 ~ "#D8B581"
+    ),
+    label = str_glue("{sex}'s {distance}")
+  ) |>
+  group_by(year) |>
+  arrange(ranking) |>
+  mutate(y = row_number()) |>
+  ggplot(aes(x = year, y = -y)) +
+  geom_point(aes(color = ranking_color), size = 12) +
+  geom_text(aes(label = label), size = 4, family = "custom", hjust = 0.1) +
+  geom_richtext(
+    data = tibble(), aes(
+      x = 2004.5, y = -3.5,
+      label = "**Medals earned by Ireen Wüst**"
+    ),
+    family = "custom", size = 8, hjust = 0, label.color = NA
+  ) +
+  geom_richtext(
+    data = tibble(), aes(
+      x = 2004.5, y = -4.2,
+      label = "Ireen Wüst earned **12 medals*** (of which 6 gold) across<br>5 Olympic games, the first Winter Olympian in history<br>to reach this milestone"
+    ),
+    family = "custom", size = 4, hjust = 0, label.color = NA,
+    lineheight = 1
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    caption = "*As of time of writing (09/02/2022)"
+  ) +
+  scale_x_continuous(
+    breaks = c(game_years, 2022), position = "top",
+    expand = expansion(add = c(1, 2.5))
+  ) +
+  scale_y_continuous(
+    breaks = FALSE,
+    expand = expansion(add = c(0.5, 0.5))
+  ) +
+  scale_color_identity() +
   coord_fixed(ratio = 2) +
-  theme_minimal(base_family = "custom") + 
-  theme(plot.title = element_markdown(size = 26),
-        plot.subtitle = element_markdown(size = 13),
-        axis.text.x = element_markdown(size = 13),
-        panel.grid = element_blank())
+  theme_minimal(base_family = "custom") +
+  theme(
+    plot.title = element_markdown(size = 26),
+    plot.subtitle = element_markdown(size = 13),
+    axis.text.x = element_markdown(size = 13),
+    panel.grid = element_blank()
+  )
 ```
 
 </details>

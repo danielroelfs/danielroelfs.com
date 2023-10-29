@@ -36,7 +36,7 @@ library(normentR)
 
 set.seed(2404)
 
-gwas_data_load <- simulateGWAS(nSNPs = 1e6, nSigCols = 3) |> 
+gwas_data_load <- simulateGWAS(nSNPs = 1e6, nSigCols = 3) |>
   janitor::clean_names()
 ```
 
@@ -47,11 +47,11 @@ A vast majority of the datapoints will overlap in the non-significant region of 
 ```{r}
 #| label: reduce-size
 
-sig_data <- gwas_data_load |> 
+sig_data <- gwas_data_load |>
   subset(p < 0.05)
-notsig_data <- gwas_data_load |> 
+notsig_data <- gwas_data_load |>
   subset(p >= 0.05) |>
-  group_by(chr) |> 
+  group_by(chr) |>
   sample_frac(0.1)
 gwas_data <- bind_rows(sig_data, notsig_data)
 ```
@@ -62,14 +62,14 @@ Since the only columns we have indicating position are the chromosome number and
 ```{r}
 #| label: cumulative-bp
 
-data_cum <- gwas_data |> 
-  group_by(chr) |> 
-  summarise(max_bp = max(bp)) |> 
-  mutate(bp_add = lag(cumsum(max_bp), default = 0)) |> 
+data_cum <- gwas_data |>
+  group_by(chr) |>
+  summarise(max_bp = max(bp)) |>
+  mutate(bp_add = lag(cumsum(max_bp), default = 0)) |>
   select(chr, bp_add)
 
-gwas_data <- gwas_data |> 
-  inner_join(data_cum, by = "chr") |> 
+gwas_data <- gwas_data |>
+  inner_join(data_cum, by = "chr") |>
   mutate(bp_cum = bp + bp_add)
 ```
 
@@ -78,13 +78,13 @@ When this is done, the next thing I want to do is to get a couple of parameters 
 ```{r}
 #| label: set-axes
 
-axis_set <- gwas_data |> 
-  group_by(chr) |> 
+axis_set <- gwas_data |>
+  group_by(chr) |>
   summarize(center = mean(bp_cum))
 
-ylim <- gwas_data |> 
-  filter(p == min(p)) |> 
-  mutate(ylim = abs(floor(log10(p))) + 2) |> 
+ylim <- gwas_data |>
+  filter(p == min(p)) |>
+  mutate(ylim = abs(floor(log10(p))) + 2) |>
   pull(ylim)
 
 sig <- 5e-8
@@ -96,19 +96,25 @@ Finally, we're ready to plot the data. As promised, I use the `ggplot()` functio
 ```{r}
 #| label: create-plot
 
-manhplot <- ggplot(gwas_data, aes(x = bp_cum, y = -log10(p), 
-                                  color = as_factor(chr), size = -log10(p))) +
-  geom_hline(yintercept = -log10(sig), color = "grey40", linetype = "dashed") + 
+manhplot <- ggplot(gwas_data, aes(
+  x = bp_cum, y = -log10(p),
+  color = as_factor(chr), size = -log10(p)
+)) +
+  geom_hline(yintercept = -log10(sig), color = "grey40", linetype = "dashed") +
   geom_point(alpha = 0.75) +
   scale_x_continuous(label = axis_set$chr, breaks = axis_set$center) +
-  scale_y_continuous(expand = c(0,0), limits = c(0, ylim)) +
-  scale_color_manual(values = rep(c("#276FBF", "#183059"), 
-                                  unique(length(axis_set$chr)))) +
-  scale_size_continuous(range = c(0.5,3)) +
-  labs(x = NULL, 
-       y = "-log<sub>10</sub>(p)") + 
+  scale_y_continuous(expand = c(0, 0), limits = c(0, ylim)) +
+  scale_color_manual(values = rep(
+    c("#276FBF", "#183059"),
+    unique(length(axis_set$chr))
+  )) +
+  scale_size_continuous(range = c(0.5, 3)) +
+  labs(
+    x = NULL,
+    y = "-log<sub>10</sub>(p)"
+  ) +
   theme_minimal() +
-  theme( 
+  theme(
     legend.position = "none",
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank(),

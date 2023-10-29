@@ -32,7 +32,7 @@ First we'll simulate some summary statistics data. We can do this using the `sim
 ``` r
 set.seed(1994)
 
-sumstats.data <- simulateGWAS(nSNPs = 1e6, nSigCols = 1)
+sumstats_data <- simulateGWAS(nSNPs = 1e6, nSigCols = 1)
 ```
 
     GENERATING SIMULATED GWAS DATASET
@@ -46,15 +46,15 @@ sumstats.data <- simulateGWAS(nSNPs = 1e6, nSigCols = 1)
     8. Adding significant column in chromosome 8
     DONE!
 
-Now we have a data frame called `sumstats.data` that contains a simulated GWAS summary statistic dataset. Note that I only generated a small number of SNPs. The QQ plot can take quite a while to generate if there's a lot of SNPs in the file. QQ plots require only the p-values, but we'll keep the entire data frame because you might need this data frame at some point later on.
+Now we have a data frame called `sumstats_data` that contains a simulated GWAS summary statistic dataset. Note that I only generated a small number of SNPs. The QQ plot can take quite a while to generate if there's a lot of SNPs in the file. QQ plots require only the p-values, but we'll keep the entire data frame because you might need this data frame at some point later on.
 
 ### Preparing the data
 
-First I'll specify two variables, just to make the code later somehwat cleaner. I'll want to plot an area indicating the confidence interval, so we specify the confidence interval (e.g. 95%) and the number of SNPs (which is just the length of your `sumstats.data` data frame)
+First I'll specify two variables, just to make the code later somehwat cleaner. I'll want to plot an area indicating the confidence interval, so we specify the confidence interval (e.g. 95%) and the number of SNPs (which is just the length of your `sumstats_data` data frame)
 
 ``` r
 ci <- 0.95
-nSNPs <- nrow(sumstats.data)
+n_snps <- nrow(sumstats_data)
 ```
 
 Next, we'll create a data frame that has all the data we need for the plot. We'll call that data frame `plotdata`. We initiate a data frame with four columns. The first column is the observed p-values, sorted in decreasing order, and then -log<sub>10</sub> transformed. So then the SNPs with the lowest p-values will have the highest value. These SNPs will end up on the right side of the figure later. Based on this sorted vector, we can also generate the expected vector of log transformed p-values. We could do this manually, but I much prefer to use one of the (somewhat obscure but very useful) base functions in R called `ppoints()`. This generates the sequence of probabilities based on the input vector. In this case, we'll input just the number of SNPs.
@@ -62,10 +62,10 @@ Since we also want to plot the confidence interval, we'll have to calculate the 
 
 ``` r
 plotdata <- data.frame(
-  observed = -log10(sort(sumstats.data$P)),
-  expected = -log10(ppoints(nSNPs)),
-  clower   = -log10(qbeta(p = (1 - ci) / 2, shape1 = seq(nSNPs), shape2 = rev(seq(nSNPs)))),
-  cupper   = -log10(qbeta(p = (1 + ci) / 2, shape1 = seq(nSNPs), shape2 = rev(seq(nSNPs))))
+  observed = -log10(sort(sumstats_data$P)),
+  expected = -log10(ppoints(n_snps)),
+  clower   = -log10(qbeta(p = (1 - ci) / 2, shape1 = seq(n_snps), shape2 = rev(seq(n_snps)))),
+  cupper   = -log10(qbeta(p = (1 + ci) / 2, shape1 = seq(n_snps), shape2 = rev(seq(n_snps))))
 )
 ```
 
@@ -98,11 +98,15 @@ We'll also add some labels (with the `expression()` and `paste()` functions). Yo
 qqplot <- ggplot(plotdata_small, aes(x = expected, y = observed)) +
   geom_ribbon(aes(ymax = cupper, ymin = clower), fill = "grey30", alpha = 0.5) +
   geom_step(color = norment_colors[["purple"]], size = 1.1, direction = "vh") +
-  geom_segment(data = . %>% filter(expected == max(expected)), 
-               aes(x = 0, xend = expected, y = 0, yend = expected),
-               size = 1.25, alpha = 0.5, color = "grey30", lineend = "round") +
-  labs(x = expression(paste("Expected -log"[10],"(", plain(P),")")),
-       y = expression(paste("Observed -log"[10],"(", plain(P),")"))) +
+  geom_segment(
+    data = . %>% filter(expected == max(expected)),
+    aes(x = 0, xend = expected, y = 0, yend = expected),
+    size = 1.25, alpha = 0.5, color = "grey30", lineend = "round"
+  ) +
+  labs(
+    x = expression(paste("Expected -log"[10], "(", plain(P), ")")),
+    y = expression(paste("Observed -log"[10], "(", plain(P), ")"))
+  ) +
   theme_norment() +
   theme()
 ```

@@ -16,6 +16,8 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "i
 
     favicon = "avatar.png"
 
+    highlightstyle  = "foundation"
+
     iconsource = "simple-icons"
 
     description = "Daniel Roelfs' personal website"

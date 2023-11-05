@@ -14,6 +14,8 @@ execute:
   fig.show: hold
   results: hold
   out.width: 80%
+editor_options: 
+  chunk_output_type: console
 ---
 
 <style type="text/css">
@@ -30,13 +32,10 @@ h2, h3, h4, h5, h6 {
   font-size: 6rem;
 }
 </style>
-<!-- ******************************************************************* -->
 
 ## Introduction
 
 A little while ago I was watching a documentary series on Dutch television about one of the most important composers in the Netherlands: Johann Sebastian Bach. The documentary discussed parts of Bach's life and the music he wrote during it. This documentary inspired me to learn more about the pieces Bach wrote, and since this is my life now, I might as well do it in R.
-
-<!-- ******************************************************************* -->
 
 ## Collecting the data
 
@@ -111,27 +110,31 @@ for (i in seq_along(length(bwvs))) {
 
   scraped_data[i, ] <- values
 }
+
+scraped_data <- scraped_data |>
+  janitor::clean_names()
 ```
 
 With this, I achieved the first goal I had for this little project, which was to find or create a dataset on Bach. Let's see what it looks like:
 
 ``` r
-str(scraped_data)
+glimpse(scraped_data)
 ```
 
-    'data.frame':   1075 obs. of  12 variables:
-     $ Title             : chr  "Wie schön leuchtet der Morgenstern" "Ach Gott, von Himmel sieh darein" "Ach Gott, wie manches Herzeleid" "Christ lag in Todes Banden" ...
-     $ Subtitle_and_notes: chr  "Kantate am Fest Mariae Verkündigung (Festo annuntiationis Mariae)" "Kantate am zweiten Sonntag nach Trinitatis (Dominica 2 post Trinitatis)" "Kantate am zweiten Sonntag nach Epiphanias (Dominica 2 post Epiphanias)" "Kantate am Osterfest (Feria Paschatos)" ...
-     $ BWV               : chr  "1" "2" "3" "4" ...
-     $ BWV_epifix        : chr  "" "" "" "" ...
-     $ CLC_BWV_w_epifix  : chr  "1" "2" "3" "4" ...
-     $ belongs after     : chr  "" "" "" "" ...
-     $ voices_instruments: chr  "Soli: S, T, B. Chor: S, A, T, B. Instr.: Corno I, II; Ob. da caccia I, II; Viol. conc. I, II; Viol. rip. I, II; Vla.; Cont." "Soli: A, T, B. Chor: S, A, T, B. Instr.: Tromb. I - IV; Ob. I, II; Viol. I, II; Vla.; Cont." "Soli: S, A, T, B. Chor: S, A, T, B. Instr.: Corno; Tromb.; Ob. d'amore I, II; Viol. I, II; Vla.; Cont." "Soli: S, A, T, B. Chor: S, A, T, B. Instr.: Cornetto; Tromb. I, II, III; Viol. I, II; Vla. I, II; Cont." ...
-     $ category1         : chr  "Vokalwerke" "Vokalwerke" "Vokalwerke" "Vokalwerke" ...
-     $ category2         : chr  "Kantaten" "Kantaten" "Kantaten" "Kantaten" ...
-     $ category3         : chr  "" "" "" "" ...
-     $ cantate_cat1      : chr  "A. Geistliche Kantaten an der Sonn- und Festtagen des Kirchenjahres" "A. Geistliche Kantaten an der Sonn- und Festtagen des Kirchenjahres" "A. Geistliche Kantaten an der Sonn- und Festtagen des Kirchenjahres" "A. Geistliche Kantaten an der Sonn- und Festtagen des Kirchenjahres" ...
-     $ cantate_cat2      : chr  "Mariae Verkundigung" "2. Sonntag nach Trinitatis" "2. Sonntag nach Epiphanias" "1. Osterfesttag" ...
+    Rows: 1,075
+    Columns: 12
+    $ title              <chr> "Wie schön leuchtet der Morgenstern", "Ach Gott, vo…
+    $ subtitle_and_notes <chr> "Kantate am Fest Mariae Verkündigung (Festo annunti…
+    $ bwv                <chr> "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", …
+    $ bwv_epifix         <chr> "", "", "", "", "", "", "", "", "", "", "", "", "",…
+    $ clc_bwv_w_epifix   <chr> "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", …
+    $ belongs_after      <chr> "", "", "", "", "", "", "", "", "", "", "249", "", …
+    $ voices_instruments <chr> "Soli: S, T, B. Chor: S, A, T, B. Instr.: Corno I, …
+    $ category1          <chr> "Vokalwerke", "Vokalwerke", "Vokalwerke", "Vokalwer…
+    $ category2          <chr> "Kantaten", "Kantaten", "Kantaten", "Kantaten", "Ka…
+    $ category3          <chr> "", "", "", "", "", "", "", "", "", "", "", "", "",…
+    $ cantate_cat1       <chr> "A. Geistliche Kantaten an der Sonn- und Festtagen …
+    $ cantate_cat2       <chr> "Mariae Verkundigung", "2. Sonntag nach Trinitatis"…
 
 All columns are currently character arrays, and this is appropriate for most of them. Although I think the BWV number alone could be a numeric array. Also, some columns are still a bit awkward. This is why I moved on to do another important and satisfying part, cleaning the data.
 
@@ -142,31 +145,32 @@ The character arrays are appropriate, but for further analyes I'd prefer to make
 ``` r
 data <- scraped_data |>
   mutate(
-    BWV = as.numeric(BWV),
+    bwv = as.numeric(bwv),
     category1 = factor(category1),
     category2 = factor(category2),
     category3 = factor(category3),
     cantate_cat1 = substring(cantate_cat1, 4),
-    CLC_BWV_w_epifix = str_replace(CLC_BWV_w_epifix, " ", "")
+    clc_bwv_w_epifix = str_squish(clc_bwv_w_epifix)
   ) |>
-  rename(BWV_w_epifix = CLC_BWV_w_epifix) |>
-  select(BWV, BWV_epifix, BWV_w_epifix, everything())
-str(data)
+  rename(bwv_w_epifix = clc_bwv_w_epifix) |>
+  select(bwv, bwv_epifix, bwv_w_epifix, everything()) |>
+  glimpse()
 ```
 
-    'data.frame':   1075 obs. of  12 variables:
-     $ BWV               : num  1 2 3 4 5 6 7 8 9 10 ...
-     $ BWV_epifix        : chr  "" "" "" "" ...
-     $ BWV_w_epifix      : chr  "1" "2" "3" "4" ...
-     $ Title             : chr  "Wie schön leuchtet der Morgenstern" "Ach Gott, von Himmel sieh darein" "Ach Gott, wie manches Herzeleid" "Christ lag in Todes Banden" ...
-     $ Subtitle_and_notes: chr  "Kantate am Fest Mariae Verkündigung (Festo annuntiationis Mariae)" "Kantate am zweiten Sonntag nach Trinitatis (Dominica 2 post Trinitatis)" "Kantate am zweiten Sonntag nach Epiphanias (Dominica 2 post Epiphanias)" "Kantate am Osterfest (Feria Paschatos)" ...
-     $ belongs after     : chr  "" "" "" "" ...
-     $ voices_instruments: chr  "Soli: S, T, B. Chor: S, A, T, B. Instr.: Corno I, II; Ob. da caccia I, II; Viol. conc. I, II; Viol. rip. I, II; Vla.; Cont." "Soli: A, T, B. Chor: S, A, T, B. Instr.: Tromb. I - IV; Ob. I, II; Viol. I, II; Vla.; Cont." "Soli: S, A, T, B. Chor: S, A, T, B. Instr.: Corno; Tromb.; Ob. d'amore I, II; Viol. I, II; Vla.; Cont." "Soli: S, A, T, B. Chor: S, A, T, B. Instr.: Cornetto; Tromb. I, II, III; Viol. I, II; Vla. I, II; Cont." ...
-     $ category1         : Factor w/ 2 levels "Instrumentalwerke",..: 2 2 2 2 2 2 2 2 2 2 ...
-     $ category2         : Factor w/ 15 levels "Kammermusik",..: 3 3 3 3 3 3 3 3 3 3 ...
-     $ category3         : Factor w/ 26 levels "","Choralbearbeitungen",..: 1 1 1 1 1 1 1 1 1 1 ...
-     $ cantate_cat1      : chr  "Geistliche Kantaten an der Sonn- und Festtagen des Kirchenjahres" "Geistliche Kantaten an der Sonn- und Festtagen des Kirchenjahres" "Geistliche Kantaten an der Sonn- und Festtagen des Kirchenjahres" "Geistliche Kantaten an der Sonn- und Festtagen des Kirchenjahres" ...
-     $ cantate_cat2      : chr  "Mariae Verkundigung" "2. Sonntag nach Trinitatis" "2. Sonntag nach Epiphanias" "1. Osterfesttag" ...
+    Rows: 1,075
+    Columns: 12
+    $ bwv                <dbl> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, …
+    $ bwv_epifix         <chr> "", "", "", "", "", "", "", "", "", "", "", "", "",…
+    $ bwv_w_epifix       <chr> "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", …
+    $ title              <chr> "Wie schön leuchtet der Morgenstern", "Ach Gott, vo…
+    $ subtitle_and_notes <chr> "Kantate am Fest Mariae Verkündigung (Festo annunti…
+    $ belongs_after      <chr> "", "", "", "", "", "", "", "", "", "", "249", "", …
+    $ voices_instruments <chr> "Soli: S, T, B. Chor: S, A, T, B. Instr.: Corno I, …
+    $ category1          <fct> Vokalwerke, Vokalwerke, Vokalwerke, Vokalwerke, Vok…
+    $ category2          <fct> "Kantaten", "Kantaten", "Kantaten", "Kantaten", "Ka…
+    $ category3          <fct> "", "", "", "", "", "", "", "", "", "", "", "", "",…
+    $ cantate_cat1       <chr> "Geistliche Kantaten an der Sonn- und Festtagen des…
+    $ cantate_cat2       <chr> "Mariae Verkundigung", "2. Sonntag nach Trinitatis"…
 
 Now we have this data, we can do some descriptive visualizations of the data. Over time I hope I can dive into the setting (`voices_instruments`) and disect that, but for now I'll keep it simple and just do some descriptives.
 
@@ -180,11 +184,14 @@ data |>
   summarise(n = n()) |>
   ggplot(aes(x = category1, y = n, color = category1)) +
   geom_segment(aes(xend = category1, yend = 0),
-    size = 12,
+    linewidth = 12,
     color = "grey40", alpha = 0.9
   ) +
   geom_point(size = 20, shape = 16) +
-  geom_text(aes(label = n, y = n + 5), color = "white", size = 5, family = "Alegreya") +
+  geom_text(aes(label = n, y = n + 5),
+    color = "white", size = 5, family = "Alegreya"
+  ) +
+  geom_hline(yintercept = 0, size = 1) +
   labs(
     x = NULL,
     y = "Number of compositions"
@@ -216,7 +223,9 @@ data |>
     color = "grey40", alpha = 0.9
   ) +
   geom_point(size = 10, shape = 16) +
-  geom_text(aes(label = n, y = n + 3), color = "white", size = 4, family = "Alegreya") +
+  geom_text(aes(label = n, y = n + 3),
+    color = "white", size = 4, family = "Alegreya"
+  ) +
   labs(
     x = NULL,
     y = "Number of compositions"
@@ -240,7 +249,10 @@ data |>
   summarise(n = n()) |>
   mutate(category2 = sprintf("%s (%s)", category2, n)) |>
   ggplot(aes(fill = category2, values = n)) +
-  geom_waffle(n_rows = 17, size = 0.2, colour = "#FFFFFC", flip = FALSE, na.rm = TRUE) +
+  geom_waffle(
+    n_rows = 17, size = 0.2, colour = "#FFFFFC",
+    flip = FALSE, na.rm = TRUE
+  ) +
   scale_fill_daniel(palette = "staalmeesters", name = NULL) +
   coord_equal() +
   theme_bach(base_family = "Alegreya", base_size = 14) +
@@ -257,33 +269,37 @@ data |>
 The dataset I just created was comprehensive and clean, but it didn't contain any information about the musical properties other than the setting. I want to dive into the setting later, but it's going to be a regular expression hell. I might come back to that later. In the meantime, Wikipedia has a page listing the compositions by Bach too (because of course Wikipedia does). This page contains approximate dates on each composition, as well as the key it was written in. I'm going to scrape this webpage too. The setup of this page was somewhat simpler, so scraping it was slightly simpler.
 
 ``` r
-url <- "https://en.wikipedia.org/wiki/List_of_compositions_by_Johann_Sebastian_Bach"
+website <- "https://en.wikipedia.org"
+article <- "wiki/List_of_compositions_by_Johann_Sebastian_Bach"
+url <- str_glue("{website}/{article}")
 webpage <- read_html(url)
 
 wikitext <- webpage |>
   html_nodes(xpath = '//*[@id="TOP"]') |>
   html_table(fill = TRUE) |>
-  as.data.frame()
+  as.data.frame() |>
+  janitor::clean_names()
 ```
 
 Then I cleaned the data somewhat and extracted the number from the BWV columns.
 
 ``` r
 wikidata <- wikitext |>
-  rename(BWV_full = BWV) |>
+  rename(bwv_full = bwv) |>
   mutate(
-    BWV = sub(".*(\\d{3}).*", "\\1", BWV_full),
-    BWV = parse_integer(BWV)
+    bwv = sub(".*(\\d{3}).*", "\\1", bwv_full),
+    bwv = parse_integer(bwv)
   ) |>
-  filter(!rev(duplicated(rev(BWV))))
+  filter(!rev(duplicated(rev(bwv))))
 ```
 
 Then I merged the data. I lost a number of compositions in the process, but I was okay with it, mostly because it took me too much time and effort to try and fix it. Hurray for laziness. I extracted the year from the slightly messy `Date` column. Some strings in this column contain two dates, one for the first compilation and one for the date of completion. I extracted the last number, the year of completion.
 
 ``` r
-merged_data <- merge(data, wikidata, by = "BWV") |>
+merged_data <- data |>
+  inner_join(wikidata, by = "bwv") |>
   mutate(
-    year = sub(".*(\\d{4}).*", "\\1", Date),
+    year = sub(".*(\\d{4}).*", "\\1", date),
     year = as.numeric(year),
     age = year - 1685
   )
@@ -317,38 +333,56 @@ annotation2 <- data.frame(
 
 ggplot(bwvperyear, aes(x = year, y = n, fill = n)) +
   geom_bar(stat = "identity") +
-  geom_vline(xintercept = c(1750.5, 1685), linetype = "dashed", color = "grey30") +
+  geom_vline(
+    xintercept = c(1750.5, 1685),
+    linetype = "dashed", color = "grey30"
+  ) +
   geom_text(
-    data = data.frame(), mapping = aes(x = 1685.5, y = 75, label = "Bach was born\nMarch 31st 1685\nin Eisenach"),
+    data = data.frame(),
+    mapping = aes(
+      x = 1685.5, y = 75,
+      label = "Bach was born\nMarch 31st 1685\nin Eisenach"
+    ),
     inherit.aes = FALSE, family = "Alegreya", hjust = 0
   ) +
   geom_text(
-    data = data.frame(), mapping = aes(x = 1750, y = 75, label = "Bach died\nJuly 28th 1750\nin Leipzich"),
+    data = data.frame(),
+    mapping = aes(
+      x = 1750, y = 75,
+      label = "Bach died\nJuly 28th 1750\nin Leipzich"
+    ),
     inherit.aes = FALSE, family = "Alegreya", hjust = 1
   ) +
   geom_curve(
-    data = annotation1, mapping = aes(x = x, y = y, xend = xend, yend = yend),
+    data = annotation1,
+    mapping = aes(x = x, y = y, xend = xend, yend = yend),
     arrow = arrow(angle = 25, length = unit(6, "pt")),
     curvature = 0.1, inherit.aes = FALSE
   ) +
   geom_text(
-    data = annotation1, mapping = aes(x = x, y = y + 4, label = text),
+    data = annotation1,
+    mapping = aes(x = x, y = y + 4, label = text),
     family = "Alegreya", inherit.aes = FALSE, parse = FALSE
   ) +
   geom_curve(
-    data = annotation2, mapping = aes(x = x, y = y, xend = xend, yend = yend),
+    data = annotation2,
+    mapping = aes(x = x, y = y, xend = xend, yend = yend),
     arrow = arrow(angle = 25, length = unit(6, "pt")),
     curvature = 0.2, inherit.aes = FALSE
   ) +
   geom_text(
-    data = annotation2, mapping = aes(x = x, y = y + 3, label = text),
+    data = annotation2,
+    mapping = aes(x = x, y = y + 3, label = text),
     family = "Alegreya", inherit.aes = FALSE, parse = TRUE
   ) +
   labs(
     x = "Year",
     y = "Number of compositions"
   ) +
-  scale_x_continuous(limits = c(1685, 1751), breaks = seq(1690, 1750, 10)) +
+  scale_x_continuous(
+    limits = c(1685, 1751),
+    breaks = seq(1690, 1750, 10)
+  ) +
   scale_fill_gradient(low = palette[6], high = palette[2]) +
   theme_bach(base_family = "Alegreya", grid = "y") +
   theme(
@@ -364,25 +398,18 @@ The Wikipedia page also contained information on the key of most of the composit
 
 ``` r
 summ_key_cat1 <- merged_data |>
-  group_by(category1, Key) |>
+  group_by(category1, key) |>
   summarise(n = n()) |>
-  filter(nchar(Key) > 1) |>
+  filter(nchar(key) > 1) |>
   mutate(
-    Key = sub("\u266D", "b", Key),
-    Key = sub("\U266F", "#", Key),
-    Key = ifelse(nchar(Key) > 10, substring(Key, 1, nchar(Key) / 2), Key)
+    Key = sub("\u266D", "b", key),
+    Key = sub("\U266F", "#", key),
+    Key = ifelse(nchar(key) > 10, substring(key, 1, nchar(key) / 2), key)
   ) |>
-  group_by(category1, Key) |>
+  group_by(category1, key) |>
   summarise(n = sum(n))
-```
 
-    `summarise()` has grouped output by 'category1'. You can override using the
-    `.groups` argument.
-    `summarise()` has grouped output by 'category1'. You can override using the
-    `.groups` argument.
-
-``` r
-ggplot(summ_key_cat1, aes(x = reorder(Key, -n), y = n, fill = category1)) +
+ggplot(summ_key_cat1, aes(x = reorder(key, -n), y = n, fill = category1)) +
   geom_col(position = position_dodge2(preserve = "single", padding = 0)) +
   labs(
     x = NULL,
@@ -403,15 +430,15 @@ I noticed that there were no double keys, as in B flat is the same as A sharp. T
 
 ``` r
 summ_key_cat2 <- merged_data |>
-  group_by(category2, Key) |>
+  group_by(category2, key) |>
   summarise(n = n()) |>
-  filter(nchar(Key) > 1) |>
+  filter(nchar(key) > 1) |>
   mutate(
-    Key = sub("\u266D", "b", Key),
-    Key = sub("\U266F", "#", Key),
-    Key = ifelse(nchar(Key) > 10, substring(Key, 1, nchar(Key) / 2), Key)
+    key = sub("\u266D", "b", key),
+    key = sub("\U266F", "#", key),
+    key = ifelse(nchar(key) > 10, substring(key, 1, nchar(key) / 2), key)
   ) |>
-  group_by(category2, Key) |>
+  group_by(category2, key) |>
   summarise(n = sum(n))
 
 plotdat <- rbind(
@@ -423,7 +450,7 @@ plotdat <- rbind(
     rep(2, nrow(summ_key_cat2))
   ))
 
-ggplot(plotdat, aes(x = Key, y = reorder(category2, n), fill = n)) +
+ggplot(plotdat, aes(x = key, y = reorder(category2, n), fill = n)) +
   geom_tile() +
   geom_text(aes(label = n), family = "Alegreya", color = "white", size = 4) +
   geom_hline(yintercept = 8.5, color = "#FFFFF0", size = 1) +
@@ -433,10 +460,12 @@ ggplot(plotdat, aes(x = Key, y = reorder(category2, n), fill = n)) +
     fill = NULL
   ) +
   scale_x_discrete(position = "top") +
-  scale_fill_gradient(low = palette[6],
-                      high = palette[2],
-                      breaks = c(1, seq(10, 40, 10)),
-                      guide = guide_colorbar(barheight = 8, barwidth = 0.75)) +
+  scale_fill_gradient(
+    low = palette[6],
+    high = palette[2],
+    breaks = c(1, seq(10, 40, 10)),
+    guide = guide_colorbar(barheight = 8, barwidth = 0.75)
+  ) +
   coord_fixed() +
   theme_bach(base_family = "Alegreya", grid = FALSE) +
   theme(
@@ -456,7 +485,10 @@ In addition to this, I also wanted to do some classic journalism. Previously, I 
 ``` r
 register_google(google_code)
 places <- data_frame(
-  city = c("Eisenach", "Ohrdruf", "Lüneburg", "Weimar", "Arnstadt", "Mühlhausen", "Weimar", "Köthen", "Leipzig"),
+  city = c(
+    "Eisenach", "Ohrdruf", "Lüneburg", "Weimar",
+    "Arnstadt", "Mühlhausen", "Weimar", "Köthen", "Leipzig"
+  ),
   year_from = c(1685, 1695, 1700, 1702, 1703, 1707, 1708, 1717, 1723),
   year_to = c(1695, 1700, 1702, 1703, 1707, 1708, 1717, 1723, 1750)
 ) |>

@@ -14,13 +14,19 @@ execute:
   fig.show: hold
   results: hold
   out.width: 80%
+editor_options: 
+  chunk_output_type: console
 ---
 
 This is just a very quick blog post outlining some of the commonalities and differences between factor analysis (FA), principal component analysis (PCA), and independent component analysis (ICA). I was inspired to write some of this down through some confusion caused in the lab by SPSS' apparent dual usage of the term "factor analysis" and "principal components". A few of my colleagues who use SPSS showed me the following screen:
 
-{{< image src="spss-screenshot.png" alt="spss screenshot" >}}
+{{< figure src="spss-screenshot.png" alt="spss screenshot" >}}
 
-This screen shows up when you click `Analyze` -\> `Dimension Reduction` -\> `Factor`, which then opens a window called "Factor Analysis: Extraction" which lets you pick "Principal components" as a method. To put the (apparent) PCA method as a sub-section of factor analysis is misleading at best, and straight-up erronious at worst. The other options for the method here is "Principal axis factoring" (which is closer to traditional factor analysis) and "Maximum likelihood" ([source for screenshot and SPSS interface](https://stats.idre.ucla.edu/spss/seminars/efa-spss/)). If you're wondering if you're the first one to be confused by SPSS' choice to present this in such a way, you're not ([link](https://stats.stackexchange.com/questions/1576/what-are-the-differences-between-factor-analysis-and-principal-component-analysi), [link](https://stats.stackexchange.com/questions/24781/interpreting-discrepancies-between-r-and-spss-with-exploratory-factor-analysis)).
+{{< sidenote br="2em" >}}
+If you're wondering if you're the first one to be confused by SPSS' choice to present this in such a way, you're not ([link](https://stats.stackexchange.com/questions/1576/what-are-the-differences-between-factor-analysis-and-principal-component-analysi), [link](https://stats.stackexchange.com/questions/24781/interpreting-discrepancies-between-r-and-spss-with-exploratory-factor-analysis)).
+{{< /sidenote >}}
+
+This screen shows up when you click `Analyze` -\> `Dimension Reduction` -\> `Factor`, which then opens a window called "Factor Analysis: Extraction" which lets you pick "Principal components" as a method. To put the (apparent) PCA method as a sub-section of factor analysis is misleading at best, and straight-up erronious at worst. The other options for the method here is "Principal axis factoring" (which is closer to traditional factor analysis) and "Maximum likelihood" ([source for screenshot and SPSS interface](https://stats.idre.ucla.edu/spss/seminars/efa-spss/)).
 
 Standard disclaimer: I'm not a statistician, and I'm definitely not confident enough to go in-depth into the mathematics of the different algorithms. Instead, I'll just run three common latent variable modeling/clustering methods, and show the difference in results when applied to the same data. Where-ever I feel confident, I will also elaborate on the underlying mathematical principles and concepts. It's a short post, and I'm sure there's levels of nuance and complexity I've missed. Please let me know if you think I've committed a major oversight.
 
@@ -41,7 +47,7 @@ theme_set(theme_minimal())
 We'll load the data into R, clean up the variable names, convert the outcome variable (`ca_cervix`) to a factor. We'll have a look at the dataset using some functions from `{skimr}`. This function will give us summary statistics and basic histograms of the different variables.
 
 ``` r
-data <- read_csv("sobar-72.csv") |>
+data <- read_csv("./data/sobar-72.csv") |>
   janitor::clean_names() |>
   mutate(ca_cervix = as_factor(ca_cervix))
 
@@ -115,9 +121,13 @@ So now we have a data frame with 72 entries and 19 normalized columns, each repr
 
 ``` r
 cor(data_features) |>
-  as_tibble() %>%
-  mutate(feature_y = names(.)) |>
-  pivot_longer(cols = -feature_y, names_to = "feature_x", values_to = "correlation") |>
+  as_tibble() |>
+  mutate(feature_y = names(data_features)) |>
+  pivot_longer(
+    cols = -feature_y,
+    names_to = "feature_x",
+    values_to = "correlation"
+  ) |>
   mutate(feature_y = fct_rev(feature_y)) |>
   ggplot(aes(x = feature_x, y = feature_y, fill = correlation)) +
   geom_tile() +
@@ -140,6 +150,10 @@ Let's now dive into the approaches we'll use. We'll discuss three here, and if t
 
 ## Selecting the number of components
 
+{{< sidenote br="6em" >}}
+Icasso is implemented in MATLAB, which I won't bore you with here, but it seems someone created a [Python port](https://github.com/Teekuningas/icasso) also
+{{< /sidenote >}}
+
 For factor analysis and ICA we need to provide the number of factors we want to extract. We'll use the same number of factors/components throughout this tutorial (also for PCA). Selection of the optimal number of factors/components is a fairly arbitrary process which I won't go into now. In short, before writing this I ran PCA and a tool called [icasso](https://research.ics.aalto.fi/ica/icasso/). *Icasso* runs an ICA algorithm a number of times and provides a number of parameters on the stability of the clusters at different thresholds, this approach is very data-driven. A more common and easier way to get some data-driven insight into the optimal number of clusters is using the "elbow"-method using PCA, eigenvalues of the components, and the cumulative variance explained by the components (we'll show those later). However, in the end, you should also look at the weight matrix of the different cluster thresholds and it becomes a fairly arbitrary process. In this case, the *icasso* showed that 7 components was good (but not the best), the weight matrix looked okay, and 7 components explained more than 80% of the variance in the PCA. I went for 7 components in the end also because it served the purpose of this blogpost quite well, but I think different thresholds are valid and you could make a case for different ones based on the data, based on the interpretation of the weight matrix, etc. This process is a bit of an art and a science combined.
 
 ``` r
@@ -148,12 +162,18 @@ n_comps <- 7
 
 ## Factor Analysis
 
-So, let's run the factor analysis. Technically speaking, factor analysis isn't a clustering method but rather a latent variable modeling method [source](https://stats.stackexchange.com/questions/241726/understanding-exploratory-factor-analysis-some-points-for-clarification). The primary aim of a factor analysis is the reconstruction of correlations/covariances between variables. Maximizing explained variance of the factors is only a secondary aim and we'll get to why that is relevant in the PCA section.
+So, let's run the factor analysis. Technically speaking, factor analysis isn't a clustering method but rather a latent variable modeling method ([source](https://stats.stackexchange.com/questions/241726/understanding-exploratory-factor-analysis-some-points-for-clarification)). The primary aim of a factor analysis is the reconstruction of correlations/covariances between variables. Maximizing explained variance of the factors is only a secondary aim and we'll get to why that is relevant in the PCA section.
 
 We've established we want 7 factors. The factor analysis method is implemented in R through the `factanal()` function (see [here](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/factanal%20for%20the%20documentation). This function applies a common factor model using the maximum likelihood method. We'll simply provide it with our data frame, the number of factors we want to extract, and we'll ask to provide Bartlett's weighted least-squares scores as well. We can apply a "rotation" to the factors to make them reduce the complexity of the factor loadings and make them easier to interpret, here we'll use the `varimax` option. Varimax maximizes the sum of the variances of the squared loadings. Then we'll print the model to see the results (and sort so the loadings are ordered). The output may be a bit long.
 
 ``` r
-fa_model <- factanal(data_features, factors = n_comps, scores = "Bartlett", rotation = "varimax")
+fa_model <- factanal(
+  data_features,
+  factors = n_comps,
+  scores = "Bartlett",
+  rotation = "varimax"
+)
+
 print(fa_model, sort = TRUE)
 ```
 
@@ -236,13 +256,18 @@ print(fa_model, sort = TRUE)
 
 We may be tempted to immediately look at the *p*-value at the end of the output. This *p*-value denotes whether the assumption of perfect fit can be rejected. If this *p*-value is below 0.05 or 0.01 we can reject the hypothesis of perfect fit, meaning that we could probably try a different method or try a different number of factors. In this case, the *p*-value is larger than 0.05 so we cannot reject the hypothesis of perfect fit.
 
-The "Loadings" section of the results show a make-shift weight matrix, but in order to further interpret these results, let's create a plot showing the weight matrix. We'll get the results from the factor analysis model we created earlier using the `tidy()` function from `{broom}` and convert it to long format. We'll then create a weight matrix much in the same way we did earlier.
+The "Loadings" section of the results show a make-shift weight matrix, but in order to further interpret these results, let's create a plot showing the weight matrix. We'll get the results from the factor analysis model we created earlier using the `tidy()` function from the `{broom}` package and convert it to long format. We'll then create a weight matrix much in the same way we did earlier.
 
 ``` r
 fa_weight_matrix <- broom::tidy(fa_model) |>
-  pivot_longer(starts_with("fl"), names_to = "factor", values_to = "loading")
+  pivot_longer(starts_with("fl"),
+    names_to = "factor", values_to = "loading"
+  )
 
-fa_loading_plot <- ggplot(fa_weight_matrix, aes(x = factor, y = variable, fill = loading)) +
+fa_loading_plot <- ggplot(
+  fa_weight_matrix,
+  aes(x = factor, y = variable, fill = loading)
+) +
   geom_tile() +
   labs(
     title = "FA loadings",
@@ -266,7 +291,10 @@ fa_model$scores |>
   cor() |>
   data.frame() |>
   rownames_to_column("factor_x") |>
-  pivot_longer(cols = -factor_x, names_to = "factor_y", values_to = "correlation") |>
+  pivot_longer(
+    cols = -factor_x,
+    names_to = "factor_y", values_to = "correlation"
+  ) |>
   ggplot(aes(x = factor_x, y = factor_y, fill = correlation)) +
   geom_tile() +
   geom_text(aes(label = round(correlation, 4)), color = "white") +
@@ -281,7 +309,7 @@ fa_model$scores |>
 
 <img src="index.markdown_strict_files/figure-markdown_strict/fa-corr-matrix-1.png" width="768" />
 
-We can see little correlation but certainly a few non-zero correlations also. In particular Factor 5 and Factor 7 seem to correlate to some extent at least and there are a few others with some minor correlations, e.g. Factor 1 and Factor 3, as well as Factor 3 and Factor 6. We'll compare this later with the other algorithms.
+We can see little correlation but certainly a few non-zero correlations also. In particular Factor 5 and Factor 7 seem to correlate to some extent at least and there are a few others with some minor correlations, e.g. Factor 1 and Factor 3, as well as Factor 5 and Factor 6. We'll compare this later with the other algorithms.
 
 ## Principal Component Analysis
 
@@ -291,7 +319,11 @@ Principal component analysis can reliably be classfied as a clustering method (a
 
 I can recommend this paper as a great primer to PCA methods. It goes over a few concepts very relevant for PCA methods as well as clustering methods in general.
 
-Now, let's run the PCA. In R there's two functions built-in to run a principal component analysis, here we'll use the `prcomp()`function (the other being `princomp()`, but `prcomp()` is preferred for reasons beyond the scope of this post). The `prcomp()` function contains a few options we can play with, but in my experience it works fine out of the box if you've normalized the data beforehand ([link to documentation](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/prcomp)). So we'll simply provide the data frame with the features. In addition, we'll also calculate the variance explained by each component. We do that by simply taking the standard deviation calculated by the PCA and squaring it, we'll save it in a new field called `variance`.
+{{< sidenote br="1em" >}}
+For some more info on the difference between `prcomp()` and `princomp()` see [this](https://stats.stackexchange.com/questions/20101/what-is-the-difference-between-r-functions-prcomp-and-princomp) thread on CrossValidated
+{{< /sidenote >}}
+
+Now, let's run the PCA. In R there's two functions built-in to run a principal component analysis, here we'll use the `prcomp()` function (the other being `princomp()`, but `prcomp()` is preferred for reasons beyond the scope of this post). The `prcomp()` function contains a few options we can play with, but in my experience it works fine out of the box if you've normalized the data beforehand ([link to documentation](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/prcomp)). So we'll simply provide the data frame with the features. In addition, we'll also calculate the variance explained by each component. We do that by simply taking the standard deviation calculated by the PCA and squaring it, we'll save it in a new field called `variance`.
 
 ``` r
 pc_model <- prcomp(data_features)
@@ -312,12 +344,9 @@ pc_model$variance |>
   ) |>
   ggplot(aes(x = comp, y = eigenvalue)) +
   geom_hline(yintercept = 1) +
-  geom_line(size = 1) +
+  geom_line(linewidth = 1) +
   geom_point(size = 3)
 ```
-
-    Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-    ℹ Please use `linewidth` instead.
 
 <img src="index.markdown_strict_files/figure-markdown_strict/pca-scree-1.png" width="768" />
 
@@ -327,11 +356,16 @@ We'll also create a weight matrix again, based on the rotation from the PCA. We'
 pc_weight_matrix <- pc_model$rotation |>
   data.frame() |>
   rownames_to_column("variable") |>
-  pivot_longer(starts_with("PC"), names_to = "prin_comp", values_to = "loading")
+  pivot_longer(starts_with("PC"),
+    names_to = "prin_comp", values_to = "loading"
+  )
 
 pca_loading_plot <- pc_weight_matrix |>
   filter(parse_number(prin_comp) <= n_comps) |>
-  ggplot(aes(x = reorder(prin_comp, parse_number(prin_comp)), y = variable, fill = loading)) +
+  ggplot(aes(
+    x = reorder(prin_comp, parse_number(prin_comp)),
+    y = variable, fill = loading
+  )) +
   geom_tile() +
   labs(
     title = "PCA loadings",
@@ -355,7 +389,10 @@ pc_model$x |>
   cor() |>
   data.frame() |>
   rownames_to_column("comp_x") |>
-  pivot_longer(cols = starts_with("PC"), names_to = "comp_y", values_to = "correlation") |>
+  pivot_longer(
+    cols = starts_with("PC"),
+    names_to = "comp_y", values_to = "correlation"
+  ) |>
   filter(
     parse_number(comp_x) <= n_comps,
     parse_number(comp_y) <= n_comps
@@ -404,7 +441,7 @@ Let's look at the scree plot:
 tibble(eigenvalues) |>
   ggplot(aes(x = seq_along(eigenvalues), y = eigenvalues)) +
   geom_hline(yintercept = 1) +
-  geom_line(size = 1) +
+  geom_line(linewidth = 1) +
   geom_point(size = 3)
 ```
 
@@ -414,8 +451,8 @@ Looks identical to the previous one. Let's also look at the correlation matrix b
 
 ``` r
 data.frame(pc_manual) |>
-  cor() %>%
-  round(., 4)
+  cor() |>
+  round(x = _, digits = 4)
 ```
 
         X1 X2 X3 X4 X5 X6 X7 X8 X9 X10 X11 X12 X13 X14 X15 X16 X17 X18 X19
@@ -443,6 +480,10 @@ Yup, also still 0 across the board. Calculating a PCA by just using matrix manip
 
 ## Independent Component Analysis
 
+{{< sidenote br="14em" >}}
+If you're feeling particularly *mathematical*, you can read find a paper [here](https://www.iiis.org/CDs2017/CD2017Spring/papers/ZA832BA.pdf) that compares different algorithms
+{{< /sidenote >}}
+
 While PCA attempts to find components explaining the maximum degree of covariance or correlation, an ICA attemps to find components with maximum statistical independence. There's very complicated nuance here where PCA components are orthogonal and uncorrelated to each other and ICA components are merely statistically independent, which is a very subtle nuance. In practice, it'll mean that ICA components also have a practically zero correlation. The main difference is in how the components are obtained. Like with factor analysis, most ICA algorithms require you to provide a number of components up front. The FastICA algorithm we'll use here is a version of an ICA implementation. There's also InfoMax and JADE to name two other implementations. I couldn't tell you the difference between these ICA algorithms. The FastICA is implemented in R through the `fastICA()` function and the eponymous `{fastICA}` package ([link to documentation](https://www.rdocumentation.org/packages/fastICA/versions/1.2-2/topics/fastICA)).
 
 ``` r
@@ -455,9 +496,15 @@ Let's create a weight matrix again. The output from the `fastICA()` doesn't prov
 ica_weight_matrix <- data.frame(t(ica_model$A)) |>
   rename_with(~ str_glue("IC{seq(.)}")) |>
   mutate(variable = names(data_features)) |>
-  pivot_longer(cols = starts_with("IC"), names_to = "ic", values_to = "loading")
+  pivot_longer(
+    cols = starts_with("IC"),
+    names_to = "ic", values_to = "loading"
+  )
 
-ica_loading_plot <- ggplot(ica_weight_matrix, aes(x = ic, y = variable, fill = loading)) +
+ica_loading_plot <- ggplot(
+  ica_weight_matrix,
+  aes(x = ic, y = variable, fill = loading)
+) +
   geom_tile() +
   labs(
     title = "ICA loadings",
@@ -481,7 +528,10 @@ ica_model$S |>
   cor() |>
   data.frame() |>
   rownames_to_column("comp_x") |>
-  pivot_longer(cols = starts_with("X"), names_to = "comp_y", values_to = "correlation") |>
+  pivot_longer(
+    cols = starts_with("X"),
+    names_to = "comp_y", values_to = "correlation"
+  ) |>
   ggplot(aes(x = comp_x, y = comp_y, fill = correlation)) +
   geom_tile() +
   geom_text(aes(label = round(correlation, 4)), color = "white") +
@@ -533,7 +583,7 @@ all_weight_matrices |>
 
 Here we can most clearly see the overlap between the three methods, Factor 1, PC1, and IC 6 capture essentially the same information. The same goes for Factor 2, PC2, and IC 4. Other than that we can see that the other components vary quite markedly. I wouldn't be comfortable calling any of the other components "fairly similar" to another. You could see how some variables load together with multiple methods, but then the components those are captured in also have other information or miss information. We already discussed IC7 consisting mostly of a single variable, and a similar thing happens with Factor 4, but for a different variable.
 
-### BONUS: Hierarchical clustering
+## BONUS: Hierarchical clustering
 
 I'll quickly go over hierarchical clustering too, it's simple and easy to interpret. Hierarchical clustering works by taking your variables and clustering them first into two groups, then three, then four, and so on. It looks at similarity and a concept called "Euclidian distance" (other methods are available) between the variables and determines how to separate. Essentially, hierarchical clustering works by iteratively separating variables into groups until every variable is on its own. It does so rather aggressively, with the previous methods it's possible for a variable to be part of two clusters, with hierarchical clustering it's part of a single cluster only. This approach makes it an easy way to see how variables cluster together at different thresholds.
 
@@ -571,12 +621,14 @@ ggdendro::ggdendrogram(hclust_model) +
 Let's look at how the clusters are made up according to the hierarchical clustering model. This isn't really a weight matrix, but rather a definition of the clusters. The "loadings" here are not numerical, but rather 1 or 0.
 
 ``` r
-hclust_weight_matrix %>%
+hclust_weight_matrix |>
   data.frame() |>
-  janitor::clean_names() |>
-  rename(cluster = x) |>
+  rename(cluster = hclust_weight_matrix) |>
   rownames_to_column("variable") |>
-  ggplot(aes(x = as_factor(cluster), y = variable, fill = as_factor(cluster))) +
+  ggplot(aes(
+    x = as_factor(cluster), y = variable,
+    fill = as_factor(cluster)
+  )) +
   geom_tile() +
   labs(
     x = NULL,

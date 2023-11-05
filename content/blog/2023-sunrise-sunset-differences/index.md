@@ -15,6 +15,8 @@ execute:
   fig.show: hold
   results: hold
   out.width: 80%
+editor_options: 
+  chunk_output_type: console
 ---
 
 Today I want to share a project that deals with data scientist's favorite kind of data: date- and timedata involving time zones and daylight savings time. Who doesn't love it?
@@ -54,80 +56,84 @@ from geopy.geocoders import Nominatim
 import re
 ```
 
+{{< sidenote br="20em" >}}
+If you thought working with dates and times was a headache, imagine adding DST to the mix as well
+{{< /sidenote >}}
+
 For this project we'll collect a number of variables related to sunrise and sunset for different locations throughout the year. The `astral` module makes this very easy, and in order to keep things clean and efficient we'll create a function to efficient collect this data. We'll write it in such a way that it can collect a number of locations within one function call using a list input (which isn't the cleanest, but works quite well here). We'll provide the list of cities we want to analyze in the form `'<region>/<city>'` to avoid any possible misconceptions (e.g. Cambridge, Cambridgeshire in the UK or Cambridge, MA in the US). We'll then extract the coordinates for that location using the `geopy` module. We'll also supply the reference time zone (for this project Central Europe). The `astral` module has a [known issue](https://github.com/sffjunkie/astral/issues/67) when dusk happens past midnight. So we'll extract everything in [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) and convert it to the time zone of interest later. We'll collect the data throughout the year for the various locations in a loop. And we'll cycle through the year using a `while` loop. We'll also collect the difference in time from the [Daylights Savings Time](https://en.wikipedia.org/wiki/Daylight_saving_time). We'll convert it to the time zone of interest using the `_convert_timezone()` function. In the final data frame we'll only get the times (not the dates) so in case the dusk happens past midnight, we'll consider that "no dusk takes place this day" instead of having it happen "early in the morning the same day", implemented in the `_fix_dusks_past_midnight()` function. This will help with the plots later. Finally we'll convert some of the variables to a format that'll make it easy to deal with in R later.
 
 ``` python
 def _convert_timezone(x, to_tz=tz.tzlocal()):
-  '''
-  Convert the default time zone to local
-  '''
-  
-  x_out = x.apply(lambda k: k.astimezone(to_tz))
-  
-  return x_out
+    """
+    Convert the default time zone to local
+    """
+
+    x_out = x.apply(lambda k: k.astimezone(to_tz))
+
+    return x_out
+
 
 def _fix_dusks_past_midnight(sunset, dusk):
-  '''
-  Replace the dusk time with NaN if it's past midnight
-  '''
-  
-  sunset_dt = datetime.strptime(sunset, '%H:%M:%S')
-  dusk_dt = datetime.strptime(dusk, '%H:%M:%S')
-  
-  if dusk_dt < sunset_dt:
-    dusk_out = '23:59:59'
-  else:
-    dusk_out = dusk_dt.strftime('%H:%M:%S')
-    
-  return dusk_out
-    
+    """
+    Replace the dusk time with NaN if it's past midnight
+    """
+
+    sunset_dt = datetime.strptime(sunset, "%H:%M:%S")
+    dusk_dt = datetime.strptime(dusk, "%H:%M:%S")
+
+    if dusk_dt < sunset_dt:
+        dusk_out = "23:59:59"
+    else:
+        dusk_out = dusk_dt.strftime("%H:%M:%S")
+
+    return dusk_out
+
+
 def get_sun_data(
-        cities=['Norway/Oslo', 'Netherlands/Amsterdam'],
-        ref_tz='Europe/Berlin'):
-    '''
+    cities=["Norway/Oslo", "Netherlands/Amsterdam"],
+    ref_tz="Europe/Berlin"
+):
+    """
     Get sunset data from location
-    '''
-    
+    """
+
     geolocator = Nominatim(user_agent="sunset-sunrise-app")
-    
+
     df = pd.DataFrame()
     for i, city in enumerate(cities):
         df_tmp = pd.DataFrame()
-        
+
         loc = geolocator.geocode(city)
         city_loc = LocationInfo(
-          timezone=city, 
-          latitude=loc.latitude, 
-          longitude=loc.longitude
-          )
+            timezone=city, latitude=loc.latitude, longitude=loc.longitude
+        )
 
-        start_date = datetime.strptime(
-            date.today().strftime('%Y-01-01'), '%Y-%m-%d')
-        end_date = datetime.strptime(
-            date.today().strftime('%Y-12-31'), '%Y-%m-%d')
+        start_date = datetime.strptime(date.today().strftime("%Y-01-01"), "%Y-%m-%d")
+        end_date = datetime.strptime(date.today().strftime("%Y-12-31"), "%Y-%m-%d")
         delta = timedelta(days=1)
         while start_date <= end_date:
             s = sun(city_loc.observer, date=start_date)
-            s['dst'] = time.localtime(start_date.timestamp()).tm_isdst
+            s["dst"] = time.localtime(start_date.timestamp()).tm_isdst
             df_tmp = pd.concat([df_tmp, pd.DataFrame(s, index=[0])])
             start_date += delta
-        df_tmp['city_no'] = i + 1
-        df_tmp['location'] = city_loc.timezone
-        df_tmp['lat'] = loc.latitude
-        df_tmp['long'] = loc.longitude
+        df_tmp["city_no"] = i + 1
+        df_tmp["location"] = city_loc.timezone
+        df_tmp["lat"] = loc.latitude
+        df_tmp["long"] = loc.longitude
         df = pd.concat([df, df_tmp])
 
     df.reset_index(drop=True, inplace=True)
-    df['date'] = df['noon'].dt.strftime('%Y-%m-%d')
-    df['dst'] = df['dst'].shift(-1, fill_value=0)
-    df['city'] = df['location'].apply(lambda x: re.findall('\\/(.*)', x)[0])
+    df["date"] = df["noon"].dt.strftime("%Y-%m-%d")
+    df["dst"] = df["dst"].shift(-1, fill_value=0)
+    df["city"] = df["location"].apply(lambda x: re.findall("\\/(.*)", x)[0])
 
-    cols = ['dawn', 'sunrise', 'noon', 'sunset', 'dusk']
+    cols = ["dawn", "sunrise", "noon", "sunset", "dusk"]
     df[cols] = df[cols].apply(lambda k: _convert_timezone(k, to_tz=ref_tz))
-    df[cols] = df[cols].apply(lambda k: k.dt.strftime('%H:%M:%S'))
-    df['dusk'] = df.apply(
-      lambda k: _fix_dusks_past_midnight(sunset=k['sunset'], dusk=k['dusk']), axis=1
-      )
+    df[cols] = df[cols].apply(lambda k: k.dt.strftime("%H:%M:%S"))
+    df["dusk"] = df.apply(
+        lambda k: _fix_dusks_past_midnight(sunset=k["sunset"],
+            dusk=k["dusk"]), axis=1
+    )
 
     return df
 ```
@@ -136,9 +142,10 @@ Let's run this function once for Oslo, Amsterdam, Warsaw, and Madrid and once fo
 
 ``` python
 df = get_sun_data(
-  ['Norway/Oslo', 'Netherlands/Amsterdam', 'Poland/Warsaw', 'Spain/Madrid']
+  ["Norway/Oslo", "Netherlands/Amsterdam",
+  "Poland/Warsaw", "Spain/Madrid"]
   )
-df_deux = get_sun_data(['Norway/Oslo', 'Netherlands/Amsterdam'])
+df_deux = get_sun_data(["Norway/Oslo", "Netherlands/Amsterdam"])
 
 print(df.info(), df.head())
 ```
@@ -197,14 +204,19 @@ data <- parse_sun_data(reticulate::py$df)
 
 data |>
   ggplot(aes(x = date, y = sunset, color = city, group = city)) +
-  geom_line(linewidth = 2, lineend = "round", key_glyph = "point") +
+  geom_line(
+    linewidth = 2, lineend = "round",
+    key_glyph = "point"
+  ) +
   labs(
     x = NULL,
     y = "Sunset time",
     color = NULL
   ) +
   scale_x_date(labels = scales::label_date(format = "%B")) +
-  ggthemes::scale_color_tableau(guide = guide_legend(override.aes = list(size = 4))) +
+  ggthemes::scale_color_tableau(
+    guide = guide_legend(override.aes = list(size = 4))
+  ) +
   theme_custom()
 ```
 
@@ -236,9 +248,6 @@ rnaturalearth::ne_countries(
   )
 ```
 
-    Warning: The `size` argument of `element_line()` is deprecated as of ggplot2 3.4.0.
-    ℹ Please use the `linewidth` argument instead.
-
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-map-1.png" width="768" />
 
 Perhaps we can have a look at day length to get a better reflection of the isolated effect of latitude. To make the plot more legible, we'll use only 2 cities this time.
@@ -254,7 +263,7 @@ parse_sun_data(reticulate::py$df_deux) |>
   )) +
   geom_hline(
     yintercept = parse_time("12:00", "%H:%M"),
-    size = 1
+    linewidth = 1
   ) +
   geom_ribbon(alpha = 0.5, color = NA, key_glyph = "point") +
   labs(
@@ -274,12 +283,13 @@ parse_sun_data(reticulate::py$df_deux) |>
   theme_custom()
 ```
 
-    Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-    ℹ Please use `linewidth` instead.
-
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-day-length-areas-1.png" width="768" />
 
-As you see, in neither cities 12:00 in the afternoon is perfectly in the middle between sunrise and sunset, although this trend is slightly enhanced for Oslo (again due to longitude differences). We can also see that the length of days in Oslo is longer in summer particularly because the mornings start earlier. We'll get back to the distance between sunset and dusk, which is also a lot larger in Oslo which means darkness sets in much later in Oslo despite sunset happening around the same time. This means it's lighter outside longer than in Amsterdam.
+{{< sidenote br="1em" >}}
+The difference between dusk and sunset is also a lot larger in Oslo, but we'll get back to that
+{{< /sidenote >}}
+
+As you see, in neither cities 12:00 in the afternoon is perfectly in the middle between sunrise and sunset, although this trend is slightly enhanced for Oslo (again due to longitude differences). We can also see that the length of days in Oslo is longer in summer particularly because the mornings start earlier.
 
 So let's also squish everything on the bottom axis and just look at day length in total.
 
@@ -359,7 +369,11 @@ print(day_length_diff |> slice_min(abs(difference), n = 5))
 
 Seems like the largest difference occur around the 20th of June when Oslo gets about 2 full hours of daylight more than Oslo.
 
-Finally, let's look at the effect of longitude (how far east or west a place is) on the sunset/sunrise times. The easiest way to look at this is to compare the time solar noon happens. Due to (most of) mainland Europe being in the same time zone ([CET](https://en.wikipedia.org/wiki/Central_European_Time)), it's 12:00 at the same time across central Europe. However, the sun did not get the note and still travels (from Earth perspective) in a very consistent pace from east to west. This means that the sun arrives first in Poland and leaves last in Spain. This means that solar noon (the time the sun is at its highest point in the sky) is unequal across the continent. Let's look at when solar noon happens across the four cities in this analysis.
+{{< sidenote br="1em" >}}
+solar noon: the time the sun is at its highest point in the sky
+{{< /sidenote >}}
+
+Finally, let's look at the effect of longitude (how far east or west a place is) on the sunset/sunrise times. The easiest way to look at this is to compare the time solar noon happens. Due to (most of) mainland Europe being in the same time zone ([CET](https://en.wikipedia.org/wiki/Central_European_Time)), it's 12:00 at the same time across central Europe. However, the sun did not get the note and still travels (from Earth perspective) in a very consistent pace from east to west. This means that the sun arrives first in Poland and leaves last in Spain. This means that solar noon is unequal across the continent. Let's look at when solar noon happens across the four cities in this analysis.
 
 ``` r
 data |>

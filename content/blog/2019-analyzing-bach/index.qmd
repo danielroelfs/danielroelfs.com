@@ -14,6 +14,8 @@ execute:
   fig.show: hold
   results: hold
   out.width: 80%
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{css}
@@ -34,12 +36,10 @@ h2, h3, h4, h5, h6 {
 }
 ```
 
-<!-- ******************************************************************* -->
 ## Introduction
 
 A little while ago I was watching a documentary series on Dutch television about one of the most important composers in the Netherlands: Johann Sebastian Bach. The documentary discussed parts of Bach's life and the music he wrote during it. This documentary inspired me to learn more about the pieces Bach wrote, and since this is my life now, I might as well do it in R.
 
-<!-- ******************************************************************* -->
 ## Collecting the data
 
 In my search of a dataset, I found this old website, looking like it last got a major update in 2003, made by what appeared to be a Bach enthousiast called Bryen Travis. I tried to contact him to see if he was interested in collaborating, but I couldn't get a hold of him. This website contained a list of all works by Bach, with some information about each of them. The website listed a few options, an online browser, a pdf containing slimmed down entries, and two files that I couldn't get to work, presumably because they were in a format that have presumably become depracated since they were uploaded back in 1996, when the website was created. I could have used the pdf, but since it contained only the BWV number, the title of the piece, and the setting, I had to scrape the data I wanted from the website directly.
@@ -66,9 +66,6 @@ library(danielR)
 #| echo: false
 
 theme_bach <- theme_daniel
-
-# palette <- c('#555555','#db735c', '#EFA86E', '#9A8A76', '#F3C57B',
-#             '#7A6752', '#2A91A2', '#87F28A', '#6EDCEF')
 ```
 
 Let's collect the BWVs:
@@ -107,6 +104,7 @@ colnames(scraped_data) <- col_names
 ```
 
 ## Scraping the data
+
 We now have a variable of the same dimensions and column names as I'll scrape from the website. Now it's time to loop through the webpages and collect the data. Each webpage contains what looks like a table, but within the table it's bulleted lists (denoted as `ul`). This might just be how html builds up tables, but I thought it was a bit strange. Nonetheless, it provided me with an easy hook to grab the values. I remove all the white spaces (`\t`), and each new line was denoted by a `\n`, which I used to split the strings into separate values. The advantage of this approach is that when a field is empty, it will still occupy an element in the character array. Then all I needed to do to obtain the values is take every second element and add it as a row to the data frame I created earlier. Now I have a dataset containing the values from all of the 1075 webpages, with which I was quite pleased.
 
 ```{r}
@@ -130,6 +128,18 @@ for (i in seq_along(length(bwvs))) {
 
   scraped_data[i, ] <- values
 }
+
+scraped_data <- scraped_data |>
+  janitor::clean_names()
+```
+
+```{r}
+#| label: save-scraped
+#| eval: false
+#| echo: false
+
+scraped_data |>
+  write_rds("./data/scraped_data.rds")
 ```
 
 With this, I achieved the first goal I had for this little project, which was to find or create a dataset on Bach. Let's see what it looks like:
@@ -138,13 +148,14 @@ With this, I achieved the first goal I had for this little project, which was to
 #| label: load-scraped
 #| echo: false
 
-load("scraped_data.Rdata")
+scraped_data <- read_rds("./data/scraped_data.rds") |>
+  janitor::clean_names()
 ```
 
 ```{r}
 #| label: str-scraped
 
-str(scraped_data)
+glimpse(scraped_data)
 ```
 
 All columns are currently character arrays, and this is appropriate for most of them. Although I think the BWV number alone could be a numeric array. Also, some columns are still a bit awkward. This is why I moved on to do another important and satisfying part, cleaning the data.
@@ -158,16 +169,16 @@ The character arrays are appropriate, but for further analyes I'd prefer to make
 
 data <- scraped_data |>
   mutate(
-    BWV = as.numeric(BWV),
+    bwv = as.numeric(bwv),
     category1 = factor(category1),
     category2 = factor(category2),
     category3 = factor(category3),
     cantate_cat1 = substring(cantate_cat1, 4),
-    CLC_BWV_w_epifix = str_replace(CLC_BWV_w_epifix, " ", "")
+    clc_bwv_w_epifix = str_squish(clc_bwv_w_epifix)
   ) |>
-  rename(BWV_w_epifix = CLC_BWV_w_epifix) |>
-  select(BWV, BWV_epifix, BWV_w_epifix, everything())
-str(data)
+  rename(bwv_w_epifix = clc_bwv_w_epifix) |>
+  select(bwv, bwv_epifix, bwv_w_epifix, everything()) |>
+  glimpse()
 ```
 
 Now we have this data, we can do some descriptive visualizations of the data. Over time I hope I can dive into the setting (`voices_instruments`) and disect that, but for now I'll keep it simple and just do some descriptives.
@@ -184,11 +195,14 @@ data |>
   summarise(n = n()) |>
   ggplot(aes(x = category1, y = n, color = category1)) +
   geom_segment(aes(xend = category1, yend = 0),
-    size = 12,
+    linewidth = 12,
     color = "grey40", alpha = 0.9
   ) +
   geom_point(size = 20, shape = 16) +
-  geom_text(aes(label = n, y = n + 5), color = "white", size = 5, family = "Alegreya") +
+  geom_text(aes(label = n, y = n + 5),
+    color = "white", size = 5, family = "Alegreya"
+  ) +
+  geom_hline(yintercept = 0, size = 1) +
   labs(
     x = NULL,
     y = "Number of compositions"
@@ -217,7 +231,9 @@ data |>
     color = "grey40", alpha = 0.9
   ) +
   geom_point(size = 10, shape = 16) +
-  geom_text(aes(label = n, y = n + 3), color = "white", size = 4, family = "Alegreya") +
+  geom_text(aes(label = n, y = n + 3),
+    color = "white", size = 4, family = "Alegreya"
+  ) +
   labs(
     x = NULL,
     y = "Number of compositions"
@@ -242,7 +258,10 @@ data |>
   summarise(n = n()) |>
   mutate(category2 = sprintf("%s (%s)", category2, n)) |>
   ggplot(aes(fill = category2, values = n)) +
-  geom_waffle(n_rows = 17, size = 0.2, colour = "#FFFFFC", flip = FALSE, na.rm = TRUE) +
+  geom_waffle(
+    n_rows = 17, size = 0.2, colour = "#FFFFFC",
+    flip = FALSE, na.rm = TRUE
+  ) +
   scale_fill_daniel(palette = "staalmeesters", name = NULL) +
   coord_equal() +
   theme_bach(base_family = "Alegreya", base_size = 14) +
@@ -257,11 +276,10 @@ data |>
 #| echo: false
 #| eval: false
 
-library(tidytext)
 title_words <- data |>
-  select(Title) |>
-  unnest_tokens(output = word, input = Title) |>
-  anti_join(get_stopwords(language = "de")) |>
+  select(title) |>
+  tidytext::unnest_tokens(output = word, input = title) |>
+  anti_join(tidytext::get_stopwords(language = "de")) |>
   count(word, sort = TRUE) |>
   mutate(nchar = nchar(word)) |>
   filter(nchar >= 3)
@@ -274,13 +292,16 @@ The dataset I just created was comprehensive and clean, but it didn't contain an
 ```{r}
 #| label: scrape-wiki
 
-url <- "https://en.wikipedia.org/wiki/List_of_compositions_by_Johann_Sebastian_Bach"
+website <- "https://en.wikipedia.org"
+article <- "wiki/List_of_compositions_by_Johann_Sebastian_Bach"
+url <- str_glue("{website}/{article}")
 webpage <- read_html(url)
 
 wikitext <- webpage |>
   html_nodes(xpath = '//*[@id="TOP"]') |>
   html_table(fill = TRUE) |>
-  as.data.frame()
+  as.data.frame() |>
+  janitor::clean_names()
 ```
 
 Then I cleaned the data somewhat and extracted the number from the BWV columns.
@@ -290,12 +311,12 @@ Then I cleaned the data somewhat and extracted the number from the BWV columns.
 #| warning: false
 
 wikidata <- wikitext |>
-  rename(BWV_full = BWV) |>
+  rename(bwv_full = bwv) |>
   mutate(
-    BWV = sub(".*(\\d{3}).*", "\\1", BWV_full),
-    BWV = parse_integer(BWV)
+    bwv = sub(".*(\\d{3}).*", "\\1", bwv_full),
+    bwv = parse_integer(bwv)
   ) |>
-  filter(!rev(duplicated(rev(BWV))))
+  filter(!rev(duplicated(rev(bwv))))
 ```
 
 Then I merged the data. I lost a number of compositions in the process, but I was okay with it, mostly because it took me too much time and effort to try and fix it. Hurray for laziness. I extracted the year from the slightly messy `Date` column. Some strings in this column contain two dates, one for the first compilation and one for the date of completion. I extracted the last number, the year of completion.
@@ -304,9 +325,10 @@ Then I merged the data. I lost a number of compositions in the process, but I wa
 #| label: merge-scraped
 #| warning: false
 
-merged_data <- merge(data, wikidata, by = "BWV") |>
+merged_data <- data |>
+  inner_join(wikidata, by = "bwv") |>
   mutate(
-    year = sub(".*(\\d{4}).*", "\\1", Date),
+    year = sub(".*(\\d{4}).*", "\\1", date),
     year = as.numeric(year),
     age = year - 1685
   )
@@ -345,38 +367,56 @@ annotation2 <- data.frame(
 
 ggplot(bwvperyear, aes(x = year, y = n, fill = n)) +
   geom_bar(stat = "identity") +
-  geom_vline(xintercept = c(1750.5, 1685), linetype = "dashed", color = "grey30") +
+  geom_vline(
+    xintercept = c(1750.5, 1685),
+    linetype = "dashed", color = "grey30"
+  ) +
   geom_text(
-    data = data.frame(), mapping = aes(x = 1685.5, y = 75, label = "Bach was born\nMarch 31st 1685\nin Eisenach"),
+    data = data.frame(),
+    mapping = aes(
+      x = 1685.5, y = 75,
+      label = "Bach was born\nMarch 31st 1685\nin Eisenach"
+    ),
     inherit.aes = FALSE, family = "Alegreya", hjust = 0
   ) +
   geom_text(
-    data = data.frame(), mapping = aes(x = 1750, y = 75, label = "Bach died\nJuly 28th 1750\nin Leipzich"),
+    data = data.frame(),
+    mapping = aes(
+      x = 1750, y = 75,
+      label = "Bach died\nJuly 28th 1750\nin Leipzich"
+    ),
     inherit.aes = FALSE, family = "Alegreya", hjust = 1
   ) +
   geom_curve(
-    data = annotation1, mapping = aes(x = x, y = y, xend = xend, yend = yend),
+    data = annotation1,
+    mapping = aes(x = x, y = y, xend = xend, yend = yend),
     arrow = arrow(angle = 25, length = unit(6, "pt")),
     curvature = 0.1, inherit.aes = FALSE
   ) +
   geom_text(
-    data = annotation1, mapping = aes(x = x, y = y + 4, label = text),
+    data = annotation1,
+    mapping = aes(x = x, y = y + 4, label = text),
     family = "Alegreya", inherit.aes = FALSE, parse = FALSE
   ) +
   geom_curve(
-    data = annotation2, mapping = aes(x = x, y = y, xend = xend, yend = yend),
+    data = annotation2,
+    mapping = aes(x = x, y = y, xend = xend, yend = yend),
     arrow = arrow(angle = 25, length = unit(6, "pt")),
     curvature = 0.2, inherit.aes = FALSE
   ) +
   geom_text(
-    data = annotation2, mapping = aes(x = x, y = y + 3, label = text),
+    data = annotation2,
+    mapping = aes(x = x, y = y + 3, label = text),
     family = "Alegreya", inherit.aes = FALSE, parse = TRUE
   ) +
   labs(
     x = "Year",
     y = "Number of compositions"
   ) +
-  scale_x_continuous(limits = c(1685, 1751), breaks = seq(1690, 1750, 10)) +
+  scale_x_continuous(
+    limits = c(1685, 1751),
+    breaks = seq(1690, 1750, 10)
+  ) +
   scale_fill_gradient(low = palette[6], high = palette[2]) +
   theme_bach(base_family = "Alegreya", grid = "y") +
   theme(
@@ -390,20 +430,21 @@ The Wikipedia page also contained information on the key of most of the composit
 
 ```{r}
 #| label: colplot-key-cat1
+#| message: false
 
 summ_key_cat1 <- merged_data |>
-  group_by(category1, Key) |>
+  group_by(category1, key) |>
   summarise(n = n()) |>
-  filter(nchar(Key) > 1) |>
+  filter(nchar(key) > 1) |>
   mutate(
-    Key = sub("\u266D", "b", Key),
-    Key = sub("\U266F", "#", Key),
-    Key = ifelse(nchar(Key) > 10, substring(Key, 1, nchar(Key) / 2), Key)
+    Key = sub("\u266D", "b", key),
+    Key = sub("\U266F", "#", key),
+    Key = ifelse(nchar(key) > 10, substring(key, 1, nchar(key) / 2), key)
   ) |>
-  group_by(category1, Key) |>
+  group_by(category1, key) |>
   summarise(n = sum(n))
 
-ggplot(summ_key_cat1, aes(x = reorder(Key, -n), y = n, fill = category1)) +
+ggplot(summ_key_cat1, aes(x = reorder(key, -n), y = n, fill = category1)) +
   geom_col(position = position_dodge2(preserve = "single", padding = 0)) +
   labs(
     x = NULL,
@@ -426,15 +467,15 @@ I noticed that there were no double keys, as in B flat is the same as A sharp. T
 #| fig-width: 12
 
 summ_key_cat2 <- merged_data |>
-  group_by(category2, Key) |>
+  group_by(category2, key) |>
   summarise(n = n()) |>
-  filter(nchar(Key) > 1) |>
+  filter(nchar(key) > 1) |>
   mutate(
-    Key = sub("\u266D", "b", Key),
-    Key = sub("\U266F", "#", Key),
-    Key = ifelse(nchar(Key) > 10, substring(Key, 1, nchar(Key) / 2), Key)
+    key = sub("\u266D", "b", key),
+    key = sub("\U266F", "#", key),
+    key = ifelse(nchar(key) > 10, substring(key, 1, nchar(key) / 2), key)
   ) |>
-  group_by(category2, Key) |>
+  group_by(category2, key) |>
   summarise(n = sum(n))
 
 plotdat <- rbind(
@@ -446,7 +487,7 @@ plotdat <- rbind(
     rep(2, nrow(summ_key_cat2))
   ))
 
-ggplot(plotdat, aes(x = Key, y = reorder(category2, n), fill = n)) +
+ggplot(plotdat, aes(x = key, y = reorder(category2, n), fill = n)) +
   geom_tile() +
   geom_text(aes(label = n), family = "Alegreya", color = "white", size = 4) +
   geom_hline(yintercept = 8.5, color = "#FFFFF0", size = 1) +
@@ -456,10 +497,12 @@ ggplot(plotdat, aes(x = Key, y = reorder(category2, n), fill = n)) +
     fill = NULL
   ) +
   scale_x_discrete(position = "top") +
-  scale_fill_gradient(low = palette[6],
-                      high = palette[2],
-                      breaks = c(1, seq(10, 40, 10)),
-                      guide = guide_colorbar(barheight = 8, barwidth = 0.75)) +
+  scale_fill_gradient(
+    low = palette[6],
+    high = palette[2],
+    breaks = c(1, seq(10, 40, 10)),
+    guide = guide_colorbar(barheight = 8, barwidth = 0.75)
+  ) +
   coord_fixed() +
   theme_bach(base_family = "Alegreya", grid = FALSE) +
   theme(
@@ -480,7 +523,10 @@ In addition to this, I also wanted to do some classic journalism. Previously, I 
 
 register_google(google_code)
 places <- data_frame(
-  city = c("Eisenach", "Ohrdruf", "Lüneburg", "Weimar", "Arnstadt", "Mühlhausen", "Weimar", "Köthen", "Leipzig"),
+  city = c(
+    "Eisenach", "Ohrdruf", "Lüneburg", "Weimar",
+    "Arnstadt", "Mühlhausen", "Weimar", "Köthen", "Leipzig"
+  ),
   year_from = c(1685, 1695, 1700, 1702, 1703, 1707, 1708, 1717, 1723),
   year_to = c(1695, 1700, 1702, 1703, 1707, 1708, 1717, 1723, 1750)
 ) |>
@@ -493,14 +539,14 @@ places <- data_frame(
 #| echo: false
 #| eval: false
 
-save(places, file = "places.Rdata")
+places |> write_rds("./data/places.rds")
 ```
 
 ```{r}
 #| label: load-places
 #| echo: false
 
-load("places.Rdata")
+places <- read_rds("./data/places.rds")
 ```
 
 Since this time I wanted to visualize whether Bach was more productive in certain places, I recreated the plot from earlier, shaded the background with the city Bach inhabited at the time, and transformed the bars into a density plot, which smoothed over the data and removed the high outliers.
@@ -514,15 +560,20 @@ places_plot <- places |>
   mutate(meanyear = year_from + ((year_to - year_from) / 2))
 
 ggplot(places_plot) +
-  geom_rect(aes(xmin = year_from + 0.5, xmax = year_to + 0.5,
-                ymin = 0, ymax = 60,
-                fill = reorder(city, year_from)),
+  geom_rect(
+    aes(
+      xmin = year_from + 0.5, xmax = year_to + 0.5,
+      ymin = 0, ymax = 60,
+      fill = reorder(city, year_from)
+    ),
     alpha = 0.75
   ) +
-  stat_smooth(data = bwvperyear |> filter(year < 1751),
-              mapping = aes(x = year + 0.5, y = n, group = 1),
-              fill = "black", geom = "area",
-              method = "loess", span = 0.225, alpha = 0.75) +
+  stat_smooth(
+    data = bwvperyear |> filter(year < 1751),
+    mapping = aes(x = year + 0.5, y = n, group = 1),
+    fill = "black", geom = "area",
+    method = "loess", span = 0.225, alpha = 0.75
+  ) +
   geom_text(aes(x = meanyear, label = city, y = 62.5),
     family = "Alegreya", angle = 60, hjust = 0
   ) +
@@ -533,8 +584,15 @@ ggplot(places_plot) +
   ) +
   scale_fill_daniel(palette = "staalmeesters") +
   scale_x_continuous(breaks = seq(1690, 1750, 10), expand = c(0, 0)) +
-  scale_y_continuous(limits = c(0, 85), breaks = seq(0, 60, 20), expand = c(0, 0)) +
-  theme_bach(base_family = "Alegreya", grid = FALSE, ticks = FALSE, axis_title_just = "c") +
+  scale_y_continuous(
+    limits = c(0, 85),
+    breaks = seq(0, 60, 20),
+    expand = c(0, 0)
+  ) +
+  theme_bach(
+    base_family = "Alegreya", grid = FALSE,
+    ticks = FALSE, axis_title_just = "c"
+  ) +
   theme(
     legend.position = "none"
   )

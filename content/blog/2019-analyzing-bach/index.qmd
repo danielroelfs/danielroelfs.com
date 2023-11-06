@@ -338,9 +338,11 @@ I noticed that some entries in the `year` column exceeded the year of Bach's dea
 
 ```{r}
 #| label: bwvperyear-plot
-#| warning: false
 #| message: false
+#| warning: false
 #| fig-width: 12
+#| code-fold: true
+#| code-summary: "Show code"
 
 bwvperyear <- merged_data |>
   filter(!is.na(year)) |>
@@ -553,8 +555,11 @@ Since this time I wanted to visualize whether Bach was more productive in certai
 
 ```{r}
 #| label: plot-with-city
-#| echo: false
 #| fig-width: 12
+#| message: false
+#| warning: false
+#| code-fold: true
+#| code-summary: "Show code"
 
 places_plot <- places |>
   mutate(meanyear = year_from + ((year_to - year_from) / 2))

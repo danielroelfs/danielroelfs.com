@@ -307,6 +307,9 @@ merged_data <- data |>
 
 I noticed that some entries in the `year` column exceeded the year of Bach's death. Bach died in 1750. I assumed that these years indicated the year of first performance or publication. In this scenario, it would be possible that certain pieces were lost and rediscovered at a later date and only then published. I thought to make a barplot of the number of compositions Bach over the course of his life, trying to see if there was any period where he was particularly productive. I also added some annotations to give the plot some context.
 
+<details>
+<summary>Show code</summary>
+
 ``` r
 bwvperyear <- merged_data |>
   filter(!is.na(year)) |>
@@ -389,6 +392,8 @@ ggplot(bwvperyear, aes(x = year, y = n, fill = n)) +
     legend.position = "none"
   )
 ```
+
+</details>
 
 <img src="index.markdown_strict_files/figure-markdown_strict/bwvperyear-plot-1.png" width="1152" />
 
@@ -498,9 +503,53 @@ places <- data_frame(
 
 Since this time I wanted to visualize whether Bach was more productive in certain places, I recreated the plot from earlier, shaded the background with the city Bach inhabited at the time, and transformed the bars into a density plot, which smoothed over the data and removed the high outliers.
 
-    `geom_smooth()` using formula = 'y ~ x'
+<details>
+<summary>Show code</summary>
 
-    Warning: Removed 1 rows containing non-finite values (`stat_smooth()`).
+``` r
+places_plot <- places |>
+  mutate(meanyear = year_from + ((year_to - year_from) / 2))
+
+ggplot(places_plot) +
+  geom_rect(
+    aes(
+      xmin = year_from + 0.5, xmax = year_to + 0.5,
+      ymin = 0, ymax = 60,
+      fill = reorder(city, year_from)
+    ),
+    alpha = 0.75
+  ) +
+  stat_smooth(
+    data = bwvperyear |> filter(year < 1751),
+    mapping = aes(x = year + 0.5, y = n, group = 1),
+    fill = "black", geom = "area",
+    method = "loess", span = 0.225, alpha = 0.75
+  ) +
+  geom_text(aes(x = meanyear, label = city, y = 62.5),
+    family = "Alegreya", angle = 60, hjust = 0
+  ) +
+  labs(
+    x = NULL,
+    y = "Number of compositions",
+    fill = "City"
+  ) +
+  scale_fill_daniel(palette = "staalmeesters") +
+  scale_x_continuous(breaks = seq(1690, 1750, 10), expand = c(0, 0)) +
+  scale_y_continuous(
+    limits = c(0, 85),
+    breaks = seq(0, 60, 20),
+    expand = c(0, 0)
+  ) +
+  theme_bach(
+    base_family = "Alegreya", grid = FALSE,
+    ticks = FALSE, axis_title_just = "c"
+  ) +
+  theme(
+    legend.position = "none"
+  )
+```
+
+</details>
 
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-with-city-1.png" width="1152" />
 

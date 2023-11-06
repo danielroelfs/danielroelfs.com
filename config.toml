@@ -16,6 +16,8 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "i
 
     favicon = "avatar.png"
 
+    highlightstyle  = "foundation"
+
     iconsource = "simple-icons"
 
     description = "Daniel Roelfs' personal website"
@@ -23,7 +25,7 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "i
 
     customcss = ["custom_style.css"]
 
-    umami       = true
+    umami       = false
     umamilink   = "https://analytics-danielroelfs.netlify.app/script.js"
     umamiid     = "da48a88a-2e87-4024-8c99-639222aab54d"
     

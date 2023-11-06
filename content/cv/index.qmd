@@ -26,7 +26,9 @@ iframe {
 #| label: iframe
 #| echo: FALSE
 
-htmltools::tags$iframe(src = "https://danielroelfs.github.io/cv", 
-                       onload = "this.width='100%';this.height=screen.height*0.6;",
-                       frameBorder="0")
+htmltools::tags$iframe(
+  src = "https://danielroelfs.github.io/cv",
+  onload = "this.width='100%';this.height=screen.height*0.6;",
+  frameBorder = "0"
+)
 ```

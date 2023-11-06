@@ -14,12 +14,16 @@ execute:
   fig.show: hold
   results: hold
   out.width: 80%
+editor_options: 
+  chunk_output_type: console
 ---
 
-### Introduction
+## Introduction
+
 There are many ways to create a Manhattan plot. There's a number of online tools that create Manhattan plots for you, it's implemented in a number of toolboxes that are often used in genetics, and there's a couple of packages for R that can create these plots. However, these options often don't offer the customizability that some people (like me) would want. One of the most flexible ways to plot a Manhattan plot (I know of) is the `{manhattan}` package, but how nice would it be to have full control over the properties of the plot. Therefore, whenever I need to create a Manhattan plot, my preference is to go to the awesome `{ggplot2}` package. In my opinion, it gives me more control over the lay-out and properties of the Manhattan plot, so I thought I'd go through how I go about creating Manhattan plots in R using the `{ggplot2}` package. I've tried this code on GWAS summary statistics from several sources, and it works for a bunch of them. Because data can look somewhat different, I'll describe the concept behind some of the code, as to show what my reasoning is behind each step. One thing I should point out is that it's probably best to run this code on a computer that is a little bit powerful, since it will need to deal with an enormous amount of SNPs, that will create massive dataframes and plot objects.
 
-### Import data into R
+## Import data into R
+
 The first step, as always, is to load the packages we need. I personally prefer to use as little packages as possible and write most of the code myself, because that gives me total control over what happens to my data. However, there are some packages (in particular some of the packages developed by Hadley Wickham) that are very powerful. So, all code described below depends on one of two packages, the `{tidyverse}` package, which includes the `{ggplot2}` and `{dplyr}` package. Next, I load the file that contains the GWAS summary statistics. Different tools use different file formats. The file I use is the output from PLINK with the `--meta-analysis` flag. This file can simple be loaded as a table. Here I use a function from our own `{normentR}` package, called `simulateGWAS()`, which does as the name suggest, and simulate the output from a GWAS analysis.
 
 ```{r}
@@ -36,7 +40,7 @@ library(normentR)
 
 set.seed(2404)
 
-gwas_data_load <- simulateGWAS(nSNPs = 1e6, nSigCols = 3) |> 
+gwas_data_load <- simulateGWAS(nSNPs = 1e6, nSigCols = 3) |>
   janitor::clean_names()
 ```
 
@@ -47,68 +51,90 @@ A vast majority of the datapoints will overlap in the non-significant region of 
 ```{r}
 #| label: reduce-size
 
-sig_data <- gwas_data_load |> 
+sig_data <- gwas_data_load |>
   subset(p < 0.05)
-notsig_data <- gwas_data_load |> 
+
+notsig_data <- gwas_data_load |>
   subset(p >= 0.05) |>
-  group_by(chr) |> 
+  group_by(chr) |>
   sample_frac(0.1)
+
 gwas_data <- bind_rows(sig_data, notsig_data)
 ```
 
-### Preparing the data
+## Preparing the data
+
 Since the only columns we have indicating position are the chromosome number and the base pair position of the SNP on that chromosome, we want to combine those so that we have one column with position that we can use for the x-axis. So, what we want to do is to create a column with cumulative base pair position in a way that puts the SNPs on the first chromosome first, and the SNPs on chromosome 22 last. I create a data frame frame called `data_cum` (for cumulative), which selects the largest position for each chromosome, and then calculates the cumulative sum of those. Since we don't need to add anything to the first chromosome, we move everything one row down (using the `lag()` function). We then merge this data frame with the original dataframe and calculate a the cumulative basepair position for each SNP by adding the relative position and the adding factor together. This will create a column (here called `bp_cum`) in which the relative base pair position is the position as if it was stitched together. This code is shown below:
 
 ```{r}
 #| label: cumulative-bp
 
-data_cum <- gwas_data |> 
-  group_by(chr) |> 
-  summarise(max_bp = max(bp)) |> 
-  mutate(bp_add = lag(cumsum(max_bp), default = 0)) |> 
+data_cum <- gwas_data |>
+  group_by(chr) |>
+  summarise(max_bp = max(bp)) |>
+  mutate(bp_add = lag(cumsum(max_bp), default = 0)) |>
   select(chr, bp_add)
 
-gwas_data <- gwas_data |> 
-  inner_join(data_cum, by = "chr") |> 
+gwas_data <- gwas_data |>
+  inner_join(data_cum, by = "chr") |>
   mutate(bp_cum = bp + bp_add)
 ```
 
-When this is done, the next thing I want to do is to get a couple of parameters that I'll use for the plot later. First, I want the centre position of each chromosome. This position I'll use later to place the labels on the x-axis of the Manhattan plot neatly in the middle of each chromosome. In order to get this position, I'll pipe the `gwas_data` dataframe into this powerful `{dplyr}` function which I then ask to calculate the difference between the maximum and minimum cumulative base pair position for each chromosome and divide it by two to get the middle of each chromosome. I also want to set the limit of the y-axis, as not to cut off any highly significant SNPs. If you want to compare multiple GWAS statistics, then I highly recommend to hard code the limit of the y-axis, and then explore the data beforehand to make sure your chosen limit does not cut off any SNPs. Since the y-axis will be log transformed, we need an integer that is lower than the largest negative exponent. But since the y-axis will be linear and positive, I transform the largest exponent to positive and add 2, to give some extra space on the top edge of the plot. When plotting, I actually convert it back to a log scale, but it's a bit easier to add a constant to it by transforming it to a regular integer first. Then, we also want to indicate the significance threshold, I prefer to save this in a variable. Here, I choose to get a Bonferroni-corrected threshold, which is 0.05 divided by the number of SNPs in the summary statistics. I believe many scientists will use the "standard" threshold of 0.05 divided by 1e-6, which is 5e-8. However, in the data I had I believed it to be best to use the Bonferroni-corrected threshold since the sample encompassed different populations, and because it contained less than a million SNPs were used in the association testing, which would make a standard correction overly conservative. These three parameters were calculated as follows:
+When this is done, the next thing I want to do is to get a couple of parameters that I'll use for the plot later. First, I want the centre position of each chromosome. This position I'll use later to place the labels on the x-axis of the Manhattan plot neatly in the middle of each chromosome. In order to get this position, I'll pipe the `gwas_data` dataframe into this powerful `{dplyr}` function which I then ask to calculate the difference between the maximum and minimum cumulative base pair position for each chromosome and divide it by two to get the middle of each chromosome. I also want to set the limit of the y-axis, as not to cut off any highly significant SNPs. If you want to compare multiple GWAS statistics, then I highly recommend to hard code the limit of the y-axis, and then explore the data beforehand to make sure your chosen limit does not cut off any SNPs. Since the y-axis will be log transformed, we need an integer that is lower than the largest negative exponent. But since the y-axis will be linear and positive, I transform the largest exponent to positive and add 2, to give some extra space on the top edge of the plot. When plotting, I actually convert it back to a log scale, but it's a bit easier to add a constant to it by transforming it to a regular integer first. 
+
+{{{< sidenote br="5em" >}}}
+Note that the 5e-8 threshold [has its own issues](https://doi.org/10.1038%2Fejhg.2015.269)
+{{{< /sidenote >}}}
+
+Then, we also want to indicate the significance threshold, I prefer to save this in a variable. Here, I choose to get a Bonferroni-corrected threshold, which is 0.05 divided by the number of SNPs in the summary statistics. Usually, I would use the "default" threshold of 0.05 divided by 1e-6 which is 5e-8. However, in the data I had I believed it to be best to use the Bonferroni-corrected threshold to be a little bit more conservative given the dataset I had. These three parameters were calculated as follows:
 
 ```{r}
 #| label: set-axes
 
-axis_set <- gwas_data |> 
-  group_by(chr) |> 
+axis_set <- gwas_data |>
+  group_by(chr) |>
   summarize(center = mean(bp_cum))
 
-ylim <- gwas_data |> 
-  filter(p == min(p)) |> 
-  mutate(ylim = abs(floor(log10(p))) + 2) |> 
+ylim <- gwas_data |>
+  filter(p == min(p)) |>
+  mutate(ylim = abs(floor(log10(p))) + 2) |>
   pull(ylim)
 
-sig <- 5e-8
+sig <- 0.05 / nrow(gwas_data_load)
 ```
 
-### Plotting the data
+## Plotting the data
+
 Finally, we're ready to plot the data. As promised, I use the `ggplot()` function for this. I build this up like I would any other `ggplot` object, each SNP will be one point on the plot. Each SNP will be colored based on the chromosome. I manually set the colors, add the labels based on the definitions I determined earlier, and set the y limits to the limit calculated before as well. I add a horizontal dashed line indicating the significance threshold. In Manhattan plots we really don't need a grid, all that would be nice are horizontal grid lines, so I keep those but remove vertical lines. Manhattan plots can be a bit intimidating, so I prefer them as minimal as possible. Shown below is the code I use to create the plot and to save the plot as an image.
 
 ```{r}
 #| label: create-plot
 
-manhplot <- ggplot(gwas_data, aes(x = bp_cum, y = -log10(p), 
-                                  color = as_factor(chr), size = -log10(p))) +
-  geom_hline(yintercept = -log10(sig), color = "grey40", linetype = "dashed") + 
+manhplot <- ggplot(gwas_data, aes(
+  x = bp_cum, y = -log10(p),
+  color = as_factor(chr), size = -log10(p)
+)) +
+  geom_hline(
+    yintercept = -log10(sig), color = "grey40",
+    linetype = "dashed"
+  ) +
   geom_point(alpha = 0.75) +
-  scale_x_continuous(label = axis_set$chr, breaks = axis_set$center) +
-  scale_y_continuous(expand = c(0,0), limits = c(0, ylim)) +
-  scale_color_manual(values = rep(c("#276FBF", "#183059"), 
-                                  unique(length(axis_set$chr)))) +
-  scale_size_continuous(range = c(0.5,3)) +
-  labs(x = NULL, 
-       y = "-log<sub>10</sub>(p)") + 
+  scale_x_continuous(
+    label = axis_set$chr,
+    breaks = axis_set$center
+  ) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, ylim)) +
+  scale_color_manual(values = rep(
+    c("#276FBF", "#183059"),
+    unique(length(axis_set$chr))
+  )) +
+  scale_size_continuous(range = c(0.5, 3)) +
+  labs(
+    x = NULL,
+    y = "-log<sub>10</sub>(p)"
+  ) +
   theme_minimal() +
-  theme( 
+  theme(
     legend.position = "none",
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank(),

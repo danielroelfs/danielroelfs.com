@@ -15,6 +15,8 @@ execute:
   fig.show: hold
   results: hold
   out.width: 80%
+editor_options: 
+  chunk_output_type: console
 ---
 
 ## Introduction
@@ -32,28 +34,32 @@ library(normentR)
 
 Since I cannot share participants' data, I used an open EEG dataset downloaded <a href="https://sccn.ucsd.edu/~arno/fam2data/publicly_available_EEG_data.html" target="_blank">here</a>, this data comes from a psychophysics group of 5 participants with 2 conditions. It came in the EEGLAB format, same as my own data. The first step is to take the data out of MATLAB and take it to a format that can be easily understood by R. The most convenient way I thought of was to take the `EEG.data` field, transform it into a two-dimensional metrix and store it in a .csv file.
 
-If you have a large amount of participants, I can recommend to only extract data from the channels of interest or the conditions of interest. One can make one file per channel or participant, or one large file that contains everything. I usually choose the latter, and that's what I'll work with here. So my file looks as follows: one column with the channel, one column with the ID, one with the condition (or trigger). If I'm doing a between-groups analysis, I'll also have a column with the group. All the other columns are the amplitudes with across the timepoints.
+If you have a large amount of participants, I can recommend to only extract data from the channels of interest or the conditions of interest. One can make one file per channel or participant, or one large file that contains everything. I usually choose the latter, and that's what I'll work with here. So my file looks as follows: one column with the channel, one column with the ID, one with the condition (or trigger). If I'm doing a between-groups analysis, I'll also have a column with the group. All the other columns are the amplitudes with across the timepoints. I also have a file with the timepoints for each value. i.e. with epoch of 500 milliseconds ranging from 100 milliseconds pre-stimulus to 400 milliseconds post-stimulus, all the timepoints according to the sampling rate are the values in this file. It is basically nothing more than a print of the values in the `EEG.times` field from the EEGLAB dataset. I'll load this list of time points here also.
 
 ``` r
-data <- read_delim("AllChannels_ERP.txt", delim = "\t", col_names = FALSE)
+data <- read_delim("./data/all_channels_erp.txt",
+  delim = "\t", col_names = FALSE
+)
+
+times <- read_table("./data/times.txt", col_names = FALSE)
 ```
 
-I also have a file with the timepoints for each value. i.e. with epoch of 500 milliseconds ranging from 100 milliseconds pre-stimulus to 400 milliseconds post-stimulus, all the timepoints according to the sampling rate are the values in this file. It is basically nothing more than a print of the values in the `EEG.times` field from the EEGLAB dataset.
-
-Since I didn't include any headers in my file, I rename them here. I give the the identifying columns their appropriate names, and for the amplitudes, I attach the values from the `times` variable as names to these columns, so -100 will be one column, -99 will be another, and so on.
+{{< sidenote >}}
+The `janitor` package helps cleaning up column names, in this instance it converts all default columns (e.g. `V1`) to lowercase (i.e. `v1`)
+{{< /sidenote >}}
 
 ``` r
-ERPdata <- data |>
-  rename(Channel = V1,
-         ID = V2,
-         Condition = V3) |>
-  mutate(ID = factor(ID),
-         Condition = factor(Condition))
-
-oldnames <- sprintf("V%s", 1:ncol(times) + 3)
-
-ERPdata <- ERPdata |> 
-  rename_at(vars(all_of(oldnames)), ~ as.character(times))
+erp_data <- data |>
+  janitor::clean_names() |>
+  rename(
+    channel = v1,
+    id = v2,
+    condition = v3
+  ) |>
+  mutate(
+    id = as_factor(id),
+    condition = as_factor(condition)
+  )
 ```
 
 ## Preparing the data
@@ -61,42 +67,56 @@ ERPdata <- ERPdata |>
 Then I specify a variable with the channels of interest. These will be the channels I'll average across later.
 
 ``` r
-coi <- c("P1", "P2", "Pz", "P3", "P4", "PO3", "PO4", "POz");
+coi <- c("P1", "P2", "Pz", "P3", "P4", "PO3", "PO4", "POz")
 ```
 
-Then I calculate the means across channels and conditions. This goes in two steps. First I'll select only the channels of interest, then I'll group by ID, condition, and channel. And then calculate the average of every other column, in this case column 4 to the end of the file. Then I'll do the same, except now I'll group by ID and condition. So then we have one average ERP for every condition in all participants.
+Then I calculate the means across channels and conditions. This goes in two steps. First I'll select only the channels of interest, then I'll group by ID, condition, and channel. And then calculate the average of every other column, in this case all columns starting with "v". Then I'll do the same, except now I'll group by ID and condition. So then we have one average ERP for every condition in all participants.
+
+{{< sidenote >}}
+The `summarise()` function will throw a warning about the grouping variable, this can be silenced by setting `.groups = "drop"`
+{{< /sidenote >}}
 
 ``` r
-ERPdata_mChan <- ERPdata |>
-  filter(Channel %in% coi) |>
-  group_by(ID,Condition,Channel) %>%
-  summarise_at(vars(names(.)[4:ncol(.)]), list(~ mean(., na.rm = TRUE))) |>
+erp_data_chan_mean <- erp_data |>
+  filter(channel %in% coi) |>
+  group_by(id, condition, channel) |>
+  summarise(across(starts_with("v"), ~ mean(.x, na.rm = TRUE))) |>
   ungroup()
 
-ERPdata_mCond <- ERPdata_mChan |>
-  group_by(ID,Condition) %>%
-  summarise_at(vars(names(.)[4:ncol(.)]), list(~ mean(., na.rm = TRUE))) |>
+erp_data_cond_mean <- erp_data_chan_mean |>
+  group_by(id, condition) |>
+  summarise(across(starts_with("v"), ~ mean(.x, na.rm = TRUE))) |>
   ungroup()
 
-MeanERPs <- ERPdata_mCond
+mean_erp <- erp_data_cond_mean
 ```
 
 ## Calculate grand average and confidence interval
 
-The next piece of code calculates the grand average. I will also calculate the confidence interval and then transform it from the interval relative to the mean to the absolute values representing the upper and lower boundaries of the confidence interval. Here I use a confidence interval of 95%. We first transform from wide to long format using the `pivot_longer()` function from the `{tidyr}` package. Then we convert the (now character) `Time` variable to numeric. Then we will calculate the average amplitude per time point. Then using the `CI()` function from the `{Rmisc}` package, we calculate the upper and lower bounds of the confidence interval.
+The next piece of code calculates the grand average. I will also add the time for each timepoint in milliseconds from the "times.txt" file we loaded earlier. Afterwards, I will alculate the confidence interval and then transform it from the interval relative to the mean to the absolute values representing the upper and lower boundaries of the confidence interval. Here I use a confidence interval of 95%. We first transform from wide to long format using the `pivot_longer()` function from the `{tidyr}` package. I merge the data frame containing the times to the long data frame with the mean ERP so that we have a column with numerical time points. Then we calculate the average amplitude per time point. Then using the `CI()` function from the `{Rmisc}` package, we calculate the upper and lower bounds of the confidence interval and add each as a separate column in the data frame.
 
 ``` r
-ERP_plotdata <- MeanERPs |>
-  pivot_longer(-c(ID,Condition), names_to = "Time", values_to = "Amplitude") |>
-  mutate(Time = as.numeric(Time)) |>
-  group_by(Condition,Time) |>
-  summarise(Mean_Amplitude = mean(Amplitude),
-            CIlower = Rmisc::CI(Amplitude, ci = 0.95)["lower"],
-            CIupper = Rmisc::CI(Amplitude, ci = 0.95)["upper"])
-```
+times <- times |>
+  pivot_longer(
+    cols = everything(),
+    names_to = "index", values_to = "time"
+  ) |>
+  mutate(timepoint = str_glue("v{row_number() + 3}")) |>
+  select(-index)
 
-    `summarise()` has grouped output by 'Condition'. You can override using the
-    `.groups` argument.
+erp_plotdata <- mean_erp |>
+  pivot_longer(
+    cols = -c(id, condition),
+    names_to = "timepoint", values_to = "amplitude"
+  ) |>
+  inner_join(times, by = "timepoint") |>
+  group_by(condition, time) |>
+  summarise(
+    mean_amplitude = mean(amplitude),
+    ci_lower = Rmisc::CI(amplitude, ci = 0.95)["lower"],
+    ci_upper = Rmisc::CI(amplitude, ci = 0.95)["upper"]
+  )
+```
 
 ## Preparing to plot
 
@@ -111,30 +131,31 @@ After running the chunk below, we have a beautiful ERP with a nice confidence in
 ``` r
 colors <- norment_pal(palette = "logo")(2)
 
-ERPplot <- ggplot(ERP_plotdata, aes(x = Time, y = Mean_Amplitude, 
-                           colour = Condition, group = Condition)) + 
-  geom_ribbon(aes(ymin = CIlower, ymax = CIupper, fill = Condition), 
-              alpha = 0.1, linetype = 0) + 
-  geom_line(size = 0.75) + 
-  scale_color_manual(values = colors) + 
-  scale_fill_manual(values = colors) + 
-  scale_x_continuous(breaks = c(seq(-2000,2000,500))) + 
-  scale_y_continuous(breaks = c(seq(-12,-1,2), seq(2,12,2))) + 
+erp_plot <- ggplot(erp_plotdata, aes(
+  x = time, y = mean_amplitude,
+  colour = condition, group = condition
+)) +
+  geom_ribbon(aes(ymin = ci_lower, ymax = ci_upper, fill = condition),
+    alpha = 0.1, linetype = 0
+  ) +
+  geom_line(linewidth = 0.75) +
+  scale_color_manual(values = colors) +
+  scale_fill_manual(values = colors) +
+  scale_x_continuous(breaks = c(seq(-2000, 2000, 500))) +
+  scale_y_continuous(breaks = c(seq(-12, -1, 2), seq(2, 12, 2))) +
   coord_cartesian() +
-  labs(x = "Time (ms)", 
-       y = "Amplitude (µV)") + 
+  labs(
+    x = "Time (ms)",
+    y = "Amplitude (µV)"
+  ) +
   theme_norment(ticks = TRUE, grid = FALSE) +
   theme(
-    legend.position = c(0.9,0.1),
+    legend.position = c(0.9, 0.1),
     axis.text.x = element_text(vjust = -0.1)
   )
-```
-
-    Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-    ℹ Please use `linewidth` instead.
-
-``` r
-shift_axes(ERPplot, x = 0, y = 0)
+shift_axes(erp_plot, x = 0, y = 0)
 ```
 
 <img src="index.markdown_strict_files/figure-markdown_strict/erp-plot-1.png" width="1152" />
+
+**EDIT (2023-10-30)**: In the process of making some general updates to this site, I also revisited some of the code here. I improved the standard somewhat from when I first wrote this post in 2019 and brought it up to the code standards of 2023. The old version is of course available on GitHub.

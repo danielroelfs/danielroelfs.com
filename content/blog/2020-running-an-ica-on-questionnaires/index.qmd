@@ -2,8 +2,6 @@
 title: Running an ICA on Questionnaires
 date: 2020-10-24
 description: Running an ICA on Questionnaires
-date: 2020-10-24
-description: Running an ICA on Questionnaires
 slug: running-an-ica-on-questionnaires
 categories:
   - coding
@@ -90,9 +88,6 @@ We'll first find if there's any unanswered questions. These are rows where `scor
 ```{r}
 #| label: find-nas
 
-questdata |>
-  filter(is.na(score)) |>
-  nrow()
 questdata |>
   filter(is.na(score)) |>
   nrow()

@@ -465,7 +465,3 @@ get_nyt_lists()
 ```
 
 If you wish to explore other APIs, there's [a ton of public APIs](https://github.com/public-apis/public-apis) that you can explore using the approach discussed here. Thanks for reading, and thanks sticking all the way through! Happy coding!
-
-
-
-

@@ -2,8 +2,6 @@
 title: Difference in sunset times in Europe
 date: 2023-04-06
 description: Difference in sunset times in Europe
-date: 2023-04-06
-description: Difference in sunset times in Europe
 slug: difference-in-sunset-times-in-europe
 categories:
   - data science
@@ -284,9 +282,6 @@ parse_sun_data(reticulate::py$df_deux) |>
   )) +
   theme_custom()
 ```
-
-    Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-    ℹ Please use `linewidth` instead.
 
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-day-length-areas-1.png" width="768" />
 

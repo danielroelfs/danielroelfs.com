@@ -2,8 +2,6 @@
 title: Everything is a Linear Model
 date: 2022-03-18
 description: Everything is a Linear Model
-date: 2022-03-18
-description: Everything is a Linear Model
 slug: everything-is-a-linear-model
 categories:
   - statistics
@@ -51,9 +49,6 @@ What this says is that the effect size ($t$) is equal to the sample mean minus t
 $$
 \sigma = \sqrt{\frac{\sum\limits\_{i=1}^n{(x\_{i} - \overline{x})^2}}{n - 1}}
 $$
-$$
-\sigma = \sqrt{\frac{\sum\limits\_{i=1}^n{(x\_{i} - \overline{x})^2}}{n - 1}}
-$$
 
 In this formula, you'd subtract the average across the sample values from each individual value, square it, and sum all these resulting values. This sum you would then divide by the size of the sample minus one (or the degrees of freedom), and take the square root of the whole thing. This will give the standard deviation (*σ*). Alright, let's now consider a study where we collected blood samples from a number of patients and measured for instance sodium levels in the blood. We don't have a control group for this study, but we know from medical textbooks that the reference value for sodium in healthy individuals for the age and sex distribution in our sample is for instance 2.5 mmol/L. Then we measure the sodium levels for 30 patients, we can simulate some fake measurements by generating a random sequence of values with a mean of 3 and a standard deviation of 1.2.
 
@@ -73,9 +68,6 @@ If we then implement these values in the formulas earlier, we get the following 
 $$
 \sigma = \sqrt{\frac{\sum\limits\_{i=1}^n{\|x\_{i} - \overline{x}\|^2}}{n - 1}} = \sqrt{\frac{\sum\limits\_{i=1}^{30}{\|concentration\_{i} - 2.855\|^2}}{30 - 1}} = 1.157
 $$
-$$
-\sigma = \sqrt{\frac{\sum\limits\_{i=1}^n{\|x\_{i} - \overline{x}\|^2}}{n - 1}} = \sqrt{\frac{\sum\limits\_{i=1}^{30}{\|concentration\_{i} - 2.855\|^2}}{30 - 1}} = 1.157
-$$
 
 this formula would like like this when implemented in R:
 
@@ -87,9 +79,6 @@ sqrt(sum(abs(concentration - mean(concentration))^2) / (n - 1))
 
 But of course in any normal setting, you'd use the `sd()` function, which will give the same result as the code above, but I just wanted to show it for illustrative purposes. Anywhere else I'll use the `sd()` function. Now let's calculate the $t$-value. In formula form this would look like this:
 
-$$
-t = \frac{\overline{x} - \mu}{\frac{\sigma}{\sqrt{n}}} = \frac{2.855 - 2.5}{\frac{1.157}{\sqrt{30}}} = 1.681
-$$
 $$
 t = \frac{\overline{x} - \mu}{\frac{\sigma}{\sqrt{n}}} = \frac{2.855 - 2.5}{\frac{1.157}{\sqrt{30}}} = 1.681
 $$
@@ -191,9 +180,6 @@ The formula for an Two-Sample T-test is very similar to that of the One-Sample T
 $$
 t = \frac{(\overline{x_1} - \overline{x_2})}{\sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{n_2}}} = \frac{(3.838073 - 5.455809)}{\sqrt{\frac{1.343565^2}{30} + \frac{1.69711^2}{30}}} = -4.093524
 $$
-$$
-t = \frac{(\overline{x_1} - \overline{x_2})}{\sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{n_2}}} = \frac{(3.838073 - 5.455809)}{\sqrt{\frac{1.343565^2}{30} + \frac{1.69711^2}{30}}} = -4.093524
-$$
 
 It's a bit too complex to describe in a sentence, but the definitions are perhaps familiar: $\overline{x}$ for group means, $a$ for group standard deviations, and $n$ for group size. I find that the simplest way to implement this in R is by first separating the groups and then adding them in the formula.
 
@@ -245,8 +231,6 @@ ggplot(data, aes(x = group, y = concentration, fill = group)) +
 Great! Now we have a visual representation of the data. Now, since the T-test compares means, we can might also add a point indicating the mean for both groups. Let's look just at the jittered points and add a line connecting the two mean values.
 
 ``` r
-mean_concentration <- data |>
-  group_by(group) |>
 mean_concentration <- data |>
   group_by(group) |>
   summarise(mean_conc = mean(concentration))
@@ -306,25 +290,9 @@ c &=& \overline{x}\_{0} \newline
  &=& 4.162838
 \end{eqnarray}
 $$
-$$
-\begin{eqnarray}
-\overline{x}\_{0} &=& a \times 0 + c \newline
-c &=& \overline{x}\_{0} \newline
- &=& 4.162838
-\end{eqnarray}
-$$
 
 So that's the constant our formula. If we look back at the output from the `lm()` function, we see that this value is represented as the `Estimate` of the `(Intercept)` row! Let's also solve $a$. Remember that $a$ represents the slope of the line. How do we get the slope? The slope is basically nothing more than the difference between the mean values of `HC` and `PAT`, but let's solve it in a more elegant way, by using the same formula we used to find *c*. We'll use the same coding as before, `0` for `HC` and `1` for `PAT`. Remember that *c* is equal to the mean value of `HC` (aka $\overline{x}_{0}$).
 
-$$
-\begin{eqnarray}
-\overline{x}\_{1} &=& a \times 1 + c \newline
- &=& a + \overline{x}\_{0} \newline
-a &=& \overline{x}\_{1} - \overline{x}\_{0} \newline
- &=& 6.746285 - 4.162838 \newline
- &=& 2.583447
-\end{eqnarray}
-$$
 $$
 \begin{eqnarray}
 \overline{x}\_{1} &=& a \times 1 + c \newline
@@ -343,12 +311,6 @@ inb4 the angry statisticians: I know it's more complicated than that but let's n
 
 We can reverse engineer the $t$-value too using just the output from the `lm()` function. One can imagine that if one would plot a situation where the null hypothesis (H<sub>0</sub>) is true, the slope of that line would be 0 since then there's no difference between the mean of the two groups. We'll take the difference between our observed slope, or the slope of the alternative hypothesis (H<sub>0</sub>), and the slope of the null hypothesis, which is 0, and divide that by the standard error of the sampling distribution, which is given by the `lm()` function as the `Std. Error` of the `groupPAT` row:
 
-$$
-\begin{eqnarray}
-t &=& \frac{slope~of~regression~line~at~H\_{a} - slope~of~regression~line~at~H\_{0}}{standard~error~of~sampling~distribution}\newline
-&=& \frac{1.6177 - 0}{0.3952} = 4.093
-\end{eqnarray}
-$$
 $$
 \begin{eqnarray}
 t &=& \frac{slope~of~regression~line~at~H\_{a} - slope~of~regression~line~at~H\_{0}}{standard~error~of~sampling~distribution}\newline
@@ -613,9 +575,6 @@ With that we can quickly calculate the residual standard error (oversimplified, 
 $$
 Residual~standard~error = \sqrt{\frac{\sum(observed - predicted)^2}{degrees~of~freedom}}
 $$
-$$
-Residual~standard~error = \sqrt{\frac{\sum(observed - predicted)^2}{degrees~of~freedom}}
-$$
 
 or in R terms (the degrees of freedom is 18 here, too complicated to explain for now):
 
@@ -628,7 +587,6 @@ sqrt(sum((data$measure - data$measure_pred)^2) / 18)
 So that checks out. What we can then also do is calculate the difference between the observed and the predicted values values, this is called the residual:
 
 ``` r
-data <- data |>
 data <- data |>
   mutate(residual = measure - measure_pred)
 ```
@@ -736,12 +694,6 @@ R^2 &=& perfect~correlation - \frac{explained~variance}{total~variance} \newline
 &=& 1 - \frac{\sum(difference~with~regression~line^2)}{\sum(difference~with~mean~value^2)}
 \end{eqnarray}
 $$
-$$
-\begin{eqnarray}
-R^2 &=& perfect~correlation - \frac{explained~variance}{total~variance} \newline
-&=& 1 - \frac{\sum(difference~with~regression~line^2)}{\sum(difference~with~mean~value^2)}
-\end{eqnarray}
-$$
 
 Explained variance is defined here as the sum of squared error. You might notice the sum symbols and the squares, so you might guess that this formula is also some kind of sum of squares, and it is! As we already discovered, the numerator in this formula is the sum of squared error, the denominator is referred to as the sum of squared total. And the composite of those two is referred to as the sum of squared regression. Making three different sum of squares.
 
@@ -794,9 +746,6 @@ Sidenote, if you wanted to calculate the total variance the formula for that wou
 $$
 S^2 = \frac{\sum(x\_{i} - \overline{x})^2}{n - 1}
 $$
-$$
-S^2 = \frac{\sum(x\_{i} - \overline{x})^2}{n - 1}
-$$
 
 Notice how the numerator is the same calculation as the sum of squared total, then divided by the sample size minus 1 (like the degrees of freedom).
 
@@ -831,13 +780,8 @@ sessionInfo()
     R version 4.3.0 (2023-04-21)
     Platform: x86_64-apple-darwin20 (64-bit)
     Running under: macOS 14.0
-    R version 4.3.0 (2023-04-21)
-    Platform: x86_64-apple-darwin20 (64-bit)
-    Running under: macOS 14.0
 
     Matrix products: default
-    BLAS:   /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRblas.0.dylib 
-    LAPACK: /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
     BLAS:   /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRblas.0.dylib 
     LAPACK: /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
 
@@ -847,11 +791,7 @@ sessionInfo()
     time zone: Europe/Oslo
     tzcode source: internal
 
-    time zone: Europe/Oslo
-    tzcode source: internal
-
     attached base packages:
-    [1] stats     graphics  grDevices datasets  utils     methods   base     
     [1] stats     graphics  grDevices datasets  utils     methods   base     
 
     other attached packages:

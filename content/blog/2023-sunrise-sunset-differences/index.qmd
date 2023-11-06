@@ -2,8 +2,6 @@
 title: Difference in sunset times in Europe
 date: 2023-04-06
 description: Difference in sunset times in Europe
-date: 2023-04-06
-description: Difference in sunset times in Europe
 slug: difference-in-sunset-times-in-europe
 categories:
   - data science

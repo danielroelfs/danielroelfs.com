@@ -2,8 +2,6 @@
 title: A Basic Comparison Between Factor Analysis, PCA, and ICA
 date: 2021-09-14
 description: A Basic Comparison Between Factor Analysis, PCA, and ICA
-date: 2021-09-14
-description: A Basic Comparison Between Factor Analysis, PCA, and ICA
 slug: a-basic-comparison-between-factor-analysis-pca-and-ica
 categories:
   - statistics
@@ -548,5 +546,3 @@ hclust_weight_matrix |>
 We can again see that the same two clusters show up. Cluster 6 and 7 resemble those of Factor 2 and Factor 1, PC2 and PC1, and IC4 and IC6 respectively. If you want to learn more about what you can do with the `hlcust()` and associated functions, you can check out [this webpage](https://uc-r.github.io/hc_clustering).
 
 Okay I'd like to leave it at that. This blogpost is long enough. Again, I had to simplify and take some shortcuts, if you think I made mistakes in that effort, please let me know and I'll fix it as well as I can!
-
-

@@ -2,8 +2,6 @@
 title: How I Create Manhattan Plots Using ggplot
 date: 2019-04-24
 description: How I Create Manhattan Plots Using ggplot
-date: 2019-04-24
-description: How I Create Manhattan Plots Using ggplot
 slug: how-i-create-manhattan-plots-using-ggplot
 categories:
   - coding

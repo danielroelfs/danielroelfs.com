@@ -2,8 +2,6 @@
 title: Analyzing Bach
 date: 2019-12-01
 description: Analyzing Bach with R
-date: 2019-12-01
-description: Analyzing Bach with R
 slug: analyzing-bach
 categories:
   - coding
@@ -19,10 +17,6 @@ execute:
 editor_options: 
   chunk_output_type: console
 ---
-
-```{css}
-#| label: style
-#| echo: false
 
 ```{css}
 #| label: style
@@ -199,9 +193,6 @@ The first descritive I wanted to see was what kind of work Bach wrote and in wha
 data |>
   group_by(category1) |>
   summarise(n = n()) |>
-data |>
-  group_by(category1) |>
-  summarise(n = n()) |>
   ggplot(aes(x = category1, y = n, color = category1)) +
   geom_segment(aes(xend = category1, yend = 0),
     linewidth = 12,
@@ -262,10 +253,6 @@ From this it seems that most of the intrumental pieces are made up by just solo 
 #| label: waffle
 #| fig-width: 12
 
-data |>
-  group_by(category2) |>
-  summarise(n = n()) |>
-  mutate(category2 = sprintf("%s (%s)", category2, n)) |>
 data |>
   group_by(category2) |>
   summarise(n = n()) |>
@@ -618,8 +605,6 @@ Lastly, just for fun, I created a map.
 ```{r}
 #| label: mapplot
 
-places_unique <- places |>
-  distinct(city, .keep_all = TRUE)
 places_unique <- places |>
   distinct(city, .keep_all = TRUE)
 

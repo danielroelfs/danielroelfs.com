@@ -2,8 +2,6 @@
 title: Running an ICA on Questionnaires
 date: 2020-10-24
 description: Running an ICA on Questionnaires
-date: 2020-10-24
-description: Running an ICA on Questionnaires
 slug: running-an-ica-on-questionnaires
 categories:
   - coding
@@ -79,9 +77,6 @@ questdata <- loaddata |>
 We'll first find if there's any unanswered questions. These are rows where `score` is `NA`.
 
 ``` r
-questdata |>
-  filter(is.na(score)) |>
-  nrow()
 questdata |>
   filter(is.na(score)) |>
   nrow()
@@ -230,9 +225,6 @@ glimpse(ica_model)
      $ W: num [1:6, 1:6] 0.5122 0.2571 0.2286 -0.744 0.0655 ...
      $ A: num [1:6, 1:26] -0.283 0.131 -0.387 0.127 -0.583 ...
      $ S: num [1:14955, 1:6] -0.3649 1.0887 -1.2281 -0.1592 -0.0618 ...
-     $ W: num [1:6, 1:6] 0.5122 0.2571 0.2286 -0.744 0.0655 ...
-     $ A: num [1:6, 1:26] -0.283 0.131 -0.387 0.127 -0.583 ...
-     $ S: num [1:14955, 1:6] -0.3649 1.0887 -1.2281 -0.1592 -0.0618 ...
 
 These names aren't very informative. In this function, `X` represens the pre-processed data matrix, `K` is the pre-whitening matrix, `W` is the estimated un-mixing matrix, `A` is the estimating mixing matrix (the loadings of the items on the independent components), and `S` is the source matrix (the individual IC loadings for all participants).
 
@@ -249,18 +241,7 @@ cor(ica_model$S)
     [4,]  3.537856e-14 -9.827378e-15  2.328882e-14  1.000000e+00 -3.206080e-15
     [5,] -8.652989e-15 -1.197023e-15  2.402569e-14 -3.206080e-15  1.000000e+00
     [6,]  1.354061e-15 -6.944827e-15 -1.626536e-15 -2.241246e-14 -3.859294e-15
-    [1,]  1.000000e+00  1.008510e-14 -1.701048e-14  3.537856e-14 -8.652989e-15
-    [2,]  1.008510e-14  1.000000e+00  9.286019e-15 -9.827378e-15 -1.197023e-15
-    [3,] -1.701048e-14  9.286019e-15  1.000000e+00  2.328882e-14  2.402569e-14
-    [4,]  3.537856e-14 -9.827378e-15  2.328882e-14  1.000000e+00 -3.206080e-15
-    [5,] -8.652989e-15 -1.197023e-15  2.402569e-14 -3.206080e-15  1.000000e+00
-    [6,]  1.354061e-15 -6.944827e-15 -1.626536e-15 -2.241246e-14 -3.859294e-15
                   [,6]
-    [1,]  1.354061e-15
-    [2,] -6.944827e-15
-    [3,] -1.626536e-15
-    [4,] -2.241246e-14
-    [5,] -3.859294e-15
     [1,]  1.354061e-15
     [2,] -6.944827e-15
     [3,] -1.626536e-15

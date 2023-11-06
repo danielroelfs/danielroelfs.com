@@ -2,8 +2,6 @@
 title: Visualizing the State of the Amsterdam Housing Market
 date: 2021-06-20
 description: Visualizing the State of the Amsterdam Housing Market
-date: 2021-06-20
-description: Visualizing the State of the Amsterdam Housing Market
 slug: visualizing-the-state-of-the-amsterdam-housing-market
 categories:
   - society
@@ -13,17 +11,12 @@ tags:
 execute:
   fig.retina: 2
   fig.align: left
-  fig.align: left
   fig.show: hold
   results: hold
   dev.args: list(bg = "#EBEBEB")
 editor_options: 
   chunk_output_type: console
 ---
-
-```{css}
-#| label: style
-#| echo: FALSE
 
 ```{css}
 #| label: style
@@ -65,8 +58,6 @@ This will be a fairly basic data analysis and visualization post, I can't claim 
 ```{r}
 #| label: pkgs
 #| message: false
-#| code-fold: true
-#| code-summary: "Show code"
 #| code-fold: true
 #| code-summary: "Show code"
 
@@ -125,8 +116,6 @@ You can look at the code I used to load and merge the files. It's a bit of a mes
 ```{r}
 #| label: load-data
 #| eval: false
-#| code-fold: true
-#| code-summary: "Show code"
 #| code-fold: true
 #| code-summary: "Show code"
 
@@ -267,8 +256,6 @@ Let's have a look at the dataset.
 #| label: load-glimpse-data
 #| code-fold: true
 #| code-summary: "Show code"
-#| code-fold: true
-#| code-summary: "Show code"
 
 data_merged <- read_rds("./data/data_merged.rds")
 
@@ -279,8 +266,6 @@ From this dataset, I want to create a few new variables. I want to create a date
 
 ```{r}
 #| label: clean-data
-#| code-fold: true
-#| code-summary: "Show code"
 #| code-fold: true
 #| code-summary: "Show code"
 
@@ -324,8 +309,6 @@ The first thing that seems interesting to do is to plot the percentage differenc
 ```{r}
 #| label: plot-overpay
 #| warning: false
-#| code-fold: true
-#| code-summary: "Show code"
 #| code-fold: true
 #| code-summary: "Show code"
 
@@ -420,7 +403,6 @@ data |>
 ```
 
 What contributed to this price increase? A simple supply-and-demand plays a part. The figure below shows the "tightness index" (Dutch: "krapte indicator") over time. This number represents the number of choices a potential buyer has. This number is calculated per quarter by dividing the number of properties on the market halfway through the quarter divided by the number of transactions over the entire quarter. This number is then multiplied by 3 to correct for the fact that the number is calculated per quarter instead of per month. When the "tightness index" is below 5, it's considered a "sellers market" (source: [NVM](https://www.nvm.nl/wonen/marktinformatie/)). A larger number is good for buyers, a smaller number is good for sellers. In the first quarter of 2021, the number was exactly `r data |> filter(type == "Total", date == max(date)) |> pull(tightness_index)`. It varies a bit per property type, but for apartments specifically it hasn't been higher than 3 since 2016. This means that first-time buyers often don't have a choice between more than 2 or 3 apartments per month. I tried to find some data on how many people currently are interested in buying a home in Amsterdam, but I couldn't find anything solid. There's only anecdotal evidence from viewings where within a year, the number of people interested in viewing a property has increased to 80 in 2020, compared to about 55 a year earlier (source: [Parool](https://www.parool.nl/amsterdam/huizenmarkt-is-gekkenhuis-kopers-profiteren-voor-1-april-nog-van-voordelige-belastingregel~bcadc579/)).
-What contributed to this price increase? A simple supply-and-demand plays a part. The figure below shows the "tightness index" (Dutch: "krapte indicator") over time. This number represents the number of choices a potential buyer has. This number is calculated per quarter by dividing the number of properties on the market halfway through the quarter divided by the number of transactions over the entire quarter. This number is then multiplied by 3 to correct for the fact that the number is calculated per quarter instead of per month. When the "tightness index" is below 5, it's considered a "sellers market" (source: [NVM](https://www.nvm.nl/wonen/marktinformatie/)). A larger number is good for buyers, a smaller number is good for sellers. In the first quarter of 2021, the number was exactly `r data |> filter(type == "Total", date == max(date)) |> pull(tightness_index)`. It varies a bit per property type, but for apartments specifically it hasn't been higher than 3 since 2016. This means that first-time buyers often don't have a choice between more than 2 or 3 apartments per month. I tried to find some data on how many people currently are interested in buying a home in Amsterdam, but I couldn't find anything solid. There's only anecdotal evidence from viewings where within a year, the number of people interested in viewing a property has increased to 80 in 2020, compared to about 55 a year earlier (source: [Parool](https://www.parool.nl/amsterdam/huizenmarkt-is-gekkenhuis-kopers-profiteren-voor-1-april-nog-van-voordelige-belastingregel~bcadc579/)).
 
 ```{r}
 #| label: plot-tightness
@@ -508,8 +490,6 @@ A new phenomenon that entered the scene a little while ago may indicate how skew
 #| fig-height: 7
 #| code-fold: true
 #| code-summary: "Show code"
-#| code-fold: true
-#| code-summary: "Show code"
 
 data |>
   filter(type != "Total") |>
@@ -560,8 +540,6 @@ This adds fuel to the fire. I guess I'm trying to show that there are a number o
 #| warning: false
 #| fig-width: 10
 #| fig-height: 8
-#| code-fold: true
-#| code-summary: "Show code"
 #| code-fold: true
 #| code-summary: "Show code"
 
@@ -666,8 +644,6 @@ But that's not all, there's a few other features that contribute to the gridlock
 #| label: load-housing-mutations
 #| code-fold: true
 #| code-summary: "Show code"
-#| code-fold: true
-#| code-summary: "Show code"
 
 house_mutations_in <- tribble(
   ~year, ~buy_to_rent_corp, ~buy_to_rent_other, ~rent_corp_to_buy,
@@ -712,8 +688,6 @@ So not every year there's the same number of "mutations" (transformations of pur
 #| warning: false
 #| fig-width: 10
 #| fig-height: 9
-#| code-fold: true
-#| code-summary: "Show code"
 #| code-fold: true
 #| code-summary: "Show code"
 
@@ -802,8 +776,6 @@ We can look at the net number of houses added to the rental market by adding up 
 #| fig-height: 6
 #| code-fold: true
 #| code-summary: "Show code"
-#| code-fold: true
-#| code-summary: "Show code"
 
 net_house_mutations <- house_mutations |>
   mutate(across(c(from, to), ~ case_when(
@@ -874,8 +846,6 @@ So in 2017 nearly 90 000 houses were mutated from sale to rental properties. In 
 #| out-width: 60%
 #| code-fold: true
 #| code-summary: "Show code"
-#| code-fold: true
-#| code-summary: "Show code"
 
 house_mutations |>
   filter(year == max(year)) |>
@@ -931,8 +901,6 @@ So what's the result of all these phenomena? The figure below shows the housing 
 #| warning: false
 #| fig-width: 10
 #| fig-height: 6
-#| code-fold: true
-#| code-summary: "Show code"
 #| code-fold: true
 #| code-summary: "Show code"
 

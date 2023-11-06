@@ -2,8 +2,6 @@
 title: Dutch performance at Olympic speed skating
 date: 2022-02-09
 description: Dutch performance at Olympic speed skating
-date: 2022-02-09
-description: Dutch performance at Olympic speed skating
 slug: dutch-performance-at-olympic-speed-skating
 categories:
   - miscellaneous
@@ -31,8 +29,6 @@ First we'll load the packages, as usual, we'll use the `{tidyverse}` package. Fo
 #| message: false
 #| code-fold: true
 #| code-summary: "Show code"
-#| code-fold: true
-#| code-summary: "Show code"
 
 library(tidyverse)
 library(ggtext)
@@ -55,8 +51,6 @@ Before we've used the `{rvest}` package to scrape websites, but since then I've 
 #| eval: false
 #| code-fold: true
 #| code-summary: "Show code"
-#| code-fold: true
-#| code-summary: "Show code"
 ```
 
 I said before that the data is neatly organized, which is true except for a few instances. The individual events are simple tables with a ranking and time for each athlete. It's a bit more complicated for the team pursuits, since team pursuit events are a direct competition with qualifying rounds and knock-out rounds, the table is a bit more complicated. In this case we're just interested in the final ranking (so we dismiss the semi- and quarter-finals). The final ranking is split across two columns, so we stitch those together. For some reason the men's team pursuit from 2018 lists only the medal winners, and not in the same format as the other team pursuit events. One advantage here is that they list individual skaters too, but since this is the only time indivdual skaters are listed among the team pursuits it's still not very useful. It just meant we have to create another few lines in the `if else` statement to parse the JSON. In the HTML, the podium places aren't denoted with a numeric list, but rather with a gold, silver, and bronze badge. Since the Python script doesn't parse those, we add those back here (except for the 1928 Men's 10.000 m event, which was canceled due to bad weather).
@@ -64,8 +58,6 @@ I said before that the data is neatly organized, which is true except for a few 
 ```{r}
 #| label:  define-parsing-function
 #| message: false
-#| code-fold: true
-#| code-summary: "Show code"
 #| code-fold: true
 #| code-summary: "Show code"
 
@@ -153,8 +145,6 @@ Then we'll also create two vectors that contain the breaks we'll use later for t
 #| label:  load-json-data
 #| message: false
 #| warning: false
-#| code-fold: true
-#| code-summary: "Show code"
 #| code-fold: true
 #| code-summary: "Show code"
 
@@ -552,8 +542,6 @@ Next, I want to highlight one athlete in particular. The Dutch team is a powerho
 #| label: ireen-wust-data
 #| code-fold: true
 #| code-summary: "Show code"
-#| code-fold: true
-#| code-summary: "Show code"
 
 data_wust <- data |>
   filter(str_detect(athlete, "Ireen") |
@@ -629,8 +617,6 @@ Finally, we can also visualize the individual medals she won. Again, I'll take s
 
 ```{r}
 #| label: wust-medals
-#| code-fold: true
-#| code-summary: "Show code"
 #| code-fold: true
 #| code-summary: "Show code"
 

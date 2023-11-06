@@ -2,8 +2,6 @@
 title: Dutch performance at Olympic speed skating
 date: 2022-02-09
 description: Dutch performance at Olympic speed skating
-date: 2022-02-09
-description: Dutch performance at Olympic speed skating
 slug: dutch-performance-at-olympic-speed-skating
 categories:
   - miscellaneous
@@ -25,9 +23,6 @@ The 2022 Winter Olympics started last week. I'm don't usually follow sports (of 
 Now, since the last Winter Olympic Games in 2018 I've learned quite a bit about data science and data visualization too. So, as I've done before on my website, I'll combine a personal passion with my interest in data analytics and data visualization. In this post I'll collect some data from an online source, parse and wrangle it, and then create some illustrations. As the code can be quite long, I've hidden the code blocks by default to make the text a bit more legible. If you want to see the code, simply click the <em>Show code</em> button and it will appear. Now, let's see how Dutch performance at the Winter Olympic Games compares and if the "Dutch dominance" is just good marketing or whether there is some truth to it.
 
 First we'll load the packages, as usual, we'll use the `{tidyverse}` package. For some more functionality around text rendering in the plots, we'll also load the `{ggtext}` package, and in order to use different fonts than the default ones we'll use functionality from the `{showtext}` package and then load a nice sans-serif font called [Yanone Kaffeesatz](https://fonts.google.com/specimen/Yanone+Kaffeesatz?preview.text=solipsism&preview.text_type=custom). We'll incidentally use some other packages, but then we can use the `::` operator.
-
-<details>
-<summary>Show code</summary>
 
 <details>
 <summary>Show code</summary>
@@ -188,8 +183,6 @@ with open(out_name, "w") as outfile:
 
 </details>
 
-</details>
-
 I said before that the data is neatly organized, which is true except for a few instances. The individual events are simple tables with a ranking and time for each athlete. It's a bit more complicated for the team pursuits, since team pursuit events are a direct competition with qualifying rounds and knock-out rounds, the table is a bit more complicated. In this case we're just interested in the final ranking (so we dismiss the semi- and quarter-finals). The final ranking is split across two columns, so we stitch those together. For some reason the men's team pursuit from 2018 lists only the medal winners, and not in the same format as the other team pursuit events. One advantage here is that they list individual skaters too, but since this is the only time indivdual skaters are listed among the team pursuits it's still not very useful. It just meant we have to create another few lines in the `if else` statement to parse the JSON. In the HTML, the podium places aren't denoted with a numeric list, but rather with a gold, silver, and bronze badge. Since the Python script doesn't parse those, we add those back here (except for the 1928 Men's 10.000 m event, which was canceled due to bad weather).
 
 <details>
@@ -305,8 +298,6 @@ data <- data_load |>
 
 </details>
 
-</details>
-
     Rows: 5,712
     Columns: 10
     $ title    <chr> "Men's 1500 m - Speed Skating Chamonix 1924 Winter Olympics",…
@@ -319,9 +310,6 @@ data <- data_load |>
     $ country  <chr> "FIN", "NOR", "NOR", "FIN", "NOR", "NOR", "USA", "USA", "USA"…
     $ time     <dbl> 2.208, 2.220, 2.256, 2.266, 2.290, 2.292, 2.298, 2.316, 2.316…
     $ comment  <chr> "OR", NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
-
-<details>
-<summary>Show code</summary>
 
 <details>
 <summary>Show code</summary>
@@ -339,9 +327,6 @@ If you happen to get here by searching for "Gantt chart in ggplot", you can find
 {{< /sidenote >}}
 
 Then we can finally create some plots. Not all speed skating events were present from the start in 1924. Back then only men competed in Olympic speed skating, the women's program started in 1960. Here we'll create something that looks a bit like a Gantt chart. We'll use a `geom_segment()` to visualize the timeline and since there's a few events which have only been on the program once we'll use a `geom_point()` for those since `geom_segment()` requires a begin and end point that are different. Since this is just a casual visualization for illustrative purposes we can take some creative liberty and experiment a bit with the design. That's why I chose to remove the grid lines and axes, make the lines fairly big and added the individual distances as a label on top of the lines. I also made the text quite large and moved the labels slightly up. The first year an event was held is shown slightly below the line.
-
-<details>
-<summary>Show code</summary>
 
 <details>
 <summary>Show code</summary>
@@ -392,16 +377,12 @@ data |>
 ```
 
 </details>
-</details>
 
 <img src="index.markdown_strict_files/figure-markdown_strict/events-timeline-1.png" width="768" />
 
 As we can see, the first Winter Olympic Games had only 5 events. This also included an event called "combined", which is the ranking for the all-round best score at the speed skating tournament. This event was only part of the Olympics in 1924 and an all-round medal hasn't been awarded since that tournament in 1924. The women's competition at the Olympics started in 1960 with 4 distances. Today the only difference is that the men have a 10.000 m event, and the women have a 3000 m event. Both competitions have a team pursuit event, but the men skate 8 laps around the 400 m track, while women do 6 laps. Why? I don't know. I think there's quite a lot of female athletes who'd love to show how fast they can skate a 10k, and there's a lot of male athletes who'd love the chance to earn a medal at the medium-distance 3000 m. The mass start is a new event that was added only in 2018, it is a spectacular event that mimics some of the scenarios from the eventful short-track tournament.
 
 Now, let's dive into the medals. First let's create a simple barplot with the total number of medals. As I prefer, we'll rotate so that the bars extent across the x-axis instead of the y-axis. This leaves more space for the country names (which we'll extract from the IOC codes using the `{countrycodes}` package) so we don't have to rotate labels. A simple rule: never rotate labels if you can avoid it. It makes the labels harder to read and increases cognitive load. To make the plot a bit cleaner, we'll move the title and subtitle (which we'll create with `{ggtext}`'s `geom_richtext()`) to the empty space in the barplot. Since I want to draw attention to the Netherlands in particular, I'll highlight that bar in its national orange color. We can easily do that by creating a separate column which will store the hex-value of the color and then we can use `scale_fill_identity()` to make the bar the color saved in that column.
-
-<details>
-<summary>Show code</summary>
 
 <details>
 <summary>Show code</summary>
@@ -462,16 +443,11 @@ data |>
 
 </details>
 
-</details>
-
 <img src="index.markdown_strict_files/figure-markdown_strict/n-medals-1.png" width="768" />
 
 As you can see, the Netherlands has earned by far the most medals since 1960 than any other country. In fact, it's earned more medals than number two and three combined. Now, news agencies have reported on the total number of medals, and numbers may slightly differ between reports. This is the number reported by the source, unless I made some errors in scraping, parsing, or wrangling the data. Even if, differences of 3 or 4 medals won't change the message that the Netherlands is absolutely dominant in this area of the Winter Olympics.
 
 Let's look at how this distribution is spread out across the different Olympic events. We'll start in 1960 since that's when the women's tournament was added and I consider that the proper start of the Winter Olympics. Since 1960 we've had 16 Winter Olympics (the 17th is currently underway). Since not all games had the same number of medals (events were added at different years), I'll calculate the percentage of medals won per year.
-
-<details>
-<summary>Show code</summary>
 
 <details>
 <summary>Show code</summary>
@@ -523,8 +499,6 @@ data |>
     panel.grid.major.y = element_blank()
   )
 ```
-
-</details>
 
 </details>
 
@@ -604,14 +578,9 @@ data |>
 
 </details>
 
-</details>
-
 <img src="index.markdown_strict_files/figure-markdown_strict/medal-table-1.png" width="768" />
 
 To show that a country is dominant in a particular competition it helps to show that a country can deliver not just one, but a few contenders for Olympic gold. The greatest display of strength for a country is to take home all medals in a single event, a so-called *podium sweep*. If a country can take home gold, silver, and bronze in a single event it may show they're competing mostly with each other. Now, to calculate this can simply take the rankins, group by event and country, and count how often a single country took home three medals in a single event. For this we'll create a simple stacked barplot.
-
-<details>
-<summary>Show code</summary>
 
 <details>
 <summary>Show code</summary>
@@ -655,8 +624,6 @@ data |>
     panel.grid.minor = element_blank()
   )
 ```
-
-</details>
 
 </details>
 
@@ -726,12 +693,7 @@ data |>
 
 </details>
 
-</details>
-
 Next, I want to highlight one athlete in particular. The Dutch team is a powerhouse of speed skating, but a team is still made up of individual athletes. And one of those athletes deserves some special attention: Ireen Wüst. She is one of the most successful Winter Olympic athletes ever and the most succesful speed skater of all time. As of time of writing (9/2/2022) she won 6 gold, 5 silver, and 1 bronze medals across 5 Winter Olympic Games. She's the only Olympian (Winter or Summer) to win individual gold in 5 different Olympic Games. So let's look at her performance. Let's extract all events where Ireen Wüst participated. One caveat here is that we can't only look for her name in the `athlete` column, and as we saw before, there's also team pursuit where individual names aren't registered in the website. Lucky for us, Ireen Wüst participated in all team pursuit events (only held since 2006), so we'll extract all instances where the Dutch team pursuit team participated. Since the 2022 Olympics are already underway and Ireen has already won a gold medal in her first event, I'll add a row manually to include this data too.
-
-<details>
-<summary>Show code</summary>
 
 <details>
 <summary>Show code</summary>
@@ -753,8 +715,6 @@ data_wust <- data |>
 
 </details>
 
-</details>
-
     Rows: 18
     Columns: 10
     $ title    <chr> "Women's 1000 m - Speed Skating Torino 2006 Winter Olympics",…
@@ -769,9 +729,6 @@ data_wust <- data |>
     $ comment  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, "OR", NA, NA, NA, NA, NA,…
 
 So Ireen participated in 18 events across 5 Olympic Games. She participated in all events apart from the 500 m and the 5000 m. Now, let's see how often she'll take home a medal if she shows up at the start. For this we can calculate a win rate. Let's count per year how many medals she won, and then we can calculate a percentage and create a barplot.
-
-<details>
-<summary>Show code</summary>
 
 <details>
 <summary>Show code</summary>
@@ -823,8 +780,6 @@ data_wust |>
     panel.grid.major.y = element_blank()
   )
 ```
-
-</details>
 
 </details>
 
@@ -895,8 +850,6 @@ data_wust |>
     panel.grid = element_blank()
   )
 ```
-
-</details>
 
 </details>
 

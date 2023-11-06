@@ -2,6 +2,8 @@
 title: How I Plot ERPs in R
 date: 2019-03-30
 description: How I Plot ERPs in R
+date: 2019-03-30
+description: How I Plot ERPs in R
 slug: how-i-plot-erps-in-r
 categories:
   - coding

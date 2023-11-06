@@ -2,6 +2,8 @@
 title: Analyzing Bach
 date: 2019-12-01
 description: Analyzing Bach with R
+date: 2019-12-01
+description: Analyzing Bach with R
 slug: analyzing-bach
 categories:
   - coding
@@ -182,6 +184,9 @@ The first descritive I wanted to see was what kind of work Bach wrote and in wha
 data |>
   group_by(category1) |>
   summarise(n = n()) |>
+data |>
+  group_by(category1) |>
+  summarise(n = n()) |>
   ggplot(aes(x = category1, y = n, color = category1)) +
   geom_segment(aes(xend = category1, yend = 0),
     linewidth = 12,
@@ -244,6 +249,10 @@ data |>
 From this it seems that most of the intrumental pieces are made up by just solo pieces for organ and the harpsichord and that the choral pieces are made up mostly by cantates and chorales for four voices. While I appreciate the information dissemination qualities of a barplot (or lollipop plot) like this, in that it's good in communicating absolute quantities (while I admit that this could also be displayed in a table). One thing it is less good at, is communicating the subjective volume of the works. There's more than a thousand pieces in the BWV, and I feel that the plots above don't do a good enough job at communicating just how many pieces this is. Therefore, I created a tile plot (using `{waffle}`), where every tile represents one piece. I colored again based on the secondary category. In order to still maintain the quantities of each category, I added the number of compositions to the legend.
 
 ``` r
+data |>
+  group_by(category2) |>
+  summarise(n = n()) |>
+  mutate(category2 = sprintf("%s (%s)", category2, n)) |>
 data |>
   group_by(category2) |>
   summarise(n = n()) |>
@@ -509,6 +518,8 @@ It's obvious that Bach lived in Leipzich the longest. He had a few productive pe
 Lastly, just for fun, I created a map.
 
 ``` r
+places_unique <- places |>
+  distinct(city, .keep_all = TRUE)
 places_unique <- places |>
   distinct(city, .keep_all = TRUE)
 

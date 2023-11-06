@@ -3,6 +3,11 @@ title = "Daniel Roelfs"
 theme = "typography"
 
 ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "index\\.html", "about\\.html", "static/blog/\\*_files/", "README.md"] 
+baseurl = "/"
+title = "Daniel Roelfs"
+theme = "typography"
+
+ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "index\\.html", "about\\.html", "static/blog/\\*_files/", "README.md"] 
 
 [markup]
   defaultMarkdownHandler = "goldmark"
@@ -60,8 +65,66 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "i
         icon = "minutemailer"
         weight = 6
         url = "mailto:daniel.roelfs@medisin.uio.no"
+    # Social links
+    [[params.social]]
+        name = "GitHub"
+        icon = "github"
+        weight = 1
+        url = "https://github.com/danielroelfs/"
+    [[params.social]]
+        name = "Twitter"
+        icon = "x"
+        weight = 2
+        url = "https://twitter.com/dthroelfs/"
+    [[params.social]]
+        name = "LinkedIn"
+        icon = "linkedin"
+        weight = 3
+        url = "https://www.linkedin.com/in/danielroelfs/"
+    [[params.social]]
+        name = "ORCID"
+        icon = "orcid"
+        weight = 4
+        url = "https://orcid.org/0000-0002-1083-002X"
+    [[params.social]]
+        name = "Google Scholar"
+        icon = "googlescholar"
+        weight = 5
+        url = "https://scholar.google.com/citations?user=QmVQcsAAAAAJ&hl=en"
+    [[params.social]]
+        name = "Mail"
+        icon = "minutemailer"
+        weight = 6
+        url = "mailto:daniel.roelfs@medisin.uio.no"
 
 # Menu links
+[menu]
+    [[menu.main]]
+        name = "Home"
+        url  = "/"
+        weight = 1
+    [[menu.main]]
+        name = "Blog"
+        url  = "/blog"
+        weight = 2
+    [[menu.main]]
+        name = "Photography"
+        url = "/photography"    
+        weight = 3
+        identifier = "hide-from-nav"
+    [[menu.main]]
+        name = "Publications"
+        url = "/publications"
+        weight = 4
+    [[menu.main]]
+        name = "CV"
+        url = "/cv"
+        weight = 5
+    [[menu.main]]
+        name = "About"
+        url = "/about"
+        weight = 6
+
 [menu]
     [[menu.main]]
         name = "Home"

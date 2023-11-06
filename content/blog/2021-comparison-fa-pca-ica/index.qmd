@@ -2,6 +2,8 @@
 title: A Basic Comparison Between Factor Analysis, PCA, and ICA
 date: 2021-09-14
 description: A Basic Comparison Between Factor Analysis, PCA, and ICA
+date: 2021-09-14
+description: A Basic Comparison Between Factor Analysis, PCA, and ICA
 slug: a-basic-comparison-between-factor-analysis-pca-and-ica
 categories:
   - statistics

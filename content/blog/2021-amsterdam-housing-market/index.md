@@ -2,6 +2,8 @@
 title: Visualizing the State of the Amsterdam Housing Market
 date: 2021-06-20
 description: Visualizing the State of the Amsterdam Housing Market
+date: 2021-06-20
+description: Visualizing the State of the Amsterdam Housing Market
 slug: visualizing-the-state-of-the-amsterdam-housing-market
 categories:
   - society
@@ -10,6 +12,7 @@ tags:
   - society
 execute:
   fig.retina: 2
+  fig.align: left
   fig.align: left
   fig.show: hold
   results: hold
@@ -51,6 +54,9 @@ This conclusion is based on a survey from Deloitte in 2020 where they surveyed m
 Of all the worrying events in 2020, millennials and Gen Z kids ranked financial instability as the second most common driver of stress, the most common being the welfare of their family ([source](https://www2.deloitte.com/content/dam/Deloitte/global/Documents/About-Deloitte/deloitte-2020-millennial-survey.pdf)). Today I want to dissect one of the possible causes of this *economic anxiety*: **the housing market**. Now, I'm not an economist nor a financial expert. Nonetheless, I believe I can leverage some of my knowledge of data wrangling and analysis to contribute a small piece to this topic. My insight into the Oslo housing market is fairly limited to so far and there's many nuances I don't fully understand yet, but I do think I have some relevant knowledge of the Dutch housing market. So today I'll dive into some data on the Dutch market, and particularly the Amsterdam housing market. There's countless stories about the Amsterdam housing market and how terrible it is for new buyers, similar to the Oslo housing market. However, in my opinion the Amsterdam housing market is already a few steps ahead of the Oslo market, and hopefully the Amsterdam market can offer some warnings about what the Oslo housing market might look like in a few years without some policy corrections.
 
 This will be a fairly basic data analysis and visualization post, I can't claim that this is an exhaustive list and that I didn't miss some nuances, but I'll give it . I collected some data from the Amsterdam Real Estate Association ([Makelaars Vereniging Amsterdam; MVA](https://www.mva.nl)) and statistics from the Central Bureau for Statistics ([Centraal Bureau for de Statistiek; CBS](https://www.cbs.nl)). As usual, I'll be using `{tidyverse}` *a lot*. I've also recently started using the `{ggtext}` package to manage the text elements in my plots, inspired by Cédric Scherer ([@CedScherer](https://twitter.com/CedScherer)). I'll use the `{gt}` package to spice up some of the tables, and `{patchwork}` for arranging plots. I'll use the `{cbsodataR}` to download data from the Central Bureau for Statistics ([CBS](https://www.cbs.nl)).
+
+<details>
+<summary>Show code</summary>
 
 <details>
 <summary>Show code</summary>
@@ -100,6 +106,8 @@ theme_set(ggthemes::theme_economist(base_family = "nunito-sans") +
 
 </details>
 
+</details>
+
 ### Getting the data
 
 {{< sidenote br="10em" >}}
@@ -109,6 +117,9 @@ There are [R packages](https://docs.ropensci.org/tabulizer/) that can parse PDF 
 The first piece of data I'll use comes from the Amsterdam Real Estate Association. They publish quarterly data on a number of variables about the Amsterdam housing market ([link](https://www.mva.nl/over-de-mva/mva/kwartaalcijfers)), inclusing asking price, final price paid, number of properties put on the market, number of properties sold and a few more back to the first quarter of 2012. *Obviously*, these numbers all come in pdf-format, because the people writing quarterly reports apparently have a *massive hatred* towards people that want to analyze this data. I downloaded the reports, used the online tool [PDFTables](https://pdftables.com) to convert them to Excel, and then stitched the tables together manually. Of course (remember the authors have a *massive hatred* towards us), the formatting of the numbers in the tables weren't consistent between different quarterly reports, so I had to do some cleaning in R. I put each table in a separate sheet and then used functionality from the `{readxl}` package to load each table into a different variable and then do the cleaning per table. This was a bit cumbersome.
 
 You can look at the code I used to load and merge the files. It's a bit of a mess:
+
+<details>
+<summary>Show code</summary>
 
 <details>
 <summary>Show code</summary>
@@ -247,7 +258,12 @@ write_rds(data_merged, "./data/data_merged.rds")
 
 </details>
 
+</details>
+
 Let's have a look at the dataset.
+
+<details>
+<summary>Show code</summary>
 
 <details>
 <summary>Show code</summary>
@@ -257,6 +273,8 @@ data_merged <- read_rds("./data/data_merged.rds")
 
 glimpse(data_merged)
 ```
+
+</details>
 
 </details>
 
@@ -273,6 +291,9 @@ glimpse(data_merged)
     $ tightness_index   <dbl> 19.8, 18.5, 20.1, 14.1, 21.8, 23.6, 17.4, 12.5, 13.3…
 
 From this dataset, I want to create a few new variables. I want to create a date format from the quarterly date. Currently it's in the format `"x1e_kw_2012"`. We'll extract the year and the quarter. Since there's 4 quarters in the 12 months, we'll multiply the quarter by 3 and then create a date format. We'll also calculate the percentage difference between the asking price and the price paid, and the percentage difference between the houses offered and the houses sold. I'll also translate the character string from Dutch to English using the `case_when()` function.
+
+<details>
+<summary>Show code</summary>
 
 <details>
 <summary>Show code</summary>
@@ -308,6 +329,8 @@ data <- data_merged |>
   ) |>
   glimpse()
 ```
+
+</details>
 
 </details>
 
@@ -386,9 +409,14 @@ data |>
 
 </details>
 
+</details>
+
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-overpay-1.png" width="768" />
 
 Prior to 2014, most properties in Amsterdam were sold at about 6% below asking price, in the last quarter of 2020, that trend had changed to more than 3.5% above asking. The variance is obviously larger for detached and semi-detached houses, since those are both expensive and scarce in Amsterdam, and are thus also bought and sold less often. The table below shows the stats for the first quarter of 2021. Apart from semi-detached houses, most other properties were sold at 4% over asking or more. The types of properties most accessible to first-time buyers are obviously the apartments. Either the older type in the inner city, or the newer apartments in the suburbs. People buying pre-1970 apartments spent more than €28 000 over the asking price and people buying apartments built after 1970 spent on average more than €18 000 over the asking price.
+
+<details>
+<summary>Show code</summary>
 
 <details>
 <summary>Show code</summary>
@@ -434,7 +462,12 @@ data |>
 
 </details>
 
+</details>
+
 What contributed to this price increase? A simple supply-and-demand plays a part. The figure below shows the "tightness index" (Dutch: "krapte indicator") over time. This number represents the number of choices a potential buyer has. This number is calculated per quarter by dividing the number of properties on the market halfway through the quarter divided by the number of transactions over the entire quarter. This number is then multiplied by 3 to correct for the fact that the number is calculated per quarter instead of per month. When the "tightness index" is below 5, it's considered a "sellers market" (source: [NVM](https://www.nvm.nl/wonen/marktinformatie/)). A larger number is good for buyers, a smaller number is good for sellers. In the first quarter of 2021, the number was exactly 2. It varies a bit per property type, but for apartments specifically it hasn't been higher than 3 since 2016. This means that first-time buyers often don't have a choice between more than 2 or 3 apartments per month. I tried to find some data on how many people currently are interested in buying a home in Amsterdam, but I couldn't find anything solid. There's only anecdotal evidence from viewings where within a year, the number of people interested in viewing a property has increased to 80 in 2020, compared to about 55 a year earlier (source: [Parool](https://www.parool.nl/amsterdam/huizenmarkt-is-gekkenhuis-kopers-profiteren-voor-1-april-nog-van-voordelige-belastingregel~bcadc579/)).
+
+<details>
+<summary>Show code</summary>
 
 <details>
 <summary>Show code</summary>
@@ -507,6 +540,8 @@ data |>
 
 </details>
 
+</details>
+
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-tightness-1.png" width="768" />
 
 So, there's a lot of competition among buyers, and people looking to sell their houses can expect to be paid more than they anticipated. Dozens of buyers compete for the same properties, driving up the price. The figure below shows the percentage of properties sold compared to the number of properties offered. It's clear that after the 2008 housing bubble crisis, the housing market was still recovering in 2012 and 2013. However, since 2016, more apartments were sold than were put on the market. This means that the number of properties available for the growing number of people wanting to move to Amsterdam is decreasing. This decreases supply in a time with increasing demand, thus pushing the prices higher twice over.
@@ -562,9 +597,14 @@ data |>
 
 </details>
 
+</details>
+
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-n-sales-1.png" width="960" />
 
 This adds fuel to the fire. I guess I'm trying to show that there are a number of factors stacked against young buyers. Any money you have saved up you need to spend to outbid the massive competition. The massive competition means buyers only have a handful of feasible options. Again, because of the massive competition, the chance they actually get to buy one of those options is low. The number of options is not steady either, the number properties sold has overtaken the number of properties being put on the market. There is a dwindling reserve of properties. Combine this with more and more young people wanting to move to the bigger cities and you have a perfect cocktail for a congested housing market. Building new properties can counteract this, but over the last years the Netherlands has actually slowed building new properties.
+
+<details>
+<summary>Show code</summary>
 
 <details>
 <summary>Show code</summary>
@@ -658,6 +698,8 @@ total_hist_plot / diff_hist_plot +
 
 </details>
 
+</details>
+
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-n-homes-1.png" width="960" />
 
 The figure displays data from from the CBS through the `{cbsodataR}` package. It shows an increase in the number of homes after the second World War in the 50s and the 60s. Since around 1975 there's been a decline in the net number of new houses added year-over-year. This while demand hasn't decreased in the same period.
@@ -669,6 +711,9 @@ There's actually quite a few more, but I'll focus on the ones I can quantify at 
 {{< /sidenote >}}
 
 But that's not all, there's a few other features that contribute to the gridlock. See, not only young people are on the market to buy apartments in Amsterdam. There's a thriving market for investors looking to take advantage of the rising prices in the Amsterdam housing market (source: [Algemeen Dagblad](https://www.ad.nl/wonen/beleggers-verwerven-massaal-koophuizen-voor-verhuur-in-amsterdam~afedc50c6/)). According to the Dutch central bank, about 1 in 5 properties are sold to investors, who are mostly looking to convert it to a rental property or flip it for a profit. I couldn't find the data the Dutch central bank relied on, but I found something else. The Central Bureau for Statistics collects data on the number of "mutations" among properties. The "mutation" in this case refers to the change of purpose of a property, e.g. if a house meant for sale is bought and then transformed to a rental property by either private individuals or corporations, or vice versa. I collected this data from the governmental yearly report on the housing market of 2020 ("*Staat van de Woningmarkt - Jaarrapportage 2020*", [link](https://www.rijksoverheid.nl/documenten/rapporten/2020/06/15/staat-van-de-woningmarkt-jaarrapportage-2020)). Instead of per quarter, this data is reported per year. Unfortunately, the data on housing mutations in the report (from 2020 mind you) only goes until 2017. It's important to note that these numbers are country-wide, not specific for Amsterdam. That means there could be some other factors in play. Many of these trends are present across the country, but they're massively amplified in the larger cities. The data was contained in a pdf that wasn't easily machine-readable, so I had to manually copy the numbers into a tibble, which was great...
+
+<details>
+<summary>Show code</summary>
 
 <details>
 <summary>Show code</summary>
@@ -712,7 +757,12 @@ house_mutations <- house_mutations_in |>
 
 </details>
 
+</details>
+
 So not every year there's the same number of "mutations" (transformations of purpose). That's I thought I'd display this data in two different plots, one with the raw values per year, and one with the percentage-wise deconstruction per year. Now obviously, first-time buyers don't care about the percentage houses being taken of the market and being transformed into rental properties, they care about the total number. However, I do think showing the percentage-wise plot makes the trend a bit more clearly.
+
+<details>
+<summary>Show code</summary>
 
 <details>
 <summary>Show code</summary>
@@ -794,11 +844,16 @@ mutations_n_plot / mutations_perc_plot +
 
 </details>
 
+</details>
+
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-housing-n_mutations-1.png" width="960" />
 
 The total number of mutations has hovered around 150 000 since 2012. There was a bump in 2014 when about 40 000 properties were changed from "rent (other)" to "rent (corporation)". The label "rent (other)" includes mostly private rentals or government-run rental properties, I think. I suspect that in 2014 one of those government-run rental agencies was privatized, causing the bump. The number of mutations from type to type has been fairly consistent until 2016. After 2016 there was a massive drop in the number of private rental properties being put up for sale, and a massive increase in the number of properties meant for sale being added to the private rental market. My guess is that this increase represents investors getting more and more involved in buying up properties and renting them out. Whereas in e.g. 2012, there was about an equal number of properties exchanged between the private rental market and the sale market, this balance is now heavily skewed. Relating this to the previous figures, where we showed that the number of houses sold exceeds the number of houses being put on the market, this also means that among those houses sold, a large number isn't kept in the sale market but rather added to the rental market.
 
 We can look at the net number of houses added to the rental market by adding up the different mutations. Again, prior to 2016, there were slightly more houses added to the sale market than the rental market, but after 2016, this number skyrocketed in favor of the rental market, when tens of thousands of properties were withdrawn from the sale market. Unfortunately I couldn't find any data since then to see if 2017 happened to be an outlier and if this number corrected to a more reasonable number since then.
+
+<details>
+<summary>Show code</summary>
 
 <details>
 <summary>Show code</summary>
@@ -868,8 +923,14 @@ net_mutation_plot + perc_mutation_plot +
 
 </details>
 
+</details>
+
 <img src="index.markdown_strict_files/figure-markdown_strict/net-shift-to-renters-1.png" width="960" />
 
+So in 2017 nearly 90 000 houses were mutated from sale to rental properties. In that same year, about 62 000 new homes were built (source: [CBS](https://www.cbs.nl/nl-nl/nieuws/2018/04/hoogste-aantal-nieuwbouwwoningen-in-acht-jaar)). Not all of those 62 000 homes are meant for sale, a proportion are added to the rental market, but even if all those new homes were meant for sale, the sale market still shrunk due to the (net) ~90 000 properties that were transformed and in that way removed from the sale market.
+
+<details>
+<summary>Show code</summary>
 So in 2017 nearly 90 000 houses were mutated from sale to rental properties. In that same year, about 62 000 new homes were built (source: [CBS](https://www.cbs.nl/nl-nl/nieuws/2018/04/hoogste-aantal-nieuwbouwwoningen-in-acht-jaar)). Not all of those 62 000 homes are meant for sale, a proportion are added to the rental market, but even if all those new homes were meant for sale, the sale market still shrunk due to the (net) ~90 000 properties that were transformed and in that way removed from the sale market.
 
 <details>
@@ -929,6 +990,9 @@ So what's the result of all these phenomena? The figure below shows the housing 
 <details>
 <summary>Show code</summary>
 
+<details>
+<summary>Show code</summary>
+
 ``` r
 asking_start <- data |>
   filter(
@@ -971,6 +1035,8 @@ data_asking_index |>
     legend.key = element_rect(fill = "transparent", color = "transparent")
   )
 ```
+
+</details>
 
 </details>
 

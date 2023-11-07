@@ -378,7 +378,7 @@ for (i in seq_len(nrow(titles_w_adaptation))) {
 
   rplot[[i]] <- data |>
     right_join(titles_w_adaptation |>
-      slice(i), by = "title") |>
+                slice(i), by = "title") |>
     right_join(data |> select(list_publication_date) |> distinct(),
       by = "list_publication_date"
     ) |>

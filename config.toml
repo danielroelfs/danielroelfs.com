@@ -25,7 +25,7 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "i
 
     customcss = ["custom_style.css"]
 
-    umami       = false
+    umami       = true
     umamilink   = "https://analytics-danielroelfs.netlify.app/script.js"
     umamiid     = "da48a88a-2e87-4024-8c99-639222aab54d"
     

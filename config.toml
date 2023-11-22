@@ -2,7 +2,9 @@ baseurl = "/"
 title = "Daniel Roelfs"
 theme = "typography"
 
-ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "index\\.html", "about\\.html", "static/blog/\\*_files/", "README.md"] 
+ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "index\\.html", "about\\.html", "static/blog/\\*_files/", "README.md",
+    "content/blog/2022-dutch-performance-olympic-speed-skating/.venv/",
+    "content/blog/2023-nyt-books-api/.venv"]
 
 [markup]
   defaultMarkdownHandler = "goldmark"
@@ -25,7 +27,7 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "i
 
     customcss = ["custom_style.css"]
 
-    umami       = true
+    umami       = false
     umamilink   = "https://analytics-danielroelfs.netlify.app/script.js"
     umamiid     = "da48a88a-2e87-4024-8c99-639222aab54d"
     

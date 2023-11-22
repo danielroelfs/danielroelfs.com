@@ -101,7 +101,7 @@ compass_text <- tribble(
 )
 
 data_parties |>
-  mutate(party = str_replace(party, "-", "-\n")) |> 
+  mutate(party = str_replace(party, "-", "-\n")) |>
   ggplot(aes(x = leftright, y = progcon, color = color)) +
   geom_hline(yintercept = 0, color = "#333333") +
   geom_vline(xintercept = 0, color = "#333333") +
@@ -113,7 +113,7 @@ data_parties |>
   geom_point(size = 16) +
   geom_text(
     aes(label = party, color = text_color),
-    size = 4, lineheight = 1, 
+    size = 4, lineheight = 1,
     fontface = "bold", family = "custom"
   ) +
   labs(
@@ -302,13 +302,16 @@ data_polls_pre_new <- read_rds("./data/polls_wk_46.rds") |>
   ) |>
   group_by(party) |>
   summarise(across(everything(), sum)) |>
-  filter(!party %in% c("GL", "PvdA")) |> 
-  mutate(party = case_when(str_detect(party, "50") ~ "50PLUS",
-                           str_detect(party, "VOLT") ~ "Volt",
-                           TRUE ~ party))
+  filter(!party %in% c("GL", "PvdA")) |>
+  mutate(party = case_when(
+    str_detect(party, "50") ~ "50PLUS",
+    str_detect(party, "VOLT") ~ "Volt",
+    TRUE ~ party
+  ))
 
 data_polls_pre_new |>
-  pivot_longer(cols = contains("seats"), names_to = "seats_var", values_to = "n_seats") |>
+  pivot_longer(cols = contains("seats"),
+               names_to = "seats_var", values_to = "n_seats") |>
   filter(seats_var %in% c("current_seats", "polls_seats_wk_46")) |>
   ggplot(aes(x = n_seats, y = reorder(party, polls_perc_wk_46), fill = seats_var)) +
   geom_vline(xintercept = 0, color = "#333333") +
@@ -382,22 +385,29 @@ polls_peilingwijzer <- tribble(
   "50PLUS", 0, 1,
 )
 
-polls_peilingwijzer |> 
-  inner_join(data_parties) |> 
-  inner_join(data_polls_pre_new |> select(party, current_seats)) |>
+polls_peilingwijzer |>
+  inner_join(data_parties) |>
+  inner_join(data_polls_pre_new |>
+               select(party, current_seats)) |>
   mutate(
     color = ifelse(color == "grey92", "grey", color),
-    range_max_label = ifelse(range_max <= 2, str_glue("{range_min}-{range_max}"), range_max)
+    range_max_label = ifelse(range_max <= 2,
+                             str_glue("{range_min}-{range_max}"), range_max)
   ) |>
-  ggplot(aes(x = current_seats, y = reorder(party, range_max), 
-             color = color, fill = color)) + 
+  ggplot(aes(
+    x = current_seats, y = reorder(party, range_max),
+    color = color, fill = color
+  )) +
   geom_vline(xintercept = 0, color = "#333333", linewidth = 1) +
   geom_col(color = "transparent", width = 0.25, alpha = 0.5, just = 2.5) +
   geom_crossbar(
-    aes(x = range_min + round((range_max - range_min) / 2), 
-        xmin = range_min, xmax = range_max,
-        color = colorspace::lighten(color, amount = 0.5)),
-    width = 0.5, linewidth = 1, fatten = 2) +
+    aes(
+      x = range_min + round((range_max - range_min) / 2),
+      xmin = range_min, xmax = range_max,
+      color = colorspace::lighten(color, amount = 0.5)
+    ),
+    width = 0.5, linewidth = 1, fatten = 2
+  ) +
   geom_text(
     aes(x = range_min, label = range_min),
     color = "#333333", size = 4, family = "custom",
@@ -412,7 +422,7 @@ polls_peilingwijzer |>
     data = tibble(),
     aes(x = 27, y = 12, label = "Previous\nelections"),
     inherit.aes = FALSE,
-    size = 4, family = "custom", 
+    size = 4, family = "custom",
     hjust = 0, lineheight = 0.75
   ) +
   geom_curve(
@@ -468,7 +478,7 @@ The voting booths (at least in the mainland part of the Netherlands) close at 21
 #| code-fold: true
 #| code-summary: "Show code for the plot"
 
-data_current_seats <- data_polls_pre_new |> 
+data_current_seats <- data_polls_pre_new |>
   select(party, current_perc, current_seats)
 
 exit_polls_2100 <- tribble(
@@ -477,7 +487,7 @@ exit_polls_2100 <- tribble(
   "PVV", 35,
   "GL-PvdA", 26,
   "NSC", 20,
-  "D66", 10, 
+  "D66", 10,
   "BBB", 7,
   "SP", 5,
   "PvdD", 4,
@@ -493,19 +503,24 @@ exit_polls_2100 <- tribble(
   "50PLUS", 1
 )
 
-exit_polls_2100 |> 
-  inner_join(data_parties, by = "party") |> 
-  inner_join(data_current_seats, by = "party") |> 
-  pivot_longer(cols = c(polls_2100, current_seats),
-               names_to = "variable", values_to = "seats") |> 
+exit_polls_2100 |>
+  inner_join(data_parties, by = "party") |>
+  inner_join(data_current_seats, by = "party") |>
+  pivot_longer(
+    cols = c(polls_2100, current_seats),
+    names_to = "variable", values_to = "seats"
+  ) |>
   mutate(
     color = ifelse(str_detect(variable, "current"), "grey80", color),
     color = ifelse(color == "grey92", "grey40", color),
-    text_color = ifelse(str_detect(variable, "polls") & party == "PVV", "white", text_color),
+    text_color = ifelse(str_detect(variable, "polls") & party == "PVV",
+                        "white", text_color),
     text_color = ifelse(str_detect(variable, "current"), "#333333", text_color)
-  ) |> 
-  ggplot(aes(x = seats, y = reorder(party, current_perc),
-             group = variable, fill = color)) +
+  ) |>
+  ggplot(aes(
+    x = seats, y = reorder(party, current_perc),
+    group = variable, fill = color
+  )) +
   geom_col(position = position_dodge(), key_glyph = "point") +
   geom_vline(xintercept = 0, color = "#333333") +
   geom_text(

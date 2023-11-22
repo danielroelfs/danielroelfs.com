@@ -317,8 +317,10 @@ data_polls_pre_new <- read_rds("./data/polls_wk_46.rds") |>
   ))
 
 data_polls_pre_new |>
-  pivot_longer(cols = contains("seats"),
-               names_to = "seats_var", values_to = "n_seats") |>
+  pivot_longer(
+    cols = contains("seats"),
+    names_to = "seats_var", values_to = "n_seats"
+  ) |>
   filter(seats_var %in% c("current_seats", "polls_seats_wk_46")) |>
   ggplot(aes(x = n_seats, y = reorder(party, polls_perc_wk_46), fill = seats_var)) +
   geom_vline(xintercept = 0, color = "#333333") +
@@ -402,7 +404,8 @@ polls_peilingwijzer |>
   mutate(
     color = ifelse(color == "grey92", "grey", color),
     range_max_label = ifelse(range_max <= 2,
-                             str_glue("{range_min}-{range_max}"), range_max)
+      str_glue("{range_min}-{range_max}"), range_max
+    )
   ) |>
   ggplot(aes(
     x = current_seats, y = reorder(party, range_max),
@@ -525,7 +528,8 @@ exit_polls_2100 |>
     color = ifelse(str_detect(variable, "current"), "grey80", color),
     color = ifelse(color == "grey92", "grey40", color),
     text_color = ifelse(str_detect(variable, "polls") & party == "PVV",
-                        "white", text_color),
+      "white", text_color
+    ),
     text_color = ifelse(str_detect(variable, "current"), "#333333", text_color)
   ) |>
   ggplot(aes(
@@ -604,19 +608,22 @@ exit_polls_2200 <- tribble(
   "50PLUS", 1
 )
 
-exit_polls_2200 |> 
-  inner_join(exit_polls_2100) |> 
-  inner_join(data_parties, by = "party") |> 
-  pivot_longer(cols = starts_with("polls"),
-               names_to = "time", values_to = "seats") |> 
+exit_polls_2200 |>
+  inner_join(exit_polls_2100) |>
+  inner_join(data_parties, by = "party") |>
+  pivot_longer(
+    cols = starts_with("polls"),
+    names_to = "time", values_to = "seats"
+  ) |>
   mutate(
     time = str_remove(time, "polls_"),
-    time = lubridate::parse_date_time(time, "HM", tz=""),
+    time = lubridate::parse_date_time(time, "HM", tz = ""),
     color = ifelse(party == "PVV", "grey40", color),
     text_color = ifelse(party == "PVV",
-                        "white", text_color),
-  ) |> 
-  ggplot(aes(x = time, y = seats, color = color)) + 
+      "white", text_color
+    ),
+  ) |>
+  ggplot(aes(x = time, y = seats, color = color)) +
   geom_path() +
   geom_point(size = 3) +
   geom_text(

@@ -178,6 +178,7 @@ data_tk_history <- "https://www.parlement.com/id/vh8lnhronvx6/zetelverdeling_twe
 Then we can merge this dataset with the metadata tibble I created earlier to get the colors so I can use them in plotting. This plot is a simple "time-series"-like plot using `geom_path()`. The biggest challenge here was to annotate all the parties properly. I chose for a combination of both labeling each line explicitly and adding a legend with the specification for each color. However, since many parties use very similar colors this legend alone was not enough.
 
 ```{r}
+#| label: plot-seat-historical-distributions
 #| warning: false
 #| code-fold: true
 #| code-summary: "Show code"
@@ -261,6 +262,7 @@ I scraped this data earlier in the week, so the current table online does not re
 Let's now also look at some polls to see what election night might bring. For this I'll scrape the results from [Ipsos](https://www.ipsos.com). It contains the polls from week 44 and week 46.
 
 ```{r}
+#| label: scrape-ipsos-polls-wk46
 #| eval: false
 #| code-fold: true
 #| code-summary: "Show code"
@@ -289,6 +291,7 @@ data_polls_pre |> write_rds("./data/polls_wk_46.rds")
 From this table I'll use only the polls from week 46 (latest available at the time). To better compare the polls to the current situation without drowning out the most important data I'll show the current seat distribution in grey, and the predicted seats in red.
 
 ```{r}
+#| label: plot-ipsos-polls-wk46
 #| code-fold: true
 #| code-summary: "Show code for the plot"
 
@@ -534,7 +537,7 @@ exit_polls_2100 |>
     x = "Number of seats in parliament",
     y = NULL,
     fill = NULL,
-    caption = "**Source**: NOS"
+    caption = "**Source**: Ipsos, comissioned by NOS and RTL"
   ) +
   scale_x_continuous(
     position = "top",
@@ -559,4 +562,89 @@ Out of the blue, contrary to basically any serious poll, the PVV party from Geer
 
 {{{< omission >}}}
 
-_Data and analysis will be added throughout the night_
+## 22 November 22:00
+
+An hour later, at 22:00, the next exit polls was released. After the shock of the first one I think everyone was quite nervous to see whether these next exit polls were consistent with the first or if there was some course correction, but the second exit polls were very consistent. No party changed more than 1 seat in either direction compared to the polls released at 21:00. I'll try to visualize the difference, showing how flat the differences are.
+
+```{r}
+#| label: plot-exit-polls-2200
+#| warning: false
+#| fig-height: 6
+#| code-fold: true
+#| code-summary: "Show code for the plot"
+
+exit_polls_2200 <- tribble(
+  ~party, ~polls_2200,
+  "VVD", 24,
+  "PVV", 35,
+  "GL-PvdA", 25,
+  "NSC", 20,
+  "D66", 10,
+  "BBB", 7,
+  "SP", 5,
+  "PvdD", 3,
+  "CU", 3,
+  "CDA", 5,
+  "FvD", 3,
+  "DENK", 3,
+  "Volt", 2,
+  "SGP", 3,
+  "JA21", 1,
+  "BVNL", 0,
+  "BIJ1", 0,
+  "50PLUS", 1
+)
+
+exit_polls_2200 |> 
+  inner_join(exit_polls_2100) |> 
+  inner_join(data_parties, by = "party") |> 
+  pivot_longer(cols = starts_with("polls"),
+               names_to = "time", values_to = "seats") |> 
+  mutate(
+    time = str_remove(time, "polls_"),
+    time = lubridate::parse_date_time(time, "HM", tz=""),
+    color = ifelse(party == "PVV", "grey40", color),
+    text_color = ifelse(party == "PVV",
+                        "white", text_color),
+  ) |> 
+  ggplot(aes(x = time, y = seats, color = color)) + 
+  geom_path() +
+  geom_point(size = 3) +
+  geom_text(
+    aes(label = seats, color = text_color),
+    size = 2
+  ) +
+  ggrepel::geom_text_repel(
+    data = . %>% group_by(party) %>% slice_max(time),
+    mapping = aes(label = party),
+    hjust = 0, size = 2, seed = 42,
+    max.overlaps = 20,
+    fontface = "bold", family = "custom"
+  ) +
+  labs(
+    title = "Difference in exit polls<br>between 21:00 and 22:00",
+    subtitle = "Little change across the board, maximum difference is 1 seat",
+    x = NULL,
+    y = "Number of seats",
+    caption = "**Source**: Ipsos, comissioned by NOS and RTL"
+  ) +
+  scale_x_datetime(
+    expand = expansion(add = c(50, 500))
+  ) +
+  scale_color_identity() +
+  theme_minimal(base_family = "custom") +
+  coord_fixed(ratio = 120, clip = "off") +
+  theme(
+    plot.title.position = "plot",
+    plot.title = element_markdown(size = 16, face = "bold"),
+    plot.subtitle = element_markdown(lineheight = 0.67),
+    plot.caption.position = "plot",
+    plot.caption = element_markdown(),
+    legend.position = c(0.8, 0.2)
+  )
+```
+
+{{{< omission >}}}
+
+It looks like the results per municipality will take some time longer, so I'll go to bed in the meantime and I'll update this post tomorrow with results per municipality and/or province.
+

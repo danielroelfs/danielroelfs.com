@@ -100,7 +100,7 @@ compass_text <- tribble(
 )
 
 data_parties |>
-  mutate(party = str_replace(party, "-", "-\n")) |> 
+  mutate(party = str_replace(party, "-", "-\n")) |>
   ggplot(aes(x = leftright, y = progcon, color = color)) +
   geom_hline(yintercept = 0, color = "#333333") +
   geom_vline(xintercept = 0, color = "#333333") +
@@ -112,7 +112,7 @@ data_parties |>
   geom_point(size = 16) +
   geom_text(
     aes(label = party, color = text_color),
-    size = 4, lineheight = 1, 
+    size = 4, lineheight = 1,
     fontface = "bold", family = "custom"
   ) +
   labs(
@@ -252,7 +252,7 @@ data_tk_hist |>
 
 </details>
 
-<img src="index.markdown_strict_files/figure-markdown_strict/unnamed-chunk-5-1.png" width="768" />
+<img src="index.markdown_strict_files/figure-markdown_strict/plot-seat-historical-distributions-1.png" width="768" />
 
 {{< sidenote >}}
 In contrast to [Geert Wilders](https://www.britannica.com/biography/Geert-Wilders), [Mark Rutte](https://www.britannica.com/biography/Mark-Rutte) does not have an elaborate entry in the Encyclopedia Brittanica
@@ -309,13 +309,16 @@ data_polls_pre_new <- read_rds("./data/polls_wk_46.rds") |>
   ) |>
   group_by(party) |>
   summarise(across(everything(), sum)) |>
-  filter(!party %in% c("GL", "PvdA")) |> 
-  mutate(party = case_when(str_detect(party, "50") ~ "50PLUS",
-                           str_detect(party, "VOLT") ~ "Volt",
-                           TRUE ~ party))
+  filter(!party %in% c("GL", "PvdA")) |>
+  mutate(party = case_when(
+    str_detect(party, "50") ~ "50PLUS",
+    str_detect(party, "VOLT") ~ "Volt",
+    TRUE ~ party
+  ))
 
 data_polls_pre_new |>
-  pivot_longer(cols = contains("seats"), names_to = "seats_var", values_to = "n_seats") |>
+  pivot_longer(cols = contains("seats"),
+               names_to = "seats_var", values_to = "n_seats") |>
   filter(seats_var %in% c("current_seats", "polls_seats_wk_46")) |>
   ggplot(aes(x = n_seats, y = reorder(party, polls_perc_wk_46), fill = seats_var)) +
   geom_vline(xintercept = 0, color = "#333333") +
@@ -356,7 +359,7 @@ data_polls_pre_new |>
 
     Warning: Removed 6 rows containing missing values (`geom_text()`).
 
-<img src="index.markdown_strict_files/figure-markdown_strict/unnamed-chunk-7-1.png" width="768" />
+<img src="index.markdown_strict_files/figure-markdown_strict/plot-ipsos-polls-wk46-1.png" width="768" />
 
 The biggest thing to notice here is the party NSC which was started by Pieter Omtzigt, formerly a member of the CDA. This party participates in the 2023 parliamentary elections for the first time, so it doesn't have anything to compare to. According to these polls, the NSC will go in one go to 26 seats. The VVD is still the biggest, but loses a few seats. Other than the VVD, the biggest losers in these polls are the D66, CDA, FvD, and SP.
 
@@ -392,22 +395,29 @@ polls_peilingwijzer <- tribble(
   "50PLUS", 0, 1,
 )
 
-polls_peilingwijzer |> 
-  inner_join(data_parties) |> 
-  inner_join(data_polls_pre_new |> select(party, current_seats)) |>
+polls_peilingwijzer |>
+  inner_join(data_parties) |>
+  inner_join(data_polls_pre_new |>
+               select(party, current_seats)) |>
   mutate(
     color = ifelse(color == "grey92", "grey", color),
-    range_max_label = ifelse(range_max <= 2, str_glue("{range_min}-{range_max}"), range_max)
+    range_max_label = ifelse(range_max <= 2,
+                             str_glue("{range_min}-{range_max}"), range_max)
   ) |>
-  ggplot(aes(x = current_seats, y = reorder(party, range_max), 
-             color = color, fill = color)) + 
+  ggplot(aes(
+    x = current_seats, y = reorder(party, range_max),
+    color = color, fill = color
+  )) +
   geom_vline(xintercept = 0, color = "#333333", linewidth = 1) +
   geom_col(color = "transparent", width = 0.25, alpha = 0.5, just = 2.5) +
   geom_crossbar(
-    aes(x = range_min + round((range_max - range_min) / 2), 
-        xmin = range_min, xmax = range_max,
-        color = colorspace::lighten(color, amount = 0.5)),
-    width = 0.5, linewidth = 1, fatten = 2) +
+    aes(
+      x = range_min + round((range_max - range_min) / 2),
+      xmin = range_min, xmax = range_max,
+      color = colorspace::lighten(color, amount = 0.5)
+    ),
+    width = 0.5, linewidth = 1, fatten = 2
+  ) +
   geom_text(
     aes(x = range_min, label = range_min),
     color = "#333333", size = 4, family = "custom",
@@ -422,7 +432,7 @@ polls_peilingwijzer |>
     data = tibble(),
     aes(x = 27, y = 12, label = "Previous\nelections"),
     inherit.aes = FALSE,
-    size = 4, family = "custom", 
+    size = 4, family = "custom",
     hjust = 0, lineheight = 0.75
   ) +
   geom_curve(
@@ -479,7 +489,7 @@ The voting booths (at least in the mainland part of the Netherlands) close at 21
 <summary>Show code for the plot</summary>
 
 ``` r
-data_current_seats <- data_polls_pre_new |> 
+data_current_seats <- data_polls_pre_new |>
   select(party, current_perc, current_seats)
 
 exit_polls_2100 <- tribble(
@@ -488,7 +498,7 @@ exit_polls_2100 <- tribble(
   "PVV", 35,
   "GL-PvdA", 26,
   "NSC", 20,
-  "D66", 10, 
+  "D66", 10,
   "BBB", 7,
   "SP", 5,
   "PvdD", 4,
@@ -504,19 +514,24 @@ exit_polls_2100 <- tribble(
   "50PLUS", 1
 )
 
-exit_polls_2100 |> 
-  inner_join(data_parties, by = "party") |> 
-  inner_join(data_current_seats, by = "party") |> 
-  pivot_longer(cols = c(polls_2100, current_seats),
-               names_to = "variable", values_to = "seats") |> 
+exit_polls_2100 |>
+  inner_join(data_parties, by = "party") |>
+  inner_join(data_current_seats, by = "party") |>
+  pivot_longer(
+    cols = c(polls_2100, current_seats),
+    names_to = "variable", values_to = "seats"
+  ) |>
   mutate(
     color = ifelse(str_detect(variable, "current"), "grey80", color),
     color = ifelse(color == "grey92", "grey40", color),
-    text_color = ifelse(str_detect(variable, "polls") & party == "PVV", "white", text_color),
+    text_color = ifelse(str_detect(variable, "polls") & party == "PVV",
+                        "white", text_color),
     text_color = ifelse(str_detect(variable, "current"), "#333333", text_color)
-  ) |> 
-  ggplot(aes(x = seats, y = reorder(party, current_perc),
-             group = variable, fill = color)) +
+  ) |>
+  ggplot(aes(
+    x = seats, y = reorder(party, current_perc),
+    group = variable, fill = color
+  )) +
   geom_col(position = position_dodge(), key_glyph = "point") +
   geom_vline(xintercept = 0, color = "#333333") +
   geom_text(
@@ -530,7 +545,7 @@ exit_polls_2100 |>
     x = "Number of seats in parliament",
     y = NULL,
     fill = NULL,
-    caption = "**Source**: NOS"
+    caption = "**Source**: Ipsos, comissioned by NOS and RTL"
   ) +
   scale_x_continuous(
     position = "top",
@@ -559,4 +574,89 @@ Out of the blue, contrary to basically any serious poll, the PVV party from Geer
 
 {{< omission >}}
 
-*Data and analysis will be added throughout the night*
+## 22 November 22:00
+
+An hour later, at 22:00, the next exit polls was released. After the shock of the first one I think everyone was quite nervous to see whether these next exit polls were consistent with the first or if there was some course correction, but the second exit polls were very consistent. No party changed more than 1 seat in either direction compared to the polls released at 21:00. I'll try to visualize the difference, showing how flat the differences are.
+
+<details>
+<summary>Show code for the plot</summary>
+
+``` r
+exit_polls_2200 <- tribble(
+  ~party, ~polls_2200,
+  "VVD", 24,
+  "PVV", 35,
+  "GL-PvdA", 25,
+  "NSC", 20,
+  "D66", 10,
+  "BBB", 7,
+  "SP", 5,
+  "PvdD", 3,
+  "CU", 3,
+  "CDA", 5,
+  "FvD", 3,
+  "DENK", 3,
+  "Volt", 2,
+  "SGP", 3,
+  "JA21", 1,
+  "BVNL", 0,
+  "BIJ1", 0,
+  "50PLUS", 1
+)
+
+exit_polls_2200 |> 
+  inner_join(exit_polls_2100) |> 
+  inner_join(data_parties, by = "party") |> 
+  pivot_longer(cols = starts_with("polls"),
+               names_to = "time", values_to = "seats") |> 
+  mutate(
+    time = str_remove(time, "polls_"),
+    time = lubridate::parse_date_time(time, "HM", tz=""),
+    color = ifelse(party == "PVV", "grey40", color),
+    text_color = ifelse(party == "PVV",
+                        "white", text_color),
+  ) |> 
+  ggplot(aes(x = time, y = seats, color = color)) + 
+  geom_path() +
+  geom_point(size = 3) +
+  geom_text(
+    aes(label = seats, color = text_color),
+    size = 2
+  ) +
+  ggrepel::geom_text_repel(
+    data = . %>% group_by(party) %>% slice_max(time),
+    mapping = aes(label = party),
+    hjust = 0, size = 2, seed = 42,
+    max.overlaps = 20,
+    fontface = "bold", family = "custom"
+  ) +
+  labs(
+    title = "Difference in exit polls<br>between 21:00 and 22:00",
+    subtitle = "Little change across the board, maximum difference is 1 seat",
+    x = NULL,
+    y = "Number of seats",
+    caption = "**Source**: Ipsos, comissioned by NOS and RTL"
+  ) +
+  scale_x_datetime(
+    expand = expansion(add = c(50, 500))
+  ) +
+  scale_color_identity() +
+  theme_minimal(base_family = "custom") +
+  coord_fixed(ratio = 120, clip = "off") +
+  theme(
+    plot.title.position = "plot",
+    plot.title = element_markdown(size = 16, face = "bold"),
+    plot.subtitle = element_markdown(lineheight = 0.67),
+    plot.caption.position = "plot",
+    plot.caption = element_markdown(),
+    legend.position = c(0.8, 0.2)
+  )
+```
+
+</details>
+
+<img src="index.markdown_strict_files/figure-markdown_strict/plot-exit-polls-2200-1.png" width="768" />
+
+{{< omission >}}
+
+It looks like the results per municipality will take some time longer, so I'll go to bed in the meantime and I'll update this post tomorrow with results per municipality and/or province.

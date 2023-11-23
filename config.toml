@@ -2,10 +2,9 @@ baseurl = "/"
 title = "Daniel Roelfs"
 theme = "typography"
 
-ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "index\\.html", "about\\.html", "static/blog/\\*_files/", "README.md",
-    "content/blog/2022-dutch-performance-olympic-speed-skating/.venv/",
-    "content/blog/2023-nyt-books-api/.venv",
-    "content/blog/2023-scientific-publishing/.venv"]
+ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
+    "_cache$", "index\\.html", "about\\.html", "static/blog/\\*_files/", "README.md",
+    ".venv"]
 
 [markup]
   defaultMarkdownHandler = "goldmark"

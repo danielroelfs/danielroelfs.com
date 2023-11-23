@@ -401,7 +401,7 @@ polls_peilingwijzer <- tribble(
 polls_peilingwijzer |>
   inner_join(data_parties) |>
   inner_join(data_polls_pre_new |>
-    select(party, current_seats)) |>
+               select(party, current_seats)) |>
   mutate(
     color = ifelse(color == "grey92", "grey", color),
     range_max_label = ifelse(range_max <= 2,
@@ -852,7 +852,9 @@ summary_municipality <- results_municipality |>
   ) +
   labs(
     title = "Political identity",
-    subtitle = "Is the municipalitiy more<br><span style='color: #B24334'>progressive</span> or <span style='color: #4180B4'>conservative</span>?",
+    subtitle = "Is the municipalitiy more<br>
+      <span style='color: #B24334'>**progressive**</span> or
+      <span style='color: #4180B4'>**conservative**</span>?",
     fill = NULL
   ) +
   scico::scale_fill_scico(
@@ -868,7 +870,9 @@ summary_municipality <- results_municipality |>
     ) +
     labs(
       title = "Political color",
-      subtitle = "Is the municipalitiy more<br><span style='color: #B24334'>left</span> or <span style='color: #4180B4'>right</span> leaning?",
+      subtitle = "Is the municipalitiy more<br>
+        <span style='color: #B24334'>**left**</span> or
+        <span style='color: #4180B4'>**right**</span> leaning?",
       fill = NULL
     ) +
     scico::scale_fill_scico(
@@ -888,7 +892,7 @@ summary_municipality <- results_municipality |>
     plot.title.position = "plot",
     plot.title = element_markdown(size = 16, face = "bold"),
     plot.subtitle = element_markdown(),
-    plot.caption = element_markdown(lineheight = 0.75),
+    plot.caption = element_markdown(lineheight = 1),
     plot.caption.position = "plot",
     legend.text = element_blank(),
     legend.position = "bottom"

@@ -360,8 +360,6 @@ data_polls_pre_new |>
 
 </details>
 
-    Warning: Removed 6 rows containing missing values (`geom_text()`).
-
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-ipsos-polls-wk46-1.png" width="768" />
 
 The biggest thing to notice here is the party NSC which was started by Pieter Omtzigt, formerly a member of the CDA. This party participates in the 2023 parliamentary elections for the first time, so it doesn't have anything to compare to. According to these polls, the NSC will go in one go to 26 seats. The VVD is still the biggest, but loses a few seats. Other than the VVD, the biggest losers in these polls are the D66, CDA, FvD, and SP.
@@ -673,30 +671,7 @@ exit_polls_2200 |>
 The Dutch government is based on coalitions, so the PVV will need to collaborate with other parties to form a government
 {{< /sidenote >}}
 
-It's the day after and basically all news agencies (e.g. [NOS](https://nos.nl/collectie/13958/artikel/2498903), [BBC](https://www.bbc.com/news/world-europe-67504272), [CNN](https://edition.cnn.com/2023/11/23/europe/geert-wilders-dutch-election-analysis-intl/index.html), [NRK](https://www.nrk.no/urix/1.16648165)) are (justifiably) shocked by the fact that Geert Wilders likely will become the next prime minister in the Netherlands for however long his government will last. The formal results will be announced once all votes are properly tallied and checked again, so for this part of the analyses we can only rely on the latest results with almost all votes counted at least once. The official result will be published by the [*Kiesraad*](https://www.kiesraad.nl/) one about a week, but it publishes the [preliminary results](https://www.kiesraad.nl/verkiezingen/tweede-kamer/uitslagen/uitslagen-per-gemeente-tweede-kamer) also. However, this data is quite a headache to scrape, so I'll use the website [*AlleCijfers.nl*](https://allecijfers.nl/uitslag-tweede-kamer-verkiezingen-2023/) instead that more conveniently lists everything in an HTML table that we can scrape. See [here](https://github.com/danielroelfs/danielroelfs.com/tree/main/content/blog/2023-dutch-elections/scrape_municipality_results.py) for the Python code to scrape the website
-
-<details>
-<summary>Show code</summary>
-
-``` r
-results_municipality <- read_delim("./data/election_results.csv", delim = ";") |>
-  rename(region = Regionaam) |>
-  mutate(
-    across(everything(), ~ str_remove(.x, "%")),
-    across(everything(), ~ str_replace(.x, ",", ".")),
-    across(-region, parse_number)
-  ) |>
-  pivot_longer(cols = -region, names_to = "party", values_to = "perc") |>
-  left_join(data_parties) |>
-  mutate(
-    region = str_remove(region, "Gemeente"),
-    region = str_trim(region)
-  )
-```
-
-</details>
-
-I'll first look at the national results, which I can just copy from the TV. I already created the absolute seat comparison, and since not much changed I thought perhaps I could look at the percentage change from the current seats.
+It's the day after and basically all news agencies (e.g. [NOS](https://nos.nl/collectie/13958/artikel/2498903), [BBC](https://www.bbc.com/news/world-europe-67504272), [CNN](https://edition.cnn.com/2023/11/23/europe/geert-wilders-dutch-election-analysis-intl/index.html), [NRK](https://www.nrk.no/urix/1.16648165)) are (justifiably) shocked by the fact that Geert Wilders likely will become the next prime minister in the Netherlands for however long his government will last. The formal results will be announced once all votes are properly tallied and checked again, so for this part of the analyses we can only rely on the latest results with almost all votes counted at least once. The official result will be published by the [*Kiesraad*](https://www.kiesraad.nl/) one about a week, but it publishes the [preliminary results](https://www.kiesraad.nl/verkiezingen/tweede-kamer/uitslagen/uitslagen-per-gemeente-tweede-kamer) also, so I'll just copy the data from there. I already created the absolute seat comparison, and since not much changed I thought perhaps I could look at the percentage change from the current seats.
 
 <details>
 <summary>Show code for the plot</summary>
@@ -801,7 +776,30 @@ preliminary_results_diff |>
 
 Since the NSC is a new party it's increase (no matter how little or large it would have been) is infinite. Since the party got 20 seats, I think it looks fairly logical to have it appear at the top. If it was a much smaller party, I would have maybe forced it to be shown at the bottom to incidate that this is a statistical anomaly. The *Boer Burger Beweging* (BBB) has one seat in the current parliament after their first participation in the previous election, but will increase to 7 in the next parliament that will be seated early December. There are two parties that according to these numbers will be removed from parliament (indicated by the 100% decrease in seats in parliament). I would say that having the most important numbers be somewhat squished on the left of the plot is perhaps not ideal, but it's a trade-off from showing the large increase in the NSC and BBB.
 
-Next I wanted to look at the results per municipality to see if there were any trends I could identify. This means creating a map, so I downloaded a *geopackage* file from the [*Centraal Bureau voor de Statistiek*](https://www.cbs.nl) (CBS) page on [geographical areas](https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/cbs-gebiedsindelingen) where they share current and historical files on a number of divisions (provinces, municipalities, security regions, etc.). The *geopackage* format can be parsed with the `{sf}` package. The file contains several "layers" that can be listed through the `sf::st_layers(<file>)` functionality.
+Next I wanted to look at the results per municipality to see if there were any trends I could identify. The *Kiesraad* publishes preliminary results per municipality also, but this data is quite a headache to scrape so I'll use the website [*AlleCijfers.nl*](https://allecijfers.nl/uitslag-tweede-kamer-verkiezingen-2023/) instead that more conveniently lists everything in an HTML table that we can scrape. See [here](https://github.com/danielroelfs/danielroelfs.com/tree/main/content/blog/2023-dutch-elections/scrape_municipality_results.py) for the Python code to scrape the website.
+
+<details>
+<summary>Show code</summary>
+
+``` r
+results_municipality <- read_delim("./data/election_results.csv", delim = ";") |>
+  rename(region = Regionaam) |>
+  mutate(
+    across(everything(), ~ str_remove(.x, "%")),
+    across(everything(), ~ str_replace(.x, ",", ".")),
+    across(-region, parse_number)
+  ) |>
+  pivot_longer(cols = -region, names_to = "party", values_to = "perc") |>
+  left_join(data_parties) |>
+  mutate(
+    region = str_remove(region, "Gemeente"),
+    region = str_trim(region)
+  )
+```
+
+</details>
+
+To create the map, I downloaded a *geopackage* file from the [*Centraal Bureau voor de Statistiek*](https://www.cbs.nl) (CBS) page on [geographical areas](https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/cbs-gebiedsindelingen) where they share current and historical files on a number of divisions (provinces, municipalities, security regions, etc.). The *geopackage* format can be parsed with the `{sf}` package. The file contains several "layers" that can be listed through the `sf::st_layers(<file>)` functionality.
 
 <details>
 <summary>Show code</summary>
@@ -809,21 +807,13 @@ Next I wanted to look at the results per municipality to see if there were any t
 ``` r
 geo_municipality <- sf::st_read(
   "./data/cbsgebiedsindelingen2023.gpkg",
-  layer = "gemeente_gegeneraliseerd"
+  layer = "gemeente_gegeneraliseerd",
+  quiet = TRUE
 ) |>
   janitor::clean_names()
 ```
 
 </details>
-
-    Reading layer `gemeente_gegeneraliseerd' from data source 
-      `/Users/dtroelfs/Dropbox/Personal/scripts/danielroelfs/content/blog/2023-dutch-elections/data/cbsgebiedsindelingen2023.gpkg' 
-      using driver `GPKG'
-    Simple feature collection with 342 features and 5 fields
-    Geometry type: MULTIPOLYGON
-    Dimension:     XY
-    Bounding box:  xmin: 13565.4 ymin: 306846.2 xmax: 278026.1 ymax: 619231.6
-    Projected CRS: Amersfoort / RD New
 
 The thing I was most interested in at first is how progressive or conservative (I'll refer to this as "political identity" from now on), and how left- and right-wing the municipalities are ("political color"). As noted before, the political color of the PVV is somewhat controversial, where *KiesKompas* would put in the centre-right due to it's populist agenda, the party is usually mentioned among the far-right parties, both nationally and internationally. I could change the value for this part of the analyses, but I'm not comfortable setting another value, so look at the following plots with this caveat in mind. Considering the electoral victory the PVV won this election cycle, the plots should probabaly look more right-wing than the shown values represent.
 

@@ -293,6 +293,7 @@ From this table I'll use only the polls from week 46 (latest available at the ti
 
 ```{r}
 #| label: plot-ipsos-polls-wk46
+#| warning: false
 #| code-fold: true
 #| code-summary: "Show code for the plot"
 
@@ -660,30 +661,7 @@ exit_polls_2200 |>
 The Dutch government is based on coalitions, so the PVV will need to collaborate with other parties to form a government
 {{{< /sidenote >}}}
 
-It's the day after and basically all news agencies (e.g. [NOS](https://nos.nl/collectie/13958/artikel/2498903), [BBC](https://www.bbc.com/news/world-europe-67504272), [CNN](https://edition.cnn.com/2023/11/23/europe/geert-wilders-dutch-election-analysis-intl/index.html), [NRK](https://www.nrk.no/urix/1.16648165)) are (justifiably) shocked by the fact that Geert Wilders likely will become the next prime minister in the Netherlands for however long his government will last. The formal results will be announced once all votes are properly tallied and checked again, so for this part of the analyses we can only rely on the latest results with almost all votes counted at least once. The official result will be published by the [_Kiesraad_](https://www.kiesraad.nl/) one about a week, but it publishes the [preliminary results](https://www.kiesraad.nl/verkiezingen/tweede-kamer/uitslagen/uitslagen-per-gemeente-tweede-kamer) also. However, this data is quite a headache to scrape, so I'll use the website  [_AlleCijfers.nl_](https://allecijfers.nl/uitslag-tweede-kamer-verkiezingen-2023/) instead that more conveniently lists everything in an HTML table that we can scrape. See [here](https://github.com/danielroelfs/danielroelfs.com/tree/main/content/blog/2023-dutch-elections/scrape_municipality_results.py) for the Python code to scrape the website
-
-```{r}
-#| label: prep-municipality-results
-#| message: false
-#| code-fold: true
-#| code-summary: "Show code"
-
-results_municipality <- read_delim("./data/election_results.csv", delim = ";") |>
-  rename(region = Regionaam) |>
-  mutate(
-    across(everything(), ~ str_remove(.x, "%")),
-    across(everything(), ~ str_replace(.x, ",", ".")),
-    across(-region, parse_number)
-  ) |>
-  pivot_longer(cols = -region, names_to = "party", values_to = "perc") |>
-  left_join(data_parties) |>
-  mutate(
-    region = str_remove(region, "Gemeente"),
-    region = str_trim(region)
-  )
-```
-
-I'll first look at the national results, which I can just copy from the TV. I already created the absolute seat comparison, and since not much changed I thought perhaps I could look at the percentage change from the current seats.
+It's the day after and basically all news agencies (e.g. [NOS](https://nos.nl/collectie/13958/artikel/2498903), [BBC](https://www.bbc.com/news/world-europe-67504272), [CNN](https://edition.cnn.com/2023/11/23/europe/geert-wilders-dutch-election-analysis-intl/index.html), [NRK](https://www.nrk.no/urix/1.16648165)) are (justifiably) shocked by the fact that Geert Wilders likely will become the next prime minister in the Netherlands for however long his government will last. The formal results will be announced once all votes are properly tallied and checked again, so for this part of the analyses we can only rely on the latest results with almost all votes counted at least once. The official result will be published by the [_Kiesraad_](https://www.kiesraad.nl/) one about a week, but it publishes the [preliminary results](https://www.kiesraad.nl/verkiezingen/tweede-kamer/uitslagen/uitslagen-per-gemeente-tweede-kamer) also, so I'll just copy the data from there. I already created the absolute seat comparison, and since not much changed I thought perhaps I could look at the percentage change from the current seats.
 
 ```{r}
 #| label: plot-preliminary-results
@@ -787,17 +765,41 @@ preliminary_results_diff |>
 
 Since the NSC is a new party it's increase (no matter how little or large it would have been) is infinite. Since the party got 20 seats, I think it looks fairly logical to have it appear at the top. If it was a much smaller party, I would have maybe forced it to be shown at the bottom to incidate that this is a statistical anomaly. The _Boer Burger Beweging_ (BBB) has one seat in the current parliament after their first participation in the previous election, but will increase to 7 in the next parliament that will be seated early December. There are two parties that according to these numbers will be removed from parliament (indicated by the 100% decrease in seats in parliament). I would say that having the most important numbers be somewhat squished on the left of the plot is perhaps not ideal, but it's a trade-off from showing the large increase in the NSC and BBB.
 
-Next I wanted to look at the results per municipality to see if there were any trends I could identify. This means creating a map, so I downloaded a _geopackage_ file from the [_Centraal Bureau voor de Statistiek_](https://www.cbs.nl) (CBS) page on [geographical areas](https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/cbs-gebiedsindelingen) where they share current and historical files on a number of divisions (provinces, municipalities, security regions, etc.). The _geopackage_ format can be parsed with the `{sf}` package. The file contains several "layers" that can be listed through the `sf::st_layers(<file>)` functionality.
+Next I wanted to look at the results per municipality to see if there were any trends I could identify. The _Kiesraad_ publishes preliminary results per municipality also, but this data is quite a headache to scrape so I'll use the website  [_AlleCijfers.nl_](https://allecijfers.nl/uitslag-tweede-kamer-verkiezingen-2023/) instead that more conveniently lists everything in an HTML table that we can scrape. See [here](https://github.com/danielroelfs/danielroelfs.com/tree/main/content/blog/2023-dutch-elections/scrape_municipality_results.py) for the Python code to scrape the website.
+
+```{r}
+#| label: prep-municipality-results
+#| message: false
+#| code-fold: true
+#| code-summary: "Show code"
+
+results_municipality <- read_delim("./data/election_results.csv", delim = ";") |>
+  rename(region = Regionaam) |>
+  mutate(
+    across(everything(), ~ str_remove(.x, "%")),
+    across(everything(), ~ str_replace(.x, ",", ".")),
+    across(-region, parse_number)
+  ) |>
+  pivot_longer(cols = -region, names_to = "party", values_to = "perc") |>
+  left_join(data_parties) |>
+  mutate(
+    region = str_remove(region, "Gemeente"),
+    region = str_trim(region)
+  )
+```
+
+
+To create the map, I downloaded a _geopackage_ file from the [_Centraal Bureau voor de Statistiek_](https://www.cbs.nl) (CBS) page on [geographical areas](https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/cbs-gebiedsindelingen) where they share current and historical files on a number of divisions (provinces, municipalities, security regions, etc.). The _geopackage_ format can be parsed with the `{sf}` package. The file contains several "layers" that can be listed through the `sf::st_layers(<file>)` functionality.
 
 ```{r}
 #| label: load--geo-file
-#| message: false
 #| code-fold: true
 #| code-summary: "Show code"
 
 geo_municipality <- sf::st_read(
   "./data/cbsgebiedsindelingen2023.gpkg",
-  layer = "gemeente_gegeneraliseerd"
+  layer = "gemeente_gegeneraliseerd",
+  quiet = TRUE
 ) |>
   janitor::clean_names()
 ```

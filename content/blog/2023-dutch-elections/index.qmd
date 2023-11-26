@@ -37,6 +37,7 @@ library(ggtext)
 library(rvest)
 library(showtext)
 library(patchwork)
+library(patchwork)
 
 font_add_google("Bitter", family = "custom")
 showtext_auto()

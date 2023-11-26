@@ -884,6 +884,4 @@ The first important thing to mention is that the _geopackage_ file and the datas
 
 Anyone with some familiarity of Dutch geography might immediately notice the large red spots in some familiar areas. As usual, the big cities and the cities with a significant population of younger people and/or students are markedly more progressive and left-wing than the surrounding areas, in particular the municipality in the east and south and following the _Biblebelt_. This is not a surprise for me, or anyone, but nice to see confirmed. To address the issue of the political color of the PVV, I tested replacing the value for the political color with 50 (the same as the VVD), which is a big increase from 9 given by _KiesKompas_. In this experiment (which I intentionally don't show here to stay true to the data reported), the two plots look very similar in color too in addition to trend already visible in the plot based on the data reported.
 
-{{{< omission >}}}
-
-_More updates may follow when data changes, or when I get new inspiration for further analyses_
+This was an interesting challenge to visualize data both accurately and responsibly. Despite the outcome of the election, it was fun to work with data as it came in. If I feel qualified to do so, I might repeat this post for the next elections for the Norwegian parliament in 2025 or the next Dutch election (whichever comes first). If you're reading this far down, thanks for your interest, and hope it was interesting and perhaps of some use to you.

@@ -39,7 +39,7 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
         url = "https://github.com/danielroelfs/"
     [[params.social]]
         name = "Bluesky"
-        icon = "icloud"
+        icon = "bluesky"
         weight = 2
         url = "https://bsky.app/profile/danielroelfs.bsky.social"
     [[params.social]]

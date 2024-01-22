@@ -29,7 +29,7 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
 
     umami       = false
     umamilink   = "https://analytics-danielroelfs.netlify.app/script.js"
-    umamiid     = "da48a88a-2e87-4024-8c99-639222aab54d"
+    umamiid     = "10185115-89df-427f-9aea-8c3575857825"
     
     # Social links
     [[params.social]]

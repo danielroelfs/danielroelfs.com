@@ -28,6 +28,14 @@ ul li a {
 Selection of publications. For a full list see my [Google Scholar profile](https://scholar.google.com/citations?user=QmVQcsAAAAAJ&hl=en)
 
 {{< sidenote >}}
+2024
+{{< /sidenote >}}
+
+-   **D Roelfs**, D van der Meer, D Alnæs, O Frei, AA Shadrin, R Loughnan, CC Fan, AM Dale, OA Andreassen, LT Westlye, T Kaufmann (2024) [***Genetic overlap between multivariate measures of human functional brain connectivity and psychiatric disorders***](https://doi.org/10.1038/s44220-023-00190-1). *Nature Mental Health*. doi: [10.1038/s44220-023-00190-1](https://doi.org/10.1038/s44220-023-00190-1) preprint: [10.1101/2021.06.15.21258954](https://doi.org/10.1101/2021.06.15.21258954)
+
+-   
+
+{{< sidenote >}}
 2023
 {{< /sidenote >}}
 
@@ -50,8 +58,6 @@ Selection of publications. For a full list see my [Google Scholar profile](https
 {{< /sidenote >}}
 
 -   LS Sæther, **D Roelfs**, T Moberget, OA Andreassen, T Elvsåshagen, EG Jönsson, A Vaskinn (2021) [***Exploring neurophysiological markers of visual perspective taking: Methodological considerations***](https://doi.org/10.1016/j.ijpsycho.2020.12.006). *International Journal of Psychophysiology*. doi: [10.1016/j.ijpsycho.2020.12.006](https://doi.org/10.1016/j.ijpsycho.2020.12.006)
-
--   **PREPRINT** **D Roelfs**, D van der Meer, D Alnæs, O Frei, R Loughnan, CC Fan, AM Dale, OA Andreassen, LT Westlye, T Kaufmann (2021) [***Genetic overlap between multivariate measures of human functional brain connectivity and psychiatric disorders***](https://doi.org/10.1101/2021.06.15.21258954). *medRxiv*. doi: [10.1101/2021.06.15.21258954](https://doi.org/10.1101/2021.06.15.21258954)
 
 -   **D Roelfs**, D Alnæs, O Frei, D van der Meer, OB Smeland, OA Andreassen, LT Westlye, T Kaufmann (2021) [***Phenotypically independent profiles relevant to mental health are genetically correlated***](https://doi.org/10.1038/s41398-021-01313-x). *Translational Psychiatry*. doi: [10.1038/s41398-021-01313-x](https://doi.org/10.1038/s41398-021-01313-x) preprint: [10.1101/2020.03.30.20045591](https://doi.org/10.1101/2020.03.30.20045591)
 

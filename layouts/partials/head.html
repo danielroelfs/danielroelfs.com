@@ -1,0 +1,52 @@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {{ with .Site.Params.author }}<meta name="author" content="{{ . }}">{{ end }}
+    <meta name="description" content="{{ if .IsPage }}{{ .Site.BaseURL }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+    {{ with .Site.Params.keywords }}<meta name="keywords" content="{{ . }}">{{ end }}
+
+    <meta property="og:site_name" content="{{ .Site.Title }}">
+    <meta property="og:title" content="{{ block "og-title" . }}{{ .Site.Title }}{{ end }}">
+    <meta property="og:description" content="{{ if .IsPage }}{{ .Params.description }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ .Permalink }}">
+    <meta property="og:image" content="{{ if .IsPage }}{{ .Site.BaseURL }}{{ .Params.thumbnail }}{{ else }}{{ .Site.BaseURL }}{{ .Site.Params.favicon }}{{ end }}">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="{{ .Permalink }}">
+    <meta name="twitter:image" content="{{ if .IsPage }}{{ .Site.BaseURL }}{{ .Params.thumbnail }}{{ else }}{{ .Site.BaseURL }}{{ .Site.Params.favicon }}{{ end }}">
+
+    {{ $stylesheet := "css/style.css" }}
+    <link rel="stylesheet" type="text/css" href="{{ $stylesheet | absURL }}">
+    
+    <!-- Custom css -->
+    {{ range .Site.Params.customcss }}
+        {{ $style := resources.Get . }}
+        <link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}">
+    {{ end }}
+
+    <link rel="stylesheet" href="https://use.typekit.net/jxt2fnp.css"> <!-- Source Serif 4-->
+    <link rel="stylesheet" href="https://use.typekit.net/uwd7war.css"> <!-- Source Code -->
+    <link href="https://fonts.cdnfonts.com/css/cooper-hewitt" rel="stylesheet">
+    
+    {{ if .Site.Params.description }}
+        <meta name="description" content="{{ .Site.Params.description }}">
+    {{ end }}
+
+    {{ if .Site.Params.favicon }}
+        {{ with .Site.Params.favicon }}
+            <link rel="shortcut icon" href="{{ . | relURL }}">
+        {{ end }}
+    {{ end }}
+
+    {{ if not .Site.IsServer }}
+        <script async src="https://web-analytics.danielroelfs.app/script.js" data-website-id="10185115-89df-427f-9aea-8c3575857825"></script>
+    {{ end }}
+    {{ if and .Site.Params.umami (not .Site.IsServer) }}
+        <script async src="{{ .Site.Params.umamilink }}" data-website-id="{{ .Site.Params.umamiid }}"></script>
+    {{ end }}
+    
+    {{ $title := print .Title " | " .Site.Title }}
+    {{ if .IsHome }}{{ $title = .Site.Title }}{{ end }}
+    <title>{{ lower $title }}</title>
+</head>

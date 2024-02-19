@@ -29,7 +29,7 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
 
     umami       = false
     umamilink   = "https://analytics-danielroelfs.netlify.app/script.js"
-    umamiid     = "10185115-89df-427f-9aea-8c3575857825"
+    umamiid     = "da48a88a-2e87-4024-8c99-639222aab54d"
     
     # Social links
     [[params.social]]
@@ -38,20 +38,20 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
         weight = 1
         url = "https://github.com/danielroelfs/"
     [[params.social]]
+        name = "LinkedIn"
+        icon = "linkedin"
+        weight = 2
+        url = "https://www.linkedin.com/in/danielroelfs/"
+    [[params.social]]
         name = "Bluesky"
         icon = "bluesky"
-        weight = 2
+        weight = 3
         url = "https://bsky.app/profile/danielroelfs.bsky.social"
     [[params.social]]
         name = "Twitter"
         icon = "x"
-        weight = 3
-        url = "https://twitter.com/dthroelfs/"
-    [[params.social]]
-        name = "LinkedIn"
-        icon = "linkedin"
         weight = 4
-        url = "https://www.linkedin.com/in/danielroelfs/"
+        url = "https://twitter.com/dthroelfs/"
     [[params.social]]
         name = "ORCID"
         icon = "orcid"

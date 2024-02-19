@@ -39,7 +39,9 @@
         {{ end }}
     {{ end }}
 
-    <script async src="https://web-analytics.danielroelfs.app/script.js" data-website-id="10185115-89df-427f-9aea-8c3575857825"></script>
+    {{ if not .Site.IsServer }}
+        <script async src="https://web-analytics.danielroelfs.app/script.js" data-website-id="10185115-89df-427f-9aea-8c3575857825"></script>
+    {{ end }}
     {{ if and .Site.Params.umami (not .Site.IsServer) }}
         <script async src="{{ .Site.Params.umamilink }}" data-website-id="{{ .Site.Params.umamiid }}"></script>
     {{ end }}

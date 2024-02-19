@@ -38,29 +38,34 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
         weight = 1
         url = "https://github.com/danielroelfs/"
     [[params.social]]
-        name = "Twitter"
-        icon = "x"
-        weight = 2
-        url = "https://twitter.com/dthroelfs/"
-    [[params.social]]
         name = "LinkedIn"
         icon = "linkedin"
-        weight = 3
+        weight = 2
         url = "https://www.linkedin.com/in/danielroelfs/"
+    [[params.social]]
+        name = "Bluesky"
+        icon = "bluesky"
+        weight = 3
+        url = "https://bsky.app/profile/danielroelfs.bsky.social"
+    [[params.social]]
+        name = "Twitter"
+        icon = "x"
+        weight = 4
+        url = "https://twitter.com/dthroelfs/"
     [[params.social]]
         name = "ORCID"
         icon = "orcid"
-        weight = 4
+        weight = 5
         url = "https://orcid.org/0000-0002-1083-002X"
     [[params.social]]
         name = "Google Scholar"
         icon = "googlescholar"
-        weight = 5
+        weight = 6
         url = "https://scholar.google.com/citations?user=QmVQcsAAAAAJ&hl=en"
     [[params.social]]
         name = "Mail"
         icon = "minutemailer"
-        weight = 6
+        weight = 7
         url = "mailto:daniel.roelfs@medisin.uio.no"
 
 # Menu links

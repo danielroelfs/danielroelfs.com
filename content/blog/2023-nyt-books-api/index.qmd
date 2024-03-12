@@ -8,12 +8,6 @@ categories:
 tags:
   - Python
   - R
-execute:
-  fig.retina: 2
-  fig.align: center
-  fig.show: hold
-  results: hold
-  out.width: 80%
 editor_options: 
   chunk_output_type: console
 ---

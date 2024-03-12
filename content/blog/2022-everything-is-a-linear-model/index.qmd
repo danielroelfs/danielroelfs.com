@@ -9,12 +9,6 @@ tags:
   - statistics
   - R
   - data visualization
-execute:
-  fig.retina: 2
-  fig.align: center
-  fig.show: hold
-  results: hold
-  out.width: 80%
 editor_options: 
   chunk_output_type: console
 ---
@@ -665,9 +659,13 @@ There's many more things we could go over, multiple linear regression, non-param
 ## Resources
 
 -   [Common statistical tests are linear models (or: how to teach stats) - Jonas Kristoffer Lindeløv](https://lindeloev.github.io/tests-as-linear/)
+
 -   [The Linear Regression Family in R - Athanasia Mowinckel](https://drmowinckels.netlify.app/blog/2020-06-24-the-linear-regression-family-in-r/)
+
 -   [STAT 415: Introduction to Mathematical Statistics - Penn State Department of Statistics](https://online.stat.psu.edu/stat415/lesson/13/13.2)
+
 -   [ANOVA for Regression - Rahul Pathak](https://towardsdatascience.com/anova-for-regression-fdb49cf5d684)
+
 -   [Explaining the `lm` summary in R - Learn by Marketing](https://www.learnbymarketing.com/tutorials/explaining-the-lm-summary-in-r/)
 
 {{{< details "Session info for reproducibility purposes" >}}}

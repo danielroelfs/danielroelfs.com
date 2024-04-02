@@ -207,3 +207,5 @@ publications
 {{< /sidenote >}}
 
 See the [publications](/publications) page, [ORCID](https://orcid.org/0000-0002-1083-002X) or my [Google Scholar](https://scholar.google.com/citations?hl=en&user=QmVQcsAAAAAJ&view_op=list_works&sortby=pubdate) profile
+
+{{< gap 2 >}}

@@ -36,6 +36,8 @@ h3 {
 
 For a downloadable version of this CV, go to [cv.danielroelfs.com](https://cv.danielroelfs.com)
 
+{{< gap 1 >}}
+
 {{< sidenote br="0.5em" >}}
 work experience
 {{< /sidenote >}}

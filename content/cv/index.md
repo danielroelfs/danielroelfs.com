@@ -6,13 +6,23 @@ engine: knitr
 ---
 
 <style type="text/css">
-#doc {
-    font-size: 90%
-}
-
 li {
     font-size: 80%;
     padding: 0;
+    max-width: 80%;
+}
+
+ul li:before {
+    margin-right: 0;
+}
+
+ol li p, ul li p {
+    margin-left: 1.5rem;
+}
+
+ol li:only-child {
+    color: red;
+    margin-left: 1.5rem;
 }
 
 p {
@@ -23,22 +33,13 @@ h3 {
     margin-top: 0.5em;
     margin-bottom: 0em;
 }
-
-.cv-date {
-    font-family: 'Cooper Hewitt', sans-serif;
-    font-weight: 711;
-    font-size: 80%;
-    position: absolute; 
-    right: 3em;
-    margin-top: -1.5em;
-}
 </style>
 
 For a downloadable version of this CV, go to [cv.danielroelfs.com](https://cv.danielroelfs.com)
 
 {{< gap 1 >}}
 
-{{< sidenote br="0.5em" >}}
+{{< sidenote br="0.75em" >}}
 work experience
 {{< /sidenote >}}
 
@@ -90,7 +91,7 @@ work experience
 
 {{< omission >}}
 
-{{< sidenote br="0.25em" >}}
+{{< sidenote >}}
 education
 {{< /sidenote >}}
 
@@ -128,7 +129,41 @@ education
 
 {{< omission >}}
 
-{{< sidenote br="0.25em" >}}
+{{< sidenote >}}
+skills & languages
+{{< /sidenote >}}
+
+{{< progress-bar perc="94" >}} Python {{< /progress-bar >}}
+
+{{< progress-bar perc="92" >}} R {{< /progress-bar >}}
+
+{{< progress-bar perc="88" >}} SQL {{< /progress-bar >}}
+
+{{< progress-bar perc="82" >}} Bash {{< /progress-bar >}}
+
+{{< progress-bar perc="70" >}} MATLAB {{< /progress-bar >}}
+
+{{< progress-bar perc="68" >}} LaTeX {{< /progress-bar >}}
+
+{{< progress-bar perc="60" >}} HTML/CSS {{< /progress-bar >}}
+
+{{< gap 0.5 >}}
+
+{{< progress-bar perc="100" >}} Dutch/native {{< /progress-bar >}}
+
+{{< progress-bar perc="100" >}} English (C2) {{< /progress-bar >}}
+
+{{< progress-bar perc="100" >}} Norwegian (C2) {{< /progress-bar >}}
+
+{{< progress-bar perc="55" >}} French (C1) {{< /progress-bar >}}
+
+{{< progress-bar perc="45" >}} German (A2) {{< /progress-bar >}}
+
+{{< gap 1 >}}
+
+{{< omission >}}
+
+{{< sidenote >}}
 awards
 {{< /sidenote >}}
 
@@ -138,7 +173,7 @@ awards
 
 *World Congress of Psychiatry Genetics*
 
--   Awarded to promising oral presentations from early-career researchers
+-   {{< p >}}Awarded to promising oral presentations from early-career researchers{{< /p >}}
 
 ### International Training Grant
 
@@ -146,7 +181,7 @@ awards
 
 *Norwegian Research School in Neuroscience*
 
--   Grant awarded to scientists to receive training abroad that'll benefit their research in Norway
+-   {{< p >}}Grant awarded to scientists to receive training abroad that'll benefit their research in Norway{{< /p >}}
 
 ### Sparbanken Skåne Master Prize
 
@@ -154,11 +189,11 @@ awards
 
 *Sparbanksstiftelsen Färs & Frosta, Lund University*
 
--   Awarded to the best master theses in the field of neuroscience
+-   {{< p >}}Awarded to the best master theses in the field of neuroscience{{< /p >}}
 
 {{< omission >}}
 
-{{< sidenote br="0.25em" >}}
+{{< sidenote >}}
 commissions
 {{< /sidenote >}}
 
@@ -174,7 +209,7 @@ commissions
 
 *Committee Member*
 
--   Organization of the national conference for neuroscience PhD candidates
+-   {{< p >}}Organization of the national conference for neuroscience PhD candidates{{< /p >}}
 
 ### The Netherlands Red Cross Student Desk Zeeland
 
@@ -182,9 +217,11 @@ commissions
 
 *General Board Member (Fundraising portfolio)*
 
+{{< gap 0.5 >}}
+
 {{< omission >}}
 
-{{< sidenote br="0.25em" >}}
+{{< sidenote >}}
 portfolio
 {{< /sidenote >}}
 
@@ -200,9 +237,11 @@ portfolio
 
 ### [Introduction To Basic Statistics in R](https://norment.github.io/IntroToBasicStatisticsInR/)
 
+{{< gap 0.5 >}}
+
 {{< omission >}}
 
-{{< sidenote br="0.25em" >}}
+{{< sidenote >}}
 publications
 {{< /sidenote >}}
 

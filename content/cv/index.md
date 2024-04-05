@@ -57,7 +57,7 @@ work experience
 
 ### University of Oslo - NORMENT - Multimodal Imaging Group
 
-{{< cv-date >}}2019 - 2022{{< /cv-date >}}
+{{< cv-date >}}2019 - 22{{< /cv-date >}}
 
 *Doctoral Research Fellow*
 
@@ -69,7 +69,7 @@ work experience
 
 ### University of Oslo - NORMENT - EEG Group
 
-{{< cv-date >}}2018 - 2019{{< /cv-date >}}
+{{< cv-date >}}2018 - 19{{< /cv-date >}}
 
 *Research Assistant*
 
@@ -79,7 +79,7 @@ work experience
 
 ### Rikshospitalet - Department of Medical Physics
 
-{{< cv-date >}}2018 - 2019{{< /cv-date >}}
+{{< cv-date >}}2018 - 19{{< /cv-date >}}
 
 *Research Assistant*
 
@@ -97,7 +97,7 @@ education
 
 ### University of Oslo - Faculty of Clinical Medicine
 
-{{< cv-date >}}2019 - 2022{{< /cv-date >}}
+{{< cv-date >}}2019 - 22{{< /cv-date >}}
 
 *PhD, Doctoral Education*
 
@@ -107,7 +107,7 @@ education
 
 ### Lund University - Faculty of Medicine
 
-{{< cv-date >}}2016 - 2018{{< /cv-date >}}
+{{< cv-date >}}2016 - 18{{< /cv-date >}}
 
 *MSc, Biomedicine*
 
@@ -117,7 +117,7 @@ education
 
 ### Utrecht University - University College Roosevelt
 
-{{< cv-date >}}2012 - 2015{{< /cv-date >}}
+{{< cv-date >}}2012 - 15{{< /cv-date >}}
 
 *BSc, pre-medical track*
 
@@ -205,7 +205,7 @@ commissions
 
 ### Norwegian Research School in Neuroscience
 
-{{< cv-date >}}2019 - 2021{{< /cv-date >}}
+{{< cv-date >}}2019 - 21{{< /cv-date >}}
 
 *Committee Member*
 
@@ -213,7 +213,7 @@ commissions
 
 ### The Netherlands Red Cross Student Desk Zeeland
 
-{{< cv-date >}}2014 - 2015{{< /cv-date >}}
+{{< cv-date >}}2014 - 15{{< /cv-date >}}
 
 *General Board Member (Fundraising portfolio)*
 

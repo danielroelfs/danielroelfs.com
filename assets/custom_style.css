@@ -38,7 +38,7 @@ a.notbyai:hover {
   height: 1rem;
   padding: 1px;
   margin: 0.15rem 0;
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .progress-bar {

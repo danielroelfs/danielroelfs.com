@@ -59,7 +59,7 @@ _Data Scientist_
 
 ### University of Oslo - NORMENT - Multimodal Imaging Group
 
-{{{< cv-date >}}}2019 - 2022{{{< /cv-date >}}}
+{{{< cv-date >}}}2019 - 22{{{< /cv-date >}}}
 
 _Doctoral Research Fellow_
 
@@ -71,7 +71,7 @@ _Doctoral Research Fellow_
 
 ### University of Oslo - NORMENT - EEG Group
 
-{{{< cv-date >}}}2018 - 2019{{{< /cv-date >}}}
+{{{< cv-date >}}}2018 - 19{{{< /cv-date >}}}
 
 _Research Assistant_
 
@@ -81,7 +81,7 @@ _Research Assistant_
 
 ### Rikshospitalet - Department of Medical Physics
 
-{{{< cv-date >}}}2018 - 2019{{{< /cv-date >}}}
+{{{< cv-date >}}}2018 - 19{{{< /cv-date >}}}
 
 _Research Assistant_
 
@@ -99,7 +99,7 @@ education
 
 ### University of Oslo - Faculty of Clinical Medicine
 
-{{{< cv-date >}}}2019 - 2022{{{< /cv-date >}}}
+{{{< cv-date >}}}2019 - 22{{{< /cv-date >}}}
 
 _PhD, Doctoral Education_
 
@@ -109,7 +109,7 @@ _PhD, Doctoral Education_
 
 ### Lund University - Faculty of Medicine
 
-{{{< cv-date >}}}2016 - 2018{{{< /cv-date >}}}
+{{{< cv-date >}}}2016 - 18{{{< /cv-date >}}}
 
 _MSc, Biomedicine_
 
@@ -119,7 +119,7 @@ _MSc, Biomedicine_
 
 ### Utrecht University - University College Roosevelt
 
-{{{< cv-date >}}}2012 - 2015{{{< /cv-date >}}}
+{{{< cv-date >}}}2012 - 15{{{< /cv-date >}}}
 
 _BSc, pre-medical track_
 
@@ -207,7 +207,7 @@ _Committee Member_
 
 ### Norwegian Research School in Neuroscience
 
-{{{< cv-date >}}}2019 - 2021{{{< /cv-date >}}}
+{{{< cv-date >}}}2019 - 21{{{< /cv-date >}}}
 
 _Committee Member_
 
@@ -215,7 +215,7 @@ _Committee Member_
 
 ### The Netherlands Red Cross Student Desk Zeeland
 
-{{{< cv-date >}}}2014 - 2015{{{< /cv-date >}}}
+{{{< cv-date >}}}2014 - 15{{{< /cv-date >}}}
 
 _General Board Member (Fundraising portfolio)_
 

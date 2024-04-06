@@ -9,10 +9,6 @@ tags:
   - ggplot
   - society
 execute:
-  fig.retina: 2
-  fig.align: left
-  fig.show: hold
-  results: hold
   dev.args: list(bg = "#EBEBEB")
 editor_options: 
   chunk_output_type: console

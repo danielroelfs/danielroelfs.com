@@ -9,12 +9,6 @@ tags:
   - statistics
   - R
   - data visualization
-execute:
-  fig.retina: 2
-  fig.align: center
-  fig.show: hold
-  results: hold
-  out.width: 80%
 editor_options: 
   chunk_output_type: console
 ---
@@ -766,9 +760,13 @@ There's many more things we could go over, multiple linear regression, non-param
 ## Resources
 
 -   [Common statistical tests are linear models (or: how to teach stats) - Jonas Kristoffer Lindeløv](https://lindeloev.github.io/tests-as-linear/)
+
 -   [The Linear Regression Family in R - Athanasia Mowinckel](https://drmowinckels.netlify.app/blog/2020-06-24-the-linear-regression-family-in-r/)
+
 -   [STAT 415: Introduction to Mathematical Statistics - Penn State Department of Statistics](https://online.stat.psu.edu/stat415/lesson/13/13.2)
+
 -   [ANOVA for Regression - Rahul Pathak](https://towardsdatascience.com/anova-for-regression-fdb49cf5d684)
+
 -   [Explaining the `lm` summary in R - Learn by Marketing](https://www.learnbymarketing.com/tutorials/explaining-the-lm-summary-in-r/)
 
 {{< details "Session info for reproducibility purposes" >}}
@@ -777,9 +775,9 @@ There's many more things we could go over, multiple linear regression, non-param
 sessionInfo()
 ```
 
-    R version 4.3.0 (2023-04-21)
+    R version 4.3.2 (2023-10-31)
     Platform: x86_64-apple-darwin20 (64-bit)
-    Running under: macOS 14.0
+    Running under: macOS Sonoma 14.2
 
     Matrix products: default
     BLAS:   /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRblas.0.dylib 
@@ -802,16 +800,16 @@ sessionInfo()
     loaded via a namespace (and not attached):
      [1] utf8_1.2.4        generics_0.1.3    renv_1.0.3        xml2_1.3.5       
      [5] lattice_0.22-5    stringi_1.7.12    hms_1.1.3         digest_0.6.33    
-     [9] magrittr_2.0.3    evaluate_0.22     grid_4.3.0        timechange_0.2.0 
+     [9] magrittr_2.0.3    evaluate_0.22     grid_4.3.2        timechange_0.2.0 
     [13] fastmap_1.1.1     Matrix_1.6-1.1    jsonlite_1.8.7    ggtext_0.1.2     
     [17] mgcv_1.9-0        fansi_1.0.5       scales_1.2.1      scico_1.5.0      
-    [21] cli_3.6.1         rlang_1.1.1       splines_4.3.0     commonmark_1.9.0 
-    [25] munsell_0.5.0     withr_2.5.1       yaml_2.3.7        tools_4.3.0      
+    [21] cli_3.6.1         rlang_1.1.1       splines_4.3.2     commonmark_1.9.0 
+    [25] munsell_0.5.0     withr_2.5.1       yaml_2.3.7        tools_4.3.2      
     [29] tzdb_0.4.0        colorspace_2.1-0  vctrs_0.6.4       R6_2.5.1         
     [33] lifecycle_1.0.3   pkgconfig_2.0.3   pillar_1.9.0      gtable_0.3.4     
     [37] glue_1.6.2        Rcpp_1.0.11       xfun_0.40         tidyselect_1.2.0 
     [41] rstudioapi_0.15.0 knitr_1.44        farver_2.1.1      nlme_3.1-163     
-    [45] htmltools_0.5.6.1 rmarkdown_2.25    labeling_0.4.3    compiler_4.3.0   
+    [45] htmltools_0.5.6.1 rmarkdown_2.25    labeling_0.4.3    compiler_4.3.2   
     [49] markdown_1.11     gridtext_0.1.5   
 
 {{< /details >}}

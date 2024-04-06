@@ -8,12 +8,6 @@ categories:
 tags:
   - ggplot
   - R
-execute:
-  fig.retina: 2
-  fig.align: center
-  fig.show: hold
-  results: hold
-  out.width: 80%
 editor_options: 
   chunk_output_type: console
 ---
@@ -334,13 +328,19 @@ merged_data <- data |>
   )
 ```
 
+{{{< sidenote br="7em" >}}}
+Click on "Show code" to show the code. I hid it by default because it's quite a long chunk
+{{{< /sidenote >}}}
+
 I noticed that some entries in the `year` column exceeded the year of Bach's death. Bach died in 1750. I assumed that these years indicated the year of first performance or publication. In this scenario, it would be possible that certain pieces were lost and rediscovered at a later date and only then published. I thought to make a barplot of the number of compositions Bach over the course of his life, trying to see if there was any period where he was particularly productive. I also added some annotations to give the plot some context.
 
 ```{r}
 #| label: bwvperyear-plot
-#| warning: false
 #| message: false
+#| warning: false
 #| fig-width: 12
+#| code-fold: true
+#| code-summary: "Show code"
 
 bwvperyear <- merged_data |>
   filter(!is.na(year)) |>
@@ -553,8 +553,11 @@ Since this time I wanted to visualize whether Bach was more productive in certai
 
 ```{r}
 #| label: plot-with-city
-#| echo: false
 #| fig-width: 12
+#| message: false
+#| warning: false
+#| code-fold: true
+#| code-summary: "Show code"
 
 places_plot <- places |>
   mutate(meanyear = year_from + ((year_to - year_from) / 2))

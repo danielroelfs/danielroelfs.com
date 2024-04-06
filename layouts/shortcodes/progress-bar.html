@@ -1,0 +1,3 @@
+<div class="progress">
+    <div class="progress-bar" {{ with .Get "perc" }} style="width: {{ . }}%;"{{ end }}>{{ .Inner | markdownify }}</div>
+</div>

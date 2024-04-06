@@ -4,7 +4,7 @@ theme = "typography"
 
 ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
     "_cache$", "index\\.html", "about\\.html", "static/blog/\\*_files/", "README.md",
-    ".venv"]
+    ".venv/"]
 
 [markup]
   defaultMarkdownHandler = "goldmark"
@@ -27,8 +27,8 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
 
     customcss = ["custom_style.css"]
 
-    umami       = true
-    umamilink   = "https://analytics-danielroelfs.netlify.app/script.js"
+    umami       = false
+    umamilink   = "https://web-analytics.danielroelfs.app/script.js"
     umamiid     = "10185115-89df-427f-9aea-8c3575857825"
     
     # Social links

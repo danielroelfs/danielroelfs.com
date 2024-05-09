@@ -532,7 +532,7 @@ data_jif |>
     data = data_jif |> filter(title %in% jif_joi),
     aes(label = title),
     min.segment.length = 0, point.padding = 0.3,
-    size = 3, color = "grey30", 
+    size = 3, color = "grey30",
     family = "custom", max.overlaps = 12,
     seed = 42,
   ) +

@@ -231,7 +231,7 @@ portfolio
 
 ### [Talks & Presentations](https://danielroelfs.github.io/slides)
 
-### [Bilkollektivet Trip Cost Calculator]((https://bilkollektivet.danielroelfs.app))
+### [Bilkollektivet Trip Cost Calculator](https://bilkollektivet.danielroelfs.app)
 
 ### [Advent of Code](https://danielroelfs.github.io/advent-of-code/)
 

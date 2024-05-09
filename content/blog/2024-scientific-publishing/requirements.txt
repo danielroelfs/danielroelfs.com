@@ -118,7 +118,7 @@ jupyterlab_server==2.27.1
 jupyterlab_widgets==3.0.10
 kiwisolver==1.4.5
 korean-lunar-calendar==0.3.1
-langchain==0.0.237
+langchain==0.1.0
 langsmith==0.0.10
 linearmodels==4.31
 llama-index==0.7.11

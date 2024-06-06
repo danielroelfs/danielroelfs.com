@@ -258,7 +258,7 @@ tokenterminal==1.0.1
 toml==0.10.2
 tomli==2.0.1
 toolz==0.12.1
-tornado==6.4
+tornado==6.4.1
 tqdm==4.66.4
 tradingview-ta==3.3.0
 traitlets==5.14.3

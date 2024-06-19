@@ -1,6 +1,6 @@
 ---
 title: SQL Notebooks with Quarto
-date: 2024-06-18T00:00:00.000Z
+date: 2024-06-19T00:00:00.000Z
 description: SQL Notebooks with Quarto
 slug: sql-notebooks-with-quarto
 categories:
@@ -250,4 +250,4 @@ Displaying records 1 - 10
 
 ## Concluding remarks
 
-I believe the ability to create SQL notebooks this way offers some serious advantages by allowing analysts to annotate their queries using Markdown and comment on the results and describe their methodology and interpretations. This would introduce the same functionality to SQL that already exists in Jupyter Notebooks and R Markdown/Quarto notebooks that have aided their popularity. I really do hope RStudio has plans to further develop this SQL integration into Quarto, because if they do I believe they may have a good shot at creating the ultimate dialect-agnostic SQL notebook available open source. If we were allowed to dream I'd love for them to support linting with for example [sqlfluff](https://sqlfluff.com) for each chunk as well. In addition, it would make Quarto perhaps the ultimate notebook software since it would then fully support R, Python, SQL, and Julia which would make it incredibly powerful and versatile, offering the ability to switch between languages within a single notebook. I hope to have inspired you have instilled some enthusiasm for Quarto and their concept of SQL notebooks and I hope you give this implementation of a SQL notebook a try!
+I believe the ability to create SQL notebooks this way offers some serious advantages by allowing analysts to annotate their queries using Markdown and comment on the results and describe their methodology and interpretations. This would introduce the same functionality to SQL that already exists in Jupyter Notebooks and R Markdown/Quarto notebooks that have aided their popularity. I really do hope RStudio has plans to further develop this SQL integration into Quarto, because if they do I believe they may have a good shot at creating the ultimate dialect-agnostic SQL notebook available open source. If we were allowed to dream I'd love for them to support linting with for example [sqlfluff](https://sqlfluff.com) for each chunk as well same as it does with `lintr` for R code. In addition, it would make Quarto perhaps the ultimate notebook software since it would then fully support R, Python, SQL, and Julia which would make it incredibly powerful and versatile, offering the ability to switch between languages within a single notebook. I hope to have inspired you have instilled some enthusiasm for Quarto and their concept of SQL notebooks and I hope you give this implementation of a SQL notebook a try!

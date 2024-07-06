@@ -28,7 +28,7 @@ bs4==0.0.1
 bt==0.2.9
 cachetools==5.3.3
 ccxt==4.3.18
-certifi==2024.2.2
+certifi==2024.7.4
 cffi==1.16.0
 charset-normalizer==3.3.2
 click==8.1.7

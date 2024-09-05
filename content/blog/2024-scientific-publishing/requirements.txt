@@ -112,7 +112,7 @@ jupyter_server==2.14.0
 jupyter_server_fileid==0.9.2
 jupyter_server_terminals==0.5.3
 jupyter_server_ydoc==0.8.0
-jupyterlab==3.6.7
+jupyterlab==3.6.8
 jupyterlab_pygments==0.3.0
 jupyterlab_server==2.27.1
 jupyterlab_widgets==3.0.10

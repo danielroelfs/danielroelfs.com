@@ -27,7 +27,7 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
 
     customcss = ["custom_style.css"]
 
-    umami       = false
+    umami       = true
     umamilink   = "https://web-analytics.danielroelfs.app/script.js"
     umamiid     = "10185115-89df-427f-9aea-8c3575857825"
     
@@ -63,7 +63,7 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
         weight = 6
         url = "mailto:daniel.roelfs@medisin.uio.no"
     [[params.social]]
-        name = "danielroelfs.apps"
+        name = "danielroelfs.app"
         icon = "apps"
         weight = 7
         url = "https://danielroelfs.app"

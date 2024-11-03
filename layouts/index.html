@@ -6,7 +6,7 @@
     <p class="intro-text">{{ .Site.Params.intro | markdownify }}</p>
     <div style="height: 2.5rem;"></div>
 {{ end }}
-<div class="sidenote" style="margin-top: 0.5rem;">pages</div>
+<div class="sidenote">pages</div>
 {{ range .Site.Menus.main }}
     {{- if ne .Name "Home" -}}
     <h3 class="list"><a class="title" href="{{ .URL }}">{{ .Name | lower | markdownify }}</a></h3>
@@ -14,7 +14,7 @@
 {{ end }}
 <div style="height: 2.5rem;"></div>
 <div class="sidenote">socials</div>
-<div class="social-icons" style="margin-top: 0.5rem;">
+<div class="social-icons">
     {{ if eq .Site.Params.iconsource "simple-icons" }}
         {{ with .Site.Params.social }}
             {{ range sort . "weight" }}
@@ -35,7 +35,7 @@
         {{ with .Site.Params.social }}
             {{ range sort . "weight" }}
                 <a href="{{ .url }}" {{ .html_attributes | safeHTMLAttr }}>
-                    <i data-feather="{{ .icon }}" style="margin-right: 0.5rem;"></i>
+                    <i data-feather="{{ .icon }}" style="margin-right: 0.5rem;margin-top: 0.5rem;"></i>
                 </a>
             {{ end }}
         {{ end }}

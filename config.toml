@@ -20,7 +20,7 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
 
     highlightstyle  = "foundation"
 
-    iconsource = "simple-icons"
+    iconsource = "tabler"
 
     description = "Daniel Roelfs' personal website"
     keywords = "blog, personal, coding"
@@ -34,34 +34,39 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
     # Social links
     [[params.social]]
         name = "GitHub"
-        icon = "github"
+        icon = "brand-github"
         weight = 1
         url = "https://github.com/danielroelfs/"
     [[params.social]]
         name = "LinkedIn"
-        icon = "linkedin"
+        icon = "brand-linkedin"
         weight = 2
         url = "https://www.linkedin.com/in/danielroelfs/"
     [[params.social]]
         name = "Bluesky"
-        icon = "bluesky"
+        icon = "brand-bluesky"
         weight = 3
         url = "https://bsky.app/profile/danielroelfs.bsky.social"
     [[params.social]]
         name = "ORCID"
-        icon = "orcid"
-        weight = 5
+        icon = "brand-pushbullet"
+        weight = 4
         url = "https://orcid.org/0000-0002-1083-002X"
     [[params.social]]
         name = "Google Scholar"
-        icon = "googlescholar"
-        weight = 6
+        icon = "school"
+        weight = 5
         url = "https://scholar.google.com/citations?user=QmVQcsAAAAAJ&hl=en"
     [[params.social]]
         name = "Mail"
-        icon = "minutemailer"
-        weight = 7
+        icon = "mail"
+        weight = 6
         url = "mailto:daniel.roelfs@medisin.uio.no"
+    [[params.social]]
+        name = "danielroelfs.apps"
+        icon = "apps"
+        weight = 7
+        url = "https://github.com/danielroelfs/"
 
 # Menu links
 [menu]

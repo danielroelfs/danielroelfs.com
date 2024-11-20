@@ -14,7 +14,7 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
 
 [params]
     introtag = "introduction"
-    intro = "PhD Candidate in Brain Imaging & Genetics, Data Scientist within Anti-Money Laundering at DNB"
+    intro = "PhD in computational neuroscience and psychiatry genetics, Data Scientist within anti-money laundering at DNB"
 
     favicon = "avatar.png"
 
@@ -63,7 +63,7 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
         weight = 6
         url = "mailto:daniel.roelfs@medisin.uio.no"
     [[params.social]]
-        name = "danielroelfs.apps"
+        name = "danielroelfs.app"
         icon = "apps"
         weight = 7
         url = "https://danielroelfs.app"

@@ -127,7 +127,7 @@ Let's also hide the code chunk itself and only show the output with the `echo` o
 ```{sql}
 #| label: get-tables-in-superheroes-db
 #| echo: false
-#| connection: con_flights
+#| connection: con_superheroes
 
 SHOW TABLES;
 ```
@@ -135,15 +135,20 @@ SHOW TABLES;
 
 And the output looks like this:
 
-| name     |
-|:---------|
-| airlines |
-| airports |
-| flights  |
-| planes   |
-| weather  |
+| name           |
+|:---------------|
+| alignment      |
+| attribute      |
+| colour         |
+| gender         |
+| hero_attribute |
+| hero_power     |
+| publisher      |
+| race           |
+| superhero      |
+| superpower     |
 
-5 records
+Displaying records 1 - 10
 
 ## Exploratory data analysis example
 

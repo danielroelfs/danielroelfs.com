@@ -22,6 +22,10 @@ a.notbyai:hover {
   background: none;
 }
 
+.smaller-text {
+  font-size: 80%;
+}
+
 .cv-date {
   font-family: 'Cooper Hewitt', sans-serif;
   font-weight: 711;

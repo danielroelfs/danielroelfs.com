@@ -5,6 +5,7 @@ engine: knitr
 hidetopnav: true
 ---
 
+
 <style type="text/css">
 ul li:before {
   content: "";
@@ -31,11 +32,11 @@ Selection of publications. For a full list see my [Google Scholar profile](https
 2024
 {{< /sidenote >}}
 
+-   **D Roelfs** [***Understanding patterns of mental health and their brain functional correlates through psychiatric genetics***](http://hdl.handle.net/10852/114512) \[Doctoral dissertation\] University of Oslo. ISBN [978-82-348-0524-0](http://hdl.handle.net/10852/114512), digital version: [thesis.danielroelfs.app](https://thesis.danielroelfs.app)
+
 -   EP Tissink, AA Shadrin, D van der Meer, N Parker, G Hindley, **D Roelfs**, O Frei, CC Fan, M Nagel, T Nærland, M Budisteanu, S Djurovic, LT Westlye, MP van den Heuvel, D Posthuma, T Kaufmann, AM Dale, OA Andreassen [***Abundant pleiotropy across neuroimaging modalities identified through a multivariate genome-wide association study***](https://doi.org/10.1038/s41467-024-46817-4). *Nature Communications*. doi: [10.1038/s41467-024-46817-4](https://doi.org/10.1038/s41467-024-46817-4) preprint: [10.1101/2022.12.20.521181](https://doi.org/10.1101/2022.12.20.521181)
 
 -   **D Roelfs**, D van der Meer, D Alnæs, O Frei, AA Shadrin, R Loughnan, CC Fan, AM Dale, OA Andreassen, LT Westlye, T Kaufmann [***Genetic overlap between multivariate measures of human functional brain connectivity and psychiatric disorders***](https://doi.org/10.1038/s44220-023-00190-1). *Nature Mental Health*. doi: [10.1038/s44220-023-00190-1](https://doi.org/10.1038/s44220-023-00190-1) preprint: [10.1101/2021.06.15.21258954](https://doi.org/10.1101/2021.06.15.21258954)
-
--   
 
 {{< sidenote >}}
 2023

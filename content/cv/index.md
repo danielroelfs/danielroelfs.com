@@ -5,6 +5,7 @@ hidetopnav: true
 engine: knitr
 ---
 
+
 <style type="text/css">
 li {
     font-size: 80%;
@@ -30,8 +31,8 @@ p {
 }
 
 h3 {
-    margin-top: 0.5em;
-    margin-bottom: 0em;
+    margin-top: 0.75em !important;
+    margin-bottom: 0em !important;
 }
 </style>
 
@@ -39,7 +40,7 @@ For a downloadable version of this CV, go to [cv.danielroelfs.com](https://cv.da
 
 {{< gap 1 >}}
 
-{{< sidenote br="0.75em" >}}
+{{< sidenote br=\"0.75em\" >}}
 work experience
 {{< /sidenote >}}
 
@@ -133,31 +134,37 @@ education
 skills & languages
 {{< /sidenote >}}
 
-{{< progress-bar perc="94" >}} Python {{< /progress-bar >}}
+{{< progress-bar perc=\"94\" >}} Python {{< /progress-bar >}}
 
-{{< progress-bar perc="92" >}} R {{< /progress-bar >}}
+{{< progress-bar perc=\"92\" >}} R {{< /progress-bar >}}
 
-{{< progress-bar perc="88" >}} SQL {{< /progress-bar >}}
+{{< progress-bar perc=\"88\" >}} SQL {{< /progress-bar >}}
 
-{{< progress-bar perc="82" >}} Bash {{< /progress-bar >}}
+{{< progress-bar perc=\"82\" >}} Bash {{< /progress-bar >}}
 
-{{< progress-bar perc="70" >}} MATLAB {{< /progress-bar >}}
+{{< progress-bar perc=\"70\" >}} MATLAB {{< /progress-bar >}}
 
-{{< progress-bar perc="68" >}} LaTeX {{< /progress-bar >}}
+{{< progress-bar perc=\"68\" >}} LaTeX {{< /progress-bar >}}
 
-{{< progress-bar perc="60" >}} HTML/CSS {{< /progress-bar >}}
+{{< progress-bar perc=\"60\" >}} HTML/CSS {{< /progress-bar >}}
 
 {{< gap 0.5 >}}
 
-{{< progress-bar perc="100" >}} Dutch/native {{< /progress-bar >}}
+{{< progress-bar perc=\"100\" >}} Dutch/native {{< /progress-bar >}}
 
-{{< progress-bar perc="100" >}} English (C2) {{< /progress-bar >}}
+{{< progress-bar perc=\"100\" >}} English (C2) {{< /progress-bar >}}
 
-{{< progress-bar perc="100" >}} Norwegian (C2) {{< /progress-bar >}}
+{{< progress-bar perc=\"100\" >}} Norwegian (C2) {{< /progress-bar >}}
 
-{{< progress-bar perc="55" >}} French (C1) {{< /progress-bar >}}
+{{< progress-bar perc=\"55\" >}} French (C1) {{< /progress-bar >}}
 
-{{< progress-bar perc="45" >}} German (A2) {{< /progress-bar >}}
+{{< progress-bar perc=\"45\" >}} German (A2) {{< /progress-bar >}}
+
+{{< gap 1 >}}
+
+{{< smaller-text >}}
+In addition, I'm familiar with common data science and data engineering frameworks including but not limited to [Shiny](https://shiny.posit.co), [Flask](https://flask.palletsprojects.com/en/stable/), [Streamlit](https://streamlit.io), [MLFlow](https://mlflow.org), [Airflow](https://airflow.apache.org), [dbt](https://www.getdbt.com), [Docker](https://www.docker.com), [Snowflake](https://www.snowflake.com), [AWS](https://aws.amazon.com), [LangChain](https://www.google.com/search?client=safari&rls=en&q=langchain&ie=UTF-8&oe=UTF-8), and various other common tools.
+{{< /smaller-text >}}
 
 {{< gap 1 >}}
 
@@ -233,6 +240,8 @@ portfolio
 
 ### [Bilkollektivet Trip Cost Calculator](https://bilkollektivet.danielroelfs.app)
 
+### [Advent of SQL](https://danielroelfs.github.io/advent-of-sql/)
+
 ### [Advent of Code](https://danielroelfs.github.io/advent-of-code/)
 
 ### [Introduction To Basic Statistics in R](https://norment.github.io/IntroToBasicStatisticsInR/)
@@ -245,6 +254,6 @@ portfolio
 publications
 {{< /sidenote >}}
 
-See the [publications](/publications) page, [ORCID](https://orcid.org/0000-0002-1083-002X) or my [Google Scholar](https://scholar.google.com/citations?hl=en&user=QmVQcsAAAAAJ&view_op=list_works&sortby=pubdate) profile
+See the [publications](../../publications) page, [ORCID](https://orcid.org/0000-0002-1083-002X) or my [Google Scholar](https://scholar.google.com/citations?hl=en&user=QmVQcsAAAAAJ&view_op=list_works&sortby=pubdate) profile
 
 {{< gap 2 >}}

@@ -918,6 +918,9 @@ data_running |>
   )
 ```
 
+    Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+    ℹ Please use `linewidth` instead.
+
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-density-map-norway-per-year-1.png" width="768" />
 
 It's a common trope that "running allows you to explore new areas" and that runners then subsequently continue to run the same few routes every time. This applies also for me I'm afraid. The plot again comfirms what I already knew, which is that I run the same few routes multiple times and only change it on ocassion. Even after I moved house I stuck to rougly the same routes. This is even more visible when I'm recreating a plot I saw [Marcus Volz](https://marcusvolz.com/) create once for [a similar project](https://github.com/marcusvolz/strava). It's a facet plot where each tile represents a single running route. It's basically a gallery of all running routes in a year, and I thought it was a beautiful way to visualize the data. We basically use the same code as before, but instead of faceting by year, we now facet by date.

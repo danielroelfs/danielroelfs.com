@@ -491,6 +491,7 @@ Note that there are some overlapping points around the beginning and end of the 
 #| label: fancy-github-plot
 #| fig-height: 10
 #| include: false
+#| eval: false
 
 data_run_summ |>
   mutate(
@@ -583,6 +584,7 @@ At this point I also want to mention that I fully agree with the slogan [_"Finis
 ```{r}
 #| label: plot-density-map-per-country
 #| include: false
+#| eval: false
 
 data_running |>
   mutate(

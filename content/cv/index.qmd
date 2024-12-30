@@ -151,7 +151,7 @@ skills & languages
 
 {{{< gap 0.5 >}}}
 
-{{{< progress-bar perc="100" >}}} Dutch/native {{{< /progress-bar >}}}
+{{{< progress-bar perc="100" >}}} Dutch (native) {{{< /progress-bar >}}}
 
 {{{< progress-bar perc="100" >}}} English (C2) {{{< /progress-bar >}}}
 

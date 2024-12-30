@@ -4,7 +4,7 @@ theme = "typography"
 
 ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
     "_cache$", "index\\.html", "about\\.html", "static/blog/\\*_files/", "README.md",
-    ".venv/"]
+    ".venv/", "data/"]
 
 [markup]
   defaultMarkdownHandler = "goldmark"
@@ -27,7 +27,7 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
 
     customcss = ["custom_style.css"]
 
-    umami       = false
+    umami       = true
     umamilink   = "https://web-analytics.danielroelfs.app/script.js"
     umamiid     = "10185115-89df-427f-9aea-8c3575857825"
     

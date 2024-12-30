@@ -129,7 +129,7 @@ Let's also hide the code chunk itself and only show the output with the `echo` o
 ```{{sql}}
 #| label: get-tables-in-superheroes-db
 #| echo: false
-#| connection: con_flights
+#| connection: con_superheroes
 
 SHOW TABLES;
 ```
@@ -139,7 +139,7 @@ And the output looks like this:
 ```{sql}
 #| label: show-tables-in-superheroes-db
 #| echo: false
-#| connection: con_flights
+#| connection: con_superheroes
 
 SHOW TABLES;
 ```

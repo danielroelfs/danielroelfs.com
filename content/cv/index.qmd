@@ -32,8 +32,8 @@ p {
 }
 
 h3 {
-    margin-top: 0.5em;
-    margin-bottom: 0em;
+    margin-top: 0.75em !important;
+    margin-bottom: 0em !important;
 }
 ```
 
@@ -163,6 +163,12 @@ skills & languages
 
 {{{< gap 1 >}}}
 
+{{{< smaller-text >}}}
+In addition, I’m familiar with common data science and data engineering frameworks including but not limited to [Shiny](https://shiny.posit.co), [Flask](https://flask.palletsprojects.com/en/stable/), [Streamlit](https://streamlit.io), [MLFlow](https://mlflow.org), [Airflow](https://airflow.apache.org), [dbt](https://www.getdbt.com), [Docker](https://www.docker.com), [Snowflake](https://www.snowflake.com), [AWS](https://aws.amazon.com), [LangChain](https://www.google.com/search?client=safari&rls=en&q=langchain&ie=UTF-8&oe=UTF-8), and various other common tools.
+{{{< /smaller-text >}}}
+
+{{{< gap 1 >}}}
+
 {{{< omission >}}}
 
 {{{< sidenote >}}}
@@ -234,6 +240,8 @@ portfolio
 ### [Talks & Presentations](https://danielroelfs.github.io/slides)
 
 ### [Bilkollektivet Trip Cost Calculator](https://bilkollektivet.danielroelfs.app)
+
+### [Advent of SQL](https://danielroelfs.github.io/advent-of-sql/)
 
 ### [Advent of Code](https://danielroelfs.github.io/advent-of-code/)
 

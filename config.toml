@@ -4,7 +4,7 @@ theme = "typography"
 
 ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
     "_cache$", "index\\.html", "about\\.html", "static/blog/\\*_files/", "README.md",
-    ".venv/"]
+    ".venv/", "data/"]
 
 [markup]
   defaultMarkdownHandler = "goldmark"

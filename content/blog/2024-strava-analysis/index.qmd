@@ -320,7 +320,7 @@ data_run_summ |>
   labs(
     title = "When do I run?",
     subtitle = "Most runs are either before breakfast or after work",
-    caption = str_glue("Total number of runs: {nrow(data_run_summ)} runs<br>Earliest run started at {data_run_summ |> slice_min(time) |> pull(time) |> format(., format='%H:%M', tz='UTC', usetz=FALSE)}")
+    caption = str_glue("Total number of runs: {nrow(data_run_summ)} runs<br>Earliest run started at {data_run_summ |> slice_min(time) |> pull(time) |> format(., format='%H:%M', tz='UTC', usetz=FALSE)}") # nolint
   ) +
   scale_x_continuous(breaks = NULL, limits = c(1, NA)) +
   scale_y_discrete(limits = rev) +

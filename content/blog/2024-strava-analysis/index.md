@@ -639,7 +639,8 @@ data_run_summ |>
   coord_cartesian(clip = "off") +
   theme_strava() +
   theme(
-    legend.position = c(0.075, 0.8),
+    legend.position = "inside",
+    legend.position.inside = c(0.075, 0.8),
     legend.direction = "vertical",
     legend.background = element_rect(fill = "white"),
     legend.text = element_text(size = 10)
@@ -811,7 +812,7 @@ data_run_summ |>
     limits = c(0, 25),
     na.value = "grey95",
     guide = guide_colorbar(
-      title.position = "top", title.hjust = 0.5,
+      title.position = "top",
       ticks = FALSE,
       barwidth = 20, barheight = 0.5
     )
@@ -820,7 +821,7 @@ data_run_summ |>
   facet_wrap(~year, nrow = 3) +
   theme_strava() +
   theme(
-    legend.title = element_markdown(size = 10),
+    legend.title = element_markdown(size = 10, hjust = 0.5),
     legend.text = element_markdown(size = 6),
     panel.grid.major = element_blank(),
     axis.text.x.bottom = element_text(size = 6),
@@ -889,7 +890,7 @@ data_running |>
   mutate(year = lubridate::year(date)) |>
   filter(longitude > 10) |>
   ggplot(aes(x = longitude, y = latitude, group = activity_id)) +
-  geom_path(color = strava_color, alpha = 0.2, size = 0.5) +
+  geom_path(color = strava_color, alpha = 0.2, linewidth = 0.5) +
   geom_rect(
     aes(
       xmin = as.numeric(Sys.getenv("hide_xmin")),
@@ -918,9 +919,6 @@ data_running |>
   )
 ```
 
-    Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-    ℹ Please use `linewidth` instead.
-
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-density-map-norway-per-year-1.png" width="768" />
 
 It's a common trope that "running allows you to explore new areas" and that runners then subsequently continue to run the same few routes every time. This applies also for me I'm afraid. The plot again comfirms what I already knew, which is that I run the same few routes multiple times and only change it on ocassion. Even after I moved house I stuck to rougly the same routes. This is even more visible when I'm recreating a plot I saw [Marcus Volz](https://marcusvolz.com/) create once for [a similar project](https://github.com/marcusvolz/strava). It's a facet plot where each tile represents a single running route. It's basically a gallery of all running routes in a year, and I thought it was a beautiful way to visualize the data. We basically use the same code as before, but instead of faceting by year, we now facet by date.
@@ -932,7 +930,7 @@ data_running |>
   ) |>
   ggplot(aes(x = longitude, y = latitude, group = date)) +
   geom_path(
-    size = 0.5, key_glyph = "point", color = strava_color
+    linewidth = 0.5, key_glyph = "point", color = strava_color
   ) +
   geom_rect(
     aes(

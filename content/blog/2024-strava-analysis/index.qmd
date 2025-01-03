@@ -286,7 +286,8 @@ data_run_summ |>
   coord_cartesian(clip = "off") +
   theme_strava() +
   theme(
-    legend.position = c(0.075, 0.8),
+    legend.position = "inside",
+    legend.position.inside = c(0.075, 0.8),
     legend.direction = "vertical",
     legend.background = element_rect(fill = "white"),
     legend.text = element_text(size = 10)
@@ -463,7 +464,7 @@ data_run_summ |>
     limits = c(0, 25),
     na.value = "grey95",
     guide = guide_colorbar(
-      title.position = "top", title.hjust = 0.5,
+      title.position = "top",
       ticks = FALSE,
       barwidth = 20, barheight = 0.5
     )
@@ -472,7 +473,7 @@ data_run_summ |>
   facet_wrap(~year, nrow = 3) +
   theme_strava() +
   theme(
-    legend.title = element_markdown(size = 10),
+    legend.title = element_markdown(size = 10, hjust = 0.5),
     legend.text = element_markdown(size = 6),
     panel.grid.major = element_blank(),
     axis.text.x.bottom = element_text(size = 6),
@@ -528,12 +529,13 @@ data_run_summ |>
     trans = "reverse", breaks = seq(52), limits = c(52, 1)
   ) +
   scale_size_continuous(
-    guide = guide_legend(title.position = "top", title.hjust = 0.5)
+    guide = guide_legend(title.position = "top")
   ) +
   scico::scale_color_scico_d() +
   facet_wrap(~year) +
   theme_strava() +
   theme(
+    legend.title = element_markdown(hjust = 0.5),
     axis.title.y = element_markdown(),
     panel.grid.major.y = element_line(color = "grey30", linewidth = 0.1),
   )
@@ -596,7 +598,7 @@ data_running |>
     )
   ) |>
   ggplot(aes(x = longitude, y = latitude, group = activity_id)) +
-  geom_path(color = strava_color, alpha = 0.5, size = 0.5) +
+  geom_path(color = strava_color, alpha = 0.5, linewidth = 0.5) +
   facet_wrap(year ~ country, scales = "free") +
   theme(
     aspect.ratio = 1,
@@ -619,7 +621,7 @@ data_running |>
   mutate(year = lubridate::year(date)) |>
   filter(longitude > 10) |>
   ggplot(aes(x = longitude, y = latitude, group = activity_id)) +
-  geom_path(color = strava_color, alpha = 0.2, size = 0.5) +
+  geom_path(color = strava_color, alpha = 0.2, linewidth = 0.5) +
   geom_rect(
     aes(
       xmin = as.numeric(Sys.getenv("hide_xmin")),
@@ -660,7 +662,7 @@ data_running |>
   ) |>
   ggplot(aes(x = longitude, y = latitude, group = date)) +
   geom_path(
-    size = 0.5, key_glyph = "point", color = strava_color
+    linewidth = 0.5, key_glyph = "point", color = strava_color
   ) +
   geom_rect(
     aes(

@@ -9,4 +9,5 @@ https://photography.danielroelfs.com/* https://danielroelfs.github.io/photograph
 http://cv.danielroelfs.com/* https://danielroelfs.github.io/cv/:splat 200!
 https://cv.danielroelfs.com/* https://danielroelfs.github.io/cv/:splat 200!
 
+http://thesis.danielroelfs.com/* https://thesis.danielroelfs.app/:splat 200!
 https://thesis.danielroelfs.com/* https://thesis.danielroelfs.app/:splat 200!

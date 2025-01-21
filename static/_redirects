@@ -1,6 +1,6 @@
 # Updated blog post names
-https://danielroelfs.com/blog/the-easier-way-to-create-a-map-of-norway-using-fhimaps/ https://danielroelfs.com/blog/the-easier-way-to-create-a-map-of-norway-using-csmaps/
-https://danielroelfs.com/blog/the-easier-way-to-create-a-map-of-norway-using-splmaps/ https://danielroelfs.com/blog/the-easier-way-to-create-a-map-of-norway-using-csmaps/
+/blog/the-easier-way-to-create-a-map-of-norway-using-fhimaps/ /blog/the-easier-way-to-create-a-map-of-norway-using-csmaps/
+/blog/the-easier-way-to-create-a-map-of-norway-using-splmaps/ /blog/the-easier-way-to-create-a-map-of-norway-using-csmaps/
 
 # Domain-level redirects
 http://photography.danielroelfs.com/* https://danielroelfs.github.io/photography-site/:splat 200!
@@ -8,3 +8,6 @@ https://photography.danielroelfs.com/* https://danielroelfs.github.io/photograph
 
 http://cv.danielroelfs.com/* https://danielroelfs.github.io/cv/:splat 200!
 https://cv.danielroelfs.com/* https://danielroelfs.github.io/cv/:splat 200!
+
+http://thesis.danielroelfs.com/* https://thesis.danielroelfs.app/:splat 200!
+https://thesis.danielroelfs.com/* https://thesis.danielroelfs.app/:splat 200!

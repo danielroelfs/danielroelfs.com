@@ -63,7 +63,11 @@ def request_to_pd(url, data_field, specify_headers=False):
 
 def clean_column_names(df):
     """Clean column names"""
-    df.columns = df.columns.str.lower().str.replace(" ", "_").str.replace(".", "_")
+    df.columns = (
+      df.columns.str.lower()
+      .str.replace(" ", "_")
+      .str.replace(".", "_")
+    )
     return df
 ```
 
@@ -109,11 +113,22 @@ df_production.isna().sum()
 The dataset above contains some information about the municipality, specifically the municipality number or code. I don't live in Denmark, so the municipality code itself doesn't tell me much (I'd be impressed if any Danish person could accurately identify the municipality by their code but I'm sure they are out there). Instead, we can download some relevant information from [Danmarks Statistikk](https://www.dst.dk/) ([Statistics Denmark](https://www.dst.dk/en/)), specifically their table on [regions, provinces and municipalities](https://www.dst.dk/da/Statistik/dokumentation/nomenklaturer/nuts)<!--(NUTS_V1_2007_DK)-->. This website doesn't have an API, but we can download a good-old CSV file instead and read that into the database instead.
 
 ``` python
-df_municipality = pd.read_csv(os.path.join("data", "csv_da.csv"), delimiter=";")
+df_municipality = pd.read_csv(
+  os.path.join("data", "csv_da.csv"),
+  delimiter=";"
+)
 df_municipality = clean_column_names(df_municipality)
-df_municipality = df_municipality.loc[df_municipality["niveau"] == 3, ["kode", "titel"]]
-df_municipality.rename(columns={"kode": "code", "titel": "name"}, inplace=True)
-df_municipality.to_sql(name="municipality", con=conn, if_exists="replace", index=False)
+df_municipality = df_municipality.loc[
+  df_municipality["niveau"] == 3, ["kode", "titel"]
+]
+df_municipality.rename(
+  columns={"kode": "code", "titel": "name"},
+  inplace=True
+)
+df_municipality.to_sql(
+  name="municipality", con=conn,
+  if_exists="replace", index=False
+)
 ```
 
 So let's combine the production data with the municipality names.
@@ -136,13 +151,13 @@ Cool, we're not done yet, not by a long shot. I think we should get even more da
 See [here](https://opendatadocs.dmi.govcloud.dk/en/Data/Climate_Data#parameters-for-stationvalue) for an overview of all variables available
 {{< /sidenote >}}
 
-Both those features are also available from yet another Danish data registry. This time we'll use the API from [Danmarks Meteorologiske Institut (DMI)](https://www.dmi.dk) which maintains an [open database](https://opendatadocs.dmi.govcloud.dk/DMIOpenData). It contains a variety of categories, like meteorological observations, climate data, radar data, and forecast data. Here we're particularly interested in [historical climate data](https://opendatadocs.dmi.govcloud.dk/Data/Climate_Data), so we'll create a user and get our API key
+Both those features are also available from yet another Danish data registry. This time we'll use the API from [Danmarks Meteorologiske Institut (DMI)](https://www.dmi.dk) which maintains an [open database](https://opendatadocs.dmi.govcloud.dk/DMIOpenData). It contains a variety of categories, like meteorological observations, climate data, radar data, and forecast data. Here we're particularly interested in [historical climate data](https://opendatadocs.dmi.govcloud.dk/Data/Climate_Data), so we'll create a user and get our API key.
 
-The API key is essential for the next part. I've saved mine as usual in a `.env` file which I've excluded from Git versioning for obvious reasons. To call the API I'll define yet another function which wraps around the initial `request_to_pd()` function and deal with some of the other data cleaning that comes with this particular API and the columns. We'll run this function with the API call twice, once for wind speed (`wind_speed`) and once for cloud cover (`cloud_cover`). This will give us an hourly overview of those two features going back 300 000 records.
-
-{{< sidenote br=\"2em\" >}}
+{{< sidenote br=\"10em\" >}}
 Be warned that the data frame is quite big. The raw JSON is about 250MB large for 300 000 records
 {{< /sidenote >}}
+
+The API key is essential for the next part. I've saved mine as usual in a `.env` file which I've excluded from Git versioning for obvious reasons. To call the API I'll define yet another function which wraps around the initial `request_to_pd()` function and deal with some of the other data cleaning that comes with this particular API and the columns. We'll run this function with the API call twice, once for wind speed (`wind_speed`) and once for cloud cover (`cloud_cover`). This will give us an hourly overview of those two features going back 300 000 records.
 
 ``` python
 def get_weather_data(feature):
@@ -206,7 +221,10 @@ library(ggtext)
 For the interactions with the database we'll use the default `{DBI}` package, and to access the SQLite driver we'll use the `{RSQLite}` package. Then we can for example have a look at what the `production_weather` table looks like.
 
 ``` r
-conn <- DBI::dbConnect(RSQLite::SQLite(), dbname = "./data/energy_data.db")
+conn <- DBI::dbConnect(
+  RSQLite::SQLite(),
+  dbname = "./data/energy_data.db"
+)
 data <- DBI::dbReadTable(conn, "production_weather")
 data |>
   glimpse()
@@ -278,7 +296,10 @@ You can check which layers are available using `sf::st_layers()`
 Let's make some maps, those are always fun. I downloaded a map of Denmark in a [GeoPackage](https://www.geopackage.org) format from [gadm.org](https://gadm.org/download_country.html) and load it into R using the `st_read()` from the `{sf}` package. Since our data is already on a municipality level, we'll load the relevant layer from the file.
 
 ``` r
-denmark_sf <- sf::st_read("data/gadm41_DNK.gpkg", layer = "ADM_ADM_2") |>
+denmark_sf <- sf::st_read(
+  "data/gadm41_DNK.gpkg",
+  layer = "ADM_ADM_2"
+) |>
   janitor::clean_names()
 ```
 
@@ -296,7 +317,10 @@ data_agg_wind <- data |>
     mean_wind_production = mean(onshorewindmwh, na.rm = TRUE)
   ) |>
   mutate(
-    wind_speed_bins = cut(mean_wind_speed, breaks = c(0, 3, 6, 9, Inf))
+    wind_speed_bins = cut(
+      mean_wind_speed,
+      breaks = c(0, 3, 6, 9, Inf)
+    )
   ) |>
   group_by(wind_speed_bins, name) |>
   summarise(
@@ -651,7 +675,10 @@ Now we can look at the association between the energy prices and the energy sour
 
 ``` r
 data_prices_production |>
-  pivot_longer(-c(date, price, day_length), names_to = "energy_source") |>
+  pivot_longer(
+    -c(date, price, day_length),
+    names_to = "energy_source"
+  ) |>
   add_row(energy_source = "price") |>
   mutate(
     energy_source = case_when(

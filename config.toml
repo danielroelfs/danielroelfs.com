@@ -61,7 +61,7 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
         name = "Mail"
         icon = "mail"
         weight = 6
-        url = "mailto:daniel.roelfs@medisin.uio.no"
+        url = "mailto:answer_salt8f@icloud.com"
     [[params.social]]
         name = "danielroelfs.app"
         icon = "apps"

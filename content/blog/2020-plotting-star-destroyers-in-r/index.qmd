@@ -42,7 +42,7 @@ convert_to_binary <- function(x) {
     out <- paste0(mod, out)
     x <- floor(x / 2)
   }
-  return(out)
+  out
 }
 
 convert_to_base_n <- function(x, base = NULL) {
@@ -95,7 +95,7 @@ convert_to_binary <- function(x) {
     out <- paste0(mod, out)
     x <- floor(x / 2)
   }
-  return(out)
+  out
 }
 ```
 
@@ -183,15 +183,16 @@ In the function, since 0 will always result in 0, this is hard coded in. Afterwa
 
 bte <- function(x) {
   if (x == 0) {
-    return(0)
+    out <- 0
   }
   if (x %% 3 == 0) {
-    return(3 * bte(x / 3))
+    out <- 3 * bte(x / 3)
   } else if (x %% 3 == 1) {
-    return(3 * bte((x - 1) / 3) + 1)
+    out <- 3 * bte((x - 1) / 3) + 1
   } else if (x %% 3 == 2) {
-    return(3 * bte((x - 2) / 3) - 1)
+    out <- 3 * bte((x - 2) / 3) - 1
   }
+  out
 }
 ```
 
@@ -280,20 +281,26 @@ ggplot(data = NULL, aes(x = seq(starwars_seq), y = starwars_seq)) +
   geom_point(
     aes(
       x = sample(seq(-1e4, length(starwars_seq) + 1e4), 1e3),
-      y = sample(seq(
-        min(starwars_seq) - 1e4,
-        max(starwars_seq) + 1e4
-      ), 1e3),
+      y = sample(
+        seq(
+          min(starwars_seq) - 1e4,
+          max(starwars_seq) + 1e4
+        ),
+        1e3
+      ),
       size = sample(runif(length(starwars_seq) + 1e4), 1e3)
     ),
-    shape = 18, color = "yellow"
+    shape = 18,
+    color = "yellow"
   ) +
   geom_point(
     aes(
       x = sample(seq(starwars_seq), 1),
       y = sample(starwars_seq, 1)
     ),
-    shape = 19, size = 12, color = "darkslategray"
+    shape = 19,
+    size = 12,
+    color = "darkslategray"
   ) +
   geom_point(size = 4, color = "grey90") +
   scale_size_continuous(range = c(1e-3, 5e-1)) +

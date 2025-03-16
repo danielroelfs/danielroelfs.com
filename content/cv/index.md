@@ -236,7 +236,7 @@ portfolio
 
 ### [danielroelfs.app](https://danielroelfs.app)
 
-### [Talks & Presentations](https://danielroelfs.github.io/slides)
+### [Talks & Presentations](https://slides.danielroelfs.app)
 
 ### [Bilkollektivet Trip Cost Calculator](https://bilkollektivet.danielroelfs.app)
 

@@ -57,3 +57,13 @@ a.notbyai:hover {
   font-variant-caps: all-small-caps;
   background-color: #555;
 }
+
+p a.footnote-ref {
+  font-size: 80%;
+  margin-top: -1em;
+}
+
+p a.footnote-ref:after, p a.footnote-backref:after {
+  content: none;
+  margin-left: 0;
+}

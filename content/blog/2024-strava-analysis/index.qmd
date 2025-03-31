@@ -125,36 +125,38 @@ We'll also set the color (I like using the Strava color for the plots), and we'l
 strava_color <- "#EA5E2A"
 
 theme_strava <- function(...) {
-  ggthemes::theme_fivethirtyeight(base_family = "custom", ...) +
-    theme(
-      plot.background = element_rect(
-        fill = "transparent", color = "transparent"
-      ),
-      panel.background = element_rect(
-        fill = "transparent", color = "transparent"
-      ),
-      plot.title = element_markdown(),
-      plot.title.position = "plot",
-      plot.subtitle = element_markdown(),
-      plot.caption = element_markdown(),
-      plot.caption.position = "plot",
-      legend.title = element_markdown(),
-      legend.background = element_rect(
-        fill = "transparent", color = "transparent"
-      ),
-      legend.key = element_rect(
-        fill = "transparent", color = "transparent"
-      ),
-      axis.text.x = element_markdown(),
-      axis.text.y = element_markdown(),
-      strip.background = element_rect(
-        fill = "transparent", linetype = "solid",
-        color = "grey30", linewidth = 1
-      ),
-      strip.text = element_text(
-        face = "bold", size = 10, color = "grey30"
+  return(
+    ggthemes::theme_fivethirtyeight(base_family = "custom", ...) +
+      theme(
+        plot.background = element_rect(
+          fill = "transparent", color = "transparent"
+        ),
+        panel.background = element_rect(
+          fill = "transparent", color = "transparent"
+        ),
+        plot.title = element_markdown(),
+        plot.title.position = "plot",
+        plot.subtitle = element_markdown(),
+        plot.caption = element_markdown(),
+        plot.caption.position = "plot",
+        legend.title = element_markdown(),
+        legend.background = element_rect(
+          fill = "transparent", color = "transparent"
+        ),
+        legend.key = element_rect(
+          fill = "transparent", color = "transparent"
+        ),
+        axis.text.x = element_markdown(),
+        axis.text.y = element_markdown(),
+        strip.background = element_rect(
+          fill = "transparent", linetype = "solid",
+          color = "grey30", linewidth = 1
+        ),
+        strip.text = element_text(
+          face = "bold", size = 10, color = "grey30"
+        )
       )
-    )
+  )
 }
 ```
 

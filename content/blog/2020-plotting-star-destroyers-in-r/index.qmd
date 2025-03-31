@@ -42,7 +42,7 @@ convert_to_binary <- function(x) {
     out <- paste0(mod, out)
     x <- floor(x / 2)
   }
-  out
+  return(out)
 }
 
 convert_to_base_n <- function(x, base = NULL) {
@@ -95,7 +95,7 @@ convert_to_binary <- function(x) {
     out <- paste0(mod, out)
     x <- floor(x / 2)
   }
-  out
+  return(out)
 }
 ```
 
@@ -192,7 +192,7 @@ bte <- function(x) {
   } else if (x %% 3 == 2) {
     out <- 3 * bte((x - 2) / 3) - 1
   }
-  out
+  return(out)
 }
 ```
 

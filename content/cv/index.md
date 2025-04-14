@@ -34,6 +34,12 @@ h3 {
     margin-top: 0.75em !important;
     margin-bottom: 0em !important;
 }
+@media all and (max-width: 1200px) {
+    h3 {
+        width: 65%;
+        font-size: 0.8em;
+    }
+}
 </style>
 
 For a downloadable version of this CV, go to [cv.danielroelfs.com](https://cv.danielroelfs.com)

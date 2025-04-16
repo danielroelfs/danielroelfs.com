@@ -419,7 +419,8 @@ data_country_plot <- data_happiness |>
   mutate(
     opacity = ifelse(country_name %in% coi, 1, 0.05),
     country_color = fct_relevel(
-      as_factor(country_color), country_color_pal[0], after = 0
+      as_factor(country_color), country_color_pal[0],
+      after = 0
     )
   )
 ```

@@ -505,6 +505,7 @@ data_country_plot |>
       size = 10,
       lineheight = 1.2,
       hjust = 0,
+      margin = margin(t = -2, unit = "lines"),
     ),
     plot.caption.position = "plot",
     panel.grid.major.x = element_blank(),

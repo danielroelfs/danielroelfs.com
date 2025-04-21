@@ -27,6 +27,8 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
 
     customcss = ["custom_style.css"]
 
+    blogname = "posts"
+
     umami       = true
     umamilink   = "https://web-analytics.danielroelfs.app/script.js"
     umamiid     = "10185115-89df-427f-9aea-8c3575857825"
@@ -75,8 +77,8 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
         url  = "/"
         weight = 1
     [[menu.main]]
-        name = "Blog"
-        url  = "/blog"
+        name = "Posts"
+        url  = "/posts"
         weight = 2
     [[menu.main]]
         name = "Publications"

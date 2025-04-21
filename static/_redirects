@@ -1,9 +1,8 @@
 # Renamed blogs
-/blog /posts
+/blog /posts 200!
 
 # Updated blog post names
 /blog/the-easier-way-to-create-a-map-of-norway-using-fhimaps/ /blog/the-easier-way-to-create-a-map-of-norway-using-csmaps/
-/blog/the-easier-way-to-create-a-map-of-norway-using-splmaps/ /blog/the-easier-way-to-create-a-map-of-norway-using-csmaps/
 
 # Domain-level redirects
 http://photography.danielroelfs.com/* https://danielroelfs.github.io/photography-site/:splat 200!

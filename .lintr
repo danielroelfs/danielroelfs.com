@@ -6,8 +6,8 @@ linters: linters_with_defaults(
     object_usage_linter = NULL
   )
 exclusions: list(
-    "content/blog/2021-easy-map-norway/save_splmaps_data.R",
-    "content/blog/2022-dutch-performance-olympic-speed-skating/index.qmd",
-    "content/blog/2023-sunrise-sunset-differences/index.qmd",
+    "content/posts/2021-easy-map-norway/save_splmaps_data.R",
+    "content/posts/2022-dutch-performance-olympic-speed-skating/index.qmd",
+    "content/posts/2023-sunrise-sunset-differences/index.qmd",
     "renv/"
   )

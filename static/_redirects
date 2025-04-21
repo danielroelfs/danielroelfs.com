@@ -1,6 +1,6 @@
 # Renamed blogs
 /blog /posts 301
-/blog/* /posts/* 301
+/blog/* /posts/:splat 301
 
 # Updated blog post names
 /blog/the-easier-way-to-create-a-map-of-norway-using-fhimaps/ /blog/the-easier-way-to-create-a-map-of-norway-using-csmaps/ 301

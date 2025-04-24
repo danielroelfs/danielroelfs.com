@@ -1,3 +1,14 @@
+:root {
+  --body-font: "source-serif-pro", serif;
+  --header-font: "Cooper Hewitt", sans-serif;
+  --code-font: "source-code", monospace;
+  --header-weight: 713;
+}
+
+.article-nav-inner a.internal {
+  font-weight: 711;
+}
+
 @media all and (min-width: 1200px) {
   img:not(.icon, .notbyai-img) {
     margin-left: -6rem;

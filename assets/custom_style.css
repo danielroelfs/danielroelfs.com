@@ -3,9 +3,9 @@
 @import url("https://use.typekit.net/dzy3ude.css"); /* akzidenz-grotesk-next-pro */
 
 :root {
-  --body-font: "source-serif-pro", serif;
-  --header-font: "Cooper Hewitt", sans-serif;
-  --code-font: "source-code", monospace;
+  --body-font: "source-serif-pro", "Source Serif 4", serif;
+  --header-font: "Cooper Hewitt", "akzidenz-grotest-next-pro", sans-serif;
+  --code-font: "Courier", "source-code-pro", monospace;
   --header-weight: 713;
 }
 

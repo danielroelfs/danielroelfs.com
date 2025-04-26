@@ -13,9 +13,9 @@ editor_options:
   chunk_output_type: console
 ---
 
-<p style="border-radius: 5px; background-color: #acc8d4; padding: 1em;">
+{{{< standout >}}}
 I'm very about what I share on the internet. Strava stores a bunch of data I am not comfortable sharing openly on the internet. Now, I think my health (and the summarized data below does hopefully reflect that too) is excellent, but it's just a word of caution to everyone who might think about working/analyzing this type of data. If you share your segments publicly, it is fairly easy to trace it back to a home address. Be aware of what you upload to the internet!
-</p>
+{{{< /standout >}}}
 
 {{{< sidenote br="2em" >}}}
 Note the difference between _self-generated_ and _self-collected_ here

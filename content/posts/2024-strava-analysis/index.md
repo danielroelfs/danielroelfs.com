@@ -14,9 +14,9 @@ editor_options:
 ---
 
 
-<p style="border-radius: 5px; background-color: #acc8d4; padding: 1em;">
+{{< standout >}}
 I'm very about what I share on the internet. Strava stores a bunch of data I am not comfortable sharing openly on the internet. Now, I think my health (and the summarized data below does hopefully reflect that too) is excellent, but it's just a word of caution to everyone who might think about working/analyzing this type of data. If you share your segments publicly, it is fairly easy to trace it back to a home address. Be aware of what you upload to the internet!
-</p>
+{{< /standout >}}
 
 {{< sidenote br=\"2em\" >}}
 Note the difference between *self-generated* and *self-collected* here
@@ -461,36 +461,38 @@ We'll also set the color (I like using the Strava color for the plots), and we'l
 strava_color <- "#EA5E2A"
 
 theme_strava <- function(...) {
-  ggthemes::theme_fivethirtyeight(base_family = "custom", ...) +
-    theme(
-      plot.background = element_rect(
-        fill = "transparent", color = "transparent"
-      ),
-      panel.background = element_rect(
-        fill = "transparent", color = "transparent"
-      ),
-      plot.title = element_markdown(),
-      plot.title.position = "plot",
-      plot.subtitle = element_markdown(),
-      plot.caption = element_markdown(),
-      plot.caption.position = "plot",
-      legend.title = element_markdown(),
-      legend.background = element_rect(
-        fill = "transparent", color = "transparent"
-      ),
-      legend.key = element_rect(
-        fill = "transparent", color = "transparent"
-      ),
-      axis.text.x = element_markdown(),
-      axis.text.y = element_markdown(),
-      strip.background = element_rect(
-        fill = "transparent", linetype = "solid",
-        color = "grey30", linewidth = 1
-      ),
-      strip.text = element_text(
-        face = "bold", size = 10, color = "grey30"
+  return(
+    ggthemes::theme_fivethirtyeight(base_family = "custom", ...) +
+      theme(
+        plot.background = element_rect(
+          fill = "transparent", color = "transparent"
+        ),
+        panel.background = element_rect(
+          fill = "transparent", color = "transparent"
+        ),
+        plot.title = element_markdown(),
+        plot.title.position = "plot",
+        plot.subtitle = element_markdown(),
+        plot.caption = element_markdown(),
+        plot.caption.position = "plot",
+        legend.title = element_markdown(),
+        legend.background = element_rect(
+          fill = "transparent", color = "transparent"
+        ),
+        legend.key = element_rect(
+          fill = "transparent", color = "transparent"
+        ),
+        axis.text.x = element_markdown(),
+        axis.text.y = element_markdown(),
+        strip.background = element_rect(
+          fill = "transparent", linetype = "solid",
+          color = "grey30", linewidth = 1
+        ),
+        strip.text = element_text(
+          face = "bold", size = 10, color = "grey30"
+        )
       )
-    )
+  )
 }
 ```
 

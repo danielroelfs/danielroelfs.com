@@ -27,7 +27,7 @@ table {
   font-family: "Nunito Sans", sans-serif;
 }
 
-code {
+pre code {
   background: #E0E0E0;
 }
 
@@ -36,7 +36,7 @@ img {
 }
 </style>
 
-{{< standout bg="#acc8d4" >}}
+{{< standout >}}
 For this post, I decided to hide the code chunks by default to improve legibility. You can click on *Show code* to expand the code.
 {{< /standout >}}
 
@@ -511,7 +511,7 @@ data |>
 
 So, there's a lot of competition among buyers, and people looking to sell their houses can expect to be paid more than they anticipated. Dozens of buyers compete for the same properties, driving up the price. The figure below shows the percentage of properties sold compared to the number of properties offered. It's clear that after the 2008 housing bubble crisis, the housing market was still recovering in 2012 and 2013. However, since 2016, more apartments were sold than were put on the market. This means that the number of properties available for the growing number of people wanting to move to Amsterdam is decreasing. This decreases supply in a time with increasing demand, thus pushing the prices higher twice over.
 
-{{< standout bg="#acc8d4" >}}
+{{< standout >}}
 A new phenomenon that entered the scene a little while ago may indicate how skewed the market is. People wanting to buy a house in a certain neighborhood will put notes and letters in the mailboxes of people living in that area saying *"Nice house! Are you interested in selling it to me?"*. This is now not an uncommon strategy to find a house. Some people living in popular neighborshoods are inundated with notes from agencies facilitating these practices. See also a [news item by RTL](https://www.rtlnieuws.nl/geld-en-werk/artikel/19001/droomhuis-gezien-maar-niet-te-koop-stop-dan-een-briefje-de-bus)
 {{< /standout >}}
 

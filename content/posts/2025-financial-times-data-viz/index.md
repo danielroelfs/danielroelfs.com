@@ -19,7 +19,7 @@ body {
   background-color: rgb(255, 241, 229);
 }
 
-code {
+pre code {
   background: hsl(28, 100.00%, 97.5%) !important;
 }
 

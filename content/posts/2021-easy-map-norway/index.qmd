@@ -18,11 +18,11 @@ editor_options:
 #| echo: FALSE
 
 p.stand-out-paragraph code {
-  background-color: #93b8c8;
+  background-color: rgba(165, 132, 138, 0.5);
 }
 ```
 
-{{{< standout bg="#acc8d4" >}}}
+{{{< standout >}}}
 As of March 2023 <code>{fhimaps}</code> and <code>{splmaps}</code> are no longer supported due to budget cuts at the institution supporting them. The amazing developers (led by [Richard Aubrey White](https://www.rwhite.no) and [Chi Zhang](https://andreaczhang.github.io)) have moved the data and functionality to a new package called `{csmaps}`. The code below is updated to reflect the changes.
 {{{< /standout >}}}
 
@@ -539,7 +539,7 @@ map <- map_sf |>
 htmlwidgets::saveWidget(map, "leafMap.html")
 ```
 
-<div style="text-align:center"><iframe seamless src="leafMap.html" width="100%" height="500" frameBorder="0" style="padding-top: 1em;"></iframe></div>
+<div style="text-align:center"><iframe seamless src="/2021-easy-map-norway-leafMap.html" width="100%" height="500" frameBorder="0" style="padding-top: 1em;"></iframe></div>
 
 **EDIT (2022-09-04)**: Updated the blogpost to replace usage of the retiring `{fhimaps}` and `{fhidata}` packages with the newer `{splmaps}` and `{spldata}` packages from FHI. The `{fhidata}` package included a dataset on vaccination rates in Norway, but since this isn't incorporated in the new `{spldata}` package I replaced that plot with a plot about age distribution. 
 In addition, I also replaced all usage of the NORMENT internal `{normentR}` package with the `{scico}` package which is available on CRAN.

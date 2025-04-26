@@ -21,10 +21,6 @@ body {
   background-color: rgb(255, 241, 229);
 }
 
-pre code {
-  background: hsl(28, 100.00%, 97.5%) !important;
-}
-
 figure img {
   min-width: 100% !important;
   margin-left: 0 !important;

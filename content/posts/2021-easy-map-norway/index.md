@@ -573,7 +573,7 @@ map_sf |>
   )
 ```
 
-<iframe seamless src="leafMap.html" width="100%" height="500" frameBorder="0" style="padding-top: 1em;">
+<iframe seamless src="/2021-easy-map-norway-leafMap.html" width="100%" height="500" frameBorder="0" style="padding-top: 1em;">
 </iframe>
 
 **EDIT (2022-09-04)**: Updated the blogpost to replace usage of the retiring `{fhimaps}` and `{fhidata}` packages with the newer `{splmaps}` and `{spldata}` packages from FHI. The `{fhidata}` package included a dataset on vaccination rates in Norway, but since this isn't incorporated in the new `{spldata}` package I replaced that plot with a plot about age distribution.

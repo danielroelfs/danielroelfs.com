@@ -18,7 +18,7 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
 
     favicon = "avatar.png"
 
-    highlightstyle_light  = "foundation"
+    highlightstyle_light  = "routeros"
     highlightstyle_dark  = "rainbow"
 
     iconsource = "tabler"

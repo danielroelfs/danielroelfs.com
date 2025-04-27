@@ -27,6 +27,36 @@ figure img {
   filter: drop-shadow(2px 5px 2px hsl(28, 40%, 25%))
 }
 </style>
+<script>
+function applyConditionalStyles() {
+  const currentlyDark = sessionStorage.getItem('darkMode');
+
+  const hljsElements = document.querySelectorAll('pre code');
+
+  if (currentlyDark == 0 || currentlyDark == null) {
+    styles = `
+      pre code {
+        background-color: hsl(28, 100.00%, 97.5%) !important;
+      }
+    `;
+  } else {
+    styles = `
+      pre code {
+        background-color: #373939 !important;
+      }
+    `;
+  }
+  const styleSheet = document.createElement('style');
+    styleSheet.type = 'text/css';
+    styleSheet.innerText = styles;
+    document.head.appendChild(styleSheet);
+}
+applyConditionalStyles();
+
+document.getElementById("btn-theme-toggle").addEventListener("click", function() {
+  window.location.reload();
+})
+</script>
 
 I've wandered around the data viz community for a while now, and it tends to be same set of news agencies, organisations, and individuals that are shared and discussed repeatedly for their ingenuity, creativity, or just excellent execution. Some of my sources of inspiration are (among others), [Axios](https://www.axios.com/visuals/2024-best-visuals-axios) (with for example [Will Chase](https://www.williamrchase.com)), the [New York Times](https://www.nytimes.com/spotlight/graphics), and the (now defunct) FiveThirtyEight. As for individuals, I've always looked up to [Cédric Scherer](https://www.cedricscherer.com) for his ability to make data viz accessible for newcomers, he also runs the commmunity event [30DayChartChallenge](https://github.com/30DayChartChallenge) which is an excellent source of inspiration from many data viz enthusiasts. And [Nadieh Bremer](https://www.visualcinnamon.com) for her incredible creativity and artistic data viz work, also for her book [Data Sketches](https://www.datasketch.es) she wrote together with [Shirley Wu](https://sxywu.github.io), absolutely gorgeous data visualization that communicates a message very clearly. There's also the [Data Vizualization Society](https://www.datavisualizationsociety.org) which aims to promote data viz practices and whose conference I still want to visit some day.
 

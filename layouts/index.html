@@ -1,4 +1,9 @@
 {{ define "main" }}
+{{ if .Site.Params.enable_theme_toggle | default true }}
+    <div class="theme-switch">
+        <button class="btn-theme-switch" id="btn-theme-toggle" data-umami-event="Toggle mode (index)" onclick="toggleColorScheme()">dark mode</button>
+    </div>
+{{ end }}
 <h1 class="title">{{ .Title | markdownify }}</h1>
 <div style="height: 2rem;"></div>
 {{ if .Site.Params.intro }}

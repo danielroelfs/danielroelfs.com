@@ -16,7 +16,7 @@ editor_options:
 - {{{< xref text="Energy production" link="#energy-production" >}}}
 - {{{< xref text="Weather and climate data" link="#weather-and-climate-data" >}}}
 - {{{< xref text="Length of day" link="#length-of-day" >}}}
-- {{{< xref text="Energy prices" link="#energy-prices" >}}}
+- {{{< xref text="Energy storage and prices" link="#energy-storage-and-prices" >}}}
 
 ```{r}
 #| label: act-venv

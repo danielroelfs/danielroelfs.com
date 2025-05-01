@@ -17,7 +17,7 @@ editor_options:
 -   {{< xref text=\"Energy production\" link=\"#energy-production\" >}}
 -   {{< xref text=\"Weather and climate data\" link=\"#weather-and-climate-data\" >}}
 -   {{< xref text=\"Length of day\" link=\"#length-of-day\" >}}
--   {{< xref text=\"Energy prices\" link=\"#energy-prices\" >}}
+-   {{< xref text=\"Energy storage and prices\" link=\"#energy-storage-and-prices\" >}}
 
 One of the main reasons I maintain this blog is because I like delving into methods and topics that I don't get the chance to during my day job. One of those topics is the energy market. As energy markets move towards more sustainable sources of production, there are some really interesting challenges arising that offer for some fun.
 

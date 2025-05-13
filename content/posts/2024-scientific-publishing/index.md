@@ -21,6 +21,7 @@ editor_options:
 -   {{< xref text="What Can Universities Do?" link="#what-can-universities-do" >}}
 -   {{< xref text="So What Do We Do Next?" link="#so-what-do-we-do-next" >}}
 -   {{< xref text="FAQ" link="#faq" >}}
+-   {{< xref text="En español" link="#acknowledgements" >}}
 
 ## Introduction
 
@@ -654,3 +655,10 @@ A - In 2022, Martin Saggese earned a little over \$950 000 in his role as Execut
 ## Acknowledgements
 
 I would like to thank my friends and (former) colleagues on providing feedback on various drafts of this blogpost. They have received compensation in the form of a beverage at our next dinner.
+
+**EDIT (2025-05-09)**:
+
+{{< standout >}}
+**Para lectores españoles**<br/>
+Me ha llamado la atención que este artículo ha estado circulando entre académicos de Iberoamérica. Si quieres leerlo este artículo en español, puedes leer la traducción (automática) [aquí](https://translate.kagi.com/translate/en/es/https://danielroelfs.com/posts/the-money-in-scientific-publishing).
+{{< /standout >}}

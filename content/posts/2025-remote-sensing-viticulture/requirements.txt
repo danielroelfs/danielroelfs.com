@@ -1,0 +1,7 @@
+matplotlib==3.10.0
+netCDF4==1.7.2
+numpy==2.2.2
+openeo==0.37.0
+pandas==2.2.3
+scipy==1.15.1
+xarray==2025.1.2

@@ -180,7 +180,7 @@ psutil==5.9.8
 ptyprocess==0.7.0
 pure-eval==0.2.2
 pyarrow==16.0.0
-pycares==4.4.0
+pycares==4.9.0
 pycodestyle==2.11.1
 pycoingecko==3.1.0
 pycparser==2.22

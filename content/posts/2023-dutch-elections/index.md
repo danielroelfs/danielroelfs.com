@@ -1,16 +1,21 @@
 ---
 title: Visualizing the Dutch elections throughout the night
-date: 2023-11-22
-description: "Visualizing the Dutch elections throughout the night"
+date: 2023-11-22T00:00:00.000Z
+description: Visualizing the Dutch elections throughout the night
 slug: visualizing-the-dutch-elections
 categories:
   - society
 tags:
   - R
   - ggplot
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
+
+
+{{< standout >}}
+This post is about the 2023 Dutch parliamentary elections, not the 2024 European parliament elections or the 2025 Dutch parliamentary elections
+{{< /standout >}}
 
 So it's time again for the Netherlands to have another election for the Dutch parliament ([*Tweede Kamer*](https://en.wikipedia.org/wiki/House_of_Representatives_(Netherlands))) The previous one was only in 2021, and we had elections in 2023 already for the Provinces and indirectly for the Dutch "Senate" ([*Eerste Kamer*](https://en.wikipedia.org/wiki/Senate_(Netherlands))), but the parliamentary elections are the most important ones, usually taking place every four years (until one of the coalition partners believes they cannot support the government anymore, or if one of parties in government believe it's in their best interest to have another election sooner rather than later).
 
@@ -26,7 +31,7 @@ I'll also separate this post in when I added the new plots and data. I'll mark t
 
 Some of the plots I could create beforehand, this data about the polls leading up to election dayy. I also made sure to create a few datasets that might help me speed up the work during election night. So I'll add color and accent colors and their political identity. First, I'll load the packages we'll use here. I'll also load a custom font I'll use for the plots.
 
-<details>
+<details class="code-fold">
 <summary>Show code</summary>
 
 ``` r
@@ -42,7 +47,7 @@ showtext_auto()
 
 </details>
 
-{{< sidenote br="3em" >}}
+{{< sidenote br=\"3em\" >}}
 There are a ton of voting advice websites, but only a few (including *KiesKompas*) are generally recommended by a variety of political parties across the spectrum
 {{< /sidenote >}}
 
@@ -50,7 +55,7 @@ Then we can create a data frame with the party names and their identifying color
 
 One more complication here is that two parties, *GroenLinks* (GL) and the *Partij van de Arbeid* (PvdA), campaigned under a single banner, referred to here as *GL-PvdA*. When comparing to previous elections, polls and election outcomes should probably be summed across those two parties to better reflect the trends.
 
-<details>
+<details class="code-fold">
 <summary>Show code</summary>
 
 ``` r
@@ -88,7 +93,7 @@ data_historical_parties <- tribble(
 
 Recreating the political compass is fairly simple once the data is loaded. It's in principle simply a scatterplot. Making it look informative by labeling the points directly and adding the colors and annotations in an informative matter is the only challenge here.
 
-<details>
+<details class="code-fold">
 <summary>Show code</summary>
 
 ``` r
@@ -149,7 +154,7 @@ data_parties |>
 
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-political-spectrum-1.png" width="768" />
 
-{{< sidenote br="12em" >}}
+{{< sidenote br=\"12em\" >}}
 Geert Wilders is also the party's sole member ([link](https://en.wikipedia.org/wiki/Party_for_Freedom#Organisation_and_support))
 {{< /sidenote >}}
 
@@ -159,7 +164,7 @@ The only squarely left-wing party of significance this election is the coalition
 
 Before I move to the lastest polls, I can show how the seats have been distributed across the political parties over the past election cycles. For this I'll quickly scrape the [parlement.com](https://www.parlement.com) website for the seat distribution across the past few elections.
 
-<details>
+<details class="code-fold">
 <summary>Show code</summary>
 
 ``` r
@@ -174,14 +179,15 @@ data_tk_history <- "https://www.parlement.com/id/vh8lnhronvx6/zetelverdeling_twe
   mutate(
     party = str_extract(party, "[^<!]+"),
     across(starts_with("election"), as.integer)
-  )
+  ) |>
+  select(-election_2023)
 ```
 
 </details>
 
 Then we can merge this dataset with the metadata tibble I created earlier to get the colors so I can use them in plotting. This plot is a simple "time-series"-like plot using `geom_path()`. The biggest challenge here was to annotate all the parties properly. I chose for a combination of both labeling each line explicitly and adding a legend with the specification for each color. However, since many parties use very similar colors this legend alone was not enough.
 
-<details>
+<details class="code-fold">
 <summary>Show code</summary>
 
 ``` r
@@ -267,7 +273,7 @@ I scraped this data earlier in the week, so the current table online does not re
 
 Let's now also look at some polls to see what election night might bring. For this I'll scrape the results from [Ipsos](https://www.ipsos.com). It contains the polls from week 44 and week 46.
 
-<details>
+<details class="code-fold">
 <summary>Show code</summary>
 
 ``` r
@@ -296,7 +302,7 @@ data_polls_pre |> write_rds("./data/polls_wk_46.rds")
 
 From this table I'll use only the polls from week 46 (latest available at the time). To better compare the polls to the current situation without drowning out the most important data I'll show the current seat distribution in grey, and the predicted seats in red.
 
-<details>
+<details class="code-fold">
 <summary>Show code for the plot</summary>
 
 ``` r
@@ -370,7 +376,7 @@ Tom Louwerse also contributes to the [Irish Polling Indicator](https://pollingin
 
 This is just one plot from one pollster. There is however a polling aggregator, called the [*Peilingwijzer*](https://peilingwijzer.tomlouwerse.nl), which is maintained by political scientist [Tom Louwerse](https://www.tomlouwerse.nl) at Leiden University. It uses a Bayesian approach to weigh a collection of polls from various sources (description in [Dutch](https://peilingwijzer.tomlouwerse.nl/methode.html#statistisch-model) and [English](https://pollingindicator.com/method/)). An (probably earlier) version of the code is available on [Dataverse](https://dataverse.harvard.edu/file.xhtml?fileId=4459988&version=1.0) This way he gets a better estimate of the uncertainty across several pollsters and polling dates. I know he does a lot of his analyses in R, so I'll try to recreate his plot on the [main website](https://peilingwijzer.tomlouwerse.nl) just as a challenge (and perhaps make one or two things a bit more aesthetically pleasing). It seems he uses the somewhat niche (at least in my field) `geom_crossbar()`.
 
-<details>
+<details class="code-fold">
 <summary>Show code</summary>
 
 ``` r
@@ -487,7 +493,7 @@ There are three municipalities in the Carribean that can vote until 02:00 CET
 
 The voting booths (at least in the mainland part of the Netherlands) close at 21:00. This also marks the release of the first exit polls. I'm just copying the numbers from the TV broadcast as they come in and saving them in a `tibble()` using the `tribble()` function.
 
-<details>
+<details class="code-fold">
 <summary>Show code for the plot</summary>
 
 ``` r
@@ -581,7 +587,7 @@ Out of the blue, contrary to basically any serious poll, the PVV party from Geer
 
 An hour later, at 22:00, the next exit polls was released. After the shock of the first one I think everyone was quite nervous to see whether these next exit polls were consistent with the first or if there was some course correction, but the second exit polls were very consistent. No party changed more than 1 seat in either direction compared to the polls released at 21:00. I'll try to visualize the difference, showing how flat the differences are.
 
-<details>
+<details class="code-fold">
 <summary>Show code for the plot</summary>
 
 ``` r
@@ -667,13 +673,13 @@ exit_polls_2200 |>
 
 ## 23 November
 
-{{< sidenote br="2em" >}}
+{{< sidenote br=\"2em\" >}}
 The Dutch government is based on coalitions, so the PVV will need to collaborate with other parties to form a government
 {{< /sidenote >}}
 
 It's the day after and basically all news agencies (e.g. [NOS](https://nos.nl/collectie/13958/artikel/2498903), [BBC](https://www.bbc.com/news/world-europe-67504272), [CNN](https://edition.cnn.com/2023/11/23/europe/geert-wilders-dutch-election-analysis-intl/index.html), [NRK](https://www.nrk.no/urix/1.16648165)) are (justifiably) shocked by the fact that Geert Wilders likely will become the next prime minister in the Netherlands for however long his government will last. The formal results will be announced once all votes are properly tallied and checked again, so for this part of the analyses we can only rely on the latest results with almost all votes counted at least once. The official result will be published by the [*Kiesraad*](https://www.kiesraad.nl/) one about a week, but it publishes the [preliminary results](https://www.kiesraad.nl/verkiezingen/tweede-kamer/uitslagen/uitslagen-per-gemeente-tweede-kamer) also, so I'll just copy the data from there. I already created the absolute seat comparison, and since not much changed I thought perhaps I could look at the percentage change from the current seats.
 
-<details>
+<details class="code-fold">
 <summary>Show code for the plot</summary>
 
 ``` r
@@ -778,7 +784,7 @@ Since the NSC is a new party it's increase (no matter how little or large it wou
 
 Next I wanted to look at the results per municipality to see if there were any trends I could identify. The *Kiesraad* publishes preliminary results per municipality also, but this data is quite a headache to scrape so I'll use the website [*AlleCijfers.nl*](https://allecijfers.nl/uitslag-tweede-kamer-verkiezingen-2023/) instead that more conveniently lists everything in an HTML table that we can scrape. See [here](https://github.com/danielroelfs/danielroelfs.com/tree/main/content/blog/2023-dutch-elections/scrape_municipality_results.py) for the Python code to scrape the website.
 
-<details>
+<details class="code-fold">
 <summary>Show code</summary>
 
 ``` r
@@ -801,7 +807,7 @@ results_municipality <- read_delim("./data/election_results.csv", delim = ";") |
 
 To create the map, I downloaded a *geopackage* file from the [*Centraal Bureau voor de Statistiek*](https://www.cbs.nl) (CBS) page on [geographical areas](https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/cbs-gebiedsindelingen) where they share current and historical files on a number of divisions (provinces, municipalities, security regions, etc.). The *geopackage* format can be parsed with the `{sf}` package. The file contains several "layers" that can be listed through the `sf::st_layers(<file>)` functionality.
 
-<details>
+<details class="code-fold">
 <summary>Show code</summary>
 
 ``` r
@@ -823,7 +829,7 @@ The weighted mean is implemented in R through the `weighted.mean()` function
 
 For these plots I'll calculate two measures, the weighted mean of the political identity and the weighted mean of the political color. I'll use the percentages in each municipality as the weights and the values from *KiesKompas* to aggregate for each measure. It's important to note that there were many more parties the electorate could vote for, but not all were given a political identity or color by *KiesKompas*, so data from these (usually very small) parties is ignored.
 
-<details>
+<details class="code-fold">
 <summary>Show code for the plot</summary>
 
 ``` r

@@ -12,6 +12,10 @@ editor_options:
   chunk_output_type: console
 ---
 
+{{{< standout >}}}
+This post is about the 2023 Dutch parliamentary elections, not the 2024 European parliament elections or the 2025 Dutch parliamentary elections
+{{{< /standout >}}}
+
 So it's time again for the Netherlands to have another election for the Dutch parliament ([_Tweede Kamer_](https://en.wikipedia.org/wiki/House_of_Representatives_(Netherlands))) The previous one was only in 2021, and we had elections in 2023 already for the Provinces and indirectly for the Dutch "Senate" ([_Eerste Kamer_](https://en.wikipedia.org/wiki/Senate_(Netherlands))), but the parliamentary elections are the most important ones, usually taking place every four years (until one of the coalition partners believes they cannot support the government anymore, or if one of parties in government believe it's in their best interest to have another election sooner rather than later).
 
 Anyway, parliamentary elections are a prime example of how and why data vizualization is important. Data is used extensively throughout the political campaigns to get political points across (whether it's used justly or disingenuously). For data analysts and data journalists, vizualizing the polls, results, and trends as the data comes in is a key challenge throughout the night. Since this is a unique event that happens (hopefully) only once every four years, so I thought I'd jump on the opportunity to provide my (admittedly unrequested) take on the data visualizations that are important to share.
@@ -788,11 +792,10 @@ results_municipality <- read_delim("./data/election_results.csv", delim = ";") |
   )
 ```
 
-
 To create the map, I downloaded a _geopackage_ file from the [_Centraal Bureau voor de Statistiek_](https://www.cbs.nl) (CBS) page on [geographical areas](https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/cbs-gebiedsindelingen) where they share current and historical files on a number of divisions (provinces, municipalities, security regions, etc.). The _geopackage_ format can be parsed with the `{sf}` package. The file contains several "layers" that can be listed through the `sf::st_layers(<file>)` functionality.
 
 ```{r}
-#| label: load--geo-file
+#| label: load-geo-file
 #| code-fold: true
 #| code-summary: "Show code"
 

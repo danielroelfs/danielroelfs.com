@@ -49,7 +49,7 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
         name = "Bluesky"
         icon = "brand-bluesky"
         weight = 3
-        url = "https://bsky.app/profile/danielroelfs.bsky.social"
+        url = "https://bsky.app/profile/danielroelfs.com"
     [[params.social]]
         name = "ORCID"
         icon = "brand-pushbullet"

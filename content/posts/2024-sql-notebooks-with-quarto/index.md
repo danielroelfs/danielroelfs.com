@@ -19,25 +19,13 @@ Notebooks are a cornerstone of exploratory data analysis in data science (and so
 
 ## Background
 
-{{< sidenote br=\"6em\" >}}
-I use Quarto documents for all of my blogposts to render Markdown files that [Hugo](https://gohugo.io) builds into webpages
-{{< /sidenote >}}
+As mentioned, Quarto supports both R and Python, although it is [developed by Posit](https://posit.co/blog/announcing-quarto-a-new-scientific-and-technical-publishing-system/) (formerly RStudio) so it's more popularl with R users since Jupyter remains the gold standard for Python. However, Posit aims to branch out into other languages and has massively improved support in their IDE for Python and Julia. I've used Quarto for Python a fair bit{{< sidenote br=\"sn-1\" >}}I use Quarto documents for all of my blogposts to render Markdown files that [Hugo](https://gohugo.io) builds into webpages{{< /sidenote >}} and I think it ticks some boxes that Jupyter does not, while also having some quirks that Jupyter avoids. So while I was learning about how Quarto supports both the R and Python kernels, I learned that the list of officially supported engines (R, Python, Julia, and Javascript) and unofficially supported engines are different.
 
-As mentioned, Quarto supports both R and Python, although it is [developed by Posit](https://posit.co/blog/announcing-quarto-a-new-scientific-and-technical-publishing-system/) (formerly RStudio) so it's more popularl with R users since Jupyter remains the gold standard for Python. However, Posit aims to branch out into other languages and has massively improved support in their IDE for Python and Julia. I've used Quarto for Python a fair bit and I think it ticks some boxes that Jupyter does not, while also having some quirks that Jupyter avoids. So while I was learning about how Quarto supports both the R and Python kernels, I learned that the list of officially supported engines (R, Python, Julia, and Javascript) and unofficially supported engines are different.
-
-{{< sidenote br=\"1em\" >}}
-[Yihui Xie](https://yihui.org), the main developer of `knitr` deserves to get more praise than he does for his contributions
-{{< /sidenote >}}
-
-Quarto inherits the supported language engines from it's predecessor R Markdown, which relies on the [`knitr`](https://yihui.org/knitr/) package to handle different languages. `knitr` supports a [host of engines](https://bookdown.org/yihui/rmarkdown/language-engines.html) including Octave, Fortran, C, Stan, and SQL. So since the `knitr` engine is also used to do the rendering of R code in Quarto, these other languages kinda come for free even though the Quarto development team currently has not built in support for these other languages directly (although [people have asked on GitHub about this](https://github.com/quarto-dev/quarto-cli/discussions/1737)). But SQL code chunks will render nicely in Quarto documents if you set it up correctly. That's what I will show here now: how to use Quarto for creating SQL notebooks.
+Quarto inherits the supported language engines from it's predecessor R Markdown, which relies on the [`knitr`](https://yihui.org/knitr/){{< sidenote br=\"sn-2\" >}}[Yihui Xie](https://yihui.org), the main developer of `knitr` deserves to get more praise than he does for his contributions{{< /sidenote >}} package to handle different languages. `knitr` supports a [host of engines](https://bookdown.org/yihui/rmarkdown/language-engines.html) including Octave, Fortran, C, Stan, and SQL. So since the `knitr` engine is also used to do the rendering of R code in Quarto, these other languages kinda come for free even though the Quarto development team currently has not built in support for these other languages directly (although [people have asked on GitHub about this](https://github.com/quarto-dev/quarto-cli/discussions/1737)). But SQL code chunks will render nicely in Quarto documents if you set it up correctly. That's what I will show here now: how to use Quarto for creating SQL notebooks.
 
 ## Setup
 
-{{< sidenote br=\"1em\" >}}
-I found that the version on Homebrew might not be the latest version from the [Quarto website](https://quarto.org/docs/get-started/), so you might want to install using the GUI
-{{< /sidenote >}}
-
-So how do you get this up. So obviously, you first need to [install Quarto](https://quarto.org/docs/get-started/). If you have a Mac (with Homebrew installed), you can install it directly [from there](https://formulae.brew.sh/cask/quarto) with the following command:
+So how do you get this up. So obviously, you first need to [install Quarto](https://quarto.org/docs/get-started/). If you have a Mac (with Homebrew installed), you can install it directly [from there](https://formulae.brew.sh/cask/quarto){{< sidenote br=\"sn-3\" >}}I found that the version on Homebrew might not be the latest version from the [Quarto website](https://quarto.org/docs/get-started/), so you might want to install using the GUI{{< /sidenote >}} with the following command:
 
 ``` bash
 brew install quarto
@@ -45,11 +33,7 @@ brew install quarto
 
 You'll also need to install the R package [`DBI`](https://dbi.r-dbi.org) which will handle the database interfacing and the driver for whatever database you're using. In my case this is [duckdb](http://duckdb.org) (more about duckdb below). The driver for duckdb is easily accessed through the [`duckdb`](https://r.duckdb.org) package. Drivers for other database management systems are of course [available in their respective packages](https://dbi.r-dbi.org). Creating these SQL notebooks with just Python directly is not possibly as of now as far as I know since Quarto uses the Jupyter engine to handle Python code chunks and as mentioned we need the `knitr` engine for SQL support.
 
-{{< sidenote br=\"5em\" >}}
-[*RDBMS*](https://en.wikipedia.org/wiki/Relational_database): relational database management system
-{{< /sidenote >}}
-
-We also need a database to connect to for demonstration purposes. I've become a fervent advocate for [duckdb](https://duckdb.org) for smaller projects (although support for collaborative projects [seem to be coming](https://motherduck.com)). Duckdb is an open-source RDBMS that is incredibly fast and memory efficient. I've been using it for a while, but I hope it'll become more widely popular now that the [v1.0.0 version has been released](https://duckdb.org/2024/06/03/announcing-duckdb-100.html) in June 2024. It is lightweight and fairly easy to [install](https://duckdb.org/docs/installation/) and works on all major systems. Again with Homebrew you can install it like this:
+We also need a database to connect to for demonstration purposes. I've become a fervent advocate for [duckdb](https://duckdb.org) for smaller projects (although support for collaborative projects [seem to be coming](https://motherduck.com)). Duckdb is an open-source RDBMS{{< sidenote br=\"sn-4\" >}}[*RDBMS*](https://en.wikipedia.org/wiki/Relational_database): relational database management system{{< /sidenote >}} that is incredibly fast and memory efficient. I've been using it for a while, but I hope it'll become more widely popular now that the [v1.0.0 version has been released](https://duckdb.org/2024/06/03/announcing-duckdb-100.html) in June 2024. It is lightweight and fairly easy to [install](https://duckdb.org/docs/installation/) and works on all major systems. Again with Homebrew you can install it like this:
 
 ``` bash
 brew install duckdb
@@ -79,10 +63,6 @@ con_flights <- DBI::dbConnect(
 
 You can then provide this connection object directly to the `connection` argument in the SQL code chunk. You can also provide other arguments (like `label` and `echo` and [some others](https://quarto.org/docs/reference/cells/cells-knitr.html)) to configure the functionality and output of each chunk, but note that not all options work in SQL chunks. You'll have experiment a bit to see which ones work and which ones don't. A typical SQL code chunk in Quarto might look something like this:
 
-{{< sidenote >}}
-Note that the semicolon is not strictly necessary for functionality, but it is good practice to include it
-{{< /sidenote >}}
-
 ```` markdown
 ```{sql}
 #| label: get-carriers
@@ -91,6 +71,8 @@ Note that the semicolon is not strictly necessary for functionality, but it is g
 SELECT name, carrier FROM airlines LIMIT 10;
 ```
 ````
+
+Note that the semicolon is not strictly necessary for functionality, but it is good practice to include it.
 
 Which will provide the following output:
 
@@ -113,15 +95,7 @@ SELECT name, carrier FROM airlines LIMIT 10;
 
 Displaying records 1 - 10
 
-{{< sidenote >}}
-Unfortunately [dot commands](https://duckdb.org/docs/api/cli/dot_commands.html) are not supported at the moment
-{{< /sidenote >}}
-
-Obviously, you can run any SQL commands since the code chunk is performing the command as if it were done in the SQL prompt directly. The output is generated as set up. In this example the code is presented in a Markdown table which is then styled in the same format as the rest of the tables on this website using the CSS style everything else uses. If I were to render to HTML, it would come out as an HTML table, the same for rendering to PDF and outputting LaTeX tables. Also, if you write multiple queries inside a single chunk (separated by a semicolon), only the last one will be rendered. For example, if you wanted to show all tables in the superheroes database the code chunk would look like this:
-
-{{< sidenote >}}
-Let's also hide the code chunk itself and only show the output with the `echo` option
-{{< /sidenote >}}
+Obviously, you can run almost any SQL commands{{< sidenote for=\"sn-5\" >}}Unfortunately [dot commands](https://duckdb.org/docs/api/cli/dot_commands.html) are not supported at the moment{{< /sidenote >}} since the code chunk is performing the command as if it were done in the SQL prompt directly. The output is generated as set up. In this example the code is presented in a Markdown table which is then styled in the same format as the rest of the tables on this website using the CSS style everything else uses. If I were to render to HTML, it would come out as an HTML table, the same for rendering to PDF and outputting LaTeX tables. Also, if you write multiple queries inside a single chunk (separated by a semicolon), only the last one will be rendered. For example, if you wanted to show all tables in the superheroes database the code chunk would look like this. Let's also hide the code chunk itself and only show the output with the `echo` option
 
 ```` markdown
 ```{sql}

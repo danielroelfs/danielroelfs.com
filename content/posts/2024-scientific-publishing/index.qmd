@@ -21,15 +21,15 @@ editor_options:
 reticulate::use_virtualenv("./.venv")
 ```
 
-- {{{< xref text="Introduction" link="#introduction" >}}}
-- {{{< xref text="How Science Works" link="#how-science-works" >}}}
-- {{{< xref text="The Article Processing Fee" link="#the-article-processing-fee-apc" >}}}
-- {{{< xref text="Profit Margins" link="#profit-margins" >}}}
-- {{{< xref text="Lobbying" link="#lobbying" >}}}
-- {{{< xref text="What Can Universities Do?" link="#what-can-universities-do" >}}}
-- {{{< xref text="So What Do We Do Next?" link="#so-what-do-we-do-next" >}}}
-- {{{< xref text="FAQ" link="#faq" >}}}
-- {{{< xref text="En español" link="#acknowledgements" >}}}
+- {{{< crossref link="#introduction" >}}}Introduction{{{< /crossref >}}}
+- {{{< crossref link="#how-science-works" >}}}How Science Works{{{< /crossref >}}}
+- {{{< crossref link="#the-article-processing-fee-apc" >}}}The Article Processing Fee{{{< /crossref >}}}
+- {{{< crossref link="#profit-margins" >}}}Profit Margins{{{< /crossref >}}}
+- {{{< crossref link="#lobbying" >}}}Lobbying{{{< /crossref >}}}
+- {{{< crossref link="#what-can-universities-do" >}}}What Can Universities Do?{{{< /crossref >}}}
+- {{{< crossref link="#so-what-do-we-do-next" >}}}So What Do We Do Next?{{{< /crossref >}}}
+- {{{< crossref link="#faq" >}}}FAQ{{{< /crossref >}}}
+- {{{< crossref link="#acknowledgements" >}}}En español{{{< /crossref >}}}
 
 ## Introduction
 
@@ -85,7 +85,7 @@ So the main physical output of my PhD project are three peer-reviewed scientific
 
 So the grant gives researchers money to fund their research (step 1 in the schematic below), the researchers perform their scientific experiments and hopefully discover new knowledge that may benefit the field of science they're working in, so they write an article detailing their findings and subit it to a scientific journal (step 2). Following the proper scientific procedure, to ensure some quality control, before publication the journal editor ensures that each article _peer reviewed_. This means that the editor finds other scientists to read over the article and provide feedback on other experiments to include, methods to adapt, or text to rephrase etc. (step 3) before they give a thumbs-up that the article is ready for publication. These _peer reviewers_ are always other scientists at other institutions that essentially never get compensated for the time they spend reviewing other people's articles since it's considered part of the job. The author of the manuscript revises the manuscript (step 4) and when the peer reviewers are satisfied, the article is ready to publish in the scientific journal (step 5). Anyone with a computer can host a PDF online, but I think basically everyone agrees that it's preferable to collect articles from different research groups where they can be easily found by other scientists that is better than Google Scholar or Scopus.
 
-{{{< image src="./publishing_schematic.png" alt="schematic of the scientific publishing process" >}}}
+{{{< figure src="./publishing_schematic.png" alt="schematic of the scientific publishing process" >}}}
 
 So publishers (such as Elsevier and Springer-Nature) enable the scientific process by facilitating peer review and publising articles in their journals and host the articles on their websites. At the moment, apart from a special few, all publishers and their journals are run on a for-profit basis and I'm yet to meet anyone that does not believe that doesn't believe that facilitating the peer review process and hosting the servers for the articles should be fairly compensated, but is where it becomes a bit more complicated. Historically, journals used get their compensations by selling subscriptions to these journals to universities across the world. However, since the advent of the internet and the mandated open access of articles funded with public money, the publishers started demanding compensation up front for removing the pay-wall for these articles. We'll get back to that.
 

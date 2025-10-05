@@ -97,7 +97,7 @@ _Research Assistant_
 
 - Processing and analyzing of data from the video camera
 
-{{{< omission >}}}
+---
 
 {{{< sidenote >}}}
 education
@@ -135,7 +135,7 @@ _BSc, pre-medical track_
 
 - Honors College
 
-{{{< omission >}}}
+---
 
 {{{< sidenote >}}}
 skills & languages
@@ -175,7 +175,7 @@ In addition, I’m familiar with common data science and data engineering framew
 
 {{{< gap 1 >}}}
 
-{{{< omission >}}}
+---
 
 {{{< sidenote >}}}
 awards
@@ -205,7 +205,7 @@ _Sparbanksstiftelsen Färs & Frosta, Lund University_
 
 - {{{< p >}}}Awarded to the best master theses in the field of neuroscience{{{< /p >}}}
 
-{{{< omission >}}}
+---
 
 {{{< sidenote >}}}
 commissions
@@ -233,7 +233,7 @@ _General Board Member (Fundraising portfolio)_
 
 {{{< gap 0.5 >}}}
 
-{{{< omission >}}}
+---
 
 {{{< sidenote >}}}
 portfolio
@@ -255,7 +255,7 @@ portfolio
 
 {{{< gap 0.5 >}}}
 
-{{{< omission >}}}
+---
 
 {{{< sidenote >}}}
 publications

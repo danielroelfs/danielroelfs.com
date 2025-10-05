@@ -13,28 +13,8 @@
   font-weight: 711;
 }
 
-@media all and (min-width: 1200px) {
-  img:not(.icon, .notbyai-img) {
-    margin-left: -6rem;
-    min-width: 120%;
-  }
-}
-
 ul li:before {
   content: "→";
-}
-
-.notbyai-wrapper {
-  text-align: right;
-}
-
-img.notbyai {
-  width: 120px;
-  min-width: 120px;
-}
-
-a.notbyai:hover {
-  background: none;
 }
 
 .smaller-text {

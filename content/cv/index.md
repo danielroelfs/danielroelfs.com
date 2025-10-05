@@ -96,7 +96,7 @@ work experience
 
 -   Processing and analyzing of data from the video camera
 
-{{< omission >}}
+------------------------------------------------------------------------
 
 {{< sidenote >}}
 education
@@ -134,7 +134,7 @@ education
 
 -   Honors College
 
-{{< omission >}}
+------------------------------------------------------------------------
 
 {{< sidenote >}}
 skills & languages
@@ -174,7 +174,7 @@ In addition, I'm familiar with common data science and data engineering framewor
 
 {{< gap 1 >}}
 
-{{< omission >}}
+------------------------------------------------------------------------
 
 {{< sidenote >}}
 awards
@@ -204,7 +204,7 @@ awards
 
 -   {{< p >}}Awarded to the best master theses in the field of neuroscience{{< /p >}}
 
-{{< omission >}}
+------------------------------------------------------------------------
 
 {{< sidenote >}}
 commissions
@@ -232,7 +232,7 @@ commissions
 
 {{< gap 0.5 >}}
 
-{{< omission >}}
+------------------------------------------------------------------------
 
 {{< sidenote >}}
 portfolio
@@ -254,7 +254,7 @@ portfolio
 
 {{< gap 0.5 >}}
 
-{{< omission >}}
+------------------------------------------------------------------------
 
 {{< sidenote >}}
 publications

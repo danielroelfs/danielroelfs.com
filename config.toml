@@ -1,6 +1,6 @@
 baseurl = "/"
 title = "Daniel Roelfs"
-theme = "typography"
+theme = "trysil"
 
 ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
     "_cache$", "index\\.html", "about\\.html", "static/blog/\\*_files/", "README.md",

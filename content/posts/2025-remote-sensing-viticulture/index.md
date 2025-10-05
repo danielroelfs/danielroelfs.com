@@ -28,7 +28,7 @@ sup {
 
 Throughout my career so far I've been lucky to work with many different types of data. It's exciting how all different kinds of data can be represented and interpreted by different programming languages[^1]. So today I'm going to do another one of these and dive into analyzing data from satellite images. Learning to parse data from freely available satellite imagery is both a useful skill to have and quite fun, so today I'll share a little project that I have whipped together. There are more ambitious projects we can use these analyses for, but let's start simple.
 
-You may skip to the {{< xref text=\"load data\" link=\"#load-data\" >}} section to skip the introduction and hop straight to the code.
+You may skip to the {{< crossref link=\"#load-data\" >}}load data{{< /crossref >}} section to skip the introduction and hop straight to the code.
 
 {{< sidenote br=\"20em\" >}}
 While we cannot see infrared light, it is [perceptible as heat in some situations](https://science.nasa.gov/ems/07_infraredwaves/)
@@ -38,7 +38,7 @@ The project we'll focus on today is to use satellite imagery to analyze the heal
 
 The NDVI uses a combination of the near-infrared and the red color bands to make an estimation of the "greenness" of vegetation. The illustration below illustrates the concept.
 
-{{< image src=\"illustration_ndvi.png\" alt=\"simplified illustration showing how NDVI works\" >}}
+{{< figure src=\"illustration_ndvi.png\" alt=\"simplified illustration showing how NDVI works\" >}}
 
 {{< sidenote >}}
 Obviously light hits basically everything in the frame, also non-vegetation, and this is a confounder we need to deal with later
@@ -66,11 +66,11 @@ At this you might realize, based on the formula above your knowledge on light ab
 
 Let's now look at a quick example of the concept. Again, we need a little bit of background on the concept we'll look at. Once every so often, a plot in a vineyard needs to be cleared for some reason in a process called [replanting](https://lodigrowers.com/vineyard-replanting/). The reason could be a disease in the plants, or it could be that the soil needs to be given time to replenish nutrients, or maybe the winemaker wants to plant different grapes in the plot. We can look at the NDVI values for a plot that has recently been through replanting (our *case*) and one that hasn't (our *control*). I found an image on [Copernicus Browser](https://browser.dataspace.copernicus.eu/?zoom=18&lat=48.14349&lng=7.28968&themeId=DEFAULT-THEME&visualizationUrl=U2FsdGVkX1%2BQjYPD7tQXBt6um3IBcQxf%2BsHuyy%2BC%2BGQpsxC7IdsGBdT6ieUtEbWE6cr2i5U0alG6nHMXZW%2FwfBYUF1%2BhkOOjw%2BZJeIh2PAk9ndn%2Bm2gPjwF7VvazRkKt&datasetId=S2_L2A_CDAS&demSource3D=%22MAPZEN%22&cloudCoverage=30&dateMode=SINGLE) of two plots right next to each other where one was replanted in 2018:
 
-{{< image src=\"screenshot_casecontrol.png\" caption=\"Two plots of land, one recently replanted, and one regular plot for production\" alt=\"Sattelite image of two plots of land\" >}}
+{{< figure src=\"screenshot_casecontrol.png\" caption=\"Two plots of land, one recently replanted, and one regular plot for production\" alt=\"Sattelite image of two plots of land\" >}}
 
 In order to compare these two plots to each other we need to generate an outline for each plot. This we'll do in a tool called [geojson.io](http://geojson.io) where we can simply draw a shape around the plot and we'll get the [GeoJSON](https://geojson.org) data for the two plots (also called *features*). The outlines I drew look like this:
 
-{{< image src=\"screenshot_casecontrol_outlined.png\" caption=\"Same plots of land, outlined in GeoJSON format\" alt=\"Sattelite image of two plots of land with the boundaries highlighted\" >}}
+{{< figure src=\"screenshot_casecontrol_outlined.png\" caption=\"Same plots of land, outlined in GeoJSON format\" alt=\"Sattelite image of two plots of land with the boundaries highlighted\" >}}
 
 While the images above use the RGB color scheme to represent colors as the human eye would see it, the Copernicus Browser also allows for other visualizations, such as the NDVI. So for example, we can easily identify the plot recently replanted by the much brighter (or yellower) colors in that area. You'll also notice that the roads are easily identifiable. For the analysis we'll limit the NDVI calculations only to the areas inside of the GeoJSON specified and you can imagine that the quality of the analysis is quite closely correlated with the quality of the GeoJSON.
 
@@ -169,7 +169,7 @@ cube_s2 = conn.load_collection(
 
 So let's load the geographical area we want to look at. As I mentioned above, we can specify an area we want to analyse using the GeoJSON format and we already outlined two plots above. I've added another plot to the GeoJSON to test the replanting analysis pipeline. For the real use-case scenario, I've also drawn outlines around two areas classified as "grand cru" by the [AOC](https://en.wikipedia.org/wiki/Appellation_d'origine_contrôlée). It was hard finding a GeoJSON map of the areas classified as *grand cru*, but then I found this website: [vinsalsace.com](https://www.vinsalsace.com/en/carte/#!/grands-crus/). On this website you'll find a map created using [Leaflet](https://leafletjs.com) with the outlines for all the *grand cru* areas in the Alsace wine region. These outlines are made using GeoJSON and since Leaflet runs client-side the GeoJSON definitions are available in the source code of the website, so using a bit of digging we can download the GeoJSON definitions of two areas we're interested in ([Altenberg de Bergheim](https://www.vinsalsace.com/en/carte/#!/grands-crus/altenberg-de-bergheim/) and [Schlossberg](https://www.vinsalsace.com/en/carte/#!/grands-crus/schlossberg/)). `openeo` is a bit picky about which GeoJSON definitions it accepts (e.g. it doesn't work well with [MultiPolygons](https://docs.mapbox.com/android/java/api/libjava-geojson/7.3.1/com/mapbox/geojson/MultiPolygon.html)), so it seemed easiest to just load the GeoJSON from [vinsalsace.com](https://www.vinsalsace.com/en/carte/#!/grands-crus/) into [geojson.io](http://geojson.io) and trace them myself using the Polygon option for both the *grand cru* areas I wanted to compare. Why these two particular areas? No particular reason, they sounded cool I guess. This resulted in a single GeoJSON file with a 5 different polygons, three for the PoC case about replanting, and two that correspond to two different *grand cru* areas for the real use case. See the picture below for what areas the GeoJSON we'll use covers. You'll find the two little adjacent plots in the bottom left.
 
-{{< image src=\"screenshot_geojson.png\" caption=\"Geographical boundaries in the GeoJSON used in the analysis. The two large areas in the bottom left and top right are the grand cru areas, and the three little specks in the middle are plots for the replanting examples.\" alt=\"Larger sattelite image showing the outlines of the plots of land of interest for the futher analysis\" >}}
+{{< figure src=\"screenshot_geojson.png\" caption=\"Geographical boundaries in the GeoJSON used in the analysis. The two large areas in the bottom left and top right are the grand cru areas, and the three little specks in the middle are plots for the replanting examples.\" alt=\"Larger sattelite image showing the outlines of the plots of land of interest for the futher analysis\" >}}
 
 We can load the file as we would any other JSON using the snippet below:
 

@@ -14,10 +14,10 @@ editor_options:
 ---
 
 
--   {{< xref text=\"Energy production\" link=\"#energy-production\" >}}
--   {{< xref text=\"Weather and climate data\" link=\"#weather-and-climate-data\" >}}
--   {{< xref text=\"Length of day\" link=\"#length-of-day\" >}}
--   {{< xref text=\"Energy storage and prices\" link=\"#energy-storage-and-prices\" >}}
+-   {{< crossref link=\"#energy-production\" >}}Energy production{{< /crossref >}}
+-   {{< crossref link=\"#weather-and-climate-data\" >}}Weather and climate data{{< /crossref >}}
+-   {{< crossref link=\"#length-of-day\" >}}Length of day{{< /crossref >}}
+-   {{< crossref link=\"#energy-storage-and-prices\" >}}Energy storage and prices{{< /crossref >}}
 
 One of the main reasons I maintain this blog is because I like delving into methods and topics that I don't get the chance to during my day job. One of those topics is the energy market. As energy markets move towards more sustainable sources of production, there are some really interesting challenges arising that offer for some fun.
 
@@ -71,11 +71,7 @@ def clean_column_names(df):
     return df
 ```
 
-Now we can use this function to extract some data about energy production. For this we will use the API from a website called [Energi Data Service](https://www.energidataservice.dk) who maintain a really neat [API](https://www.energidataservice.dk/guides/api-guides). By default it only returns a limited number of records, but we can override it by supplying a "limit" parameter to the API call and set it to 5 million. This data has a very high resolution at a data point per hour per municipality in Denmark, so it'll be a big dataset. Be warned. Before storing the dataset to the SQLite database we first want to parse the date columns so it'll be easier to work with later, so we'll format those. And then we'll store them in the database. Let's also look at number of missing values in the data frame.
-
-{{< sidenote br=\"10em\" >}}
-I'll rerun this analysis regularly while writing, hence the `if_exists="replace"`
-{{< /sidenote >}}
+Now we can use this function to extract some data about energy production. For this we will use the API from a website called [Energi Data Service](https://www.energidataservice.dk) who maintain a really neat [API](https://www.energidataservice.dk/guides/api-guides). By default it only returns a limited number of records, but we can override it by supplying a "limit" parameter to the API call and set it to 5 million. This data has a very high resolution at a data point per hour per municipality in Denmark, so it'll be a big dataset. Be warned. Before storing the dataset to the SQLite database we first want to parse the date columns so it'll be easier to work with later, so we'll format those. And then we'll store them in the database{{< sidenote for=\"sn-1\" >}}I'll rerun this analysis regularly while writing, hence the `if_exists="replace"`{{< /sidenote >}}. Let's also look at number of missing values in the data frame.
 
 ``` python
 df_production = request_to_pd(
@@ -147,17 +143,9 @@ df_production_munic = pd.read_sql(
 
 Cool, we're not done yet, not by a long shot. I think we should get even more data. Here I'd like to particularly focus on data relevant for the more volatile energy production sources, wind and solar. An obvious dataset to look at for these energy sources is of course weather. The wind turbines don't turn if there's no wind, and the solar panels aren't exposed to sunlight if there's a thick cloud cover.
 
-{{< sidenote br=\"5em\" >}}
-See [here](https://opendatadocs.dmi.govcloud.dk/en/Data/Climate_Data#parameters-for-stationvalue) for an overview of all variables available
-{{< /sidenote >}}
+Both those features are also available from yet another Danish data registry. This time we'll use the API from [Danmarks Meteorologiske Institut (DMI)](https://www.dmi.dk) which maintains an [open database](https://opendatadocs.dmi.govcloud.dk/DMIOpenData). It contains a variety of categories, like meteorological observations, climate data, radar data, and forecast data{{< sidenote for=\"sn-2\" >}}See [here](https://opendatadocs.dmi.govcloud.dk/en/Data/Climate_Data#parameters-for-stationvalue) for an overview of all variables available{{< /sidenote >}}. Here we're particularly interested in [historical climate data](https://opendatadocs.dmi.govcloud.dk/Data/Climate_Data), so we'll create a user and get our API key.
 
-Both those features are also available from yet another Danish data registry. This time we'll use the API from [Danmarks Meteorologiske Institut (DMI)](https://www.dmi.dk) which maintains an [open database](https://opendatadocs.dmi.govcloud.dk/DMIOpenData). It contains a variety of categories, like meteorological observations, climate data, radar data, and forecast data. Here we're particularly interested in [historical climate data](https://opendatadocs.dmi.govcloud.dk/Data/Climate_Data), so we'll create a user and get our API key.
-
-{{< sidenote br=\"10em\" >}}
-Be warned that the data frame is quite big. The raw JSON is about 250MB large for 300 000 records
-{{< /sidenote >}}
-
-The API key is essential for the next part. I've saved mine as usual in a `.env` file which I've excluded from Git versioning for obvious reasons. To call the API I'll define yet another function which wraps around the initial `request_to_pd()` function and deal with some of the other data cleaning that comes with this particular API and the columns. We'll run this function with the API call twice, once for wind speed (`wind_speed`) and once for cloud cover (`cloud_cover`). This will give us an hourly overview of those two features going back 300 000 records.
+The API key is essential for the next part. I've saved mine as usual in a `.env` file which I've excluded from Git versioning for obvious reasons. To call the API I'll define yet another function which wraps around the initial `request_to_pd()` function and deal with some of the other data cleaning that comes with this particular API and the columns. We'll run this function with the API call twice, once for wind speed (`wind_speed`) and once for cloud cover (`cloud_cover`). This will give us an hourly overview of those two features going back 300 000 records{{< sidenote for=\"sn-3\" >}}Be warned that the data frame is quite big. The raw JSON is about 250MB large for 300 000 records{{< /sidenote >}}.
 
 ``` python
 def get_weather_data(feature):
@@ -207,11 +195,7 @@ cursor.execute(
 )
 ```
 
-{{< sidenote br=\"2em\" >}}
-`plotnine` just doesn't have all the functionality `{ggplot}` does
-{{< /sidenote >}}
-
-Okay, now let's move to R for the next bit. I work mostly in Python and SQL, but when it comes to data visualization I still believe `{ggplot}` is the best tool for the job. We'll use `{ggtext}` as usual for some of the manipulations of text.
+Okay, now let's move to R for the next bit. I work mostly in Python and SQL, but when it comes to data visualization I still believe `{ggplot}` is the best tool for the job{{< sidenote for=\"sn-4\" >}}`plotnine` just doesn't have all the functionality `{ggplot}` does{{< /sidenote >}}. We'll use `{ggtext}` as usual for some of the manipulations of text.
 
 ``` r
 library(tidyverse)
@@ -283,17 +267,9 @@ data |>
 
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-wind-correlation-1.png" width="768" />
 
-{{< sidenote br=\"2em\" >}}
-The statistics educators can burn me on the stake for this one
-{{< /sidenote >}}
+It makes sense that there's a correlation here obviously, since the wind makes the turbines turn. Correlation doesn't imply causation, unless it does{{< sidenote for=\"sn-5\" >}}The statistics educators can burn me on the stake for this one{{< /sidenote >}}. For anyone who's ever been to Denmark the wind speeds look a bit low. 10 *m/s* is about a 5 on the [Beaufort scale](https://en.wikipedia.org/wiki/Beaufort_scale), classified as a "fresh breeze". Especially at the coast (where most of the wind turbines are) there is often a bit more than a "fresh breeze", but remember that these numbers are averaged across the country.
 
-It makes sense that there's a correlation here obviously, since the wind makes the turbines turn. Correlation doesn't imply causation, unless it does. For anyone who's ever been to Denmark the wind speeds look a bit low. 10 *m/s* is about a 5 on the [Beaufort scale](https://en.wikipedia.org/wiki/Beaufort_scale), classified as a "fresh breeze". Especially at the coast (where most of the wind turbines are) there is often a bit more than a "fresh breeze", but remember that these numbers are averaged across the country.
-
-{{< sidenote br=\"2em\" >}}
-You can check which layers are available using `sf::st_layers()`
-{{< /sidenote >}}
-
-Let's make some maps, those are always fun. I downloaded a map of Denmark in a [GeoPackage](https://www.geopackage.org) format from [gadm.org](https://gadm.org/download_country.html) and load it into R using the `st_read()` from the `{sf}` package. Since our data is already on a municipality level, we'll load the relevant layer from the file.
+Let's make some maps, those are always fun. I downloaded a map of Denmark in a [GeoPackage](https://www.geopackage.org) format from [gadm.org](https://gadm.org/download_country.html) and load it into R using the `st_read()` from the `{sf}` package{{< sidenote for=\"sn-6\" >}}You can check which layers are available using `sf::st_layers()`{{< /sidenote >}}. Since our data is already on a municipality level, we'll load the relevant layer from the file.
 
 ``` r
 denmark_sf <- sf::st_read(
@@ -429,11 +405,7 @@ Here we can see that not all municipalities are colored pale yellow, but instead
 
 ## Length of day
 
-{{< sidenote >}}
-There's actually several, but *major* is a relative term
-{{< /sidenote >}}
-
-There is one more major factor playing a role in solar production, which is the length of the day. Denmark is a Nordic country, which are located higher up in the northern hemisphere (*duh*). This means that the difference between the length of day in the summer and winter vary a lot more widely than closer to the equator (see [my blogpost](../../../blog/difference-in-sunset-times-in-europe/) about that topic). We can look at the association between the length of day and solar power production next. Let's first download some data. The [Norwegian meteorological institute (MET)](https://www.met.no) has a very nice API where we can get a number of variables related to sunrise and sunset. See the example below of what this API can provide.
+There is one more major{{< sidenote for=\"sn-7\" >}}There's actually several, but *major* is a relative term{{< /sidenote >}} factor playing a role in solar production, which is the length of the day. Denmark is a Nordic country, which are located higher up in the northern hemisphere (*duh*). This means that the difference between the length of day in the summer and winter vary a lot more widely than closer to the equator (see [my blogpost](../../../blog/difference-in-sunset-times-in-europe/) about that topic). We can look at the association between the length of day and solar power production next. Let's first download some data. The [Norwegian meteorological institute (MET)](https://www.met.no) has a very nice API where we can get a number of variables related to sunrise and sunset. See the example below of what this API can provide.
 
 ``` python
 df_met = request_to_pd(f"https://api.met.no/weatherapi/sunrise/3.0/sun?lat=56.2639&lon=9.5018&date={pd.to_datetime('now').strftime('%Y-%m-%d')}&offset=+01:00", "properties", specify_headers=True)
@@ -441,15 +413,15 @@ print(df_met.iloc[0])
 ```
 
     body                                                      Sun
-    sunrise_time                           2025-01-21T08:36+01:00
-    sunrise_azimuth                                        126.02
-    sunset_time                            2025-01-21T16:31+01:00
-    sunset_azimuth                                         234.15
-    solarnoon_time                         2025-01-21T12:33+01:00
-    solarnoon_disc_centre_elevation                         14.01
+    sunrise_time                           2025-10-05T06:33+01:00
+    sunrise_azimuth                                         97.47
+    sunset_time                            2025-10-05T17:46+01:00
+    sunset_azimuth                                         262.21
+    solarnoon_time                         2025-10-05T12:10+01:00
+    solarnoon_disc_centre_elevation                         28.87
     solarnoon_visible                                        True
-    solarmidnight_time                     2025-01-21T00:33+01:00
-    solarmidnight_disc_centre_elevation                     -53.7
+    solarmidnight_time                     2025-10-05T00:10+01:00
+    solarmidnight_disc_centre_elevation                    -38.54
     solarmidnight_visible                                   False
     Name: 0, dtype: object
 
@@ -528,11 +500,7 @@ Looks like both of the features are very strongly associated with the solar powe
 
 ## Energy storage and prices
 
-{{< sidenote br=\"11em\" >}}
-Note that this is supplier energy prices, not consumer prices
-{{< /sidenote >}}
-
-We're not done yet collecting data. One more feature we could download is the energy prices. This is particularly interesting when we want to make inferences about how energy prices are related to the climate and energy. We could sign up for an account so we can download the individual Excel reports, but it's probably easier just to parse the data from the website directly. For this I wrote a simple script that loops through the days we're interested in and get the average price across the day for the relevant areas ([DK1 and DK2](https://data.nordpoolgroup.com/auction/day-ahead/prices?deliveryDate=latest&currency=DKK&aggregation=DeliveryPeriod&deliveryAreas=DK1,DK2)). The data currence is DKK per MWh, but can be specified. Again, we'll store this data in the database too. Since it fairly long, I'll collapse it by default.
+We're not done yet collecting data. One more feature we could download is the energy prices. This is particularly interesting when we want to make inferences about how energy prices are related to the climate and energy. We could sign up for an account so we can download the individual Excel reports, but it's probably easier just to parse the data from the website directly. For this I wrote a simple script that loops through the days we're interested in and get the average price across the day for the relevant areas ([DK1 and DK2](https://data.nordpoolgroup.com/auction/day-ahead/prices?deliveryDate=latest&currency=DKK&aggregation=DeliveryPeriod&deliveryAreas=DK1,DK2)). The data currence is DKK per MWh{{< sidenote for=\"sn-8\" >}}Note that this is supplier energy prices, not consumer prices{{< /sidenote >}}, but can be specified. Again, we'll store this data in the database too. Since it fairly long, I'll collapse it by default.
 
 <details class="code-fold">
 <summary>See the Python script for downloading the price data</summary>
@@ -779,11 +747,7 @@ data_prices_production |>
     Multiple R-squared:  0.7275,    Adjusted R-squared:  0.6991 
     F-statistic: 25.63 on 5 and 48 DF,  p-value: 1.698e-12
 
-{{< sidenote >}}
-I only now realise I need to update quite a few sections here if I ever need to regenerate this dataset in the future, luckily I maintain backups
-{{< /sidenote >}}
-
-Given that this dataset was (initially) collected in winter the solar energy production was very low, and it seemed to confirm that it didn't affect energy prices so much in winter, which seems logical. I'd love to rerun this analysis in summer to see if it changes then. Too bad the energy price data I had available only goes back like 60 days. But I've set up a scheme to automatically extract this data daily using a CRON job on my home server, so maybe I'll recreate this analysis in the future once I've collected data with a longer time window (yet another promise of more fun things to talk about in a future post).
+Given that this dataset was (initially) collected in winter{{< sidenote for=\"sn-9\" >}}I only now realise I need to update quite a few sections here if I ever need to regenerate this dataset in the future, luckily I maintain backups{{< /sidenote >}} the solar energy production was very low, and it seemed to confirm that it didn't affect energy prices so much in winter, which seems logical. I'd love to rerun this analysis in summer to see if it changes then. Too bad the energy price data I had available only goes back like 60 days. But I've set up a scheme to automatically extract this data daily using a CRON job on my home server, so maybe I'll recreate this analysis in the future once I've collected data with a longer time window (yet another promise of more fun things to talk about in a future post).
 
 Over the course of this analysis above we've downloaded quite a bit of data from various sources. While main goal here was to do some fun analysis on a topic I'm interested in. It was also a fun exercise in creating reusable functions for automated data extraction using various APIs and storing the data efficiently even though they are at different granularities. I will most likely also re-use the database we created here in future teaching sessions and workshops for SQL databases since it's a database with a few useful links but not too large to be overwhelming to beginner users. Always good to be able to reuse analysis in different contexts. Just to summarise, here's the tables we currently have in the database.
 

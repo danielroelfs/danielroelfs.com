@@ -25,7 +25,7 @@ The plots I'll share here are a bit more complicated than the usual ones (especi
 
 I'll also separate this post in when I added the new plots and data. I'll mark the (general) time I added a new section.
 
-{{< omission >}}
+------------------------------------------------------------------------
 
 ## 21 November
 
@@ -179,8 +179,7 @@ data_tk_history <- "https://www.parlement.com/id/vh8lnhronvx6/zetelverdeling_twe
   mutate(
     party = str_extract(party, "[^<!]+"),
     across(starts_with("election"), as.integer)
-  ) |>
-  select(-election_2023)
+  )
 ```
 
 </details>
@@ -483,7 +482,7 @@ polls_peilingwijzer |>
 
 <img src="index.markdown_strict_files/figure-markdown_strict/peilingwijzer-plot-1.png" width="768" />
 
-{{< omission >}}
+------------------------------------------------------------------------
 
 ## 22 November 21:00
 
@@ -581,7 +580,7 @@ exit_polls_2100 |>
 
 Out of the blue, contrary to basically any serious poll, the PVV party from Geert Wilders appears to become the largest party, followed by GL-PvdA. This is a major upset that would open the door for a very right and conservative government. This would unfortunately mean the latest blow to meaningful climate action, an increase anti-immigrant policy, decreased government support for Ukraine, increased support for Israel and the atrocities they commit in Gaza and the rest of Palestine, and possibly a host of challenges to the rule of law in the Netherlands.
 
-{{< omission >}}
+------------------------------------------------------------------------
 
 ## 22 November 22:00
 
@@ -669,7 +668,7 @@ exit_polls_2200 |>
 
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-exit-polls-2200-1.png" width="768" />
 
-{{< omission >}}
+------------------------------------------------------------------------
 
 ## 23 November
 

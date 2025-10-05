@@ -417,7 +417,7 @@ Now look back at the output from `summary(aov_model)` and we'll find the same va
 
 Well that's a statement of unequaled wisdom, isn't it? No wonder they give us doctorates to talk about this stuff.
 
-I don't think I need a lot of effort to convince anyone that a linear model is a linear model. Actually, I'm so convinced that you are aware that a linear model is a linear model that I wanted to about something else instead. Instead I wanted to dive into residuals and R{{{< sup "2" >}}}. Before we start, let's first simulate some data, We'll create an age column, a sex column, and a measure column. We'll make it so that the measure column correlates with the age column.
+I don't think I need a lot of effort to convince anyone that a linear model is a linear model. Actually, I'm so convinced that you are aware that a linear model is a linear model that I wanted to about something else instead. Instead I wanted to dive into residuals and R{{{< sup  >}}}2{{{< /sup >}}}. Before we start, let's first simulate some data, We'll create an age column, a sex column, and a measure column. We'll make it so that the measure column correlates with the age column.
 
 ```{r}
 #| label: lm-setup
@@ -444,7 +444,7 @@ lm_model <- lm(measure ~ age, data = data)
 summary(lm_model)
 ```
 
-We find that there is a significant association between age and our measure, and the R{{{< sup "2" >}}} is about 47%. Recall that R{{{< sup "2" >}}} denotes the amount of variance explained by the predictor, or age in our case. We can plot the linear model in `ggplot` with the `geom_smooth()` function, and then setting the `method` to `"lm"`:
+We find that there is a significant association between age and our measure, and the R{{{< sup  >}}}2{{{< /sup >}}} is about 47%. Recall that R{{{< sup  >}}}2{{{< /sup >}}} denotes the amount of variance explained by the predictor, or age in our case. We can plot the linear model in `ggplot` with the `geom_smooth()` function, and then setting the `method` to `"lm"`:
 
 ```{r}
 #| label: lm-plot
@@ -572,7 +572,7 @@ ggplot(data, aes(x = age)) +
 The "sum" part of "sum of squared error" refers to the sum of the areas of those squares. Simply, you sum the square of the sides. You can also look at it in mathematical form:
 
 {{{< sidenote >}}}
-We'll use this formula again a bit later to calculate the R{{{< sup "2" >}}}.
+We'll use this formula again a bit later to calculate the R{{{< sup  >}}}2{{{< /sup >}}}.
 {{{< /sidenote >}}}
 
 $$
@@ -642,7 +642,7 @@ $$
 
 Notice how the numerator is the same calculation as the sum of squared total, then divided by the sample size minus 1 (like the degrees of freedom).
 
-To calculate the squared regression coefficient (R{{{< sup "2" >}}}) from the formula above is then simple. We take 1 (perfect correlation) and subtract the sum of the squared residuals (explained variance) divided by the sum of the squared difference with the mean (total variance). In R terms, that would look like this:
+To calculate the squared regression coefficient (R{{{< sup  >}}}2{{{< /sup >}}}) from the formula above is then simple. We take 1 (perfect correlation) and subtract the sum of the squared residuals (explained variance) divided by the sum of the squared difference with the mean (total variance). In R terms, that would look like this:
 
 ```{r}
 #| label: lm-calc-r2
@@ -650,7 +650,7 @@ To calculate the squared regression coefficient (R{{{< sup "2" >}}}) from the fo
 1 - sum(data$residual^2) / sum(data$difference_mean^2)
 ```
 
-And there we have it, the regression coefficient R{{{< sup "2" >}}}! You can check that it's the same by scrolling up to where we ran `summary(lm_model)` and you'll find the same number. We could also calculate the F-statistic and the $t$- and $p$-values, but I think this tutorial has drained enough cognitive energy. For this last section, I hope it's become clear what we mean when we talk about "residuals", "sum of squares", and "variance" in the context of linear models. I also hope it's enlightened you a bit on what a linear model does and how it works.
+And there we have it, the regression coefficient R{{{< sup  >}}}2{{{< /sup >}}}! You can check that it's the same by scrolling up to where we ran `summary(lm_model)` and you'll find the same number. We could also calculate the F-statistic and the $t$- and $p$-values, but I think this tutorial has drained enough cognitive energy. For this last section, I hope it's become clear what we mean when we talk about "residuals", "sum of squares", and "variance" in the context of linear models. I also hope it's enlightened you a bit on what a linear model does and how it works.
 
 ## Conclusion
 

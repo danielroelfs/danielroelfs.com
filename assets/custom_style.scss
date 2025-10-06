@@ -1,0 +1,103 @@
+@import url("https://use.typekit.net/coq1ltf.css"); // source-serif-pro
+@import url("https://use.typekit.net/uwd7war.css"); // source-code-pro
+@import url("https://fonts.cdnfonts.com/css/cooper-hewitt"); // Cooper Hewitt
+
+$body-family: "source-serif-pro", "Source Serif 4", serif;
+$header-family: "Cooper Hewitt", "Helvetica", sans-serif;
+$code-family: "Courier", "source-code-pro", monospace;
+$header-weight: 713;
+
+body {
+  font-family: $body-family;
+  background-color: white;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $header-family;
+}
+
+h1.index-title {
+  font-style: normal;
+}
+
+article h1, article h2, article h3 {
+  font-weight: 709;
+}
+
+article h4, article h5, article h6 {
+  font-weight: 707;
+}
+
+pre {
+  background-color: none;
+}
+
+code {
+  font-family: $code-family;
+}
+
+table.posts-lists {
+  font-family: 'Cooper Hewitt', sans-serif;
+  & tr.index-entry {
+    font-weight: 707;
+    & td.post-title {
+      font-size: 1.1rem;
+      font-weight: 711;
+    }
+  }
+}
+
+ul li:before {
+  content: "→";
+}
+
+.smaller-text {
+  font-size: 80%;
+}
+
+.cv-date {
+  font-family: 'Cooper Hewitt', sans-serif;
+  font-weight: 711;
+  font-size: 80%;
+  position: absolute; 
+  right: 4em;
+  margin-top: -1.5em;
+}
+
+.progress {
+  font-family: 'Cooper Hewitt', sans-serif;
+  font-weight: 711;
+  width: 60%;
+  height: 1rem;
+  padding: 1px;
+  margin: 0.15rem 0;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar {
+  font-size: 80%;
+  color: white;
+  height: 0.9rem;
+  box-shadow: 0 0 0 0 none, inset 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.progress > .progress-bar {
+  padding-left: 5px;
+  font-variant-caps: all-small-caps;
+  background-color: #555;
+}
+
+p a.footnote-ref {
+  font-size: 80%;
+  margin-top: -1em;
+}
+
+p a.footnote-ref:after, p a.footnote-backref:after {
+  content: none;
+  margin-left: 0;
+}

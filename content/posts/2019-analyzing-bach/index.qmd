@@ -328,11 +328,7 @@ merged_data <- data |>
   )
 ```
 
-{{{< sidenote br="7em" >}}}
-Click on "Show code" to show the code. I hid it by default because it's quite a long chunk
-{{{< /sidenote >}}}
-
-I noticed that some entries in the `year` column exceeded the year of Bach's death. Bach died in 1750. I assumed that these years indicated the year of first performance or publication. In this scenario, it would be possible that certain pieces were lost and rediscovered at a later date and only then published. I thought to make a barplot of the number of compositions Bach over the course of his life, trying to see if there was any period where he was particularly productive. I also added some annotations to give the plot some context.
+I noticed that some entries in the `year` column exceeded the year of Bach's death. Bach died in 1750. I assumed that these years indicated the year of first performance or publication. In this scenario, it would be possible that certain pieces were lost and rediscovered at a later date and only then published. I thought to make a barplot of the number of compositions Bach over the course of his life, trying to see if there was any period where he was particularly productive. I also added some annotations to give the plot some context. Click on "Show code" to show the code, I hid it by default because it's quite a long chunk.
 
 ```{r}
 #| label: bwvperyear-plot

@@ -1,6 +1,6 @@
 ---
 title: How I Plot ERPs in R
-date: 2019-03-30
+date: 2019-03-30T00:00:00.000Z
 description: How I Plot ERPs in R
 slug: how-i-plot-erps-in-r
 categories:
@@ -9,9 +9,10 @@ tags:
   - R
   - ggplot
   - ERP
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
+
 
 ## Introduction
 
@@ -38,13 +39,10 @@ data <- read_delim("./data/all_channels_erp.txt",
 times <- read_table("./data/times.txt", col_names = FALSE)
 ```
 
-{{< sidenote >}}
-The `janitor` package helps cleaning up column names, in this instance it converts all default columns (e.g. `V1`) to lowercase (i.e. `v1`)
-{{< /sidenote >}}
-
 ``` r
 erp_data <- data |>
-  janitor::clean_names() |>
+  janitor::clean_names() |> # The `janitor` package helps cleaning up column names,
+  # in this instance it converts all default columns (e.g. `V1`) to lowercase (i.e. `v1`)
   rename(
     channel = v1,
     id = v2,
@@ -66,15 +64,14 @@ coi <- c("P1", "P2", "Pz", "P3", "P4", "PO3", "PO4", "POz")
 
 Then I calculate the means across channels and conditions. This goes in two steps. First I'll select only the channels of interest, then I'll group by ID, condition, and channel. And then calculate the average of every other column, in this case all columns starting with "v". Then I'll do the same, except now I'll group by ID and condition. So then we have one average ERP for every condition in all participants.
 
-{{< sidenote >}}
-The `summarise()` function will throw a warning about the grouping variable, this can be silenced by setting `.groups = "drop"`
-{{< /sidenote >}}
-
 ``` r
 erp_data_chan_mean <- erp_data |>
   filter(channel %in% coi) |>
   group_by(id, condition, channel) |>
-  summarise(across(starts_with("v"), ~ mean(.x, na.rm = TRUE))) |>
+  summarise(
+    across(starts_with("v"), ~ mean(.x, na.rm = TRUE)) # The `summarise()` function will throw a warning about
+    # the grouping variable, this can be silenced by setting `.groups = "drop"`
+  ) |>
   ungroup()
 
 erp_data_cond_mean <- erp_data_chan_mean |>
@@ -147,6 +144,13 @@ erp_plot <- ggplot(erp_plotdata, aes(
     legend.position = c(0.9, 0.1),
     axis.text.x = element_text(vjust = -0.1)
   )
+```
+
+    Warning: A numeric `legend.position` argument in `theme()` was deprecated in ggplot2
+    3.5.0.
+    ℹ Please use the `legend.position.inside` argument of `theme()` instead.
+
+``` r
 shift_axes(erp_plot, x = 0, y = 0)
 ```
 

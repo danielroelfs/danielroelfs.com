@@ -145,7 +145,7 @@ Cool, we're not done yet, not by a long shot. I think we should get even more da
 
 Both those features are also available from yet another Danish data registry. This time we'll use the API from [Danmarks Meteorologiske Institut (DMI)](https://www.dmi.dk) which maintains an [open database](https://opendatadocs.dmi.govcloud.dk/DMIOpenData). It contains a variety of categories, like meteorological observations, climate data, radar data, and forecast data{{< sidenote for=\"sn-2\" >}}See [here](https://opendatadocs.dmi.govcloud.dk/en/Data/Climate_Data#parameters-for-stationvalue) for an overview of all variables available{{< /sidenote >}}. Here we're particularly interested in [historical climate data](https://opendatadocs.dmi.govcloud.dk/Data/Climate_Data), so we'll create a user and get our API key.
 
-The API key is essential for the next part. I've saved mine as usual in a `.env` file which I've excluded from Git versioning for obvious reasons. To call the API I'll define yet another function which wraps around the initial `request_to_pd()` function and deal with some of the other data cleaning that comes with this particular API and the columns. We'll run this function with the API call twice, once for wind speed (`wind_speed`) and once for cloud cover (`cloud_cover`). This will give us an hourly overview of those two features going back 300 000 records{{< sidenote for=\"sn-3\" >}}Be warned that the data frame is quite big. The raw JSON is about 250MB large for 300 000 records{{< /sidenote >}}.
+The API key is essential for the next part. I've saved mine as usual in a `.env` file which I've excluded from Git versioning for obvious reasons. To call the API I'll define yet another function which wraps around the initial `request_to_pd()` function and deal with some of the other data cleaning that comes with this particular API and the columns. We'll run this function with the API call twice, once for wind speed (`wind_speed`) and once for cloud cover (`cloud_cover`){{< sidenote for=\"sn-3\" >}}Be warned that the data frame is quite big. The raw JSON is about 250MB large for 300 000 records{{< /sidenote >}}. This will give us an hourly overview of those two features going back 300 000 records.
 
 ``` python
 def get_weather_data(feature):
@@ -413,15 +413,15 @@ print(df_met.iloc[0])
 ```
 
     body                                                      Sun
-    sunrise_time                           2025-10-05T06:33+01:00
-    sunrise_azimuth                                         97.47
-    sunset_time                            2025-10-05T17:46+01:00
-    sunset_azimuth                                         262.21
-    solarnoon_time                         2025-10-05T12:10+01:00
-    solarnoon_disc_centre_elevation                         28.87
+    sunrise_time                           2025-10-06T06:35+01:00
+    sunrise_azimuth                                         98.17
+    sunset_time                            2025-10-06T17:43+01:00
+    sunset_azimuth                                         261.52
+    solarnoon_time                         2025-10-06T12:10+01:00
+    solarnoon_disc_centre_elevation                         28.49
     solarnoon_visible                                        True
-    solarmidnight_time                     2025-10-05T00:10+01:00
-    solarmidnight_disc_centre_elevation                    -38.54
+    solarmidnight_time                     2025-10-06T00:10+01:00
+    solarmidnight_disc_centre_elevation                    -38.92
     solarmidnight_visible                                   False
     Name: 0, dtype: object
 

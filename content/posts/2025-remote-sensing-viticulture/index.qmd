@@ -41,23 +41,15 @@ sup {
 
 Throughout my career so far I've been lucky to work with many different types of data. It's exciting how all different kinds of data can be represented and interpreted by different programming languages^[One of my favorite projects was analysis on video recordings from a camera inside an MRI scanner to see if the participants were asleep and analyzing the video recording as time series data in MATLAB]. So today I'm going to do another one of these and dive into analyzing data from satellite images. Learning to parse data from freely available satellite imagery is both a useful skill to have and quite fun, so today I'll share a little project that I have whipped together. There are more ambitious projects we can use these analyses for, but let's start simple.
 
-You may skip to the {{{< xref text="load data" link="#load-data" >}}} section to skip the introduction and hop straight to the code.
+You may skip to the {{{< crossref link="#load-data" >}}}Load data{{{< /crossref >}}} section to skip the introduction and hop straight to the code.
 
-{{{< sidenote br="20em" >}}}
-While we cannot see infrared light, it is [perceptible as heat in some situations](https://science.nasa.gov/ems/07_infraredwaves/)
-{{{< /sidenote >}}}
-
-The project we'll focus on today is to use satellite imagery to analyze the health of vineyards. We'll first do a little experiment to show the concept, and then we'll apply the same analysis to some real use case. The analysis we'll be using today is based on the [Normalized Difference Vegetation Index](https://gisgeography.com/ndvi-normalized-difference-vegetation-index/), abbreviated as _NDVI_. Let me explain briefly (and probably crudely) how it works. Most cameras, when you take a picture of something will try to recreate the colors as accurately as possible. The most common way to do this under the hood is by measuring the intensity of the three primary color bands (red, green blue, or RGB) so that for example your iPhone can create a composite image of those three colors. The RGB color bands are commonly recorded in regular cameras because it overlaps with the human visual spectrum, but other colors are of course available in more expensive cameras, like satellites. So in addition to RGB colors, satellites may also record infrared bands, which has longer wavelengths than the human eye can observe.
+The project we'll focus on today is to use satellite imagery to analyze the health of vineyards. We'll first do a little experiment to show the concept, and then we'll apply the same analysis to some real use case. The analysis we'll be using today is based on the [Normalized Difference Vegetation Index](https://gisgeography.com/ndvi-normalized-difference-vegetation-index/), abbreviated as _NDVI_. Let me explain briefly (and probably crudely) how it works. Most cameras, when you take a picture of something will try to recreate the colors as accurately as possible. The most common way to do this under the hood is by measuring the intensity of the three primary color bands (red, green blue, or RGB) so that for example your iPhone can create a composite image of those three colors. The RGB color bands are commonly recorded in regular cameras because it overlaps with the human visual spectrum, but other colors are of course available in more expensive cameras, like satellites. So in addition to RGB colors, satellites may also record infrared bands, which has longer wavelengths than the human eye can observe{{{< sidenote for="sn-1" >}}}While we cannot see infrared light, it is [perceptible as heat in some situations](https://science.nasa.gov/ems/07_infraredwaves/){{{< /sidenote >}}}.
 
 The NDVI uses a combination of the near-infrared and the red color bands to make an estimation of the "greenness" of vegetation. The illustration below illustrates the concept.
 
 {{{< figure src="illustration_ndvi.png" alt="simplified illustration showing how NDVI works" >}}}
 
-{{{< sidenote >}}}
-Obviously light hits basically everything in the frame, also non-vegetation, and this is a confounder we need to deal with later
-{{{< /sidenote >}}}
-
-Red and near-infrared light hits the leaves of the vegetation and green leaves would absorb a lot of the red light and reflect a larger proportion of the near-infrared light, while yellow (or unhealthy) leaves would reflect a larger proportion of the red light and absorb more of the near-infrared. The proportion of the light in the different color bands reflected determines the NDVI. The NDVI is basically a proportion of the red light reflected compared to the near-infrared light. The formula looks as follows:
+Red and near-infrared light hits the leaves of the vegetation and green leaves would absorb a lot of the red light{{{< sidenote for="sn-2" >}}}Obviously light hits basically everything in the frame, also non-vegetation, and this is a confounder we need to deal with later{{{< /sidenote >}}} and reflect a larger proportion of the near-infrared light, while yellow (or unhealthy) leaves would reflect a larger proportion of the red light and absorb more of the near-infrared. The proportion of the light in the different color bands reflected determines the NDVI. The NDVI is basically a proportion of the red light reflected compared to the near-infrared light. The formula looks as follows:
 
 $$
 \text{NDVI} = \frac{\text{near-infrared} - \text{red}}{\text{near-infrared} + \text{red}}
@@ -137,17 +129,9 @@ conn.authenticate_oidc()
 
 ## Get the satellite data
 
-{{{< sidenote br="6em" >}}}
-The ease of working [multidimensional matrices](https://se.mathworks.com/help/matlab/math/multidimensional-arrays.html) is still one of the biggest perks of MATLAB IMO
-{{{< /sidenote >}}}
+Finally, after all this time, we're ready to download some satellite data. The data we'll request through the `load_collection()` function will return a data type `openeo` has termed a ["data cube"](https://openeo.org/documentation/1.0/datacubes.html). For those familiar with MATLAB it most closely resembles a multidimensional matrix. For those unfamiliar with multidimensional matrices in MATLAB, it is basically a set of 2D images (x and y), made 3D by including a dimension to represent the different colors (e.g. red, green, blue, near-infrared), and a fourth dimension to represent time or the different timepoints. We won't actually get to directly inderact with the multidimensional matrix in Python directly{{{< sidenote for="sn-3" >}}}The ease of working [multidimensional matrices](https://se.mathworks.com/help/matlab/math/multidimensional-arrays.html) is still one of the biggest perks of MATLAB IMO{{{< /sidenote >}}}, but we'll do it though a series of functions implemented by `openeo`.
 
-Finally, after all this time, we're ready to download some satellite data. The data we'll request through the `load_collection()` function will return a data type `openeo` has termed a ["data cube"](https://openeo.org/documentation/1.0/datacubes.html). For those familiar with MATLAB it most closely resembles a multidimensional matrix. For those unfamiliar with multidimensional matrices in MATLAB, it is basically a set of 2D images (x and y), made 3D by including a dimension to represent the different colors (e.g. red, green, blue, near-infrared), and a fourth dimension to represent time or the different timepoints. We won't actually get to directly inderact with the multidimensional matrix in Python directly, but we'll do it though a series of functions implemented by `openeo`.
-
-{{{< sidenote br="6em" >}}}
-Different satellites will obviously offer different temporal limits based on when they were first put in orbit
-{{{< /sidenote >}}}
-
-The `load_connection()` function takes a number of arguments, most importantly the satellite we want to extract data from, the temporal limits, and the bands one wants to extract. We'll get all data from the beginning of 2016 to 2025. The bands are coded, and the satellite we use here has a range of bands available, each reflecting another aspect of what the satellite can measure. For a full overview of the band codes and what they represent, see the [full table here](https://docs.sentinel-hub.com/api/latest/data/sentinel-2-l2a/#available-bands-and-data). As mentioned, to calculate the NDVI we strictly speaking only need the red band (B04) and the near-infrared band (B08), but we'll load another data layer called the ["Scene Classification Map"](https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/scene-classification/) which classifies each pixel in the image into what is likely represented, e.g. water, vegetation, clouds, etc. We'll use that layer to mask some of the clouds from the data we'll analyse later. The final argument we'll specify is the `max_cloud_cover` which filters the images to only that have less than 20% cloud coverage in the image on the specified date for the specified area (we'll specify the area later).
+The `load_connection()` function takes a number of arguments, most importantly the satellite we want to extract data from, the temporal limits, and the bands one wants to extract. We'll get all data from the beginning of 2016 to 2025{{{< sidenote for="sn-4" >}}}Different satellites will obviously offer different temporal limits based on when they were first put in orbit{{{< /sidenote >}}}. The bands are coded, and the satellite we use here has a range of bands available, each reflecting another aspect of what the satellite can measure. For a full overview of the band codes and what they represent, see the [full table here](https://docs.sentinel-hub.com/api/latest/data/sentinel-2-l2a/#available-bands-and-data). As mentioned, to calculate the NDVI we strictly speaking only need the red band (B04) and the near-infrared band (B08), but we'll load another data layer called the ["Scene Classification Map"](https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/scene-classification/) which classifies each pixel in the image into what is likely represented, e.g. water, vegetation, clouds, etc. We'll use that layer to mask some of the clouds from the data we'll analyse later. The final argument we'll specify is the `max_cloud_cover` which filters the images to only that have less than 20% cloud coverage in the image on the specified date for the specified area (we'll specify the area later).
 
 ```{python}
 #| label: load-connection
@@ -177,11 +161,7 @@ with open(os.path.join("data", "viticulture.geojson"), "r") as f:
     area_of_interest = json.load(f)
 ```
 
-{{{< sidenote >}}}
-We could also call them "features"
-{{{< /sidenote >}}}
-
-And we can parse the polygon names from the JSON using the code below, which will put it in a simple Pandas data frame for later use.
+And we can parse the polygon names{{{< sidenote for="sn-5" >}}}We could also call them "features"{{{< /sidenote >}}} from the JSON using the code below, which will put it in a simple Pandas data frame for later use.
 
 ```{python}
 #| label: get-feature-names
@@ -227,11 +207,7 @@ ndvi_aggregated = ndvi.aggregate_spatial(
 )
 ```
 
-{{{< sidenote br="10em" >}}}
-Why do manual work if we can automate it in Python right?
-{{{< /sidenote >}}}
-
-Now we have defined everything we need to ask the server to actually perform the calculation. What we'll do is we'll apply the `execute_batch()` function to the `ndvi_aggregated` vector cube. We need to specify the format we want to get returned, and we'll choose the simple CSV format, and we'll provide a name which is not strictly necessary, but will help identify the jobs in the [online portal](https://openeo.dataspace.copernicus.eu/) among the batch jobs where you can see progress etc. and can download the output again if need be. We can also download the files directly in Python using the `get_results()` function and the `download_file()` function to save the CSV file to a local path.
+Now we have defined everything we need to ask the server to actually perform the calculation. What we'll do is we'll apply the `execute_batch()` function to the `ndvi_aggregated` vector cube. We need to specify the format we want to get returned, and we'll choose the simple CSV format, and we'll provide a name which is not strictly necessary, but will help identify the jobs in the [online portal](https://openeo.dataspace.copernicus.eu/) among the batch jobs where you can see progress etc. and can download the output again if need be. We can also download the files directly in Python using the `get_results()` function and the `download_file()` function to save the CSV file to a local path{{{< sidenote for="sn-6" >}}}Why do manual work if we can automate it in Python right?{{{< /sidenote >}}}.
 
 ```{python}
 #| label: execute-batch-raw-time-series
@@ -330,11 +306,7 @@ So what can we see here? The red "control" plot follows a somewhat irregular cyc
 
 Earlier we specified in the `load_collection()` call that we only want images with a maximum of 20% cloud cover. This removed _a lot_ of images obviously (even for an area with exceptionally nice weather). However, the images that have less less than 20% cloud cover aren't necessarily "clear blue" skies. The images may still contain up to 20% cloud coverage which confounds the analysis. Lowering the threshold may improve the quality of the images, but it will also drastically reduce the number of datapoints available. I find that 20% cloud cover is acceptable in most cases as long as we account for it by masking out the clouds.
 
-{{{< sidenote >}}}
-_SCL_ stands for "scene classification" and is a synthetic layer used for various purposes besides masking clouds
-{{{< /sidenote >}}} 
-
-For this we use the last of the bands we specified when the loaded the collection: the [SCL band](https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/scene-classification/). Looking at the [description](https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/scene-classification/) for the SCL band we'll find that bands 4 and 5 represent vegation or non-vegetation (e.g. sand and asphalt) areas respectively. The other 10 labels represent various forms of clouds, snow and ice, shadows, and technical errors. We can get a mask where all the areas where the SCL layer indicates clouds or other abnormalities is set to `True`.
+For this we use the last of the bands we specified when the loaded the collection: the [SCL band](https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/scene-classification/){{{< sidenote for="sn-7" >}}}_SCL_ stands for "scene classification" and is a synthetic layer used for various purposes besides masking clouds{{{< /sidenote >}}}. Looking at the [description](https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/scene-classification/) for the SCL band we'll find that bands 4 and 5 represent vegation or non-vegetation (e.g. sand and asphalt) areas respectively. The other 10 labels represent various forms of clouds, snow and ice, shadows, and technical errors. We can get a mask where all the areas where the SCL layer indicates clouds or other abnormalities is set to `True`.
 
 ```{python}
 #| label: define-mask-cube
@@ -351,11 +323,7 @@ Then we "smooth out" the mask by applying some Gaussian blur to the mask. For th
 np.outer([1, 2, 1], [1, 2, 1])
 ```
 
-{{{< sidenote >}}}
-Simplified, the process of applying two functions to each other to obtain a third is called [_convolution_](https://en.wikipedia.org/wiki/Convolution)
-{{{< /sidenote >}}}
-
-We'll then apply this kernel to the mask to get apply the Gaussian mask to the clouds. We can then also apply some thresholding. This will then generate a mask that can be applied to the data cube.
+We'll then apply this kernel to the mask to get apply the Gaussian mask to the clouds{{{< sidenote for="sn-8" >}}}Simplified, the process of applying two functions to each other to obtain a third is called [_convolution_](https://en.wikipedia.org/wiki/Convolution){{{< /sidenote >}}}. We can then also apply some thresholding. This will then generate a mask that can be applied to the data cube.
 
 ```{python}
 #| label: create-mask

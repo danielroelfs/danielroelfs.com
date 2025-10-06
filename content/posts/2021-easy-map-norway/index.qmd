@@ -30,11 +30,7 @@ Every now and then you discover a discover a much simpler solution to a problem 
 
 Previously, I used a JSON file and the `{geojsonio}` package to create a map of Norway and its fylker (counties) in particular. This was a very flexible and robust way of going about this, but also quite cumbersome. This method relies on a high-quality JSON file, meaning, a file that is detailed enough to display everything nicely, but not too detailed that it takes a ton of time and computing power to create a single plot. While I'll still use this method if I need to create a map for places other than Norway, I think I've found a better and easier solution for plotting Norway and the fylker and kommuner in the  [`{csmaps}`](https://www.csids.no/csmaps/) package. 
 
-{{{< sidenote >}}}
-The group has [a bunch of packages](https://www.csids.no) for data science within public health 
-{{{< /sidenote >}}}
-
-The `{csmaps}` package is created by the [_Consortium for Statistics in Disease Surveillance_](https://www.csids.no) team. It's part of a series of packages (which they refer to as the "csverse"), which includes a package containing basic health surveillance data ([`{csdata}`](https://www.csids.no/csdata/)), one for real-time analysis in disease surveillance ([`{sc9}`](https://www.csids.no/sc9/)) and a few more. Here I'll dive into the `{csmaps}` package with some help from the `{csdata}` package. I'll also use the `{ggmap}` package to help with some other data and plotting. It's perhaps important to note that `{ggmap}` does contain a map of Norway as a whole, but not of the fylker and kommuner (municipalities), hence the usefulness of the `{csmaps}` package, which contains both. I'll also use `{tidyverse}` and `{ggtext}` as I always do. I won't load `{csmaps}` with the `library()` function, but will use the `::` operator instead since it'll make it easier to navigate the different datasets included.
+The `{csmaps}` package is created by the [_Consortium for Statistics in Disease Surveillance_](https://www.csids.no) team{{{< sidenote for="sn-1" >}}}The group has [a bunch of packages](https://www.csids.no) for data science within public health{{{< /sidenote >}}}. It's part of a series of packages (which they refer to as the "csverse"), which includes a package containing basic health surveillance data ([`{csdata}`](https://www.csids.no/csdata/)), one for real-time analysis in disease surveillance ([`{sc9}`](https://www.csids.no/sc9/)) and a few more. Here I'll dive into the `{csmaps}` package with some help from the `{csdata}` package. I'll also use the `{ggmap}` package to help with some other data and plotting. It's perhaps important to note that `{ggmap}` does contain a map of Norway as a whole, but not of the fylker and kommuner (municipalities), hence the usefulness of the `{csmaps}` package, which contains both. I'll also use `{tidyverse}` and `{ggtext}` as I always do. I won't load `{csmaps}` with the `library()` function, but will use the `::` operator instead since it'll make it easier to navigate the different datasets included.
 
 ```{r}
 #| label: pkgs
@@ -94,11 +90,7 @@ county_names <- csdata::nor_locations_names(border = 2020) |>
 print(county_names)
 ```
 
-{{{< sidenote >}}}
-The [`{scico}`](https://github.com/thomasp85/scico) package contains a collection of color palettes that are great for accessibility
-{{{< /sidenote >}}}
-
-Now let's also create a nice color palette to give each fylke a nicer color than the default ggplot colors. We'll create a named vector to match each fylke with a color from the _batlow_ palette by [Fabio Crameri](https://www.fabiocrameri.ch/colourmaps/) implemented in the `{scico}` package.
+Now let's also create a nice color palette to give each fylke a nicer color than the default ggplot colors. We'll create a named vector to match each fylke with a color from the _batlow_ palette by [Fabio Crameri](https://www.fabiocrameri.ch/colourmaps/) implemented in the `{scico}` package{{{< sidenote for="sn-2" >}}}The [`{scico}`](https://github.com/thomasp85/scico) package contains a collection of color palettes that are great for accessibility{{{< /sidenote >}}}.
 
 ```{r}
 #| label: fylke-colors
@@ -228,11 +220,7 @@ nor_county_map_b2020_default_dt |>
 
 ## Geocoding
 
-{{{< sidenote br="3em" >}}}
-The Google Maps API requires a personal API key, you can read how to obtain and register an API key [here](https://github.com/dkahle/ggmap)
-{{{< /sidenote >}}}
-
-The `{ggmap}` package also has an incredibly useful function called `mutate_geocode()` which transforms a string with an address or description in character format to longitude and latitude. Since `{ggmap}` uses the Google Maps API, it works similarly to typing in a description in Google Maps. So an approximation of the location will (most likely) get you the right result (e.g. with "Hospital Lillehammer"). Note that `mutate_geocode` uses `lon` instead of `long` as column name for longitude. Just to avoid confusion, I'll rename the column to `long`.
+The `{ggmap}` package also has an incredibly useful function called `mutate_geocode()` which transforms a string with an address or description in character format to longitude and latitude. Since `{ggmap}` uses the Google Maps API{{{< sidenote for="sn-3" >}}}The Google Maps API requires a personal API key, you can read how to obtain and register an API key [here](https://github.com/dkahle/ggmap){{{< /sidenote >}}}, it works similarly to typing in a description in Google Maps. So an approximation of the location will (most likely) get you the right result (e.g. with "Hospital Lillehammer"). Note that `mutate_geocode` uses `lon` instead of `long` as column name for longitude. Just to avoid confusion, I'll rename the column to `long`.
 
 ```{r}
 #| label: get-cities-locations
@@ -409,11 +397,7 @@ nor_municip_map_b2020_split_dt |>
 
 ## Oslo
 
-The last thing I want to show is a map of Oslo! `{csmaps}` contains a detailed map of the bydeler that we will use. Now, these bydeler are again coded and `{csdata}` (since it's update) now contains a [data frame](https://www.csids.no/csmaps/articles/customization.html#add-location-name-for-ward-and-population-for-oslo-map) with the corresponding names for all geography levels (fylker, municipalities, bydeler, etc.). We could get our data from there, but we also need something to visualize so we'll scrape a Wikipedia article for Oslo's bydeler which contains a table with the bydel numbers, the names, and some data we can use for visualization. We'll extract the table from the website using `{rvest}`, do some data wrangling and prepare it for merging into the data frame with the map. I won't go into the wrangling much here, we're interested mainly in the plotting of the data right now.
-
-{{{< sidenote >}}}
-I won't go into much detail on web scraping here, you can see one of the [other posts](https://danielroelfs.com/blog/) for more details
-{{{< /sidenote >}}}
+The last thing I want to show is a map of Oslo! `{csmaps}` contains a detailed map of the bydeler that we will use. Now, these bydeler are again coded and `{csdata}` (since it's update) now contains a [data frame](https://www.csids.no/csmaps/articles/customization.html#add-location-name-for-ward-and-population-for-oslo-map) with the corresponding names for all geography levels (fylker, municipalities, bydeler, etc.). We could get our data from there, but we also need something to visualize so we'll scrape a Wikipedia article for Oslo's bydeler which contains a table with the bydel numbers, the names, and some data we can use for visualization. We'll extract the table from the website using `{rvest}`, do some data wrangling and prepare it for merging into the data frame with the map. I won't go into the wrangling much here, we're interested mainly in the plotting of the data right now. I won't go into much detail on web scraping here either, you can see one of the [other posts](https://danielroelfs.com/posts/) for more details
 
 ```{r}
 #| label: scrape-bydel-names

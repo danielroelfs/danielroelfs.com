@@ -1,6 +1,6 @@
 ---
 title: How I Host Apps from my Raspberry Pi
-date: 2024-04-06
+date: 2024-04-06T00:00:00.000Z
 description: How I Host Apps from my Raspberry Pi
 slug: how-i-host-apps-from-my-raspberry-pi
 categories:
@@ -11,31 +11,22 @@ tags:
 engine: knitr
 execute:
   eval: false
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 
-So I've recently become the proud owner of a [Raspberry Pi 5](https://www.raspberrypi.com/products/raspberry-pi-5/), a microcomputer that fits in the palm of your hand. It's initial targeted use was for educational purposes in computer science, but it's since been widely adopted by hobbyists with varying interests. I got mine to work with some data science projects, educational projects, and to host a variety of apps that currently live on various platforms. In this post I'd like to through how I host my Flask and Shiny apps on my Raspberry Pi from development to putting them online for anyone to access.
+
+So I've recently become the proud owner of a [Raspberry Pi 5](https://www.raspberrypi.com/products/raspberry-pi-5/), a microcomputer that fits in the palm of your hand. Its initial stated use was for educational purposes in computer science, but it's since been widely adopted by hobbyists with varying interests. I got mine to use with some data science projects, educational projects, and to host a variety of apps that currently live on various platforms. In this post I'd like to through how I host my Flask and Shiny apps on my Raspberry Pi from development to putting them online for anyone to access.
 
 ## Step 1 - Setup
 
-{{< sidenote >}}
-I found [this](https://youtu.be/rGygESilg8w?si=hMFMVnLcKktGhFYt) tutorial very useful for setting up a "headless" Raspberry Pi
-{{< /sidenote >}}
+My Raspberry Pi is in a "headless" setup{{< sidenote for=\"sn-1\" >}}I found [this](https://youtu.be/rGygESilg8w?si=hMFMVnLcKktGhFYt) tutorial very useful for setting up a "headless" Raspberry Pi{{< /sidenote >}} so I [ssh](https://www.cloudflare.com/en-gb/learning/access-management/what-is-ssh/) into my Raspberry either from the Terminal or through [VSCode](https://code.visualstudio.com/docs/remote/ssh) that lets me open a Workspace in VSCode over the SSH connection. While I'm actively working on an app, the latter is my preferred method. This way I can for example work on a Flask app stored on the Raspberry the same way I would if I were working on my laptop directly.
 
-My Raspberry Pi is in a "headless" setup so I [ssh](https://www.cloudflare.com/en-gb/learning/access-management/what-is-ssh/) into my Raspberry either from the Terminal or through [VSCode](https://code.visualstudio.com/docs/remote/ssh) that lets one open a Workspace in VSCode over the SSH connection. While I'm actively working on an app, the latter is my preferred method. This way I can for example my Flask app the same way I would if I were working on my laptop directly.
-
-For the purposes of what we'll discuss here, we'll use [nginx](https://www.nginx.com) to act as our reverse proxy (the main alternative here is [Apache](https://httpd.apache.org)). For our HTTP server we'll use [gunicorn](https://gunicorn.org) for Flask apps (or other Python-based apps) and [shiny-server](https://posit.co/download/shiny-server/) to run Shiny apps. We'll also use [ufw](https://help.ubuntu.com/community/UFW) (Uncomplicated Firewall) to add some layer of security. When setting up ufw on a headless Raspberry Pi it's important to allow SSH connections before enabling the firewall. Otherwise you will lose SSH access. Any other tools we will go through as they become relevant.
+For the purposes of what we'll discuss further below, we'll use [nginx](https://www.nginx.com) to act as our reverse proxy (the main alternative here is [Apache](https://httpd.apache.org)). For our HTTP server we'll use [gunicorn](https://gunicorn.org) for Flask apps (or other Python-based apps) and [shiny-server](https://posit.co/download/shiny-server/) to run Shiny apps. We'll also use [ufw](https://help.ubuntu.com/community/UFW) (Uncomplicated Firewall) to add some layer of security. When setting up ufw on a headless Raspberry Pi it's important to allow SSH connections before enabling the firewall, otherwise you will lose SSH access. These tools can be installed the usual way, any other tools we will go through as they become relevant.
 
 ## Step 2 - Building the apps
 
-{{< sidenote >}}
-I haven't gotten into the Node.js or React frameworks yet, but it's on the list
-{{< /sidenote >}}
-
-For the purposes of this post I'll show the setup for both Flask and Shiny apps since those are the ones I have most experience with. I for example have [this](http://danielroelfs.shinyapps.io/bilkollektivet) Shiny app (code available on [GitHub](https://github.com/danielroelfs/bilkollektivet_app)) that is currently hosted on [shinyapps.io](http://shinyapps.io). This app calculates the cost for a trip with a car from the Norwegian car sharing service [Bilkollektivet](https://bilkollektivet.no). This is the Shiny app we'll work with today. I'll show the Flask app later since that one isn't hosted anywhere else.
-
-I have a separate directory on my Raspberry called "`projects/`" where I collect all projects I'm working on.
+For the purposes of this post I'll show the setup for both Flask and Shiny apps since those are the ones I have most experience with{{< sidenote for=\"sn-2\" >}}I haven't gotten into the Node.js or React frameworks yet, but it's on the list{{< /sidenote >}}. I for example have [this](https://bilkollektivet.danielroelfs.app) Shiny app (code available on [GitHub](https://github.com/danielroelfs/bilkollektivet_app)) that was previously hosted on [shinyapps.io](http://shinyapps.io). This app calculates the cost for a trip with a car from the Norwegian car sharing service [Bilkollektivet](https://bilkollektivet.no). For an example of a Flask app, I have [this app](https://books.danielroelfs.app) that tracks my reading progress, library, and books that are on my to-be-read list. Both apps use a locally hosted database backend ([MariaDB](https://mariadb.org) or [duckdb](https://duckdb.org)) that I will not go into today.
 
 ## Step 3 - Running the apps
 
@@ -72,11 +63,7 @@ ExecStart=<app root path>/.venv/bin/gunicorn --workers 3 --bind 0.0.0.0:<local p
 WantedBy=multi-user.target
 ```
 
-{{< sidenote >}}
-In the future I'd prefer to use Git here to reduce uptime in case I want to make bigger changes.
-{{< /sidenote >}}
-
-As for Shiny apps, When I'm ready to deploy the apps, I'll create a symbolic link from the development directory to the `srv/` directory where also the shiny-server server lives. This way any updates I make to the app is immediately visible online. The configuration for shiny-server is available in `/etc/shiny-server/shiny-server.conf` and looks something like this by default:
+As for Shiny apps, When I'm ready to deploy the apps, I'll create a symbolic link from the development directory to the `srv/` directory where also the shiny-server server lives. This way any updates I make to the app is immediately visible online{{< sidenote for=\"sn-3\" >}}In the future I'd prefer to use Git here to reduce uptime in case I want to make bigger changes{{< /sidenote >}}. The configuration for shiny-server is available in `/etc/shiny-server/shiny-server.conf` and looks something like this by default:
 
 ``` bash
 # /etc/shiny-server/shiny-server.conf
@@ -159,33 +146,21 @@ server {
 
 You'll notice the second one contains a few extra timeout settings. This is mainly because my Shiny apps are a bit heavier and might need some extra time to load and refresh. The other settings I included because I found them on the internet somewhere and they worked 🙂.
 
-{{< sidenote br="8em" >}}
-Sometimes you might also need to [restart the systemd (not a typo) manager](https://unix.stackexchange.com/a/364787) with `sudo systemctl daemon-reload`.
-{{< /sidenote >}}
+To enable nginx, the config file needs to be available also in the `sites-enabled/` directory. The easiest way to make this happen is to create a symbolic link between the `sites-available/` and the `sites-enabled/` directory. This is easily done with `ln -s /etc/nginx/sites-available/<app name> /etc/nginx/sites-enabled/`. To test whether there are any issues in the config files one can run `sudo nginx -t`. To ensure nginx recognizes the new apps, nginx needs to be restarted using `sudo service nginx restart`{{< sidenote for=\"sn-4\" >}}Sometimes you might also need to [restart the systemd (not a typo) manager](https://unix.stackexchange.com/a/364787) with `sudo systemctl daemon-reload`.{{< /sidenote >}}.
 
-To enable nginx, the config file needs to be available also in the `sites-enabled/` direcotry. The easiest way to make this happen is to create a symbolic link between the `sites-available/` and the `sites-enabled/` directory. This is easily done with `ln -s /etc/nginx/sites-available/<app name> /etc/nginx/sites-enabled/`. To test whether there are any issues in the config files one can run `sudo nginx -t`. To ensure nginx recognizes the new apps, nginx needs to be restarted using `sudo service nginx restart`.
-
-If everything went well, the apps should be available now both on the specified ports on the machine and across the local network on `<public IP>:<nginx port>`. You'll notice that for the Shiny app the address served changed from `localhost:<shiny-server port>/<app name>` to `<hostname>:<nginx port>`, removing the need for the suffix which makes it a fair bit easier to work with.
+The apps should now be available both on the specified ports on the local IP address and across the local network on `<public IP>:<nginx port>`. You'll notice that for the Shiny app the address served changed from `localhost:<shiny-server port>/<app name>` to `<hostname>:<nginx port>`, removing the need for the suffix which makes it a fair bit easier to work with.
 
 ## Step 5 - Putting everything online
 
-{{< sidenote br="4em" >}}
-[This video](https://youtu.be/ey4u7OUAF3c?si=NQcsqkF9QBbYB_OL) was very useful here. The guy is not everybody's cup of tea, but he seems to know what's up
-{{< /sidenote >}}
+Now that the apps are available locally, the next step was tp allow machines outside my local network to access them too. There are a couple of ways to do this, but the most secure option seemed to be using a [Zero Trust](https://www.ibm.com/topics/zero-trust) security model. This is implemented through a [Cloudflare tunnel](https://www.cloudflare.com/en-gb/products/tunnel/){{< sidenote for=\"sn-5\" >}}[This video](https://youtu.be/ey4u7OUAF3c?si=NQcsqkF9QBbYB_OL) was very useful here. The guy is not everybody's cup of tea, but he seems to know what's up{{< /sidenote >}}. This ensures that my public IP address can remain hidden and routes all traffic through the Cloudflare servers that will manage any requests and security protocols (see [here](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/) for more info).
 
-Now that the apps are available locally, the next step was tp allow machines outside my local network to access them too. There are a couple of ways to do this, but the most secure option seemed to be using a [Zero Trust](https://www.ibm.com/topics/zero-trust) security model. This is implemented through a [Cloudflare tunnel](https://www.cloudflare.com/en-gb/products/tunnel/). This ensures that my public IP address can remain hidden and routes all traffic through the Cloudflare servers that will manage any requests and security protocols (see [here](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/) for more info).
-
-{{< sidenote br="1em" >}}
-Just for the sake of it, I thought I'd try to create [this landing page](https://danielroelfs.app) with [Astro](https://astro.build)
-{{< /sidenote >}}
-
-My preferred way of establishing this tunnel is through a [Docker image](https://hub.docker.com/r/cloudflare/cloudflared/tags) maintained by Cloudflare. So here are the steps. I bought a [domain name](https://danielroelfs.app) from Cloudflare directly. It was actually quite cheap (~120 NOK a year) considering I didn't need any hosting service. I could have bought a domain name elsewhere, but this seemed to be less of a hassle since I didn't need to reroute any DNS name servers. I create a tunnel in the Cloudflare dashboard and run the provided Docker container on my Raspberry with the `-d` flag to run it in detached mode, ensure the containers [run on reboot](https://docs.docker.com/config/containers/start-containers-automatically/) using the `--restart unless-stopped` flag, and give them a name so I can keep the Docker containers apart using the `--name <app name>` function. This way I can ensure that the apps are available online whenever my Raspberry is turned on. Then I specify the nginx port associated with each app in the Cloudflare dashboard associated with each app and specify the subdomain for each app like `<flask app name>.danielroelfs.app` or `<shiny app name>.danielroelfs.app`. The Cloudflare Zero Trust tunnel functionality is free and it offers a very easy and secure solution for a rather tricky issue.
+My preferred way of establishing this tunnel is through a [Docker image](https://hub.docker.com/r/cloudflare/cloudflared/tags) maintained by Cloudflare. So here are the steps. I bought a [domain name](https://danielroelfs.app) from Cloudflare directly{{< sidenote for=\"sn-6\" >}}Just for the sake of it, I thought I'd try to create [this landing page](https://danielroelfs.app) with [Astro](https://astro.build){{< /sidenote >}}. It was actually quite cheap (~120 NOK a year) considering I didn't need any hosting service. I could have bought a domain name elsewhere, but this seemed to be less of a hassle since I didn't need to reroute any DNS name servers. I create a tunnel in the Cloudflare dashboard and run the provided Docker container on my Raspberry with the `-d` flag to run it in detached mode, ensure the containers [run on reboot](https://docs.docker.com/config/containers/start-containers-automatically/) using the `--restart unless-stopped` flag, and give them a name so I can keep the Docker containers apart using the `--name <app name>` function. This way I can ensure that the apps are available online whenever my Raspberry is turned on. Then I specify the nginx port associated with each app in the Cloudflare dashboard associated with each app and specify the subdomain for each app like `<flask app name>.danielroelfs.app` or `<shiny app name>.danielroelfs.app`. The Cloudflare Zero Trust tunnel functionality is free and it offers a very easy and secure solution for a rather tricky issue.
 
 ## Step 6 - Testing and maintenance
 
 So now the apps are deployed. I used both a [Flask app](https://books.danielroelfs.app) that tracks the books I'm reading and have read and a [Shiny app](http://bilkollektivet.danielroelfs.app) to estimate car rental prices for a trip that I showed earlier as an example here, but I have a few more, like [this app](https://stats-viz.danielroelfs.app) to visualize a few statistical principles I have had discussions with colleagues about. The most important last remaining step is to have a method to maintain the apps, keep the Docker containers up to date with the latest tags, and to test whether all apps function as they should across platforms, both desktop and mobile, different browsers, whether any database connections are functional and so on.
 
-I'm very happy with my Raspberry Pi and could recommend anyone interested in full-stack developing to consider getting one. It's definitely cheaper than hosting on AWS, and offers more flexibility tha many free tier hosting sites, though it's definitely also fun (and quite reliable with the right tools) to connect a GitHub repository through GitHub Actions to Netlify and a separate SQL database server elsewhere, but having control of every step of the app is quite satisfying. Plus it has the added advantage of having an kill switch for all projects just by unplugging the Raspberry Pi. This post definitely helped me organize the steps I took to get this up and running so I hope it's perhaps useful for others too!
+I'm very happy with my Raspberry Pi and could recommend anyone interested in full-stack developing to consider getting one. It's definitely cheaper than hosting on AWS, and offers more flexibility tha many free tier hosting sites, though it's definitely also fun (and quite reliable with the right tools) to connect a GitHub repository through GitHub Actions to Netlify and a separate SQL database server elsewhere, but having control of every step of the app is quite satisfying. In the future I would like to look into Dockerizing everything, but that's a project for another time. Plus it has the added advantage of having an kill switch for all projects just by unplugging the Raspberry Pi. This post definitely helped me organize the steps I took to get this up and running so I hope it's perhaps useful for others too!
 
 ## References
 

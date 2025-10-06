@@ -31,12 +31,8 @@ set.seed(2022)
 
 Let's start simple with the One-Sample T-test. This test can be used to test how the mean value of your sample measure differs from a reference number. Throughout this post, I'll throw around a bunch of formulas, which, depending on your background, can either be informative or confusing. The formula for a One-Sample T-test is:
 
-{{< sidenote >}}
-The $\overline{x}$ is commonly called "x-bar" in conversation
-{{< /sidenote >}}
-
 $$
-t = \frac{\overline{x} - \mu}{\frac{\sigma}{\sqrt{n}}} = \frac{sample~mean - population~mean}{\frac{standard~deviation}{\sqrt{sample~size}}}
+t = \frac{\overline{x} - \mu}{\frac{\sigma}{\sqrt{n}}} = \frac{sample\ mean - population\ mean}{\frac{standard\ deviation}{\sqrt{sample\ size}}}
 $$
 
 What this says is that the effect size ($t$) is equal to the sample mean minus the population mean (or reference number) and you divide it by the standard deviation of the sample divided by the square root of the sample size. This formula will output the $t$-value that you would usually report when doing a T-test. The formula requires the standard deviation (*σ*) of the sample values, which is:
@@ -47,15 +43,13 @@ $$
 
 In this formula, you'd subtract the average across the sample values from each individual value, square it, and sum all these resulting values. This sum you would then divide by the size of the sample minus one (or the degrees of freedom), and take the square root of the whole thing. This will give the standard deviation (*σ*). Alright, let's now consider a study where we collected blood samples from a number of patients and measured for instance sodium levels in the blood. We don't have a control group for this study, but we know from medical textbooks that the reference value for sodium in healthy individuals for the age and sex distribution in our sample is for instance 2.5 mmol/L. Then we measure the sodium levels for 30 patients, we can simulate some fake measurements by generating a random sequence of values with a mean of 3 and a standard deviation of 1.2.
 
-{{< sidenote >}}
-I cannot condone generating data for your study using `rnorm()` but this is just for illustrative purposes
-{{< /sidenote >}}
-
 ``` r
 ref_concentration <- 2.5
 
 n <- 30
 concentration <- rnorm(n, mean = 3, sd = 1.25)
+# (I cannot condone generating data for your study using `rnorm()` 
+# but this is just for illustrative purposes)
 ```
 
 If we then implement these values in the formulas earlier, we get the following result for the standard deviation:
@@ -126,11 +120,7 @@ $$
 Y_i = \beta_{0} + \beta_{1}x + \epsilon_{i}
 $$
 
-{{< sidenote br=\"2em\" >}}
-$\beta_1$ in this case is equivalent to $a$ in formula $y = ax + c$
-{{< /sidenote >}}
-
-In this formula $Y_i$ is the dependent variable, $x$ is the independent variable. $\beta_0$ is equivalent to the intercept at the y-axis, similar to $c$ in the formula for a straight line. $\beta_1$ is the slope. Finally, the $\epsilon_i$ is the random error term.
+In this formula $Y_i$ is the dependent variable, $x$ is the independent variable. $\beta_0$ is equivalent to the intercept at the y-axis, similar to $c$ in the formula for a straight line. $\beta_1$ is the slope{{< sidenote for=\"sn-1\" >}}$\beta_1$ in this case is equivalent to $a$ in formula $y = ax + c${{< /sidenote >}}. Finally, the $\epsilon_i$ is the random error term.
 
 Now let's build the linear model. Remember that the formula for the linear model included this term: $\beta_{1}x$. In this case, since we only have one sample, we don't have any value to multiply our value to, so we multiply it by 1. If we wanted to correlate two variables, for instance concentration with age, we would substitute the 1 with a continuous variable, i.e. age, but in this case we correlate all sample values with 1. Since we still want to compare our value to 0, we subtract the reference value from our sample values like we did before for the `t.test()`. Let's build the linear model.
 
@@ -300,15 +290,11 @@ $$
 
 And then we find that $a$ is equal to the `Estimate` column for the `groupPAT` row.
 
-{{< sidenote br=\"3em\" >}}
-inb4 the angry statisticians: I know it's more complicated than that but let's not get into this right now
-{{< /sidenote >}}
-
-We can reverse engineer the $t$-value too using just the output from the `lm()` function. One can imagine that if one would plot a situation where the null hypothesis (H<sub>0</sub>) is true, the slope of that line would be 0 since then there's no difference between the mean of the two groups. We'll take the difference between our observed slope, or the slope of the alternative hypothesis (H<sub>0</sub>), and the slope of the null hypothesis, which is 0, and divide that by the standard error of the sampling distribution, which is given by the `lm()` function as the `Std. Error` of the `groupPAT` row:
+We can reverse engineer the $t$-value too using just the output from the `lm()` function. One can imagine that if one would plot a situation where the null hypothesis (H<sub>0</sub>) is true{{< marginnote for=\"mn-1\" >}}inb4 the angry statisticians: I know it's more complicated than that but let's not get into this right now{{< /marginnote >}}, the slope of that line would be 0 since then there's no difference between the mean of the two groups. We'll take the difference between our observed slope, or the slope of the alternative hypothesis (H<sub>0</sub>), and the slope of the null hypothesis, which is 0, and divide that by the standard error of the sampling distribution, which is given by the `lm()` function as the `Std. Error` of the `groupPAT` row:
 
 $$
 \begin{eqnarray}
-t &=& \frac{slope~of~regression~line~at~H\_{a} - slope~of~regression~line~at~H\_{0}}{standard~error~of~sampling~distribution}\newline
+t &=& \frac{slope\ of\ regression\ line\ at\ H\_{a} - slope\ of\ regression\ line\ at\ H\_{0}}{standard\ error\ of\ sampling\ distribution}\newline
 &=& \frac{1.6177 - 0}{0.3952} = 4.093
 \end{eqnarray}
 $$
@@ -360,14 +346,6 @@ ggplot(data, aes(x = group)) +
 ```
 
 </details>
-
-    Warning in geom_segment(data = NULL, aes(x = 0.4, xend = 0.925, y = mean(g1), : All aesthetics have length 1, but the data has 60 rows.
-    ℹ Please consider using `annotate()` or provide this layer with data containing
-      a single row.
-
-    Warning in geom_segment(data = NULL, aes(x = 0.4, xend = 1.925, y = mean(g2), : All aesthetics have length 1, but the data has 60 rows.
-    ℹ Please consider using `annotate()` or provide this layer with data containing
-      a single row.
 
 <img src="index.markdown_strict_files/figure-markdown_strict/tst-plot-w-annot-1.png" width="768" />
 
@@ -468,16 +446,12 @@ Oh, would you look at that! The differences between the group means and the refe
 
 $$
 \begin{eqnarray}
-total~sum~of~squares &=& \sum\limits\_{j=1}^{J} n\_{j} \times (\overline{x}\_{j} - \mu)^2 \newline
-residual~sum~of~squares &=& \sum\limits\_{j=1}^{J} \sum\limits\_{i=1}^{n\_{j}} (y\_{ij} - \overline{y}\_{j})^2
+total\ sum\ of\ squares &=& \sum\limits\_{j=1}^{J} n\_{j} \times (\overline{x}\_{j} - \mu)^2 \newline
+residual\ sum\ of\ squares &=& \sum\limits\_{j=1}^{J} \sum\limits\_{i=1}^{n\_{j}} (y\_{ij} - \overline{y}\_{j})^2
 \end{eqnarray}
 $$
 
-{{< sidenote br=\"8em\" >}}
-We'll come back to residual sum of squares further down
-{{< /sidenote >}}
-
-Just briefly, the first formula takes the mean value for the group in question, subtracts the overall mean (or grand mean) and squares the result. Then it multiplies this number by the sample size in this group. In this case we'll only do it for the first group since that's the one listed in the `summary(aov_model)` output. The second formula calculates the residual sum of squares (or sum of squared error). In essence it substracts the group mean from each of the individual values, squares it, and sums it first within the group, and then sums it again across the groups.
+Just briefly, the first formula takes the mean value for the group in question, subtracts the overall mean (or grand mean) and squares the result. Then it multiplies this number by the sample size in this group. In this case we'll only do it for the first group since that's the one listed in the `summary(aov_model)` output. The second formula calculates the residual sum of squares (or sum of squared error){{< sidenote for=\"sn-2\" >}}We'll come back to residual sum of squares further down{{< /sidenote >}}. In essence it substracts the group mean from each of the individual values, squares it, and sums it first within the group, and then sums it again across the groups.
 
 We can do both calculations in one go with the following quick code:
 
@@ -576,7 +550,7 @@ data <- data |>
 With that we can quickly calculate the residual standard error (oversimplified, it's a measure of how well a regression model fits a dataset). The formula for the residual standard error is this:
 
 $$
-Residual~standard~error = \sqrt{\frac{\sum(observed - predicted)^2}{degrees~of~freedom}}
+Residual\ standard\ error = \sqrt{\frac{\sum(observed - predicted)^2}{degrees\ of\ freedom}}
 $$
 
 or in R terms (the degrees of freedom is 18 here, too complicated to explain for now):
@@ -679,22 +653,18 @@ ggplot(data, aes(x = age)) +
 
 <img src="index.markdown_strict_files/figure-markdown_strict/lm-plot-squares-1.png" width="768" />
 
-The "sum" part of "sum of squared error" refers to the sum of the areas of those squares. Simply, you sum the square of the sides. You can also look at it in mathematical form:
-
-{{< sidenote >}}
-We'll use this formula again a bit later to calculate the R{{< sup  >}}2{{< /sup >}}.
-{{< /sidenote >}}
+The "sum" part of "sum of squared error" refers to the sum of the areas of those squares. Simply, you sum the square of the sides. You can also look at it in mathematical form (We'll use this formula again a bit later to calculate the R{{< sup  >}}2{{< /sup >}}):
 
 $$
-\sum{(residual~or~difference~with~regression~line^2)}
+\sum{(residual\ or\ difference\ with\ regression\ line^2)}
 $$
 
 In order to calculate the squared regression coefficient, we should also calculate the mean value of the measure across all points. This is necessary because the squared regression coefficient is defined as a perfect correlation (i.e. a correlation coefficient of 1) minus the explained variance divided by the total variance, or in formula form:
 
 $$
 \begin{eqnarray}
-R^2 &=& perfect~correlation - \frac{explained~variance}{total~variance} \newline
-&=& 1 - \frac{\sum(difference~with~regression~line^2)}{\sum(difference~with~mean~value^2)}
+R^2 &=& perfect\ correlation - \frac{explained\ variance}{total\ variance} \newline
+&=& 1 - \frac{\sum(difference\ with\ regression\ line^2)}{\sum(difference\ with\ mean\ value^2)}
 \end{eqnarray}
 $$
 

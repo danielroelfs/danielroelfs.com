@@ -102,7 +102,7 @@ Next we want to normalize the data. Usually you'd do this to ensure that all ans
 
 ``` r
 data <- loaddata |>
-  select(-less15var$question) |> # In this case, the second line with the `select()` 
+  select(-less15var$question) |> # In this case, the second line with the `select()`
   # function doesn't remove anything, see paragraph above
   pivot_longer(starts_with("Q"),
     names_to = "qnum", values_to = "score"

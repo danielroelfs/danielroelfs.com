@@ -48,7 +48,7 @@ ref_concentration <- 2.5
 
 n <- 30
 concentration <- rnorm(n, mean = 3, sd = 1.25)
-# (I cannot condone generating data for your study using `rnorm()` 
+# (I cannot condone generating data for your study using `rnorm()`
 # but this is just for illustrative purposes)
 ```
 

@@ -1,0 +1,31 @@
+{{ define "main" }} 
+<article>
+  <div class="article-header">
+    <h1 class="article-title">{{ .Title }}</h1>
+    <hr />
+  </div>
+  <table class="posts-lists">
+    {{ range $k, $v := .Pages.ByPublishDate.Reverse }}
+    <tr class="index-entry">
+      {{ if .Date }}
+      <td class="post-date">
+        <a href="{{ .Permalink }}">{{ .Date.Format "Jan 2006" }}</a>
+      </td>
+      {{ else }}
+      <td class="post-date"><a href="{{ .Permalink }}">no date</a></td>
+      {{ end }}
+      <td class="post-title">
+        <a href="{{ .Permalink }}">{{ upper .Title | markdownify }}</a>
+      </td>
+    </tr>
+    {{ end }}
+  </table>
+</article>
+<nav>
+  {{ with .Site.Menus.main }} {{ range sort . "Weight" }}
+  <a class="internal" hyphens="none" href="{{ .URL }}">
+    {{ $text := print .Name | safeHTML }} {{ $text }}
+  </a>
+  {{ end }} {{ end }}
+</nav>
+{{ end }}

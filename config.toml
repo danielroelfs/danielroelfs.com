@@ -26,9 +26,7 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
     description = "Daniel Roelfs' personal website"
     keywords = "blog, personal, coding"
 
-    customcss = ["custom_style.css"]
-
-    blogname = "posts"
+    customcss = ["custom_style.scss"]
 
     umami       = true
     umamilink   = "https://web-analytics.danielroelfs.app/script.js"

@@ -24,6 +24,10 @@ sup {
   position: relative;
   top: -0.5em;
 }
+
+img {
+  min-width: 55%
+}
 </style>
 
 Throughout my career so far I've been lucky to work with many different types of data. It's exciting how all different kinds of data can be represented and interpreted by different programming languages[^1]. So today I'm going to do another one of these and dive into analyzing data from satellite images. Learning to parse data from freely available satellite imagery is both a useful skill to have and quite fun, so today I'll share a little project that I have whipped together. There are more ambitious projects we can use these analyses for, but let's start simple.
@@ -66,10 +70,7 @@ In order to compare these two plots to each other we need to generate an outline
 
 While the images above use the RGB color scheme to represent colors as the human eye would see it, the Copernicus Browser also allows for other visualizations, such as the NDVI. So for example, we can easily identify the plot recently replanted by the much brighter (or yellower) colors in that area. You'll also notice that the roads are easily identifiable. For the analysis we'll limit the NDVI calculations only to the areas inside of the GeoJSON specified and you can imagine that the quality of the analysis is quite closely correlated with the quality of the GeoJSON.
 
-<figure>
-<img src="screenshot_casecontrol_ndvi.png" alt="The NDVI visualization in the Copernicus Browser for the same plots" />
-<figcaption aria-hidden="true">The NDVI visualization in the <a href="https://browser.dataspace.copernicus.eu/?zoom=18&amp;lat=48.14349&amp;lng=7.28968&amp;themeId=DEFAULT-THEME&amp;visualizationUrl=U2FsdGVkX1%2BQjYPD7tQXBt6um3IBcQxf%2BsHuyy%2BC%2BGQpsxC7IdsGBdT6ieUtEbWE6cr2i5U0alG6nHMXZW%2FwfBYUF1%2BhkOOjw%2BZJeIh2PAk9ndn%2Bm2gPjwF7VvazRkKt&amp;datasetId=S2_L2A_CDAS&amp;demSource3D=%22MAPZEN%22&amp;cloudCoverage=30&amp;dateMode=SINGLE">Copernicus Browser</a> for the same plots</figcaption>
-</figure>
+{{< figure src=\"screenshot_casecontrol_ndvi.png\" caption=\"The NDVI visualization in the [Copernicus Browser](https://browser.dataspace.copernicus.eu/?zoom=18&lat=48.14349&lng=7.28968&themeId=DEFAULT-THEME&visualizationUrl=U2FsdGVkX1%2BQjYPD7tQXBt6um3IBcQxf%2BsHuyy%2BC%2BGQpsxC7IdsGBdT6ieUtEbWE6cr2i5U0alG6nHMXZW%2FwfBYUF1%2BhkOOjw%2BZJeIh2PAk9ndn%2Bm2gPjwF7VvazRkKt&datasetId=S2_L2A_CDAS&demSource3D=%22MAPZEN%22&cloudCoverage=30&dateMode=SINGLE) for the same plots\" >}}
 
 It's the difference in the NDVI values inside of the boundaries of the GeoJSON features that we'll use for the eventual analysis. First we'll do the case-control comparison, and we'll get into the more realistic case later where we'll look at two grand cru wine areas to compare the health over time.
 

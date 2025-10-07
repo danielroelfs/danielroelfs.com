@@ -4,7 +4,7 @@
 
 $body-family: "source-serif-pro", "Source Serif 4", serif;
 $header-family: "Cooper Hewitt", "Helvetica", sans-serif;
-$code-family: "Courier", "source-code-pro", monospace;
+$code-family: "source-code-pro", "Courier", monospace;
 $header-weight: 713;
 
 body {
@@ -39,10 +39,15 @@ article h4, article h5, article h6 {
 
 pre {
   background-color: none;
+  & > code {
+    font-family: $code-family;
+    font-size-adjust: none;
+  }
 }
 
 code {
   font-family: $code-family;
+  font-size-adjust: ex-height 0.6;
 }
 
 table.posts-lists {

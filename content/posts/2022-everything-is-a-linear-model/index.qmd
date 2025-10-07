@@ -236,8 +236,8 @@ We can reverse engineer the $t$-value too using just the output from the `lm()` 
 
 $$
 \begin{eqnarray}
-t &=& \frac{slope\ of\ regression\ line\ at\ H\_{a} - slope\ of\ regression\ line\ at\ H\_{0}}{standard\ error\ of\ sampling\ distribution}\newline
-&=& \frac{1.6177 - 0}{0.3952} = 4.093
+t &=&\ \frac{slope\ at\ H\_{a} - slope\ at\ H\_{0}}{standard\ error\ of\ sampling\ distribution}\newline
+&=&\ \frac{1.6177 - 0}{0.3952} = 4.093
 \end{eqnarray}
 $$
 

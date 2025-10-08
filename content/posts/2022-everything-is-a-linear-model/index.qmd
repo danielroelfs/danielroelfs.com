@@ -99,7 +99,7 @@ $$
 Y_i = \beta_{0} + \beta_{1}x + \epsilon_{i}
 $$
 
-In this formula $Y_i$ is the dependent variable, $x$ is the independent variable. $\beta_0$ is equivalent to the intercept at the y-axis, similar to $c$ in the formula for a straight line. $\beta_1$ is the slope{{{< sidenote for="sn-1" >}}}$\beta_1$ in this case is equivalent to $a$ in formula $y = ax + c${{{< /sidenote >}}}. Finally, the $\epsilon_i$ is the random error term.
+In this formula $Y_i$ is the dependent variable, $x$ is the independent variable. $\beta_0$ is equivalent to the intercept at the y-axis, similar to $c$ in the formula for a straight line. $\beta_1$ is the slope{{{< sidenote >}}}$\beta_1$ in this case is equivalent to $a$ in formula $y = ax + c${{{< /sidenote >}}}. Finally, the $\epsilon_i$ is the random error term.
 
 Now let's build the linear model. Remember that the formula for the linear model included this term: $\beta_{1}x$. In this case, since we only have one sample, we don't have any value to multiply our value to, so we multiply it by 1. If we wanted to correlate two variables, for instance concentration with age, we would substitute the 1 with a continuous variable, i.e. age, but in this case we correlate all sample values with 1. Since we still want to compare our value to 0, we subtract the reference value from our sample values like we did before for the `t.test()`. Let's build the linear model.
 
@@ -232,7 +232,7 @@ $$
 
 And then we find that $a$ is equal to the `Estimate` column for the `groupPAT` row.
 
-We can reverse engineer the $t$-value too using just the output from the `lm()` function. One can imagine that if one would plot a situation where the null hypothesis (H<sub>0</sub>) is true{{{< marginnote for="mn-1" >}}}inb4 the angry statisticians: I know it's more complicated than that but let's not get into this right now{{{< /marginnote >}}}, the slope of that line would be 0 since then there's no difference between the mean of the two groups. We'll take the difference between our observed slope, or the slope of the alternative hypothesis (H<sub>0</sub>), and the slope of the null hypothesis, which is 0, and divide that by the standard error of the sampling distribution, which is given by the `lm()` function as the `Std. Error` of the `groupPAT` row:
+We can reverse engineer the $t$-value too using just the output from the `lm()` function. One can imagine that if one would plot a situation where the null hypothesis (H<sub>0</sub>) is true{{{< marginnote >}}}inb4 the angry statisticians: I know it's more complicated than that but let's not get into this right now{{{< /marginnote >}}}, the slope of that line would be 0 since then there's no difference between the mean of the two groups. We'll take the difference between our observed slope, or the slope of the alternative hypothesis (H<sub>0</sub>), and the slope of the null hypothesis, which is 0, and divide that by the standard error of the sampling distribution, which is given by the `lm()` function as the `Std. Error` of the `groupPAT` row:
 
 $$
 \begin{eqnarray}
@@ -370,7 +370,7 @@ residual\ sum\ of\ squares &=& \sum\limits\_{j=1}^{J} \sum\limits\_{i=1}^{n\_{j}
 \end{eqnarray}
 $$
 
-Just briefly, the first formula takes the mean value for the group in question, subtracts the overall mean (or grand mean) and squares the result. Then it multiplies this number by the sample size in this group. In this case we'll only do it for the first group since that's the one listed in the `summary(aov_model)` output. The second formula calculates the residual sum of squares (or sum of squared error){{{< sidenote for="sn-2" >}}}We'll come back to residual sum of squares further down{{{< /sidenote >}}}. In essence it substracts the group mean from each of the individual values, squares it, and sums it first within the group, and then sums it again across the groups.
+Just briefly, the first formula takes the mean value for the group in question, subtracts the overall mean (or grand mean) and squares the result. Then it multiplies this number by the sample size in this group. In this case we'll only do it for the first group since that's the one listed in the `summary(aov_model)` output. The second formula calculates the residual sum of squares (or sum of squared error){{{< sidenote >}}}We'll come back to residual sum of squares further down{{{< /sidenote >}}}. In essence it substracts the group mean from each of the individual values, squares it, and sums it first within the group, and then sums it again across the groups.
 
 We can do both calculations in one go with the following quick code:
 

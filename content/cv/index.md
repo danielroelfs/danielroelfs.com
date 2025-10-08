@@ -7,6 +7,11 @@ engine: knitr
 
 
 <style type="text/css">
+ul {
+    margin-top: 0.5rem;
+    padding-left: 0;
+}
+
 li {
     font-size: 80%;
     padding: 0;
@@ -14,45 +19,71 @@ li {
 }
 
 ul li:before {
-    margin-right: 0;
+    margin-right: 10px;
 }
 
 ol li p, ul li p {
     margin-left: 1.5rem;
+    padding-left: 10px;
 }
 
 ol li:only-child {
-    color: red;
     margin-left: 1.5rem;
 }
 
 p {
-    margin-bottom: 0.1em;
+    margin-top: 0;
+    margin-bottom: 0.1rem;
 }
 
-h3 {
-    margin-top: 0.75em !important;
-    margin-bottom: 0em !important;
+article h3 {
+    margin-top: 0.75rem;
+    margin-bottom: 0rem;
+    width: 62.5%;
 }
-@media all and (max-width: 1200px) {
-    h3 {
-        width: 65%;
-        font-size: 0.8em;
-    }
+
+.cv-date {
+    font-style: italic;
+    margin-top: 0;
+    float: right;
+}
+
+.smaller-text {
+  font-size: 80%;
+  line-height: 1;
+}
+
+.progress {
+  font-family: 'Cooper Hewitt', sans-serif;
+  font-weight: 711;
+  width: 45%;
+  height: 1.6rem;
+  padding: 1px;
+  margin: 0.15rem 0;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar {
+  font-size: 1.3rem;
+  color: white;
+  height: 1.6rem;
+  box-shadow: 0 0 0 0 none, inset 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.progress > .progress-bar {
+  padding-left: 5px;
+  font-variant-caps: all-small-caps;
+  background-color: #555;
 }
 </style>
 
 For a downloadable version of this CV, go to [cv.danielroelfs.com](https://cv.danielroelfs.com)
 
-{{< gap 1 >}}
+------------------------------------------------------------------------
 
-{{< sidenote br=\"0.75em\" >}}
-work experience
-{{< /sidenote >}}
+## Work Experience
 
-### DNB - Group Security - Group AML
-
-{{< cv-date >}}2022 - current{{< /cv-date >}}
+### DNB - Group Security - Group AML {{< cv-date >}}2022 - current{{< /cv-date >}}
 
 *Data Scientist*
 
@@ -62,9 +93,7 @@ work experience
 
 -   Application of responsible data science practices in both development and deployment
 
-### University of Oslo - NORMENT - Multimodal Imaging Group
-
-{{< cv-date >}}2019 - 22{{< /cv-date >}}
+### University of Oslo - NORMENT - Multimodal Imaging Group {{< cv-date >}}2019 - 22{{< /cv-date >}}
 
 *Doctoral Research Fellow*
 
@@ -74,9 +103,7 @@ work experience
 
 -   Writing scripts and pipelines in R, Python, and MATLAB
 
-### University of Oslo - NORMENT - EEG Group
-
-{{< cv-date >}}2018 - 19{{< /cv-date >}}
+### University of Oslo - NORMENT - EEG Group {{< cv-date >}}2018 - 19{{< /cv-date >}}
 
 *Research Assistant*
 
@@ -84,9 +111,7 @@ work experience
 
 -   Maintaining and adapting preprocessing pipelines for EEG data
 
-### Rikshospitalet - Department of Medical Physics
-
-{{< cv-date >}}2018 - 19{{< /cv-date >}}
+### Rikshospitalet - Department of Medical Physics {{< cv-date >}}2018 - 19{{< /cv-date >}}
 
 *Research Assistant*
 
@@ -98,13 +123,9 @@ work experience
 
 ------------------------------------------------------------------------
 
-{{< sidenote >}}
-education
-{{< /sidenote >}}
+## Education
 
-### University of Oslo - Faculty of Clinical Medicine
-
-{{< cv-date >}}2019 - 22{{< /cv-date >}}
+### University of Oslo - Faculty of Clinical Medicine {{< cv-date >}}2019 - 22{{< /cv-date >}}
 
 *PhD, Doctoral Education*
 
@@ -112,9 +133,7 @@ education
 
 -   Courses relevant to neurobiology, advanced statistics, and other academic and non-academic skills
 
-### Lund University - Faculty of Medicine
-
-{{< cv-date >}}2016 - 18{{< /cv-date >}}
+### Lund University - Faculty of Medicine {{< cv-date >}}2016 - 18{{< /cv-date >}}
 
 *MSc, Biomedicine*
 
@@ -122,9 +141,7 @@ education
 
 -   Focus on molecular biology and neuroscience
 
-### Utrecht University - University College Roosevelt
-
-{{< cv-date >}}2012 - 15{{< /cv-date >}}
+### Utrecht University - University College Roosevelt {{< cv-date >}}2012 - 15{{< /cv-date >}}
 
 *BSc, pre-medical track*
 
@@ -136,69 +153,45 @@ education
 
 ------------------------------------------------------------------------
 
-{{< sidenote >}}
-skills & languages
-{{< /sidenote >}}
+## Skills & Languages
 
-{{< progress-bar perc=\"94\" >}} Python {{< /progress-bar >}}
+Daily use of Python, R, SQL (various dialects), bash, AWS, Snowflake, Git, and common packages and module. Experience also with MATLAB, LaTeX, HTML/CSS. Have previously worked with Google Cloud, SLURM.
 
-{{< progress-bar perc=\"92\" >}} R {{< /progress-bar >}}
-
-{{< progress-bar perc=\"88\" >}} SQL {{< /progress-bar >}}
-
-{{< progress-bar perc=\"82\" >}} Bash {{< /progress-bar >}}
-
-{{< progress-bar perc=\"70\" >}} MATLAB {{< /progress-bar >}}
-
-{{< progress-bar perc=\"68\" >}} LaTeX {{< /progress-bar >}}
-
-{{< progress-bar perc=\"60\" >}} HTML/CSS {{< /progress-bar >}}
-
-{{< gap 0.5 >}}
-
-{{< progress-bar perc=\"100\" >}} Dutch (native) {{< /progress-bar >}}
-
-{{< progress-bar perc=\"100\" >}} English (C2) {{< /progress-bar >}}
-
-{{< progress-bar perc=\"100\" >}} Norwegian (C2) {{< /progress-bar >}}
-
-{{< progress-bar perc=\"55\" >}} French (C1) {{< /progress-bar >}}
-
-{{< progress-bar perc=\"45\" >}} German (A2) {{< /progress-bar >}}
-
-{{< gap 1 >}}
+{{< gap \"0.5rem\" >}}
 
 {{< smaller-text >}}
 In addition, I'm familiar with common data science and data engineering frameworks including but not limited to [Shiny](https://shiny.posit.co), [Flask](https://flask.palletsprojects.com/en/stable/), [Streamlit](https://streamlit.io), [MLFlow](https://mlflow.org), [Airflow](https://airflow.apache.org), [dbt](https://www.getdbt.com), [Docker](https://www.docker.com), [Snowflake](https://www.snowflake.com), [AWS](https://aws.amazon.com), [LangChain](https://www.google.com/search?client=safari&rls=en&q=langchain&ie=UTF-8&oe=UTF-8), and various other common tools.
 {{< /smaller-text >}}
 
-{{< gap 1 >}}
+{{< gap \"1.5rem\" >}}
+
+{{< progress-bar perc=\"99\" >}} Dutch (native) {{< /progress-bar >}}
+
+{{< progress-bar perc=\"99\" >}} English (C2) {{< /progress-bar >}}
+
+{{< progress-bar perc=\"99\" >}} Norwegian (C2) {{< /progress-bar >}}
+
+{{< progress-bar perc=\"55\" >}} French (C1) {{< /progress-bar >}}
+
+{{< progress-bar perc=\"45\" >}} German (A2) {{< /progress-bar >}}
 
 ------------------------------------------------------------------------
 
-{{< sidenote >}}
-awards
-{{< /sidenote >}}
+## Awards
 
-### ECIP Oral Finalist
-
-{{< cv-date >}} 2021 {{< /cv-date >}}
+### ECIP Oral Finalist {{< cv-date >}} 2021 {{< /cv-date >}}
 
 *World Congress of Psychiatry Genetics*
 
 -   {{< p >}}Awarded to promising oral presentations from early-career researchers{{< /p >}}
 
-### International Training Grant
-
-{{< cv-date >}} 2019 {{< /cv-date >}}
+### International Training Grant {{< cv-date >}} 2019 {{< /cv-date >}}
 
 *Norwegian Research School in Neuroscience*
 
 -   {{< p >}}Grant awarded to scientists to receive training abroad that'll benefit their research in Norway{{< /p >}}
 
-### Sparbanken Skåne Master Prize
-
-{{< cv-date >}} 2019 {{< /cv-date >}}
+### Sparbanken Skåne Master Prize {{< cv-date >}} 2019 {{< /cv-date >}}
 
 *Sparbanksstiftelsen Färs & Frosta, Lund University*
 
@@ -206,60 +199,42 @@ awards
 
 ------------------------------------------------------------------------
 
-{{< sidenote >}}
-commissions
-{{< /sidenote >}}
+## Commissions
 
-### DNB Data Science Meetup
-
-{{< cv-date >}}2023 - current{{< /cv-date >}}
+### DNB Data Science Meetup {{< cv-date >}}2023 - current{{< /cv-date >}}
 
 *Committee Member*
 
-### Norwegian Research School in Neuroscience
-
-{{< cv-date >}}2019 - 21{{< /cv-date >}}
+### Norwegian Research School in Neuroscience {{< cv-date >}}2019 - 21{{< /cv-date >}}
 
 *Committee Member*
 
 -   {{< p >}}Organization of the national conference for neuroscience PhD candidates{{< /p >}}
 
-### The Netherlands Red Cross Student Desk Zeeland
-
-{{< cv-date >}}2014 - 15{{< /cv-date >}}
+### The Netherlands Red Cross Student Desk Zeeland {{< cv-date >}}2014 - 15{{< /cv-date >}}
 
 *General Board Member (Fundraising portfolio)*
 
-{{< gap 0.5 >}}
+------------------------------------------------------------------------
+
+## Portfolio
+
+[danielroelfs.com](https://danielroelfs.com)
+
+[danielroelfs.app](https://danielroelfs.app)
+
+[Talks & Presentations](https://slides.danielroelfs.app)
+
+[Bilkollektivet Trip Cost Calculator](https://bilkollektivet.danielroelfs.app)
+
+[Advent of SQL](https://danielroelfs.github.io/advent-of-sql/)
+
+[Advent of Code](https://danielroelfs.github.io/advent-of-code/)
+
+[Introduction To Basic Statistics in R](https://norment.github.io/IntroToBasicStatisticsInR/)
 
 ------------------------------------------------------------------------
 
-{{< sidenote >}}
-portfolio
-{{< /sidenote >}}
-
-### [danielroelfs.com](https://danielroelfs.com)
-
-### [danielroelfs.app](https://danielroelfs.app)
-
-### [Talks & Presentations](https://slides.danielroelfs.app)
-
-### [Bilkollektivet Trip Cost Calculator](https://bilkollektivet.danielroelfs.app)
-
-### [Advent of SQL](https://danielroelfs.github.io/advent-of-sql/)
-
-### [Advent of Code](https://danielroelfs.github.io/advent-of-code/)
-
-### [Introduction To Basic Statistics in R](https://norment.github.io/IntroToBasicStatisticsInR/)
-
-{{< gap 0.5 >}}
-
-------------------------------------------------------------------------
-
-{{< sidenote >}}
-publications
-{{< /sidenote >}}
+## Publications
 
 See the [publications](../../publications) page, [ORCID](https://orcid.org/0000-0002-1083-002X) or my [Google Scholar](https://scholar.google.com/citations?hl=en&user=QmVQcsAAAAAJ&view_op=list_works&sortby=pubdate) profile
-
-{{< gap 2 >}}

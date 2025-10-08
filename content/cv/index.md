@@ -42,6 +42,12 @@ article h3 {
     width: 62.5%;
 }
 
+@media (max-width: 760px) {
+  article h3 {
+    width: 100%;
+  }
+}
+
 .cv-date {
     font-style: italic;
     margin-top: 0;

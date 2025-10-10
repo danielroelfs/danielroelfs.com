@@ -21,16 +21,30 @@ h6 {
   font-family: $header-family;
 }
 
-h1.index-title {
-  font-weight: 714;
+h1 {
+  font-size: 2.6rem;
+  &.article-title {
+    font-size: 3rem;
+  }
+  &.index-title {
+   font-weight: 714;
+  }
 }
 
-article h1, article h2, article h3 {
+h1, h2, h3 {
   font-weight: 709;
 }
 
-article h4, article h5, article h6 {
+h4, h5, h6 {
   font-weight: 707;
+}
+
+h2 {
+  font-size: 2.2rem;
+}
+
+h3 {
+  font-size: 1.6rem;
 }
 
 .index-intro {
@@ -51,7 +65,7 @@ code {
 }
 
 table.posts-lists {
-  font-family: 'Cooper Hewitt', sans-serif;
+  font-family: $header-family;
   & tr.index-entry {
     font-weight: 707;
     & td.post-title {
@@ -65,12 +79,8 @@ ul li:before {
   content: "→";
 }
 
-p a.footnote-ref {
-  font-size: 80%;
-  margin-top: -1em;
-}
-
-p a.footnote-ref:after, p a.footnote-backref:after {
-  content: none;
-  margin-left: 0;
+nav.breadcrumbs {
+  font-family: $header-family;
+  font-weight: 709;
+  text-transform: uppercase;
 }

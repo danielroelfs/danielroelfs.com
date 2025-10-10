@@ -1,4 +1,13 @@
 {{ define "main" }} 
+{{ if .Site.Params.show_breadcrumbs }}
+  <nav class="breadcrumbs">
+    {{ range .Ancestors.Reverse }}
+      <a href="{{ .RelPermalink }}">{{ if .IsHome }}{{ .Site.Params.home_name }}{{ else }}{{ .Title }}{{ end }}</a>
+      <span>/</span>
+    {{ end }}
+    <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+  </nav>
+{{ end }}
 <article>
   <div class="article-header">
     <h1 class="article-title">{{ .Title }}</h1>
@@ -21,7 +30,7 @@
     {{ end }}
   </table>
 </article>
-<nav>
+<nav class="bottom-nav">
   {{ with .Site.Menus.main }} {{ range sort . "Weight" }}
   <a class="internal" hyphens="none" href="{{ .URL }}">
     {{ $text := print .Name | safeHTML }} {{ $text }}

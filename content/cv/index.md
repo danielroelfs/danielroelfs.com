@@ -8,50 +8,51 @@ engine: knitr
 
 <style type="text/css">
 ul {
-    margin-top: 0.5rem;
-    padding-left: 0;
+  margin-top: 0.5rem;
+  padding-left: 0;
 }
 
 li {
-    font-size: 80%;
-    padding: 0;
-    max-width: 80%;
+  font-size: 80%;
+  padding: 0;
+  max-width: 80%;
 }
 
 ul li:before {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 ol li p, ul li p {
-    margin-left: 1.5rem;
-    padding-left: 10px;
+  margin-left: 1.5rem;
+  padding-left: 10px;
 }
 
 ol li:only-child {
-    margin-left: 1.5rem;
+  margin-left: 1.5rem;
 }
 
 p {
-    margin-top: 0;
-    margin-bottom: 0.1rem;
+  margin-top: 0;
+  margin-bottom: 0.1rem;
 }
 
-article h3 {
-    margin-top: 0.75rem;
-    margin-bottom: 0rem;
-    width: 62.5%;
+h3 {
+  font-size: 1.4rem;
+  margin-top: 0.75rem;
+  margin-bottom: 0rem;
+  width: 62.5%;
 }
 
 @media (max-width: 760px) {
-  article h3 {
+  h3 {
     width: 100%;
   }
 }
 
 .cv-date {
-    font-style: italic;
-    margin-top: 0;
-    float: right;
+  font-style: italic;
+  margin-top: 0;
+  float: right;
 }
 
 .smaller-text {

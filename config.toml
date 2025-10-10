@@ -20,6 +20,9 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
     highlightstyle_light = "routeros"
     highlightstyle_dark = "rainbow"
 
+    home_name = "Home"
+    show_breadcrumbs = true
+
     iconsource  = "tabler"
 
     description = "Daniel Roelfs' personal website"

@@ -1,6 +1,6 @@
 ---
 title: Everything is a Linear Model
-date: 2022-03-18
+date: 2022-03-18T00:00:00.000Z
 description: Everything is a Linear Model
 slug: everything-is-a-linear-model
 categories:
@@ -9,9 +9,10 @@ tags:
   - statistics
   - R
   - data visualization
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
+
 
 Let's imagine you're incredibly lazy and you want to learn R, but you only want to learn one function to do statistics. What function do you learn? I'd recommend to learn to use the `lm()` function. Why? Because most common statistical tests are in fact nothing more than some variation of a linear model, from the simplest One-Sample T-test to a repeated-measures ANOVA. I think most people that have Googled for this question have found Jonas Lindeløv's post on how [common statistical tests are linear models](https://lindeloev.github.io/tests-as-linear/) (as they should, it's an amazing post). Here I want to go a bit more in depth into the mathematics behind this statement to show how common statistical tests are in fact variations of a linear model.
 
@@ -30,12 +31,8 @@ set.seed(2022)
 
 Let's start simple with the One-Sample T-test. This test can be used to test how the mean value of your sample measure differs from a reference number. Throughout this post, I'll throw around a bunch of formulas, which, depending on your background, can either be informative or confusing. The formula for a One-Sample T-test is:
 
-{{< sidenote >}}
-The $\overline{x}$ is commonly called "x-bar" in conversation
-{{< /sidenote >}}
-
 $$
-t = \frac{\overline{x} - \mu}{\frac{\sigma}{\sqrt{n}}} = \frac{sample~mean - population~mean}{\frac{standard~deviation}{\sqrt{sample~size}}}
+t = \frac{\overline{x} - \mu}{\frac{\sigma}{\sqrt{n}}} = \frac{sample\ mean - population\ mean}{\frac{standard\ deviation}{\sqrt{sample\ size}}}
 $$
 
 What this says is that the effect size ($t$) is equal to the sample mean minus the population mean (or reference number) and you divide it by the standard deviation of the sample divided by the square root of the sample size. This formula will output the $t$-value that you would usually report when doing a T-test. The formula requires the standard deviation (*σ*) of the sample values, which is:
@@ -46,15 +43,13 @@ $$
 
 In this formula, you'd subtract the average across the sample values from each individual value, square it, and sum all these resulting values. This sum you would then divide by the size of the sample minus one (or the degrees of freedom), and take the square root of the whole thing. This will give the standard deviation (*σ*). Alright, let's now consider a study where we collected blood samples from a number of patients and measured for instance sodium levels in the blood. We don't have a control group for this study, but we know from medical textbooks that the reference value for sodium in healthy individuals for the age and sex distribution in our sample is for instance 2.5 mmol/L. Then we measure the sodium levels for 30 patients, we can simulate some fake measurements by generating a random sequence of values with a mean of 3 and a standard deviation of 1.2.
 
-{{< sidenote >}}
-I cannot condone generating data for your study using `rnorm()` but this is just for illustrative purposes
-{{< /sidenote >}}
-
 ``` r
 ref_concentration <- 2.5
 
 n <- 30
 concentration <- rnorm(n, mean = 3, sd = 1.25)
+# (I cannot condone generating data for your study using `rnorm()`
+# but this is just for illustrative purposes)
 ```
 
 If we then implement these values in the formulas earlier, we get the following result for the standard deviation:
@@ -125,11 +120,7 @@ $$
 Y_i = \beta_{0} + \beta_{1}x + \epsilon_{i}
 $$
 
-{{< sidenote br="2em" >}}
-$\beta_1$ in this case is equivalent to $a$ in formula $y = ax + c$
-{{< /sidenote >}}
-
-In this formula $Y_i$ is the dependent variable, $x$ is the independent variable. $\beta_0$ is equivalent to the intercept at the y-axis, similar to $c$ in the formula for a straight line. $\beta_1$ is the slope. Finally, the $\epsilon_i$ is the random error term.
+In this formula $Y_i$ is the dependent variable, $x$ is the independent variable. $\beta_0$ is equivalent to the intercept at the y-axis, similar to $c$ in the formula for a straight line. $\beta_1$ is the slope{{< sidenote >}}$\beta_1$ in this case is equivalent to $a$ in formula $y = ax + c${{< /sidenote >}}. Finally, the $\epsilon_i$ is the random error term.
 
 Now let's build the linear model. Remember that the formula for the linear model included this term: $\beta_{1}x$. In this case, since we only have one sample, we don't have any value to multiply our value to, so we multiply it by 1. If we wanted to correlate two variables, for instance concentration with age, we would substitute the 1 with a continuous variable, i.e. age, but in this case we correlate all sample values with 1. Since we still want to compare our value to 0, we subtract the reference value from our sample values like we did before for the `t.test()`. Let's build the linear model.
 
@@ -299,22 +290,18 @@ $$
 
 And then we find that $a$ is equal to the `Estimate` column for the `groupPAT` row.
 
-{{< sidenote br="3em" >}}
-inb4 the angry statisticians: I know it's more complicated than that but let's not get into this right now
-{{< /sidenote >}}
-
-We can reverse engineer the $t$-value too using just the output from the `lm()` function. One can imagine that if one would plot a situation where the null hypothesis (H<sub>0</sub>) is true, the slope of that line would be 0 since then there's no difference between the mean of the two groups. We'll take the difference between our observed slope, or the slope of the alternative hypothesis (H<sub>0</sub>), and the slope of the null hypothesis, which is 0, and divide that by the standard error of the sampling distribution, which is given by the `lm()` function as the `Std. Error` of the `groupPAT` row:
+We can reverse engineer the $t$-value too using just the output from the `lm()` function. One can imagine that if one would plot a situation where the null hypothesis (H<sub>0</sub>) is true{{< marginnote >}}inb4 the angry statisticians: I know it's more complicated than that but let's not get into this right now{{< /marginnote >}}, the slope of that line would be 0 since then there's no difference between the mean of the two groups. We'll take the difference between our observed slope, or the slope of the alternative hypothesis (H<sub>0</sub>), and the slope of the null hypothesis, which is 0, and divide that by the standard error of the sampling distribution, which is given by the `lm()` function as the `Std. Error` of the `groupPAT` row:
 
 $$
 \begin{eqnarray}
-t &=& \frac{slope~of~regression~line~at~H\_{a} - slope~of~regression~line~at~H\_{0}}{standard~error~of~sampling~distribution}\newline
-&=& \frac{1.6177 - 0}{0.3952} = 4.093
+t &=&\ \frac{slope\ at\ H\_{a} - slope\ at\ H\_{0}}{standard\ error\ of\ sampling\ distribution}\newline
+&=&\ \frac{1.6177 - 0}{0.3952} = 4.093
 \end{eqnarray}
 $$
 
 Which as you'll notice is one thousandths-decimal place off, which is due to rounding errors. `lm()` reports up to 4 decimal points while it uses more for the calculation. And now we've come full circle, because the slope of the regression line is nothing more than the difference between the mean of the second group minor the mean of the first group. Now we can go back to the figure we made earlier and see how all these values relate:
 
-<details>
+<details class="code-fold">
 <summary>Show code</summary>
 
 ``` r
@@ -459,16 +446,12 @@ Oh, would you look at that! The differences between the group means and the refe
 
 $$
 \begin{eqnarray}
-total~sum~of~squares &=& \sum\limits\_{j=1}^{J} n\_{j} \times (\overline{x}\_{j} - \mu)^2 \newline
-residual~sum~of~squares &=& \sum\limits\_{j=1}^{J} \sum\limits\_{i=1}^{n\_{j}} (y\_{ij} - \overline{y}\_{j})^2
+total\ sum\ of\ squares &=& \sum\limits\_{j=1}^{J} n\_{j} \times (\overline{x}\_{j} - \mu)^2 \newline
+residual\ sum\ of\ squares &=& \sum\limits\_{j=1}^{J} \sum\limits\_{i=1}^{n\_{j}} (y\_{ij} - \overline{y}\_{j})^2
 \end{eqnarray}
 $$
 
-{{< sidenote br="8em" >}}
-We'll come back to residual sum of squares further down
-{{< /sidenote >}}
-
-Just briefly, the first formula takes the mean value for the group in question, subtracts the overall mean (or grand mean) and squares the result. Then it multiplies this number by the sample size in this group. In this case we'll only do it for the first group since that's the one listed in the `summary(aov_model)` output. The second formula calculates the residual sum of squares (or sum of squared error). In essence it substracts the group mean from each of the individual values, squares it, and sums it first within the group, and then sums it again across the groups.
+Just briefly, the first formula takes the mean value for the group in question, subtracts the overall mean (or grand mean) and squares the result. Then it multiplies this number by the sample size in this group. In this case we'll only do it for the first group since that's the one listed in the `summary(aov_model)` output. The second formula calculates the residual sum of squares (or sum of squared error){{< sidenote >}}We'll come back to residual sum of squares further down{{< /sidenote >}}. In essence it substracts the group mean from each of the individual values, squares it, and sums it first within the group, and then sums it again across the groups.
 
 We can do both calculations in one go with the following quick code:
 
@@ -501,7 +484,7 @@ Now look back at the output from `summary(aov_model)` and we'll find the same va
 
 Well that's a statement of unequaled wisdom, isn't it? No wonder they give us doctorates to talk about this stuff.
 
-I don't think I need a lot of effort to convince anyone that a linear model is a linear model. Actually, I'm so convinced that you are aware that a linear model is a linear model that I wanted to about something else instead. Instead I wanted to dive into residuals and R{{< sup "2" >}}. Before we start, let's first simulate some data, We'll create an age column, a sex column, and a measure column. We'll make it so that the measure column correlates with the age column.
+I don't think I need a lot of effort to convince anyone that a linear model is a linear model. Actually, I'm so convinced that you are aware that a linear model is a linear model that I wanted to about something else instead. Instead I wanted to dive into residuals and R{{< sup  >}}2{{< /sup >}}. Before we start, let's first simulate some data, We'll create an age column, a sex column, and a measure column. We'll make it so that the measure column correlates with the age column.
 
 ``` r
 n <- 20
@@ -543,7 +526,7 @@ summary(lm_model)
     Multiple R-squared:  0.6268,    Adjusted R-squared:  0.6061 
     F-statistic: 30.24 on 1 and 18 DF,  p-value: 3.196e-05
 
-We find that there is a significant association between age and our measure, and the R{{< sup "2" >}} is about 47%. Recall that R{{< sup "2" >}} denotes the amount of variance explained by the predictor, or age in our case. We can plot the linear model in `ggplot` with the `geom_smooth()` function, and then setting the `method` to `"lm"`:
+We find that there is a significant association between age and our measure, and the R{{< sup  >}}2{{< /sup >}} is about 47%. Recall that R{{< sup  >}}2{{< /sup >}} denotes the amount of variance explained by the predictor, or age in our case. We can plot the linear model in `ggplot` with the `geom_smooth()` function, and then setting the `method` to `"lm"`:
 
 ``` r
 ggplot(data, aes(x = age, y = measure)) +
@@ -567,7 +550,7 @@ data <- data |>
 With that we can quickly calculate the residual standard error (oversimplified, it's a measure of how well a regression model fits a dataset). The formula for the residual standard error is this:
 
 $$
-Residual~standard~error = \sqrt{\frac{\sum(observed - predicted)^2}{degrees~of~freedom}}
+Residual\ standard\ error = \sqrt{\frac{\sum(observed - predicted)^2}{degrees\ of\ freedom}}
 $$
 
 or in R terms (the degrees of freedom is 18 here, too complicated to explain for now):
@@ -606,11 +589,11 @@ Predictably, when we sum all the individual differences (or residuals) we would 
 sum(data$residual)
 ```
 
-    [1] 1.970646e-15
+    [1] -2.109424e-15
 
 We can visualize the residuals using the `geom_smooth()` function. First I just want to show the difference visually in the scatter plot we had before. I added points along the regression line to indicate where each point will move to, and an arrow to indicate the size and the direction of the difference between the observed and the predicted value:
 
-<details>
+<details class="code-fold">
 <summary>Show code</summary>
 
 ``` r
@@ -633,7 +616,7 @@ ggplot(data, aes(x = age)) +
 
 You might have noticed now that the size of the arrow is defined as the difference between the observed and predicted value, i.e. the residual! Now, you might have come across the term "sum of squared error" in different textbooks. With the values that we've calculated so far we can illustrate where this comes from. Imagine that the arrow in the figure above is one side of a square. How do you get the area of a suqare? You multiply the length of one side of the square by itself, i.e. you square it! That's where the "squared error" part of that comes from. Perhaps the figure below helps illustrate it:
 
-<details>
+<details class="code-fold">
 <summary>Show code</summary>
 
 ``` r
@@ -670,22 +653,18 @@ ggplot(data, aes(x = age)) +
 
 <img src="index.markdown_strict_files/figure-markdown_strict/lm-plot-squares-1.png" width="768" />
 
-The "sum" part of "sum of squared error" refers to the sum of the areas of those squares. Simply, you sum the square of the sides. You can also look at it in mathematical form:
-
-{{< sidenote >}}
-We'll use this formula again a bit later to calculate the R{{< sup "2" >}}.
-{{< /sidenote >}}
+The "sum" part of "sum of squared error" refers to the sum of the areas of those squares. Simply, you sum the square of the sides. You can also look at it in mathematical form (We'll use this formula again a bit later to calculate the R{{< sup  >}}2{{< /sup >}}):
 
 $$
-\sum{(residual~or~difference~with~regression~line^2)}
+\sum{(residual\ or\ difference\ with\ regression\ line^2)}
 $$
 
 In order to calculate the squared regression coefficient, we should also calculate the mean value of the measure across all points. This is necessary because the squared regression coefficient is defined as a perfect correlation (i.e. a correlation coefficient of 1) minus the explained variance divided by the total variance, or in formula form:
 
 $$
 \begin{eqnarray}
-R^2 &=& perfect~correlation - \frac{explained~variance}{total~variance} \newline
-&=& 1 - \frac{\sum(difference~with~regression~line^2)}{\sum(difference~with~mean~value^2)}
+R^2 &=& perfect\ correlation - \frac{explained\ variance}{total\ variance} \newline
+&=& 1 - \frac{\sum(difference\ with\ regression\ line^2)}{\sum(difference\ with\ mean\ value^2)}
 \end{eqnarray}
 $$
 
@@ -695,7 +674,7 @@ Important here is to notice that the error term has switched from the difference
 
 We've already plotted the sum of squared error, now we'll also illustrate sum of squared total. Remember the sum of squared total is the sum of squared differences between the observed values and the mean value. I'll also add the original regression line in the background to show the difference with the sum of squared error.
 
-<details>
+<details class="code-fold">
 <summary>Show code</summary>
 
 ``` r
@@ -743,7 +722,7 @@ $$
 
 Notice how the numerator is the same calculation as the sum of squared total, then divided by the sample size minus 1 (like the degrees of freedom).
 
-To calculate the squared regression coefficient (R{{< sup "2" >}}) from the formula above is then simple. We take 1 (perfect correlation) and subtract the sum of the squared residuals (explained variance) divided by the sum of the squared difference with the mean (total variance). In R terms, that would look like this:
+To calculate the squared regression coefficient (R{{< sup  >}}2{{< /sup >}}) from the formula above is then simple. We take 1 (perfect correlation) and subtract the sum of the squared residuals (explained variance) divided by the sum of the squared difference with the mean (total variance). In R terms, that would look like this:
 
 ``` r
 1 - sum(data$residual^2) / sum(data$difference_mean^2)
@@ -751,7 +730,7 @@ To calculate the squared regression coefficient (R{{< sup "2" >}}) from the form
 
     [1] 0.6268363
 
-And there we have it, the regression coefficient R{{< sup "2" >}}! You can check that it's the same by scrolling up to where we ran `summary(lm_model)` and you'll find the same number. We could also calculate the F-statistic and the $t$- and $p$-values, but I think this tutorial has drained enough cognitive energy. For this last section, I hope it's become clear what we mean when we talk about "residuals", "sum of squares", and "variance" in the context of linear models. I also hope it's enlightened you a bit on what a linear model does and how it works.
+And there we have it, the regression coefficient R{{< sup  >}}2{{< /sup >}}! You can check that it's the same by scrolling up to where we ran `summary(lm_model)` and you'll find the same number. We could also calculate the F-statistic and the $t$- and $p$-values, but I think this tutorial has drained enough cognitive energy. For this last section, I hope it's become clear what we mean when we talk about "residuals", "sum of squares", and "variance" in the context of linear models. I also hope it's enlightened you a bit on what a linear model does and how it works.
 
 ## Conclusion
 
@@ -769,19 +748,19 @@ There's many more things we could go over, multiple linear regression, non-param
 
 -   [Explaining the `lm` summary in R - Learn by Marketing](https://www.learnbymarketing.com/tutorials/explaining-the-lm-summary-in-r/)
 
-{{< details "Session info for reproducibility purposes" >}}
+{{< details \"Session info for reproducibility purposes\" >}}
 
 ``` r
 sessionInfo()
 ```
 
-    R version 4.3.2 (2023-10-31)
-    Platform: x86_64-apple-darwin20 (64-bit)
-    Running under: macOS Sonoma 14.2
+    R version 4.4.3 (2025-02-28)
+    Platform: aarch64-apple-darwin20
+    Running under: macOS Sequoia 15.7.1
 
     Matrix products: default
-    BLAS:   /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRblas.0.dylib 
-    LAPACK: /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+    BLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib 
+    LAPACK: /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0
 
     locale:
     [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -793,23 +772,22 @@ sessionInfo()
     [1] stats     graphics  grDevices datasets  utils     methods   base     
 
     other attached packages:
-     [1] patchwork_1.1.3 lubridate_1.9.3 forcats_1.0.0   stringr_1.5.0  
-     [5] dplyr_1.1.3     purrr_1.0.2     readr_2.1.4     tidyr_1.3.0    
-     [9] tibble_3.2.1    ggplot2_3.4.4   tidyverse_2.0.0
+     [1] patchwork_1.3.0 lubridate_1.9.4 forcats_1.0.0   stringr_1.5.1  
+     [5] dplyr_1.1.4     purrr_1.0.2     readr_2.1.5     tidyr_1.3.1    
+     [9] tibble_3.2.1    ggplot2_3.5.1   tidyverse_2.0.0
 
     loaded via a namespace (and not attached):
-     [1] utf8_1.2.4        generics_0.1.3    renv_1.0.3        xml2_1.3.5       
-     [5] lattice_0.22-5    stringi_1.7.12    hms_1.1.3         digest_0.6.33    
-     [9] magrittr_2.0.3    evaluate_0.22     grid_4.3.2        timechange_0.2.0 
-    [13] fastmap_1.1.1     Matrix_1.6-1.1    jsonlite_1.8.7    ggtext_0.1.2     
-    [17] mgcv_1.9-0        fansi_1.0.5       scales_1.2.1      scico_1.5.0      
-    [21] cli_3.6.1         rlang_1.1.1       splines_4.3.2     commonmark_1.9.0 
-    [25] munsell_0.5.0     withr_2.5.1       yaml_2.3.7        tools_4.3.2      
-    [29] tzdb_0.4.0        colorspace_2.1-0  vctrs_0.6.4       R6_2.5.1         
-    [33] lifecycle_1.0.3   pkgconfig_2.0.3   pillar_1.9.0      gtable_0.3.4     
-    [37] glue_1.6.2        Rcpp_1.0.11       xfun_0.40         tidyselect_1.2.0 
-    [41] rstudioapi_0.15.0 knitr_1.44        farver_2.1.1      nlme_3.1-163     
-    [45] htmltools_0.5.6.1 rmarkdown_2.25    labeling_0.4.3    compiler_4.3.2   
-    [49] markdown_1.11     gridtext_0.1.5   
+     [1] generics_0.1.3    renv_1.0.11       xml2_1.3.6        lattice_0.22-6   
+     [5] stringi_1.8.4     hms_1.1.3         digest_0.6.37     magrittr_2.0.3   
+     [9] evaluate_1.0.1    grid_4.4.3        timechange_0.3.0  fastmap_1.2.0    
+    [13] Matrix_1.7-2      jsonlite_1.8.9    ggtext_0.1.2      mgcv_1.9-1       
+    [17] scales_1.3.0      scico_1.5.0       cli_3.6.3         rlang_1.1.4      
+    [21] munsell_0.5.1     commonmark_1.9.2  splines_4.4.3     withr_3.0.2      
+    [25] yaml_2.3.10       tools_4.4.3       tzdb_0.4.0        colorspace_2.1-1 
+    [29] vctrs_0.6.5       R6_2.5.1          lifecycle_1.0.4   pkgconfig_2.0.3  
+    [33] pillar_1.10.0     gtable_0.3.6      glue_1.8.0        Rcpp_1.0.13-1    
+    [37] xfun_0.49         tidyselect_1.2.1  knitr_1.49        farver_2.1.2     
+    [41] nlme_3.1-167      htmltools_0.5.8.1 rmarkdown_2.29    labeling_0.4.3   
+    [45] compiler_4.4.3    markdown_1.13     gridtext_0.1.5   
 
 {{< /details >}}

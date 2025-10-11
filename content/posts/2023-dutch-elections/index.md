@@ -25,7 +25,7 @@ The plots I'll share here are a bit more complicated than the usual ones (especi
 
 I'll also separate this post in when I added the new plots and data. I'll mark the (general) time I added a new section.
 
-{{< omission >}}
+------------------------------------------------------------------------
 
 ## 21 November
 
@@ -47,11 +47,7 @@ showtext_auto()
 
 </details>
 
-{{< sidenote br=\"3em\" >}}
-There are a ton of voting advice websites, but only a few (including *KiesKompas*) are generally recommended by a variety of political parties across the spectrum
-{{< /sidenote >}}
-
-Then we can create a data frame with the party names and their identifying colors. I'll also add their political identity, i.e. how far left or right the parties are and how progressive or conservative the parties are. This data comes from the webpage [*the political landscape*](https://tweedekamer2023.kieskompas.nl/nl/results/compass) from the Dutch voting advice website [*KiesKompas*](https://www.kieskompas.nl) which offers one of the most popular application that helps voters identify what parties their values most closely align with. It's a tool by the Vrije Universiteit Amsterdam (VU Amsterdam) and is generally well-respected. However, their political landscape is a bit controversial because it tends to "average" across a set of issues, while perhaps ignoring some of the key identifying issue a party is campaigning on (historically e.g. immigration and the PVV).
+Then we can create a data frame with the party names and their identifying colors. I'll also add their political identity, i.e. how far left or right the parties are and how progressive or conservative the parties are. This data comes from the webpage [*the political landscape*](https://tweedekamer2023.kieskompas.nl/nl/results/compass) from the Dutch voting advice website [*KiesKompas*](https://www.kieskompas.nl) which offers one of the most popular application that helps voters identify what parties their values most closely align with{{< sidenote >}}There are a ton of voting advice websites, but only a few (including *KiesKompas*) are generally recommended by a variety of political parties across the spectrum{{< /sidenote >}}. It's a tool by the Vrije Universiteit Amsterdam (VU Amsterdam) and is generally well-respected. However, their political landscape is a bit controversial because it tends to "average" across a set of issues, while perhaps ignoring some of the key identifying issue a party is campaigning on (historically e.g. immigration and the PVV).
 
 One more complication here is that two parties, *GroenLinks* (GL) and the *Partij van de Arbeid* (PvdA), campaigned under a single banner, referred to here as *GL-PvdA*. When comparing to previous elections, polls and election outcomes should probably be summed across those two parties to better reflect the trends.
 
@@ -154,11 +150,7 @@ data_parties |>
 
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-political-spectrum-1.png" width="768" />
 
-{{< sidenote br=\"12em\" >}}
-Geert Wilders is also the party's sole member ([link](https://en.wikipedia.org/wiki/Party_for_Freedom#Organisation_and_support))
-{{< /sidenote >}}
-
-It's immediately visible that the political parties (as broken down by *KiesKompas*) are aligned across a diagonal from right and conservative to left and progressive. Parties that are both left-wing and conservative, or right-wing and progressive are not really present in the mainstream Dutch political system (or in most foreign ones as far as I'm aware). There are three parties in the lower-right corner (FvD, JA21, and BVNL). JA21 and BVNL are both factions that left the FvD after internal disagreement. The PVV is perhaps best known internationally for their leader [Geert Wilders](https://www.britannica.com/biography/Geert-Wilders). According to *KiesKompas* they are somewhere in the middle between left and right-wing, but in this case the party can probably be best described as *populist*, adapting both policies from the left and right. Internationally, they associate most with far-right parties and in the Netherlands they are also commonly called far-right.
+It's immediately visible that the political parties (as broken down by *KiesKompas*) are aligned across a diagonal from right and conservative to left and progressive. Parties that are both left-wing and conservative, or right-wing and progressive are not really present in the mainstream Dutch political system (or in most foreign ones as far as I'm aware). There are three parties in the lower-right corner (FvD, JA21, and BVNL). JA21 and BVNL are both factions that left the FvD after internal disagreement. The PVV is perhaps best known internationally for their leader [Geert Wilders](https://www.britannica.com/biography/Geert-Wilders){{< sidenote >}} Geert Wilders is also the party's sole member ([link](https://en.wikipedia.org/wiki/Party_for_Freedom#Organisation_and_support)){{< /sidenote >}}. According to *KiesKompas* they are somewhere in the middle between left and right-wing, but in this case the party can probably be best described as *populist*, adapting both policies from the left and right. Internationally, they associate most with far-right parties and in the Netherlands they are also commonly called far-right.
 
 The only squarely left-wing party of significance this election is the coalition GL-PvdA, led by former EU Commissioner [Frans Timmermans](https://www.theguardian.com/world/2023/jul/20/eu-climate-chief-frans-timmermans-quits-to-run-in-dutch-elections).
 
@@ -179,8 +171,7 @@ data_tk_history <- "https://www.parlement.com/id/vh8lnhronvx6/zetelverdeling_twe
   mutate(
     party = str_extract(party, "[^<!]+"),
     across(starts_with("election"), as.integer)
-  ) |>
-  select(-election_2023)
+  )
 ```
 
 </details>
@@ -261,17 +252,9 @@ data_tk_hist |>
 
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-seat-historical-distributions-1.png" width="768" />
 
-{{< sidenote >}}
-In contrast to [Geert Wilders](https://www.britannica.com/biography/Geert-Wilders), [Mark Rutte](https://www.britannica.com/biography/Mark-Rutte) does not have an elaborate entry in the Encyclopedia Brittanica
-{{< /sidenote >}}
+This plot immediately shows the dominance of the VVD, the party of [Mark Rutte](https://en.wikipedia.org/wiki/Mark_Rutte) who is quite well-known internationally{{< sidenote >}}In contrast to [Geert Wilders](https://www.britannica.com/biography/Geert-Wilders), [Mark Rutte](https://www.britannica.com/biography/Mark-Rutte) does not have an elaborate entry in the Encyclopedia Brittanica{{< /sidenote >}}. The PvdA, which internationally associates with traditional labour parties, used to be the biggest opponent to the centre-right CDA and the right-wing VVD, but have since then failed to connect with the voters.
 
-This plot immediately shows the dominance of the VVD, the party of [Mark Rutte](https://en.wikipedia.org/wiki/Mark_Rutte) who is quite well-known internationally. The PvdA, which internationally associates with traditional labour parties, used to be the biggest opponent to the centre-right CDA and the right-wing VVD, but have since then failed to connect with the voters.
-
-{{< sidenote >}}
-I scraped this data earlier in the week, so the current table online does not reflect the data used here
-{{< /sidenote >}}
-
-Let's now also look at some polls to see what election night might bring. For this I'll scrape the results from [Ipsos](https://www.ipsos.com). It contains the polls from week 44 and week 46.
+Let's now also look at some polls to see what election night might bring. For this I'll scrape the results from [Ipsos](https://www.ipsos.com){{< sidenote >}}I scraped this data earlier in the week, so the current table online does not reflect the data used here{{< /sidenote >}}. It contains the polls from week 44 and week 46.
 
 <details class="code-fold">
 <summary>Show code</summary>
@@ -370,11 +353,7 @@ data_polls_pre_new |>
 
 The biggest thing to notice here is the party NSC which was started by Pieter Omtzigt, formerly a member of the CDA. This party participates in the 2023 parliamentary elections for the first time, so it doesn't have anything to compare to. According to these polls, the NSC will go in one go to 26 seats. The VVD is still the biggest, but loses a few seats. Other than the VVD, the biggest losers in these polls are the D66, CDA, FvD, and SP.
 
-{{< sidenote >}}
-Tom Louwerse also contributes to the [Irish Polling Indicator](https://pollingindicator.com) using the same methods, which describes the methods in English (also, see [this article](https://doi.org/10.1080/07907184.2016.1213719))
-{{< /sidenote >}}
-
-This is just one plot from one pollster. There is however a polling aggregator, called the [*Peilingwijzer*](https://peilingwijzer.tomlouwerse.nl), which is maintained by political scientist [Tom Louwerse](https://www.tomlouwerse.nl) at Leiden University. It uses a Bayesian approach to weigh a collection of polls from various sources (description in [Dutch](https://peilingwijzer.tomlouwerse.nl/methode.html#statistisch-model) and [English](https://pollingindicator.com/method/)). An (probably earlier) version of the code is available on [Dataverse](https://dataverse.harvard.edu/file.xhtml?fileId=4459988&version=1.0) This way he gets a better estimate of the uncertainty across several pollsters and polling dates. I know he does a lot of his analyses in R, so I'll try to recreate his plot on the [main website](https://peilingwijzer.tomlouwerse.nl) just as a challenge (and perhaps make one or two things a bit more aesthetically pleasing). It seems he uses the somewhat niche (at least in my field) `geom_crossbar()`.
+This is just one plot from one pollster. There is however a polling aggregator, called the [*Peilingwijzer*](https://peilingwijzer.tomlouwerse.nl), which is maintained by political scientist [Tom Louwerse](https://www.tomlouwerse.nl){{< sidenote >}}Tom Louwerse also contributes to the [Irish Polling Indicator](https://pollingindicator.com) using the same methods, which describes the methods in English (also, see [this article](https://doi.org/10.1080/07907184.2016.1213719)){{< /sidenote >}} at Leiden University. It uses a Bayesian approach to weigh a collection of polls from various sources (description in [Dutch](https://peilingwijzer.tomlouwerse.nl/methode.html#statistisch-model) and [English](https://pollingindicator.com/method/)). An (probably earlier) version of the code is available on [Dataverse](https://dataverse.harvard.edu/file.xhtml?fileId=4459988&version=1.0) This way he gets a better estimate of the uncertainty across several pollsters and polling dates. I know he does a lot of his analyses in R, so I'll try to recreate his plot on the [main website](https://peilingwijzer.tomlouwerse.nl) just as a challenge (and perhaps make one or two things a bit more aesthetically pleasing). It seems he uses the somewhat niche (at least in my field) `geom_crossbar()`.
 
 <details class="code-fold">
 <summary>Show code</summary>
@@ -483,15 +462,11 @@ polls_peilingwijzer |>
 
 <img src="index.markdown_strict_files/figure-markdown_strict/peilingwijzer-plot-1.png" width="768" />
 
-{{< omission >}}
+------------------------------------------------------------------------
 
 ## 22 November 21:00
 
-{{< sidenote >}}
-There are three municipalities in the Carribean that can vote until 02:00 CET
-{{< /sidenote >}}
-
-The voting booths (at least in the mainland part of the Netherlands) close at 21:00. This also marks the release of the first exit polls. I'm just copying the numbers from the TV broadcast as they come in and saving them in a `tibble()` using the `tribble()` function.
+The voting booths (at least in the mainland part of the Netherlands) close at 21:00{{< sidenote >}}There are three municipalities in the Carribean that can vote until 02:00 CET{{< /sidenote >}}. This also marks the release of the first exit polls. I'm just copying the numbers from the TV broadcast as they come in and saving them in a `tibble()` using the `tribble()` function.
 
 <details class="code-fold">
 <summary>Show code for the plot</summary>
@@ -581,7 +556,7 @@ exit_polls_2100 |>
 
 Out of the blue, contrary to basically any serious poll, the PVV party from Geert Wilders appears to become the largest party, followed by GL-PvdA. This is a major upset that would open the door for a very right and conservative government. This would unfortunately mean the latest blow to meaningful climate action, an increase anti-immigrant policy, decreased government support for Ukraine, increased support for Israel and the atrocities they commit in Gaza and the rest of Palestine, and possibly a host of challenges to the rule of law in the Netherlands.
 
-{{< omission >}}
+------------------------------------------------------------------------
 
 ## 22 November 22:00
 
@@ -669,15 +644,11 @@ exit_polls_2200 |>
 
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-exit-polls-2200-1.png" width="768" />
 
-{{< omission >}}
+------------------------------------------------------------------------
 
 ## 23 November
 
-{{< sidenote br=\"2em\" >}}
-The Dutch government is based on coalitions, so the PVV will need to collaborate with other parties to form a government
-{{< /sidenote >}}
-
-It's the day after and basically all news agencies (e.g. [NOS](https://nos.nl/collectie/13958/artikel/2498903), [BBC](https://www.bbc.com/news/world-europe-67504272), [CNN](https://edition.cnn.com/2023/11/23/europe/geert-wilders-dutch-election-analysis-intl/index.html), [NRK](https://www.nrk.no/urix/1.16648165)) are (justifiably) shocked by the fact that Geert Wilders likely will become the next prime minister in the Netherlands for however long his government will last. The formal results will be announced once all votes are properly tallied and checked again, so for this part of the analyses we can only rely on the latest results with almost all votes counted at least once. The official result will be published by the [*Kiesraad*](https://www.kiesraad.nl/) one about a week, but it publishes the [preliminary results](https://www.kiesraad.nl/verkiezingen/tweede-kamer/uitslagen/uitslagen-per-gemeente-tweede-kamer) also, so I'll just copy the data from there. I already created the absolute seat comparison, and since not much changed I thought perhaps I could look at the percentage change from the current seats.
+It's the day after and basically all news agencies (e.g. [NOS](https://nos.nl/collectie/13958/artikel/2498903), [BBC](https://www.bbc.com/news/world-europe-67504272), [CNN](https://edition.cnn.com/2023/11/23/europe/geert-wilders-dutch-election-analysis-intl/index.html), [NRK](https://www.nrk.no/urix/1.16648165)) are (justifiably) shocked by the fact that Geert Wilders likely will become the next prime minister in the Netherlands for however long his government will last{{< sidenote >}}The Dutch government is based on coalitions, so the PVV will need to collaborate with other parties to form a government{{< /sidenote >}}. The formal results will be announced once all votes are properly tallied and checked again, so for this part of the analyses we can only rely on the latest results with almost all votes counted at least once. The official result will be published by the [*Kiesraad*](https://www.kiesraad.nl/) one about a week, but it publishes the [preliminary results](https://www.kiesraad.nl/verkiezingen/tweede-kamer/uitslagen/uitslagen-per-gemeente-tweede-kamer) also, so I'll just copy the data from there. I already created the absolute seat comparison, and since not much changed I thought perhaps I could look at the percentage change from the current seats.
 
 <details class="code-fold">
 <summary>Show code for the plot</summary>
@@ -823,11 +794,7 @@ geo_municipality <- sf::st_read(
 
 The thing I was most interested in at first is how progressive or conservative (I'll refer to this as "political identity" from now on), and how left- and right-wing the municipalities are ("political color"). As noted before, the political color of the PVV is somewhat controversial, where *KiesKompas* would put in the centre-right due to it's populist agenda, the party is usually mentioned among the far-right parties, both nationally and internationally. I could change the value for this part of the analyses, but I'm not comfortable setting another value, so look at the following plots with this caveat in mind. Considering the electoral victory the PVV won this election cycle, the plots should probabaly look more right-wing than the shown values represent.
 
-{{< sidenote >}}
-The weighted mean is implemented in R through the `weighted.mean()` function
-{{< /sidenote >}}
-
-For these plots I'll calculate two measures, the weighted mean of the political identity and the weighted mean of the political color. I'll use the percentages in each municipality as the weights and the values from *KiesKompas* to aggregate for each measure. It's important to note that there were many more parties the electorate could vote for, but not all were given a political identity or color by *KiesKompas*, so data from these (usually very small) parties is ignored.
+For these plots I'll calculate two measures, the weighted mean of the political identity and the weighted mean of the political color{{< marginnote >}}The weighted mean is implemented in R through the `weighted.mean()` function{{< /marginnote >}}. I'll use the percentages in each municipality as the weights and the values from *KiesKompas* to aggregate for each measure. It's important to note that there were many more parties the electorate could vote for, but not all were given a political identity or color by *KiesKompas*, so data from these (usually very small) parties is ignored.
 
 <details class="code-fold">
 <summary>Show code for the plot</summary>

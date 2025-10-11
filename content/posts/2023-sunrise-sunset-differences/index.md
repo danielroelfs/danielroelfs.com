@@ -56,11 +56,7 @@ from geopy.geocoders import Nominatim
 import re
 ```
 
-{{< sidenote br="20em" >}}
-If you thought working with dates and times was a headache, imagine adding DST to the mix as well
-{{< /sidenote >}}
-
-For this project we'll collect a number of variables related to sunrise and sunset for different locations throughout the year. The `astral` module makes this very easy, and in order to keep things clean and efficient we'll create a function to efficient collect this data. We'll write it in such a way that it can collect a number of locations within one function call using a list input (which isn't the cleanest, but works quite well here). We'll provide the list of cities we want to analyze in the form `'<region>/<city>'` to avoid any possible misconceptions (e.g. Cambridge, Cambridgeshire in the UK or Cambridge, MA in the US). We'll then extract the coordinates for that location using the `geopy` module. We'll also supply the reference time zone (for this project Central Europe). The `astral` module has a [known issue](https://github.com/sffjunkie/astral/issues/67) when dusk happens past midnight. So we'll extract everything in [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) and convert it to the time zone of interest later. We'll collect the data throughout the year for the various locations in a loop. And we'll cycle through the year using a `while` loop. We'll also collect the difference in time from the [Daylights Savings Time](https://en.wikipedia.org/wiki/Daylight_saving_time). We'll convert it to the time zone of interest using the `_convert_timezone()` function. In the final data frame we'll only get the times (not the dates) so in case the dusk happens past midnight, we'll consider that "no dusk takes place this day" instead of having it happen "early in the morning the same day", implemented in the `_fix_dusks_past_midnight()` function. This will help with the plots later. Finally we'll convert some of the variables to a format that'll make it easy to deal with in R later.
+For this project we'll collect a number of variables related to sunrise and sunset for different locations throughout the year. The `astral` module makes this very easy, and in order to keep things clean and efficient we'll create a function to efficient collect this data. We'll write it in such a way that it can collect a number of locations within one function call using a list input (which isn't the cleanest, but works quite well here). We'll provide the list of cities we want to analyze in the form `'<region>/<city>'` to avoid any possible misconceptions (e.g. Cambridge, Cambridgeshire in the UK or Cambridge, MA in the US). We'll then extract the coordinates for that location using the `geopy` module. We'll also supply the reference time zone (for this project Central Europe). The `astral` module has a [known issue](https://github.com/sffjunkie/astral/issues/67) when dusk happens past midnight. So we'll extract everything in [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) and convert it to the time zone of interest later. We'll collect the data throughout the year for the various locations in a loop. And we'll cycle through the year using a `while` loop. We'll also collect the difference in time from the [Daylights Savings Time](https://en.wikipedia.org/wiki/Daylight_saving_time){{< sidenote >}}If you thought working with dates and times was a headache, imagine adding DST to the mix as well{{< /sidenote >}}. We'll convert it to the time zone of interest using the `_convert_timezone()` function. In the final data frame we'll only get the times (not the dates) so in case the dusk happens past midnight, we'll consider that "no dusk takes place this day" instead of having it happen "early in the morning the same day", implemented in the `_fix_dusks_past_midnight()` function. This will help with the plots later. Finally we'll convert some of the variables to a format that'll make it easy to deal with in R later.
 
 ``` python
 def _convert_timezone(x, to_tz=tz.tzlocal()):
@@ -285,11 +281,7 @@ parse_sun_data(reticulate::py$df_deux) |>
 
 <img src="index.markdown_strict_files/figure-markdown_strict/plot-day-length-areas-1.png" width="768" />
 
-{{< sidenote br="1em" >}}
-The difference between dusk and sunset is also a lot larger in Oslo, but we'll get back to that
-{{< /sidenote >}}
-
-As you see, in neither cities 12:00 in the afternoon is perfectly in the middle between sunrise and sunset, although this trend is slightly enhanced for Oslo (again due to longitude differences). We can also see that the length of days in Oslo is longer in summer particularly because the mornings start earlier.
+As you see, in neither cities 12:00 in the afternoon is perfectly in the middle between sunrise and sunset, although this trend is slightly enhanced for Oslo (again due to longitude differences){{< sidenote >}}The difference between dusk and sunset is also a lot larger in Oslo, but we'll get back to that{{< /sidenote >}}. We can also see that the length of days in Oslo is longer in summer particularly because the mornings start earlier.
 
 So let's also squish everything on the bottom axis and just look at day length in total.
 
@@ -369,11 +361,7 @@ print(day_length_diff |> slice_min(abs(difference), n = 5))
 
 Seems like the largest difference occur around the 20th of June when Oslo gets about 2 full hours of daylight more than Oslo.
 
-{{< sidenote br="1em" >}}
-solar noon: the time the sun is at its highest point in the sky
-{{< /sidenote >}}
-
-Finally, let's look at the effect of longitude (how far east or west a place is) on the sunset/sunrise times. The easiest way to look at this is to compare the time solar noon happens. Due to (most of) mainland Europe being in the same time zone ([CET](https://en.wikipedia.org/wiki/Central_European_Time)), it's 12:00 at the same time across central Europe. However, the sun did not get the note and still travels (from Earth perspective) in a very consistent pace from east to west. This means that the sun arrives first in Poland and leaves last in Spain. This means that solar noon is unequal across the continent. Let's look at when solar noon happens across the four cities in this analysis.
+Finally, let's look at the effect of longitude (how far east or west a place is) on the sunset/sunrise times. The easiest way to look at this is to compare the time solar noon{{< sidenote >}}solar noon: the time the sun is at its highest point in the sky{{< /sidenote >}} happens. Due to (most of) mainland Europe being in the same time zone ([CET](https://en.wikipedia.org/wiki/Central_European_Time)), it's 12:00 at the same time across central Europe. However, the sun did not get the note and still travels (from Earth perspective) in a very consistent pace from east to west. This means that the sun arrives first in Poland and leaves last in Spain. This means that solar noon is unequal across the continent. Let's look at when solar noon happens across the four cities in this analysis.
 
 ``` r
 data |>

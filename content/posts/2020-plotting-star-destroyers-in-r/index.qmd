@@ -171,12 +171,7 @@ a(3n + 2) &= 3 * a(n) - 1
 \end{aligned}
 $$
 
-{{{< sidenote >}}}
-The Python code for this function came from a website that collects mathematical functions and 
-sequences and can be found [here](https://oeis.org/A117966)
-{{{< /sidenote >}}}
-
-In the function, since 0 will always result in 0, this is hard coded in. Afterwards it is a nested function (I know, we all love it) where it iteratively calls itself until the input to the function is 0 and it stops. At that point we have out balanced ternary. This function only performs the calculation for one value. So getting a sequence means putting it in a `map()` function. 
+In the function{{{< sidenote >}}}The Python code for this function came from a website that collects mathematical functions and sequences and can be found [here](https://oeis.org/A117966){{{< /sidenote >}}}, since 0 will always result in 0, this is hard coded in. Afterwards it is a nested function (I know, we all love it) where it iteratively calls itself until the input to the function is 0 and it stops. At that point we have out balanced ternary. This function only performs the calculation for one value. So getting a sequence means putting it in a `map()` function. 
 
 ```{r}
 #| label:  bte-func

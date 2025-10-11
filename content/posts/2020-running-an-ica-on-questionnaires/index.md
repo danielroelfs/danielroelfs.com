@@ -1,6 +1,6 @@
 ---
 title: Running an ICA on Questionnaires
-date: 2020-10-24
+date: 2020-10-24T00:00:00.000Z
 description: Running an ICA on Questionnaires
 slug: running-an-ica-on-questionnaires
 categories:
@@ -9,9 +9,10 @@ tags:
   - statistics
   - R
   - ICA
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
+
 
 ## Introduction
 
@@ -25,11 +26,7 @@ Obviously, there is more to it than this, but I don't have the time to talk abou
 
 ## Getting the data
 
-{{< sidenote br="2em" >}}
-The dataset is available for download on [Kaggle](https://www.kaggle.com/lucasgreenwell/nerdy-personality-attributes-scale-responses/version/1?select=data.csv)
-{{< /sidenote >}}
-
-We'll use a dataset called the *Nerdy Personality Attributes Scale* from the [Open-Source Psychometrics Project](https://openpsychometrics.org/tests/OSRI/development/). In short, it's a questionnaire on "nerdiness". It aims to measure attributes of ones personality that reflect the popular understanding of "nerdiness". It is a series of questions to which participants are supposed to rank themselves on a Likert scale. The questionnaire has a high reliability, but the questionnaire isn't immune to valid criticisms. Here, we'll use this dataset to see if we can identify subtypes of the concept of "nerdiness" in our dataset.
+We'll use a dataset called the *Nerdy Personality Attributes Scale* from the [Open-Source Psychometrics Project](https://openpsychometrics.org/tests/OSRI/development/){{< sidenote >}}The dataset is available for download on [Kaggle](https://www.kaggle.com/lucasgreenwell/nerdy-personality-attributes-scale-responses/version/1?select=data.csv){{< /sidenote >}}. In short, it's a questionnaire on "nerdiness". It aims to measure attributes of ones personality that reflect the popular understanding of "nerdiness". It is a series of questions to which participants are supposed to rank themselves on a Likert scale. The questionnaire has a high reliability, but the questionnaire isn't immune to valid criticisms. Here, we'll use this dataset to see if we can identify subtypes of the concept of "nerdiness" in our dataset.
 
 The dataset in question consists of almost 20.000 individuals from 149 different countries. Is there any reliable way to ensure that the tests are filled in correctly? No, definitely not. Does that make it a unreliable dataset for scientific analysis? Probably. Both issues are perhaps slightly confounded by its sheer size, but the dataset serves our goal well, which is to run an ICA in R. We'll use the `{tidyverse}` package and the `{fastICA}` package.
 
@@ -103,13 +100,10 @@ So no question has too little variance. If there were, I'd remove those question
 
 Next we want to normalize the data. Usually you'd do this to ensure that all answers on a questionnaire are in the same domain. Let's imagine a scenario where some questions are scored from 0 to 10, others are scored from 0 to 5, and a third is scored from 80 to 120. The ICA is then biased towards questions that have larger values, like the third question in the example above. That's why we want to normalize the data. The statistical term for this is z-score normalization. The defining property of z-scored transformed data is that the mean is 0 and the standard deviation is one. The z-score transformation is obtained by subtracting the mean from each individual value and then dividing by the standard deviation. This is implemented in R with the `scale()` function. We'll also check if it worked afterwards.
 
-{{< sidenote >}}
-In this case, the second line with the `select()` function doesn't remove anything, see paragraph above
-{{< /sidenote >}}
-
 ``` r
 data <- loaddata |>
-  select(-less15var$question) |>
+  select(-less15var$question) |> # In this case, the second line with the `select()`
+  # function doesn't remove anything, see paragraph above
   pivot_longer(starts_with("Q"),
     names_to = "qnum", values_to = "score"
   ) |>
@@ -130,7 +124,7 @@ data |>
     # A tibble: 1 × 4
           mean    sd   min   max
          <dbl> <dbl> <dbl> <dbl>
-    1 5.73e-17  1.00 -4.48  1.87
+    1 8.10e-15  1.00 -4.48  1.87
 
 Great! Now we have a nice normalized dataset, without any missing values, and with questions that have a low degree of variance removed. All those preparations served to get us to a place where our clustering analyses are actually valid. Now it's time for the fun stuff!
 
@@ -216,9 +210,9 @@ glimpse(ica_model)
     List of 5
      $ X: num [1:14955, 1:26] -0.8724 0.0298 0.932 0.932 0.0298 ...
      $ K: num [1:26, 1:6] -0.0843 -0.0791 -0.0755 -0.0875 -0.0968 ...
-     $ W: num [1:6, 1:6] 0.5122 0.2571 0.2286 -0.744 0.0655 ...
-     $ A: num [1:6, 1:26] -0.283 0.131 -0.387 0.127 -0.583 ...
-     $ S: num [1:14955, 1:6] -0.3649 1.0887 -1.2281 -0.1592 -0.0618 ...
+     $ W: num [1:6, 1:6] 0.7539 -0.0759 0.1633 0.5827 0.2434 ...
+     $ A: num [1:6, 1:26] -0.286 0.13 0.381 0.141 -0.58 ...
+     $ S: num [1:14955, 1:6] -1.036 -0.539 -1.091 -0.669 -0.429 ...
 
 These names aren't very informative. In this function, `X` represens the pre-processed data matrix, `K` is the pre-whitening matrix, `W` is the estimated un-mixing matrix, `A` is the estimating mixing matrix (the loadings of the items on the independent components), and `S` is the source matrix (the individual IC loadings for all participants).
 
@@ -229,18 +223,18 @@ cor(ica_model$S)
 ```
 
                   [,1]          [,2]          [,3]          [,4]          [,5]
-    [1,]  1.000000e+00  1.008510e-14 -1.701048e-14  3.537856e-14 -8.652989e-15
-    [2,]  1.008510e-14  1.000000e+00  9.286019e-15 -9.827378e-15 -1.197023e-15
-    [3,] -1.701048e-14  9.286019e-15  1.000000e+00  2.328882e-14  2.402569e-14
-    [4,]  3.537856e-14 -9.827378e-15  2.328882e-14  1.000000e+00 -3.206080e-15
-    [5,] -8.652989e-15 -1.197023e-15  2.402569e-14 -3.206080e-15  1.000000e+00
-    [6,]  1.354061e-15 -6.944827e-15 -1.626536e-15 -2.241246e-14 -3.859294e-15
+    [1,]  1.000000e+00 -9.430697e-15  1.128449e-14 -1.345604e-14 -1.298089e-15
+    [2,] -9.430697e-15  1.000000e+00  1.499363e-15 -6.491490e-15  1.893277e-15
+    [3,]  1.128449e-14  1.499363e-15  1.000000e+00 -1.477767e-14 -2.262951e-14
+    [4,] -1.345604e-14 -6.491490e-15 -1.477767e-14  1.000000e+00 -1.678931e-15
+    [5,] -1.298089e-15  1.893277e-15 -2.262951e-14 -1.678931e-15  1.000000e+00
+    [6,] -1.821410e-14 -1.034288e-14 -1.967997e-14 -2.920177e-14  9.057371e-15
                   [,6]
-    [1,]  1.354061e-15
-    [2,] -6.944827e-15
-    [3,] -1.626536e-15
-    [4,] -2.241246e-14
-    [5,] -3.859294e-15
+    [1,] -1.821410e-14
+    [2,] -1.034288e-14
+    [3,] -1.967997e-14
+    [4,] -2.920177e-14
+    [5,]  9.057371e-15
     [6,]  1.000000e+00
 
 The data we're interested in for now is the estimated mixing matrix (stored in `ica_model$A`). This is the loadings of the individual questions (i.e. the columns of the matrix) that we put in the ICA algorithm on the independent components. For any further analyses with individual data, you'd take the estimated source matrix, which is the loading of each independent component on each individual (i.e. the rows of the matrix).
@@ -262,11 +256,9 @@ plot(clust)
 
 What we can see from the dendrogram is that for instance question 16 (*"I gravitate towards introspection"*) and question 17 (*"I am more comfortable interacting online than in person"*) on the left are very similar. Question 3 (*"I like to play RPGs. (Ex. D&D)"*) is somewhat similar, but not as much as question 16 and 17. The same goes for question 1 and 4, question 11 and 19, and so on.
 
-{{< sidenote br="1.5em" >}}
-We'll also do some cleaning of the questions that will help us make the plot look nicer later
-{{< /sidenote >}}
-
 ``` r
+# We'll also do some cleaning of the questions that
+# will help us make the plot look nicer later
 codes <- loadcodes |>
   filter(str_detect(qnum, "Q")) |>
   mutate(
@@ -277,10 +269,6 @@ codes <- loadcodes |>
 
 Next we'll plot the weight matrix. For that we first create a column with the question number, we'll then merge the matrix with the list of questions so we can plot the actual question asked instead of the question number. Next, we'll put the data frame in a long format. Finally, we'll also reorder the questions to match the order determined by the hierarchical clustering.
 
-{{< sidenote br="4em" >}}
-The `%>%` pipe is necessary here because the placeholder functions a bit differently from the R's native `|>` pipe
-{{< /sidenote >}}
-
 ``` r
 weight_matrix_long <- weight_matrix |>
   mutate(qnum = str_glue("Q{row_number()}")) |>
@@ -288,7 +276,8 @@ weight_matrix_long <- weight_matrix |>
   pivot_longer(
     cols = starts_with("IC"),
     names_to = "IC", values_to = "loading"
-  ) %>%
+  ) %>% # The `%>%` pipe is necessary here because the placeholder
+  # functions a bit differently from the R's native `|>` pipe
   mutate(
     question = fct_relevel(
       question,

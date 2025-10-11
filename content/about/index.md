@@ -1,7 +1,6 @@
 ---
 title: About
 description: About
-hidetopnav: true
 ---
 
 

@@ -1,7 +1,6 @@
 ---
 title: Curriculum Vitae
 description: Curriculum Vitae
-hidetopnav: true
 engine: knitr
 ---
 
@@ -26,6 +25,7 @@ ul li:before {
 ol li p, ul li p {
   margin-left: 1.5rem;
   padding-left: 10px;
+  width: 80%;
 }
 
 ol li:only-child {
@@ -71,6 +71,12 @@ h3 {
   background: rgba(0, 0, 0, 0.1);
 }
 
+@media (max-width: 760px) {
+  .progress {
+    width: 100%;
+  }
+}
+
 .progress-bar {
   font-size: 1.3rem;
   color: white;
@@ -109,7 +115,7 @@ _Doctoral Research Fellow_
 
 - Running a study from conception through writing the final manuscript
 
-- Writing scripts and pipelines in R, Python, and MATLAB
+- Writing scripts and pipelines in R, Python, and MATLAB{{{< marginnote >}}}all code is available on [GitHub](https://github.com/norment/open-science){{{< /marginnote >}}}
 
 ### University of Oslo - NORMENT - EEG Group {{{< cv-date >}}}2018 - 19{{{< /cv-date >}}}
 
@@ -137,7 +143,7 @@ _Research Assistant_
 
 _PhD, Doctoral Education_
 
-- Doctoral education at the Institute of Clinical Medicine at the University of Oslo
+- Doctoral education at the Institute of Clinical Medicine at the University of Oslo{{{< marginnote >}}}thesis available online [here](https://thesis.danielroelfs.app){{{< /marginnote >}}}
 
 - Courses relevant to neurobiology, advanced statistics, and other academic and non-academic skills
 
@@ -163,7 +169,7 @@ _BSc, pre-medical track_
 
 ## Skills & Languages
 
-Daily use of Python, R, SQL (various dialects), bash, AWS, Snowflake, Git, and common packages and module. Experience also with MATLAB, LaTeX, HTML/CSS. Have previously worked with Google Cloud, SLURM.
+Daily use of Python, R, SQL (various dialects), bash, AWS, Snowflake, Git, and common packages and module. Experience also with MATLAB, LaTeX, HTML/CSS. Have previously worked with Google Cloud, SLURM.{{{< marginnote >}}}some of these skills are documented on [GitHub](https://github.com/danielroelfs) also{{{< /marginnote >}}}
 
 {{{< gap "0.5rem" >}}}
 

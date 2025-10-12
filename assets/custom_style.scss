@@ -1,0 +1,108 @@
+@import url("https://use.typekit.net/coq1ltf.css"); // source-serif-pro
+@import url("https://use.typekit.net/uwd7war.css"); // source-code-pro
+@import url("https://fonts.cdnfonts.com/css/cooper-hewitt"); // Cooper Hewitt
+
+$body-family: "source-serif-pro", "Source Serif 4", serif;
+$header-family: "Cooper Hewitt", "Helvetica", sans-serif;
+$code-family: "source-code-pro", "Courier", monospace;
+$header-weight: 713;
+
+body {
+  font-family: $body-family;
+  background-color: white;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $header-family;
+}
+
+h1 {
+  font-size: 2.6rem;
+  &.article-title {
+    font-size: 3rem;
+  }
+  &.index-title {
+   font-weight: 714;
+  }
+}
+
+h1, h2, h3 {
+  font-weight: 709;
+}
+
+h4, h5, h6 {
+  font-weight: 707;
+}
+
+h2 {
+  font-size: 2.2rem;
+}
+
+h3 {
+  font-size: 1.6rem;
+}
+
+.index-intro {
+  hyphens: none;
+  text-wrap: pretty;
+}
+
+pre {
+  background-color: none;
+  & > code {
+    font-family: $code-family;
+    font-size-adjust: none;
+  }
+}
+
+code {
+  font-family: $code-family;
+  font-size-adjust: ex-height 0.5;
+}
+
+table.posts-lists {
+  font-family: $header-family;
+  & tr.index-entry {
+    font-weight: 707;
+    & td.post-date > a {
+      margin-top: 3px;
+      margin-bottom: -3px;
+    }
+    & td.post-title {
+      font-size: 1.25rem;
+      font-weight: 711;
+      & > a {
+        margin-top: 3px;
+        margin-bottom: -3px;
+      }
+    }
+  }
+}
+
+ul li:before {
+  content: "→";
+}
+
+nav.breadcrumbs, nav.bottom-nav  {
+  font-family: $header-family;
+  font-weight: 709;
+  text-transform: uppercase;
+}
+
+nav.bottom-nav > a {
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  padding-top: 4px;
+  padding-bottom: 0;
+}
+
+@media (max-width: 760px) {
+  img.notbyai {
+    max-width: 33%;
+  }
+}

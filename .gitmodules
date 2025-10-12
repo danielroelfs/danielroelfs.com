@@ -1,4 +1,3 @@
-[submodule "themes/typography"]
-	path = themes/typography
-	url = https://github.com/danielroelfs/hugo-theme-typography.git
-	branch = dev
+[submodule "themes/trysil"]
+	path = themes/trysil
+	url = https://github.com/danielroelfs/hugo-theme-trysil.git

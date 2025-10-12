@@ -1,6 +1,6 @@
 baseurl = "/"
 title = "Daniel Roelfs"
-theme = "typography"
+theme = "trysil"
 
 ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
     "_cache$", "index\\.html", "about\\.html", "static/blog/\\*_files/", "README.md",
@@ -13,22 +13,22 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
       unsafe = true
 
 [params]
-    introtag = "introduction"
     intro = "PhD in computational neuroscience and psychiatry genetics, Data Scientist within anti-money laundering at DNB"
 
     favicon = "avatar.png"
 
-    highlightstyle_light  = "routeros"
-    highlightstyle_dark  = "rainbow"
+    highlightstyle_light = "routeros"
+    highlightstyle_dark = "rainbow"
 
-    iconsource = "tabler"
+    home_name = "Home"
+    show_breadcrumbs = true
+
+    iconsource  = "tabler"
 
     description = "Daniel Roelfs' personal website"
-    keywords = "blog, personal, coding"
+    keywords    = "blog, personal, coding"
 
-    customcss = ["custom_style.css"]
-
-    blogname = "posts"
+    customcss   = ["custom_style.scss"]
 
     umami       = true
     umamilink   = "https://web-analytics.danielroelfs.app/script.js"

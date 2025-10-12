@@ -4,10 +4,3 @@
 
 # Updated blog post names
 /posts/the-easier-way-to-create-a-map-of-norway-using-fhimaps/ /posts/the-easier-way-to-create-a-map-of-norway-using-csmaps/ 301
-
-# Domain-level redirects
-http://cv.danielroelfs.com/* https://danielroelfs.github.io/cv/:splat 200
-https://cv.danielroelfs.com/* https://danielroelfs.github.io/cv/:splat 200
-
-http://thesis.danielroelfs.com/* https://thesis.danielroelfs.app/:splat 200
-https://thesis.danielroelfs.com/* https://thesis.danielroelfs.app/:splat 200

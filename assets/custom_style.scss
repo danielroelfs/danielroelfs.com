@@ -97,6 +97,8 @@ nav.breadcrumbs, nav.bottom-nav  {
 nav.bottom-nav > a {
   font-size: 1.2rem;
   text-transform: uppercase;
+  padding-top: 4px;
+  padding-bottom: 0;
 }
 
 @media (max-width: 760px) {

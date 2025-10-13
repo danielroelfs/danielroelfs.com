@@ -121,7 +121,7 @@ korean-lunar-calendar==0.3.1
 langchain==0.3.0
 langsmith==0.0.10
 linearmodels==4.31
-llama-index==0.12.41
+llama-index==0.13.0
 loguru==0.7.2
 lxml==5.2.1
 MarkupSafe==2.1.5

@@ -57,7 +57,7 @@ editor_options:
 
 I was in the market for a new presentation builder after my continued frustration with PowerPoint reached a boiling point{{{< sidenote >}}}This was even before they inserted the Copilot AI stuff, it was terrible for design before{{{< /sidenote >}}}. I had just gotten experienced with [LaTeX](https://www.latex-project.org) and the advantages of working in a WYMIWYG{{{< sidenote >}}}_What You Mean Is What You Get_, like LaTeX, as opposed to WYSIWYG (_What You See Is What You Get_), like Word or Powerpoint{{{< /sidenote >}}} framework and I didn't like the ["beamer"](https://www.overleaf.com/learn/latex/Beamer) option in LaTeX, I wanted more control over the design and deploy modern design principles. This is where I found reveal.js and it has been my main tool for presentation design outside my corporate job (where I still have to use Powerpoint for good reasons).
 
-If you have never seen a reveal.js presentation, here is the [official demo](https://revealjs.com/demo/) highlighting some of the built-in functionality:
+If you have never seen a reveal.js presentation, here is the [official demo](https://revealjs.com/demo/) highlighting some of the built-in functionality (if you're on mobile, the slides below all support [touch navigation](https://revealjs.com/touch-navigation/)):
 
 {{{< revealjs src="https://revealjs.com/demo/" style="width: 1600px; height: 800px;" >}}}
 
@@ -82,7 +82,7 @@ Here are some reasons why:
 
 While I believe even the defaults in reveal.js are better design-wise than the defaults in PowerPoint{{{< sidenote >}}}I compare it here to PowerPoint, but the same goes for LibreOffice's Impress, and for Apple's Keynote to a lesser degree{{{< /sidenote >}}}, reveal.js lets me design the presentation the way I want to{{{< sidenote >}}}call me a nerd but I like writing code{{{< /sidenote >}}}, while a GUI-based system forces me to design the way (for example) Microsoft or Apple wants me to. A frictionless workflow lets me work efficiently and focus on improving the content of the presentation and pedagogical challenges instead of the technicalities of the tool I'm using. Particularly if you teach statistics, mathematics, or programming, the efficiency of typing formulas in LaTeX sytax and letting [KaTeX](https://katex.org) or [MathJax](https://www.mathjax.org) handle the styling ([docs](https://revealjs.com/math/)), or typing code letting [highlight.js](https://highlightjs.org) do its magic ([docs](https://revealjs.com/code/)), is pure bliss.
 
-If you're not used to writing HTML, CSS, or Javascript code, the learning curve is very steep. Once you're comfortable with these frameworks the barriers very quickly dissappear and I found reveal.js quite intuitive. Separating the content from the style makes it not just efficient when designing individual slide decks, it also makes transferring the same content to new slide decks very simple since you can copy the HTML code and the CSS of the new slide deck will take care of the rest. This also applies for screen sizes, since you don't need to specify an aspect ratio beforehand (e.g. 16x9 or 4x3), you save having to adjust your presentations for different projectors and screens since (like any webpage with good responsive design) it would just adjust for the screen size accordingly. The [slide deck below](https://slides.danielroelfs.app/2023-10-26-psi-phd-seminar/psi-phd-seminar-slides/index.html) is just an example of w
+If you're not used to writing HTML, CSS, or Javascript code, the learning curve is very steep. Once you're comfortable with these frameworks the barriers very quickly dissappear and I found reveal.js quite intuitive. Separating the content from the style makes it not just efficient when designing individual slide decks, it also makes transferring the same content to new slide decks very simple since you can copy the HTML code and the CSS of the new slide deck will take care of the rest. This also applies for screen sizes, since you don't need to specify an aspect ratio beforehand (e.g. 16x9 or 4x3), you save having to adjust your presentations for different projectors and screens since (like any webpage with good responsive design) it would just adjust for the screen size accordingly. The [slide deck below](https://slides.danielroelfs.app/2023-10-26-psi-phd-seminar/psi-phd-seminar-slides/index.html) is just another example of a slideshow I used for a workshop: 
 
 {{{< revealjs src="https://slides.danielroelfs.app/2023-10-26-psi-phd-seminar/psi-phd-seminar-slides/index.html" style="width: 1600px; height: 900px;" >}}}
 
@@ -99,7 +99,7 @@ I use [Quarto](https://quarto.org) quite a lot, including to generate the Markdo
 #| eval: false
 ---
 title: "Example slides"
-author: "Johanne Nordmann"
+author: "J. Doe"
 format:
   revealjs:
     transition: slide
@@ -140,7 +140,7 @@ Open source alternatives are often the most attractive alternatives due to their
 
 When I am making a PowerPoint I rarely (if ever) feel inspired, a feeling I'm sure many can relate to about any Microsoft product. However, due to the community around reveal.js, the overwhelming amount of creatives that write and share their HTML/CSS/Javascript code with others through websites like [CodePen.io](https://codepen.io/) or just [StackOverflow](https://stackoverflow.com/tags/reveal.js/). I'd even trust generic LLMs to generate more reliable code than Copilot would for PowerPoint. Point being that reveal.js allows me to be creative, while any creativity in PowerPoint is immediately stifled by having to refer to the documentation for custom transitions and having to click around _a lot_ to get it done.
 
-Also during presentations, the unique (afaik) feature of allowing both horizontal and vertical slides allows you to add extra content if you feel the audience would like more elaboration on certain topics that you could include in vertical slides, but otherwise move over by continuing horzontally. I've used it also for illustrative purposes to group related slides together and showing a "flow" of related concepts. I've used it a fair bit in my introduction slides for my PhD defense to allow faster scrolling back and forth for both the highlights during the intro, and all main figures and tables at the end:
+Also during presentations, the unique (afaik) feature of allowing both horizontal and vertical slides allows you to add extra content if you feel the audience would like more elaboration on certain topics that you could include in vertical slides, but otherwise move over by continuing horzontally. I've used it also for illustrative purposes to group related slides together and showing a "flow" of related concepts. I've used it a fair bit in the [slides for my PhD defense](https://slides.danielroelfs.app/2024-11-19-phd-defense/phd-defense_index.html) to allow faster scrolling back and forth for both the highlights during the intro, and all main figures and tables at the end:
 
 {{{< revealjs src="https://slides.danielroelfs.app/2024-11-19-phd-defense/disputation-slides/slides.html" style="width: 1920px; height: 1200px;" parent_class="large" >}}}
 

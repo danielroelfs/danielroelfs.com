@@ -748,7 +748,7 @@ There's many more things we could go over, multiple linear regression, non-param
 
 -   [Explaining the `lm` summary in R - Learn by Marketing](https://www.learnbymarketing.com/tutorials/explaining-the-lm-summary-in-r/)
 
-{{< details \"Session info for reproducibility purposes\" >}}
+{{< details summary=\"Session info for reproducibility purposes\" >}}
 
 ``` r
 sessionInfo()

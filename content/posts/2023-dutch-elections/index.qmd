@@ -378,7 +378,7 @@ polls_peilingwijzer <- tribble(
 
 polls_peilingwijzer |>
   inner_join(data_parties) |>
-  inner_join(data_polls_pre_new |> 
+  inner_join(data_polls_pre_new |>
                select(party, current_seats)) |>
   mutate(
     color = ifelse(color == "grey92", "grey", color),

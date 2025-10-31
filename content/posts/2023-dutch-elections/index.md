@@ -1,8 +1,8 @@
 ---
-title: Visualizing the Dutch elections throughout the night
+title: Visualizing the 2023 Dutch elections throughout the night
 date: 2023-11-22T00:00:00.000Z
-description: Visualizing the Dutch elections throughout the night
-slug: visualizing-the-dutch-elections
+description: Visualizing the 2023 Dutch elections throughout the night
+slug: visualizing-the-2023-dutch-elections
 categories:
   - society
 tags:

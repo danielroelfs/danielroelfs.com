@@ -378,8 +378,8 @@ polls_peilingwijzer <- tribble(
 
 polls_peilingwijzer |>
   inner_join(data_parties) |>
-  inner_join(data_polls_pre_new |>
-    select(party, current_seats)) |>
+  inner_join(data_polls_pre_new |> 
+               select(party, current_seats)) |>
   mutate(
     color = ifelse(color == "grey92", "grey", color),
     range_max_label = ifelse(range_max <= 2,

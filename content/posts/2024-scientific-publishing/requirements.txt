@@ -65,7 +65,7 @@ finnhub-python==2.4.19
 finviz==1.4.6
 finvizfinance==0.14.7
 flake8==7.0.0
-fonttools==4.51.0
+fonttools==4.61.0
 formulaic==1.0.1
 fqdn==1.5.1
 fred==3.1

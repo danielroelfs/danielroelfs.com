@@ -1,7 +1,7 @@
 ---
-title: Visualizing the Dutch elections throughout the night
+title: Visualizing the 2023 Dutch elections throughout the night
 date: 2023-11-22
-description: "Visualizing the Dutch elections throughout the night"
+description: "Visualizing the 2023 Dutch elections throughout the night"
 slug: visualizing-the-dutch-elections
 categories:
   - society
@@ -429,8 +429,8 @@ polls_peilingwijzer |>
     x = "Seats",
     y = NULL,
     caption = "_Peilingwijzer_, based on I&O Research & Ipsos&EenVandaag<br>
-    Tom Louwerse, Universiteit Leiden,<br>
-    Last change: 21-11-2023"
+  Tom Louwerse, Universiteit Leiden,<br>
+  Last change: 21-11-2023"
   ) +
   scale_x_continuous(
     limits = c(0, NA),
@@ -805,8 +805,8 @@ summary_municipality <- results_municipality |>
   labs(
     title = "Political identity",
     subtitle = "Is the municipalitiy more<br>
-      <span style='color: #B24334'>**progressive**</span> or
-      <span style='color: #4180B4'>**conservative**</span>?",
+    <span style='color: #B24334'>**progressive**</span> or
+    <span style='color: #4180B4'>**conservative**</span>?",
     fill = NULL
   ) +
   scico::scale_fill_scico(
@@ -823,8 +823,8 @@ summary_municipality <- results_municipality |>
     labs(
       title = "Political color",
       subtitle = "Is the municipalitiy more<br>
-        <span style='color: #B24334'>**left**</span> or
-        <span style='color: #4180B4'>**right**</span> leaning?",
+    <span style='color: #B24334'>**left**</span> or
+    <span style='color: #4180B4'>**right**</span> leaning?",
       fill = NULL
     ) +
     scico::scale_fill_scico(
@@ -837,7 +837,7 @@ summary_municipality <- results_municipality |>
   plot_layout(guides = "collect") +
   plot_annotation(
     caption = "Election results scraped from _AlleCijfers.nl_,<br>
-      Political identity and color mapped from _KiesKompas_"
+    Political identity and color mapped from _KiesKompas_"
   ) &
   theme_void(base_family = "custom") &
   theme(

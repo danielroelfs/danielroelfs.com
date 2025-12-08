@@ -84,13 +84,12 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
     [[menu.main]]
         name = "Publications"
         url = "/publications"
-        weight = 4
-        identifier = "hide-from-nav"
+        weight = 3
     [[menu.main]]
         name = "CV"
         url = "/cv"
-        weight = 5
+        weight = 4
     [[menu.main]]
         name = "About"
         url = "/about"
-        weight = 6
+        weight = 5

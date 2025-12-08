@@ -3,7 +3,8 @@ linters: linters_with_defaults(
     indentation_linter(indent = 2L),
     return_linter(return_style = "explicit"),
     commented_code_linter = NULL,
-    object_usage_linter = NULL
+    object_usage_linter = NULL,
+    pipe_consistency_linter = NULL
   )
 exclusions: list(
     "content/posts/2021-easy-map-norway/save_splmaps_data.R",

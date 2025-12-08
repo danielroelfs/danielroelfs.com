@@ -65,7 +65,7 @@ finnhub-python==2.4.19
 finviz==1.4.6
 finvizfinance==0.14.7
 flake8==7.0.0
-fonttools==4.51.0
+fonttools==4.61.0
 formulaic==1.0.1
 fqdn==1.5.1
 fred==3.1
@@ -270,7 +270,7 @@ tzlocal==5.2
 ujson==5.9.0
 update-checker==0.18.0
 uri-template==1.3.0
-urllib3==2.5.0
+urllib3==2.6.0
 user_agent==0.1.10
 vaderSentiment==3.3.2
 valinvest==0.0.2

@@ -125,7 +125,7 @@ llama-index==0.13.0
 loguru==0.7.2
 lxml==5.2.1
 MarkupSafe==2.1.5
-marshmallow==3.21.2
+marshmallow==3.26.2
 matplotlib==3.8.4
 matplotlib-inline==0.1.7
 mccabe==0.7.0

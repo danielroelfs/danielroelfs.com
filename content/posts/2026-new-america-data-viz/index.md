@@ -126,7 +126,7 @@ Next we'll add the labels. We'll use HTML breaks (instead of Markdown's \n recog
 new_america_plot <- new_america_plot +
   labs(
     title = "Figure 1 &vert; Income and Racial Disparities Across Congressional<br>Districts",
-    subtitle = "Scatterplot of the average household incomes and the share of the population in<br>congressional districts that is white. Dotted lines represent the averages.",
+    subtitle = "Scatterplot of the average household incomes and the share of the population in<br>congressional districts that is white. Dotted lines represent the averages.", # nolint line_length_linter
     x = "Percent White",
     y = NULL,
     fill = NULL,
@@ -295,7 +295,7 @@ df_oil_swf |>
   ) +
   labs(
     title = "Association between sovereign wealth fund size and oil reserves",
-    subtitle = "Scatterplot of the size of sovereign wealth funds and oil reserves.\nDotted lines represent the medians.",
+    subtitle = "Scatterplot of the size of sovereign wealth funds and oil reserves.\nDotted lines represent the medians.", # nolint line_length_linter
     x = "Estimated oil reserves (billion barrels)",
     y = "AUM ($B)",
     color = NULL,
@@ -387,7 +387,7 @@ df_oil_swf |>
   ) +
   labs(
     title = "Association between sovereign wealth fund size<br>and oil reserves",
-    subtitle = "Scatterplot of the size of sovereign wealth funds and<br>oil reserves. Dotted lines represent the medians.",
+    subtitle = "Scatterplot of the size of sovereign wealth funds and<br>oil reserves. Dotted lines represent the medians.", # nolint line_length_linter
     x = "Estimated oil reserves",
     y = NULL,
     fill = NULL,
@@ -540,7 +540,7 @@ df_energy |>
   geom_col(width = 0.75, key_glyph = "point") +
   labs(
     title = "Electricity remains the main energy source for consumption<br>in Norway",
-    subtitle = "Despite efforts to make the Norwegian economy more sustainable,<br>the composition of sources used remain largely unchanged since the 1990s.",
+    subtitle = "Despite efforts to make the Norwegian economy more sustainable,<br>the composition of sources used remain largely unchanged since the 1990s.", # nolint line_length_linter
     x = NULL,
     y = NULL,
     fill = NULL,
@@ -681,7 +681,7 @@ df_energy |>
   ) +
   labs(
     title = "Nearly all fossil fuel energy produced in Norway is exported",
-    subtitle = "Exports can exceed 100% of production by exporting stored resources<br>or by importing first and reselling afterwards. Coal exports are volatile<br>due to low volumes.",
+    subtitle = "Exports can exceed 100% of production by exporting stored resources<br>or by importing first and reselling afterwards. Coal exports are volatile<br>due to low volumes.", # nolint line_length_linter
     x = NULL,
     y = NULL,
     color = NULL,
@@ -817,7 +817,7 @@ df_car_sales |>
   ) +
   labs(
     title = "Tesla still accounts for the largest share of<br>new cars sold in Norway",
-    subtitle = "Toyota had the largest drop from <b style='color:#4094DC'>2024</b> to <b style='color: #962364'>2025</b>, followed by Nissan and Hyundai.<br>Brands with more successful years were Volkswagen, BYD, Ford, XPeng, and Kia.",
+    subtitle = "Toyota had the largest drop from <b style='color:#4094DC'>2024</b> to <b style='color: #962364'>2025</b>, followed by Nissan and Hyundai.<br>Brands with more successful years were Volkswagen, BYD, Ford, XPeng, and Kia.", # nolint line_length_linter
     x = NULL,
     y = NULL,
     color = NULL,

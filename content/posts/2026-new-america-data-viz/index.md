@@ -1,8 +1,8 @@
 ---
-title: "Learning data viz from the best: New America and Datawrapper"
-date: 2026-01-04
-description: "Learning data viz from the best: New America and Datawrapper"
-slug: datawrapper-data-viz
+title: 'Learning data viz from the best: New America and Datawrapper'
+date: 2026-01-04T00:00:00.000Z
+description: 'Learning data viz from the best: New America and Datawrapper'
+slug: new-america-data-viz
 categories:
   - miscellaneous
 tags:
@@ -13,10 +13,8 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{css}
-#| label: style
-#| echo: false
 
+<style type="text/css">
 p code {
   white-space: nowrap;
 }
@@ -24,38 +22,32 @@ p code {
 .sidenote code {
   font-size: 80%;
 }
-```
+</style>
 
-A little while ago I scrolled past a post on [BlueSky](https://bsky.app/profile/oscarp.bsky.social/post/3ma76f2slzs2j) commenting on a [discussion](https://bsky.app/profile/brendannyhan.bsky.social/post/3ma724o5zis2t) where political scientist [Oscar Pocasangre](https://bsky.app/profile/oscarp.bsky.social) pulled up some figures he created on the topic of discussion a while ago. The figures he pulled up were for a [2023 report](https://www.newamerica.org/political-reform/reports/understanding-the-partisan-divide/) he co-wrote for think tank [New America](https://www.newamerica.org). While the topic in itself is interesting{{{< sidenote >}}}It's about partisan divide in the 2022 election if you don't want to click the [link](https://www.newamerica.org/political-reform/reports/understanding-the-partisan-divide/){{{< /sidenote >}}}, the thing that struck me were the quality of the figures. The layout was very elegant, professional, and consistent across the report. So as I did in a [previous post on figured from the FT](https://danielroelfs.com/posts/financial-times-data-viz/) I want to break down these figures and try to recreate them with `{ggplot2}`.
+A little while ago I scrolled past a post on [BlueSky](https://bsky.app/profile/oscarp.bsky.social/post/3ma76f2slzs2j) commenting on a [discussion](https://bsky.app/profile/brendannyhan.bsky.social/post/3ma724o5zis2t) where political scientist [Oscar Pocasangre](https://bsky.app/profile/oscarp.bsky.social) pulled up some figures he created on the topic of discussion a while ago. The figures he pulled up were for a [2023 report](https://www.newamerica.org/political-reform/reports/understanding-the-partisan-divide/) he co-wrote for think tank [New America](https://www.newamerica.org). While the topic in itself is interesting{{< sidenote >}}It's about partisan divide in the 2022 election if you don't want to click the [link](https://www.newamerica.org/political-reform/reports/understanding-the-partisan-divide/){{< /sidenote >}}, the thing that struck me were the quality of the figures. The layout was very elegant, professional, and consistent across the report. So as I did in a [previous post on figured from the FT](https://danielroelfs.com/posts/financial-times-data-viz/) I want to break down these figures and try to recreate them with `{ggplot2}`.
 
 ## The reference figure
 
-The figures from the New America report (as published at least) were not created using `{ggplot2}` but in [Datawrapper](https://www.datawrapper.de), a web-based data visualization tool that lets users create a host of different figure and table types. The free version has a Datawrapper attribution in the resulting .png files, but companies can pay from $600 per month to unlock the ability add brand identity to the results. It appears this is also the plan that New America is on. The figures they used in the report look striking and are very elegantly laid out, meaning they take little energy to read and quickly get the point across.
+The figures from the New America report (as published at least) were not created using `{ggplot2}` but in [Datawrapper](https://www.datawrapper.de), a web-based data visualization tool that lets users create a host of different figure and table types. The free version has a Datawrapper attribution in the resulting .png files, but companies can pay from \$600 per month to unlock the ability add brand identity to the results. It appears this is also the plan that New America is on. The figures they used in the report look striking and are very elegantly laid out, meaning they take little energy to read and quickly get the point across.
 
-Consider for example the reference figure below. We're going to recreate this figure as close as we can in `{ggplot2}` because I believe the general layout is definitely possible{{{< sidenote >}}}The original figure has interactivity that is a lot harder to recreate in ggplot, so we'll drop that for now{{{< /sidenote >}}}. Datawrapper is a great tool for easy and quality data visualizations (although I suppose one could also make terrible plots if you wanted to), so I hope that with this tutorial we can once again learn something about data visualization and the power of `{ggplot2}`.
+Consider for example the reference figure below. We're going to recreate this figure as close as we can in `{ggplot2}` because I believe the general layout is definitely possible{{< sidenote >}}The original figure has interactivity that is a lot harder to recreate in ggplot, so we'll drop that for now{{< /sidenote >}}. Datawrapper is a great tool for easy and quality data visualizations (although I suppose one could also make terrible plots if you wanted to), so I hope that with this tutorial we can once again learn something about data visualization and the power of `{ggplot2}`.
 
-{{{< figure src="new_america_datawrapper_reference.png" caption="Original figure made by Oscar Pocasangre for the 2023 New America report" >}}}
+{{< figure src=\"new_america_datawrapper_reference.png\" caption=\"Original figure made by Oscar Pocasangre for the 2023 New America report\" >}}
 
-What jumps out at once is the y-axis label that is located on the inside of the axis instead of the "usual" outside. The extensive use of text (elaborate title and subtitle and highlighting of particular datapoints). As the subtitle says, the dotted lines indicate the mean values across both the x- and y-axes. The legend is located on top of the figure and aligned with the title and subtitle. The axis ticks include marks to highlight the data type (dollar and percent) and the y-axis ticks are shortened by summarizing thousands as "K". The caption is also aligned with the title, subtitle, and legend and includes some blue text. In the [original figure](https://www.newamerica.org/political-reform/reports/understanding-the-partisan-divide/) these indicates hyperlinks that let one download the data or the figure{{{< sidenote >}}}The figure above is a screenshot, I downloaded the figure to include it here but the exported figure had the spacing of the x-axis title messed up{{{< /sidenote >}}}. 
+What jumps out at once is the y-axis label that is located on the inside of the axis instead of the "usual" outside. The extensive use of text (elaborate title and subtitle and highlighting of particular datapoints). As the subtitle says, the dotted lines indicate the mean values across both the x- and y-axes. The legend is located on top of the figure and aligned with the title and subtitle. The axis ticks include marks to highlight the data type (dollar and percent) and the y-axis ticks are shortened by summarizing thousands as "K". The caption is also aligned with the title, subtitle, and legend and includes some blue text. In the [original figure](https://www.newamerica.org/political-reform/reports/understanding-the-partisan-divide/) these indicates hyperlinks that let one download the data or the figure{{< sidenote >}}The figure above is a screenshot, I downloaded the figure to include it here but the exported figure had the spacing of the x-axis title messed up{{< /sidenote >}}.
 
 ## Recreating the figure
 
 All these items discussed above (with the exception of the hyperlinks) are easily editable in using ggplot functionality, so let's see what we can get. As usual we'll use the `{tidyverse}` and `{ggtext}` packages to read, wrangle, and plot the data and to extend control over the text in the figure respectively.
 
-```{r}
-#| label: pkgs
-#| warning: false
-
+``` r
 library(tidyverse)
 library(ggtext)
 ```
 
 The original Datawrapper figure let's users very easily download the data directly, which is a nice feature that we'll happily make use of to get the data loaded in to R. There is some cleaning of the column names involved, and some wrangling to get the color labels as they are shown in the figure, but this is fairly straightforward.
 
-```{r}
-#| label: load-data
-#| message: false
-
+``` r
 df <- read_csv(
   "data/data-PKDkD.csv",
 ) |>
@@ -73,20 +65,16 @@ df <- read_csv(
 
 Next, the original figure uses a (proprietary) typeface called [Circular](https://lineto.com/typefaces/circular/#family) which is a geometric sans-serif created by [Laurenz Brunner](https://www.sourcetype.com/information/contributors/1458/laurenz-brunner) and released through [Lineto](https://lineto.com). A good typeface can change the entire "vibe" of your figure, and also align it with the brand identity, so I usually make the effort to find something suitable to fit the style. I don't have a license for this font, so instead we'll turn to Google Fonts again to find a suitable font, preferably a geometric sans-serif again. Here I chose Poppins. We can load it using the `{sysfonts}` and `{showtext}` packages as we've [done earlier](https://danielroelfs.com/posts/financial-times-data-viz/).
 
-```{r}
-#| label: load-custom-font
-
+``` r
 sysfonts::font_add_google(name = "Poppins", family = "poppins")
 showtext::showtext_auto()
 ```
 
 Now, as the data is already wrangled, we can go straight to the plotting. We'll build it from the bottom up. Firstly, I decided to add the y-axis title on the inside of the figure as is done in the reference figure. For this I use a `geom_text()` function and plot just the single y-axis title in the top left. It takes some trial-and-error to get the size and placement right, but it usually helps to set the `hjust` to 0 if you want to left align (and to 1 if you want to right align).
 
-Then we'll add the main data points as a scatter of dots. The dots in the original are circles with a light border and a fill color without any opacity. So we'll recreate that by using [shape type 21](https://ggplot2.tidyverse.org/articles/ggplot2-specs.html#point) and specifying that we want a white border. After we'll add the dotted (`linetype = "dotted"`) lines in the original color to the figure using `geom_vline()` and `geom_hline()`. And finally we'll add the highlighted items by filtering the dataset and using using the amazing `geom_text_repel()` function from `{ggrepel}`. These also require some tuning often, and particularly the `arrow` argument and the placements can be a bit finicky, but this is the best I could do for now{{{< sidenote >}}}If we really wanted we could specify the location of each label and the arrow, but I'm too lazy{{{< /sidenote >}}}.
+Then we'll add the main data points as a scatter of dots. The dots in the original are circles with a light border and a fill color without any opacity. So we'll recreate that by using [shape type 21](https://ggplot2.tidyverse.org/articles/ggplot2-specs.html#point) and specifying that we want a white border. After we'll add the dotted (`linetype = "dotted"`) lines in the original color to the figure using `geom_vline()` and `geom_hline()`. And finally we'll add the highlighted items by filtering the dataset and using using the amazing `geom_text_repel()` function from `{ggrepel}`. These also require some tuning often, and particularly the `arrow` argument and the placements can be a bit finicky, but this is the best I could do for now{{< sidenote >}}If we really wanted we could specify the location of each label and the arrow, but I'm too lazy{{< /sidenote >}}.
 
-```{r}
-#| label: dw-geoms
-
+``` r
 new_america_plot <- df |>
   ggplot(aes(x = white, y = mean_income, fill = likely_politics)) +
   geom_text(
@@ -132,11 +120,9 @@ new_america_plot <- df |>
   )
 ```
 
-Next we'll add the labels. We'll use HTML breaks (instead of Markdown's \\n recognized by `geom_text()`) because we'll specify later in the `theme()` specification that we want to use `element_markdown()`, which parses HTML tags. Since we already added the y-axis title, we can leave that blank here. And although the original figure has an interactive caption, we'll make it as close as possible. And to ensure nobody confuses our recreation with the original, I'll add a disclaimed that this discount version of the figure is my recreation and should not be confused with the (better) version from the original article.
+Next we'll add the labels. We'll use HTML breaks (instead of Markdown's \n recognized by `geom_text()`) because we'll specify later in the `theme()` specification that we want to use `element_markdown()`, which parses HTML tags. Since we already added the y-axis title, we can leave that blank here. And although the original figure has an interactive caption, we'll make it as close as possible. And to ensure nobody confuses our recreation with the original, I'll add a disclaimed that this discount version of the figure is my recreation and should not be confused with the (better) version from the original article.
 
-```{r}
-#| label: dw-labs
-
+``` r
 new_america_plot <- new_america_plot +
   labs(
     title = "Figure 1 &vert; Income and Racial Disparities Across Congressional<br>Districts",
@@ -148,11 +134,9 @@ new_america_plot <- new_america_plot +
   )
 ```
 
-Then, the scales. We need to apply some hacky solution to get the y-axis title to appear correctly by setting the x-axis limits to be slightly below 0. Also, I couldn't find a nice way to get the % and $ signs to appear only at the last item on the axes, so I specified the breaks and labels manually. Usually (and you'll see that further below), I'd just add the signs to all items{{{< sidenote >}}}I think this also a slightly better data viz choice{{{< /sidenote >}}} using `scales::label_percent()` and `scales::label_currency(scale = 1e-3, suffix = "K")` in this case. For both axes we'll also add some spacing to let the data and labels "breathe" a little. For the color scale we'll use the same colors as in the orignal figure, put them in the order we want, and we'll make the legend keys a bit larger by using the `override.aes` argument.
+Then, the scales. We need to apply some hacky solution to get the y-axis title to appear correctly by setting the x-axis limits to be slightly below 0. Also, I couldn't find a nice way to get the % and \$ signs to appear only at the last item on the axes, so I specified the breaks and labels manually. Usually (and you'll see that further below), I'd just add the signs to all items{{< sidenote >}}I think this also a slightly better data viz choice{{< /sidenote >}} using `scales::label_percent()` and `scales::label_currency(scale = 1e-3, suffix = "K")` in this case. For both axes we'll also add some spacing to let the data and labels "breathe" a little. For the color scale we'll use the same colors as in the orignal figure, put them in the order we want, and we'll make the legend keys a bit larger by using the `override.aes` argument.
 
-```{r}
-#| label: dw-scales
-
+``` r
 new_america_plot <- new_america_plot +
   scale_x_continuous(
     limits = c(-0.025, 1),
@@ -176,11 +160,9 @@ new_america_plot <- new_america_plot +
   )
 ```
 
-For the final details we'll add a long list of specifications to the `theme()` function to put the text in the correct place and size, use typeface we selected earlier, specify the axis lines, set the background color, and specify what the legend should look like. We'll make use of the `element_markdown()` function as alluded to earlier to add some extra modifications. I think the default margins on ggplot are a bit too tight, so I expanded them a bit. Make note that the color of the axis text is different from the axis titles, after some experimenting I think it's fine as the lighter color is too pale, but either way our goal here is to make it as close as possible to the original. The typeface on the original subtitle is a bit bolder than the one we use, but I haven't yet found a way to use in between font weights (e.g. 400 or 500). It took some time to get the text sizing close enough, especially once you note that the legend text size and the subtitle are the same size. There are a few other details that needed to be adjusted, but I won't go over all of them.
+For the final details we'll add a long list of specifications to the `theme()` function to put the text in the correct place and size, use typeface we selected earlier, specify the axis lines, set the background color, and specify what the legend should look like. We'll make use of the `element_markdown()` function as alluded to earlier to add some extra modifications. I think the default margins on ggplot are a bit too tight, so I expanded them a bit. Make note that the color of the axis text is different from the axis titles, after some experimenting I think it's fine as the lighter color is too pale, but either way our goal here is to make it as close as possible to the original. The typeface on the original subtitle is a bit bolder than the one we use, but I haven't yet found a way to use in between font weights (e.g. 400 or 500). It took some time to get the text sizing close enough, especially once you note that the legend text size and the subtitle are the same size. There are a few other details that needed to be adjusted, but I won't go over all of them.
 
-```{r}
-#| label: dw-theme
-
+``` r
 new_america_plot <- new_america_plot +
   theme_minimal(base_family = "poppins") +
   theme(
@@ -221,29 +203,18 @@ new_america_plot <- new_america_plot +
 
 Good, let's see what we ended up with!
 
-```{r}
-#| label: print-datawrapper-plot
-#| echo: false
-#| fig-width: 6.5
-#| fig-height: 5.5
-#| dpi: 400
-#| out-width: 80%
-
-print(new_america_plot)
-```
+<img src="index.markdown_strict_files/figure-markdown_strict/print-datawrapper-plot-1.png" style="width:80.0%" />
 
 I'm actually quite happy with how close we managed to get. By accident the legend keys (the circles) are slightly dropped compared to the text, but that is also true for the original figure, so that turned out well. The y-axis title is also in a "roman" (or upright) variation, while the x-axis title is italic. Personally I'd have made both italic, but this is also how it is in the original. Apart from the typography and weights, the highlighted district labels are not in the ideal position. Particularly the ME02 label in the bottom right is overlaps with a lot of the dots in the same area, which hampers readability. Otherwise, I'm quite happy with how well we managed to recreate the original figure.
 
 ## Applying these methods to other figures
 
-Now let's see if we can apply the techniques we've learned on a few other plots. Let's first try a similar scatter plot again. We'll plot some data on the oil reserves in different countries and the relative size of their sovereign wealth funds. Why this data? Because it is fairly easily accessible, and because I was curious how much of an outlier [NBIM](https://www.nbim.no) (also known as the _Oljefondet_) is compared to countries with larger oil reserves. It has the added advantage that we can also use three colors to separate the subgroups. You'll find the code for the data extraction and wrangling in the folded cell below. The data comes from [Wikipedia](https://en.wikipedia.org/wiki/List_of_countries_by_proven_oil_reserves#cite_note-eia2021-6) (which used data from the U.S. Energy Information Administration) and [Global SWF](https://globalswf.com/ranking).
+Now let's see if we can apply the techniques we've learned on a few other plots. Let's first try a similar scatter plot again. We'll plot some data on the oil reserves in different countries and the relative size of their sovereign wealth funds. Why this data? Because it is fairly easily accessible, and because I was curious how much of an outlier [NBIM](https://www.nbim.no) (also known as the *Oljefondet*) is compared to countries with larger oil reserves. It has the added advantage that we can also use three colors to separate the subgroups. You'll find the code for the data extraction and wrangling in the folded cell below. The data comes from [Wikipedia](https://en.wikipedia.org/wiki/List_of_countries_by_proven_oil_reserves#cite_note-eia2021-6) (which used data from the U.S. Energy Information Administration) and [Global SWF](https://globalswf.com/ranking).
 
-```{r}
-#| label: load-oil-swf-data
-#| warning: false
-#| code-fold: true
-#| code-summary: "Code for the data wrangling"
+<details class="code-fold">
+<summary>Code for the data wrangling</summary>
 
+``` r
 df_oil_reserves <- rvest::read_html(
   "https://en.wikipedia.org/wiki/List_of_countries_by_proven_oil_reserves#cite_note-eia2021-6"
 ) |>
@@ -297,20 +268,16 @@ df_oil_swf <- df_oil_reserves |>
   )
 ```
 
-Just for comparison, I'll first plot the figure with minimal styling. My pet peeve is seeing people share a figure online without even making the effort to change the default ggplot theme (`theme_grey()`) to something else{{{< sidenote >}}}My go-to is `theme_minimal()`{{{< /sidenote >}}}. I just want to highlight the accumulative difference that making many minor changes can have on the look of a graph. So the figure below has the minimal amount of changes and the more elaborate figure follows below.
+</details>
 
-For these two figures I've chosen to scale the x-axis with a log{{{< sub >}}}10{{{< /sub >}}} scaler. One needs to be a bit careful when using log scaling as it can seriously hamper the interpretability since log scaling isn't intuitive for most people. I could do the same for the y-axis but that would make the outliers there even less visible. People are infamously terrible at conceptualizing the difference between a million dollars and a billion dollars. One could make the same argument for the amount of barrels of oil on the x-axis, but not scaling that one would make the vast majority of points squish in the bottom left corner, which in itself also hampers interpretability, so I made a trade-off. I also added the dotted lines in again, but instead of the means, they now indicate the medians for the data points in the dataset. Anyway, let's look at the "unstyled" figure.
+Just for comparison, I'll first plot the figure with minimal styling. My pet peeve is seeing people share a figure online without even making the effort to change the default ggplot theme (`theme_grey()`) to something else{{< sidenote >}}My go-to is `theme_minimal()`{{< /sidenote >}}. I just want to highlight the accumulative difference that making many minor changes can have on the look of a graph. So the figure below has the minimal amount of changes and the more elaborate figure follows below.
 
-```{r}
-#| label: oil-sqf-plain-plot
-#| fig-width: 6
-#| fig-height: 4
-#| dpi: 400
-#| out-width: 80%
-#| warning: false
-#| code-fold: true
-#| code-summary: "Code for the plot"
+For these two figures I've chosen to scale the x-axis with a log{{< sub >}}10{{< /sub >}} scaler. One needs to be a bit careful when using log scaling as it can seriously hamper the interpretability since log scaling isn't intuitive for most people. I could do the same for the y-axis but that would make the outliers there even less visible. People are infamously terrible at conceptualizing the difference between a million dollars and a billion dollars. One could make the same argument for the amount of barrels of oil on the x-axis, but not scaling that one would make the vast majority of points squish in the bottom left corner, which in itself also hampers interpretability, so I made a trade-off. I also added the dotted lines in again, but instead of the means, they now indicate the medians for the data points in the dataset. Anyway, let's look at the "unstyled" figure.
 
+<details class="code-fold">
+<summary>Code for the plot</summary>
+
+``` r
 df_oil_swf |>
   filter(eia > 1e3) |>
   mutate(
@@ -345,18 +312,16 @@ df_oil_swf |>
   theme_minimal()
 ```
 
+</details>
+
+<img src="index.markdown_strict_files/figure-markdown_strict/oil-sqf-plain-plot-1.png" style="width:80.0%" />
+
 And now the "styled" figure for comparison. The data is the same, the difference in the look is just down to the sum of all the minor changes made, more or less copied from the reference figure from earlier. I also added the units on all axes text (dollar signs on every tick on the y-axis for example). And I understand why either Oscar or Datawrapper only added the additional units to the last one, as it is less cluttered. It feels a bit odd as a single person to disagree with Oscar and/or all Datawrapper experts, but perhaps I can just put it down to personal taste here where I'll admit that my preference may be flawed.
 
-```{r}
-#| label: oil-swf-plot
-#| fig-width: 6.5
-#| fig-height: 4.5
-#| dpi: 400
-#| out-width: 80%
-#| warning: false
-#| code-fold: true
-#| code-summary: "Code for the plot"
+<details class="code-fold">
+<summary>Code for the plot</summary>
 
+``` r
 df_oil_swf |>
   filter(eia > 1e3) |>
   ggplot(aes(x = eia, y = aum)) +
@@ -480,18 +445,20 @@ df_oil_swf |>
   )
 ```
 
+</details>
+
+<img src="index.markdown_strict_files/figure-markdown_strict/oil-swf-plot-1.png" style="width:80.0%" />
+
 I hope this illustrates first and foremost how powerful ggplot is and how much a fairly common plot layout and styling can be improved by paying attention to the details and pulling the most out of the ggplot functionality. I'm not saying the plot is perfect as it is, but it at least makes some conscious decisions on how the plot should look like. Controlling accurately where the labels from `geom_text_repel()` are placed is a headache, but the magic behind this code works usually quite well. Although there are some awkward decisions occassionally, where the arrows are a lot longer than they need to be, or the direction seems less-than-optimal.
 
 Let's do the same again for a different plot type, the stacked bar graph. These aren't in the original report from New America, so here I refer to some of the [examples](https://www.datawrapper.de/charts) listed on the [Datawrapper website](https://www.datawrapper.de/charts) for some of the other details, but we'll keep the design elements from the original article.
 
-For this plot we'll take some [random data](https://www.ssb.no/statbank2/en/table/11561) from [Statistics Norway (_Statistisk sentralbyrå (SSB)_)](https://www.ssb.no) on [energy production, consumption, and import/export](https://www.ssb.no/statbank2/en/table/11561) and their sources. The folded code chunk below shows the data loading and wrangling after downloading the CSV file from the SSB database.
+For this plot we'll take some [random data](https://www.ssb.no/statbank2/en/table/11561) from [Statistics Norway (*Statistisk sentralbyrå (SSB)*)](https://www.ssb.no) on [energy production, consumption, and import/export](https://www.ssb.no/statbank2/en/table/11561) and their sources. The folded code chunk below shows the data loading and wrangling after downloading the CSV file from the SSB database.
 
-```{r}
-#| label: load-energy-data
-#| message: false
-#| code-fold: true
-#| code-summary: "Code for the data wrangling"
+<details class="code-fold">
+<summary>Code for the data wrangling</summary>
 
+``` r
 df_energy <- read_delim(
   "data/ssb_energy_balance.csv",
   delim = ";",
@@ -526,20 +493,16 @@ df_energy <- read_delim(
   select(where(~ !all(is.na(.x))))
 ```
 
+</details>
+
 The choice between a stacked bar graph and a grouped bar graph stems from what information is the most important to show. If the overall sum is the most important, then choose the stacked bar graph. If the size of the individual components is more important than the total sum, then choose a stacked bar graph.
 
 We'll create the plot then using `geom_col()` instead of `geom_point()`. We'll also use one of my favorite options in many `geoms`: the `key_glyph` setting. This allows us to change the legend key from a square to a circle, which looks a bit nicer in most situations. I also use it a lot with `geom_line()` and different types of line geometries. The rest of the plot is more or less self-explanatory I hope. I'll make sure the factors are sorted the way I want them, and I'll add ticks on the x-axis as shown in the [examples](https://www.datawrapper.de/charts#column-charts) on the Datawrapper website. The colors are taken from [this excellent guide](https://www.datawrapper.de/blog/colors-for-data-vis-style-guides) on colors, also from Datawrapper.
 
-```{r}
-#| label: plot-energy-consumption
-#| fig-width: 7
-#| fig-height: 4.25
-#| dpi: 400
-#| out-width: 80%
-#| message: false
-#| code-fold: true
-#| code-summary: "Code for the plot"
+<details class="code-fold">
+<summary>Code for the plot</summary>
 
+``` r
 df_energy |>
   select(year, starts_with("consumption")) |>
   pivot_longer(
@@ -642,20 +605,18 @@ df_energy |>
   )
 ```
 
+</details>
+
+<img src="index.markdown_strict_files/figure-markdown_strict/plot-energy-consumption-1.png" style="width:80.0%" />
+
 I'm quite happy with that result. Note that the y-axis isn't labeled. This is typically a big no-no, but the [examples](https://www.datawrapper.de/charts#column-charts) at Datawrapper generally either include an axis title inside the plot, or don't include one at all. I think this is permissable if the data can be clearly understood without a label. For example on the x-axis, it isn't necessary to add the label "Year", since it's immediately obvious what it denotes. One trick here is also to add a descriptor of the y-axis in the title or subtitle.
 
 Let's try another one, a line plot this time using mostly the same tricks as before. We'll use the same dataset. A small detail that I (when it is suitable) like to use is the `lineend` option, which allows us to make the line ends round. We'll also put the y-axis title inside the plot again, since it fits here without making it look cluttered. We'll also not include a legend, instead opting to directly label the lines, since there are only a few of them. We'll add them using `geom_text_repel()` again and do some tricks with the x-axis spacing to allow them the breathing room they need.
 
-```{r}
-#| label: plot-energy-exports
-#| fig-width: 7
-#| fig-height: 4.25
-#| dpi: 400
-#| out-width: 80%
-#| message: false
-#| code-fold: true
-#| code-summary: "Code for the plot"
+<details class="code-fold">
+<summary>Code for the plot</summary>
 
+``` r
 df_energy |>
   mutate(
     perc_exported_coal = exports_coal_and_coal_products /
@@ -777,16 +738,18 @@ df_energy |>
   )
 ```
 
+</details>
+
+<img src="index.markdown_strict_files/figure-markdown_strict/plot-energy-exports-1.png" style="width:80.0%" />
+
 So in all fairness, I could have picked a better example dataset, but this one was readily available and I was too lazy to look up something else (he says after writing a long post on nitpicky details in data visualizations). But I'd also want to highlight the power of direct labeling when the data allows for it. It makes the figure really easy to read since the clues necessary to parse the information in the plot aren't split across the plot area and the legend.
 
-Let's do another example, this time one of those popular range plots that includes to points with a line between them indicating a difference or change between two datapoints (e.g. men vs women, current period vs previous period). Here I'll plot new car sales in 2025 compared to 2024. The [data]((https://ofv.no/registreringsstatistikk)) comes from the [Opplysningsrådet for veitrafikken (OFV)](https://ofv.no/) which registers data about car sales in Norway. We'll create a range/dot plot comparing the sales of new cars in 2024 and 2025 from the most common brands in Norway. Code for the data loading and wrangling are again shown in the folded code chunk below.
+Let's do another example, this time one of those popular range plots that includes to points with a line between them indicating a difference or change between two datapoints (e.g. men vs women, current period vs previous period). Here I'll plot new car sales in 2025 compared to 2024. The [data]((https://ofv.no/registreringsstatistikk)) comes from the [Opplysningsrådet for veitrafikken (OFV)](https://ofv.no/) which registers data about car sales in Norway. We'll create a range/dot plot comparing the sales of new cars in 2024 and 2025 from the most common brands in Norway. Code for the data loading and wrangling are again shown in the folded code chunk below.
 
-```{r}
-#| label: load-car-sales-data
-#| message: false
-#| code-fold: true
-#| code-summary: "Code for the data wrangling"
+<details class="code-fold">
+<summary>Code for the data wrangling</summary>
 
+``` r
 df_car_sales <- read_csv("./data/car_sales_norway.csv") |>
   janitor::clean_names() |>
   mutate(
@@ -803,18 +766,14 @@ df_car_sales <- read_csv("./data/car_sales_norway.csv") |>
   mutate(year = as_factor(parse_number(year)))
 ```
 
-I'll once again drop the axis titles, since the axes speak for themselves I believe, and if it is not clear what the x-axis represents, the title of the plot also tells the reader what it denotes. I'll also deploy the direct labeling again from before to aid readability. Since the colors also denote information (year in this case) and I don't want to use a legend, I'll add direct labeling for those too. In addition, I'll also add hints to the subtitle (again using the functionality that `element_markdown()` allows). Otherwise, I'll also add a similar grid style as shown in the [examples](https://www.datawrapper.de/charts#dot-plots) on the Datawrapper website. For all other plots in this post I've removed the grid (against typical best practice guidelines) because the [original article]((https://www.newamerica.org/political-reform/reports/understanding-the-partisan-divide/)) we're getting our inspiration from includes a number of plot types and never uses a grid, which means it's likely a deliberate choice by Oscar to remove them, and I think it looks really nice{{{< sidenote >}}}If you're publishing scientific articles, you should probably always include a subtle grid for the continuous variables{{{< /sidenote >}}}. In some cases I think it could even be defendable to remove the grid if the absolute values aren't the most important information to be parsed, but the relative size or change is more important.
+</details>
 
-```{r}
-#| label: plot-car-sales
-#| fig-width: 7
-#| fig-height: 4.5
-#| dpi: 400
-#| out-width: 80%
-#| message: false
-#| code-fold: true
-#| code-summary: "Code for the plot"
+I'll once again drop the axis titles, since the axes speak for themselves I believe, and if it is not clear what the x-axis represents, the title of the plot also tells the reader what it denotes. I'll also deploy the direct labeling again from before to aid readability. Since the colors also denote information (year in this case) and I don't want to use a legend, I'll add direct labeling for those too. In addition, I'll also add hints to the subtitle (again using the functionality that `element_markdown()` allows). Otherwise, I'll also add a similar grid style as shown in the [examples](https://www.datawrapper.de/charts#dot-plots) on the Datawrapper website. For all other plots in this post I've removed the grid (against typical best practice guidelines) because the [original article]((https://www.newamerica.org/political-reform/reports/understanding-the-partisan-divide/)) we're getting our inspiration from includes a number of plot types and never uses a grid, which means it's likely a deliberate choice by Oscar to remove them, and I think it looks really nice{{< sidenote >}}If you're publishing scientific articles, you should probably always include a subtle grid for the continuous variables{{< /sidenote >}}. In some cases I think it could even be defendable to remove the grid if the absolute values aren't the most important information to be parsed, but the relative size or change is more important.
 
+<details class="code-fold">
+<summary>Code for the plot</summary>
+
+``` r
 df_car_sales |>
   ggplot(aes(
     x = share,
@@ -904,21 +863,18 @@ df_car_sales |>
     panel.grid.major.y = element_line(linetype = "dotted"),
     plot.margin = margin(rep(1, 4), unit = "lines"),
   )
-
 ```
 
-Let's do one more just for fun. Let's recreate the plot on the [NBIM website](https://www.nbim.no/no/investeringene/fondets-verdi/) that tracks the value of the _Oljefondet_ since it's founding in the style from the reference images. The data in the plot tracks the summed value of the fund across the different categories. They again use a stacked bar chart because the total sum of the categories is more important than the relative value of the categories. Because some of the investments were in the red during some years, they also added a separate line tracking the total value of the fund. For the past 10 years it's been identical to the sum of the subgroups, but before that it adds some additional clarity to the plot.
+</details>
 
-```{r}
-#| label: plot-nbim-value
-#| fig-width: 7
-#| fig-height: 4
-#| dpi: 400
-#| out-width: 80%
-#| message: false
-#| code-fold: true
-#| code-summary: "Code for the plot"
+<img src="index.markdown_strict_files/figure-markdown_strict/plot-car-sales-1.png" style="width:80.0%" />
 
+Let's do one more just for fun. Let's recreate the plot on the [NBIM website](https://www.nbim.no/no/investeringene/fondets-verdi/) that tracks the value of the *Oljefondet* since it's founding in the style from the reference images. The data in the plot tracks the summed value of the fund across the different categories. They again use a stacked bar chart because the total sum of the categories is more important than the relative value of the categories. Because some of the investments were in the red during some years, they also added a separate line tracking the total value of the fund. For the past 10 years it's been identical to the sum of the subgroups, but before that it adds some additional clarity to the plot.
+
+<details class="code-fold">
+<summary>Code for the plot</summary>
+
+``` r
 readxl::read_excel(
   "./data/nbim_value.xls"
 ) |>
@@ -1021,4 +977,8 @@ readxl::read_excel(
   )
 ```
 
-This turned into a very long post. I always enjoy breaking down good and beautiful data visualizations, and I found out how close you can get to basically all Datawrapper visualizations{{{< sidenote >}}}Minus the interactivity of course, though some of it can be emulated through [`{plotly}`](https://plotly.com/ggplot2/){{{< /sidenote >}}} through basic `{ggplot2}` and `{ggtext}` functionality. I think [once again](https://danielroelfs.com/posts/financial-times-data-viz/), one of the key tricks is to just know what functions are available in `{ggplot2}` and related packages, and knowing what to edit and how, so there I hope the code here is some help to you when making your own plots. And I hope this post serves as some inspiration to be more ambitious and bold when making professional plots for sharing in whatever type of presentation or publication. Good luck and have fun!
+</details>
+
+<img src="index.markdown_strict_files/figure-markdown_strict/plot-nbim-value-1.png" style="width:80.0%" />
+
+This turned into a very long post. I always enjoy breaking down good and beautiful data visualizations, and I found out how close you can get to basically all Datawrapper visualizations{{< sidenote >}}Minus the interactivity of course, though some of it can be emulated through [`{plotly}`](https://plotly.com/ggplot2/){{< /sidenote >}} through basic `{ggplot2}` and `{ggtext}` functionality. I think [once again](https://danielroelfs.com/posts/financial-times-data-viz/), one of the key tricks is to just know what functions are available in `{ggplot2}` and related packages, and knowing what to edit and how, so there I hope the code here is some help to you when making your own plots. And I hope this post serves as some inspiration to be more ambitious and bold when making professional plots for sharing in whatever type of presentation or publication. Good luck and have fun!

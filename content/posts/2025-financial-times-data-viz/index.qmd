@@ -7,7 +7,7 @@ categories:
   - miscellaneous
 tags:
   - miscellaneous
-  - python
+  - ggplot
 engine: knitr
 editor_options:
   chunk_output_type: console

@@ -166,7 +166,12 @@ For the final details we'll add a long list of specifications to the `theme()` f
 new_america_plot <- new_america_plot +
   theme_minimal(base_family = "poppins") +
   theme(
-    plot.title = element_markdown(face = "bold", size = 12),
+    plot.title = element_markdown(
+      face = "bold",
+      size = 12,
+      lineheight = 1.25,
+      margin = margin(b = 0.5, unit = "lines")
+    ),
     plot.title.position = "plot",
     plot.subtitle = element_markdown(size = 9, lineheight = 1.15),
     plot.caption = element_markdown(
@@ -412,7 +417,12 @@ df_oil_swf |>
   ) +
   theme_minimal(base_family = "poppins") +
   theme(
-    plot.title = element_markdown(face = "bold", size = 14),
+    plot.title = element_markdown(
+      face = "bold",
+      size = 14,
+      lineheight = 1.15,
+      margin = margin(b = 0.5, unit = "lines")
+    ),
     plot.title.position = "plot",
     plot.subtitle = element_markdown(size = 10, lineheight = 1.15),
     plot.caption = element_markdown(
@@ -578,7 +588,12 @@ df_energy |>
   ) +
   theme_minimal(base_family = "poppins") +
   theme(
-    plot.title = element_markdown(face = "bold", size = 14),
+    plot.title = element_markdown(
+      face = "bold",
+      size = 14,
+      lineheight = 1.15,
+      margin = margin(b = 0.5, unit = "lines")
+    ),
     plot.title.position = "plot",
     plot.subtitle = element_markdown(size = 10, lineheight = 1.15),
     plot.caption = element_markdown(
@@ -707,7 +722,12 @@ df_energy |>
   coord_cartesian(clip = "off") +
   theme_minimal(base_family = "poppins") +
   theme(
-    plot.title = element_markdown(face = "bold", size = 14),
+    plot.title = element_markdown(
+      face = "bold",
+      size = 14,
+      lineheight = 1.15,
+      margin = margin(b = 0.5, unit = "lines")
+    ),
     plot.title.position = "plot",
     plot.subtitle = element_markdown(
       size = 10,
@@ -835,7 +855,12 @@ df_car_sales |>
   coord_cartesian(clip = "off") +
   theme_minimal(base_family = "poppins") +
   theme(
-    plot.title = element_markdown(face = "bold", size = 14),
+    plot.title = element_markdown(
+      face = "bold",
+      size = 14,
+      lineheight = 1.15,
+      margin = margin(b = 0.5, unit = "lines")
+    ),
     plot.title.position = "plot",
     plot.subtitle = element_markdown(size = 10, lineheight = 1.15),
     plot.caption = element_markdown(
@@ -943,7 +968,12 @@ readxl::read_excel(
   ) +
   theme_minimal(base_family = "poppins") +
   theme(
-    plot.title = element_markdown(face = "bold", size = 14),
+    plot.title = element_markdown(
+      face = "bold",
+      size = 14,
+      lineheight = 1.15,
+      margin = margin(b = 0.5, unit = "lines")
+    ),
     plot.title.position = "plot",
     plot.subtitle = element_markdown(size = 10, lineheight = 1.15),
     plot.caption = element_markdown(

@@ -505,7 +505,7 @@ df_energy <- read_delim(
 
 </details>
 
-The choice between a stacked bar graph and a grouped bar graph stems from what information is the most important to show. If the overall sum is the most important, then choose the stacked bar graph. If the size of the individual components is more important than the total sum, then choose a stacked bar graph.
+The choice between a stacked bar graph and a grouped bar graph stems from what information is the most important to show. If the overall sum is the most important, then choose the stacked bar graph. If the size of the individual components is more important than the total sum, then choose a grouped bar graph.
 
 We'll create the plot then using `geom_col()` instead of `geom_point()`. We'll also use one of my favorite options in many `geoms`: the `key_glyph` setting. This allows us to change the legend key from a square to a circle, which looks a bit nicer in most situations. I also use it a lot with `geom_line()` and different types of line geometries. The rest of the plot is more or less self-explanatory I hope. I'll make sure the factors are sorted the way I want them, and I'll add ticks on the x-axis as shown in the [examples](https://www.datawrapper.de/charts#column-charts) on the Datawrapper website. The colors are taken from [this excellent guide](https://www.datawrapper.de/blog/colors-for-data-vis-style-guides) on colors, also from Datawrapper.
 

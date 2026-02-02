@@ -96,7 +96,17 @@ For a downloadable version of this CV, go to [cv.danielroelfs.com](https://cv.da
 
 ## Work Experience
 
-### DNB - Group Security - Group AML {{< cv-date >}}2022 - current{{< /cv-date >}}
+### Storebrand - Digital - Analytics & AI {{< cv-date >}}feb 2026 - current{{< /cv-date >}}
+
+*Data Scientist*
+
+-   Data science projects across various departments in the group
+
+-   Implementing robust machine learning and (generative) AI models for various use cases
+
+-   Using (among others) Databricks, Snowflake, Dagster, and accompanying best practices
+
+### DNB - Group Security - Group AML {{< cv-date >}}aug 2022 - jan 2026{{< /cv-date >}}
 
 *Data Scientist*
 
@@ -106,7 +116,7 @@ For a downloadable version of this CV, go to [cv.danielroelfs.com](https://cv.da
 
 -   Application of responsible data science practices in both development and deployment
 
-### University of Oslo - NORMENT - Multimodal Imaging Group {{< cv-date >}}2019 - 22{{< /cv-date >}}
+### University of Oslo - NORMENT - Multimodal Imaging Group {{< cv-date >}}mar 2019 - jul 2022{{< /cv-date >}}
 
 *Doctoral Research Fellow*
 
@@ -116,7 +126,7 @@ For a downloadable version of this CV, go to [cv.danielroelfs.com](https://cv.da
 
 -   Writing scripts and pipelines in R, Python, and MATLAB{{< marginnote >}}all code is available on [GitHub](https://github.com/norment/open-science){{< /marginnote >}}
 
-### University of Oslo - NORMENT - EEG Group {{< cv-date >}}2018 - 19{{< /cv-date >}}
+### University of Oslo - NORMENT - EEG Group {{< cv-date >}}may 2018 - feb 2019{{< /cv-date >}}
 
 *Research Assistant*
 
@@ -124,7 +134,7 @@ For a downloadable version of this CV, go to [cv.danielroelfs.com](https://cv.da
 
 -   Maintaining and adapting preprocessing pipelines for EEG data
 
-### Rikshospitalet - Department of Medical Physics {{< cv-date >}}2018 - 19{{< /cv-date >}}
+### Rikshospitalet - Department of Medical Physics {{< cv-date >}}may 2018 - feb 2019{{< /cv-date >}}
 
 *Research Assistant*
 
@@ -138,7 +148,7 @@ For a downloadable version of this CV, go to [cv.danielroelfs.com](https://cv.da
 
 ## Education
 
-### University of Oslo - Faculty of Clinical Medicine {{< cv-date >}}2019 - 22{{< /cv-date >}}
+### University of Oslo - Faculty of Clinical Medicine {{< cv-date >}}mar 2019 - jul 2022{{< /cv-date >}}
 
 *PhD, Doctoral Education*
 
@@ -146,7 +156,7 @@ For a downloadable version of this CV, go to [cv.danielroelfs.com](https://cv.da
 
 -   Courses relevant to neurobiology, advanced statistics, and other academic and non-academic skills
 
-### Lund University - Faculty of Medicine {{< cv-date >}}2016 - 18{{< /cv-date >}}
+### Lund University - Faculty of Medicine {{< cv-date >}}sep 2016 - may 2018{{< /cv-date >}}
 
 *MSc, Biomedicine*
 
@@ -154,7 +164,7 @@ For a downloadable version of this CV, go to [cv.danielroelfs.com](https://cv.da
 
 -   Focus on molecular biology and neuroscience
 
-### Utrecht University - University College Roosevelt {{< cv-date >}}2012 - 15{{< /cv-date >}}
+### Utrecht University - University College Roosevelt {{< cv-date >}}sep 2012 - may 2015{{< /cv-date >}}
 
 *BSc, pre-medical track*
 
@@ -168,7 +178,7 @@ For a downloadable version of this CV, go to [cv.danielroelfs.com](https://cv.da
 
 ## Skills & Languages
 
-Daily use of Python, R, SQL (various dialects), bash, AWS, Snowflake, Git, and common packages and module. Experience also with MATLAB, LaTeX, HTML/CSS. Have previously worked with Google Cloud, SLURM.{{< marginnote >}}some of these skills are documented on [GitHub](https://github.com/danielroelfs) also{{< /marginnote >}}
+Daily use of Python, R, SQL (various dialects), bash, AWS, Databricks, Snowflake, Git, and common packages and module. Experience also with MATLAB, LaTeX, HTML/CSS. Have previously worked with Google Cloud, SLURM.{{< marginnote >}}some of these skills are documented on [GitHub](https://github.com/danielroelfs) also{{< /marginnote >}}
 
 {{< gap \"0.5rem\" >}}
 
@@ -214,17 +224,17 @@ In addition, I'm familiar with common data science and data engineering framewor
 
 ## Commissions
 
-### DNB Data Science Meetup {{< cv-date >}}2023 - current{{< /cv-date >}}
+### DNB Data Science Meetup {{< cv-date >}}oct 2023 - dec 2024{{< /cv-date >}}
 
 *Committee Member*
 
-### Norwegian Research School in Neuroscience {{< cv-date >}}2019 - 21{{< /cv-date >}}
+### Norwegian Research School in Neuroscience {{< cv-date >}}sep 2019 - may 2021{{< /cv-date >}}
 
 *Committee Member*
 
 -   {{< p >}}Organization of the national conference for neuroscience PhD candidates{{< /p >}}
 
-### The Netherlands Red Cross Student Desk Zeeland {{< cv-date >}}2014 - 15{{< /cv-date >}}
+### The Netherlands Red Cross Student Desk Zeeland {{< cv-date >}}jan 2014 - may 2015{{< /cv-date >}}
 
 *General Board Member (Fundraising portfolio)*
 

@@ -27,15 +27,19 @@ h1 {
     font-size: 3rem;
   }
   &.index-title {
-   font-weight: 714;
+    font-weight: 714;
   }
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   font-weight: 709;
 }
 
-h4, h5, h6 {
+h4,
+h5,
+h6 {
   font-weight: 707;
 }
 
@@ -88,7 +92,8 @@ ul li:before {
   content: "→";
 }
 
-nav.breadcrumbs, nav.bottom-nav  {
+nav.breadcrumbs,
+nav.bottom-nav {
   font-family: $header-family;
   font-weight: 709;
   text-transform: uppercase;

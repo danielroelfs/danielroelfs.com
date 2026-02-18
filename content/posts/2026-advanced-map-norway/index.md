@@ -15,12 +15,14 @@ editor_options:
 ---
 
 
+Click on the links below to jump straight to the file format of your interest.
+
 -   {{< crossref link=\"#geojson\" >}}GeoJSON{{< /crossref >}}
--   {{< crossref link=\"#shapefiles\" >}}Shapefiles{{< /crossref >}}
+-   {{< crossref link=\"#shapefile\" >}}Shapefile{{< /crossref >}}
 -   {{< crossref link=\"#geopackage\" >}}GeoPackage{{< /crossref >}}
 -   {{< crossref link=\"#geodatabase\" >}}Geodatabase{{< /crossref >}}
 
-In a [previous post](../../../posts/the-easier-way-to-create-a-map-of-norway-using-csmaps/) I mentioned that I ocassionally create maps using the [GeoJSON](http://geojson.org) format, but that for simple maps that need to be done quickly I'd use the [`{csmaps}`](https://www.csids.no/csmaps/) package which contains some neatly packaged maps in an easy to use format. However, I rarely use that method myself anymore. Instead, I've moved to using a more robust method. It is also slightly more advanced than the pre-wrangled dataframes from `{csmaps}`. Since the [other post](../../../posts/the-easier-way-to-create-a-map-of-norway-using-csmaps/) has gotten a fair bit of traffic, I'd take that as a sign that this is an issue people are solving often, so today I'd like to over an alternative way to plot maps of Norway (or any other country or region) using a slightly more advanced way using a format that is commonly available. In this post we'll go through how to create maps in `(ggplot2)` using the [GeoJSON](#geojson), [shapefile](#shapefiles), [GeoPackage](#geopackage){{< sidenote >}}The GeoJSON and GeoPackage formats have their own websites: [geojson.org](https://geojson.org) and [geopackage.org](https://www.geopackage.org){{< /sidenote >}}, and [geodatabase](#geodatabase) format.
+In a [previous post](../../../posts/the-easier-way-to-create-a-map-of-norway-using-csmaps/) I mentioned that I ocassionally create maps using the [GeoJSON](http://geojson.org) format, but that for simple maps that need to be done quickly I'd use the [`{csmaps}`](https://www.csids.no/csmaps/) package which contains some neatly packaged maps in an easy to use format. However, I rarely use that method myself anymore. Instead, I've moved to using a more robust method. It is also slightly more advanced than the pre-wrangled dataframes from `{csmaps}`. Since the [other post](../../../posts/the-easier-way-to-create-a-map-of-norway-using-csmaps/) has gotten a fair bit of traffic, I'd take that as a sign that this is an issue people are solving often, so today I'd like to over an alternative way to plot maps of Norway (or any other country or region) using a slightly more advanced way using a format that is commonly available. In this post we'll go through how to create maps in `(ggplot2)` using the [GeoJSON](#geojson), [shapefile](#shapefile), [GeoPackage](#geopackage){{< sidenote >}}The GeoJSON and GeoPackage formats have their own websites: [geojson.org](https://geojson.org) and [geopackage.org](https://www.geopackage.org){{< /sidenote >}}, and [geodatabase](#geodatabase) format.
 
 We'll use the regular `{tidyverse}` to do some wrangling and the plotting. And we'll use the `{sf}` package to enable functionality to deal with the geo files. As in the [previous post](https://danielroelfs.com/posts/new-america-data-viz/) (and several before then) we'll add a custom typeface to the plots to give them a bit more "flair", even though aesthetics is not the main goal today. We'll use the `{patchwork}` package to make some composite figures combining several plots.
 
@@ -33,7 +35,7 @@ sysfonts::font_add_google(name = "Fira Sans", family = "custom")
 showtext::showtext_auto()
 ```
 
-I'll focus most of the examples in this post on Norway, but I'll use some others from other parts of Europe as well. Let's run through three common file formats: GeoJSON, shapefiles, GeoPackage, and geodatabase{{< sidenote >}}See [here](https://feed.terramonitor.com/shapefile-vs-geopackage-vs-geojson/) for a technical comparison between three of them{{< /sidenote >}}.
+I'll focus most of the examples in this post on Norway, but I'll use some others from other parts of Europe as well. Let's run through three common file formats: GeoJSON, shapefiles, GeoPackage, and geodatabases{{< sidenote >}}See [here](https://feed.terramonitor.com/shapefile-vs-geopackage-vs-geojson/) for a technical comparison between three of them{{< /sidenote >}}.
 
 ## GeoJSON
 
@@ -1027,6 +1029,7 @@ df_nasjonalpark |>
     size = 2,
     family = "custom",
     min.segment.length = 0,
+    seed = 42
   ) +
   labs(
     x = "Longitude",

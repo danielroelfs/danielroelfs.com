@@ -994,7 +994,7 @@ df_nasjonalpark_good |>
   ggrepel::geom_text_repel(
     data = df_nasjonalpark_good_centroids,
     aes(x = lon, y = lat, label = naturbase_navn),
-    size = 1.5,
+    size = 2,
     family = "custom",
     min.segment.length = 0,
     max.overlaps = Inf,

@@ -10,7 +10,6 @@ tags:
   - map
   - norway
 engine: knitr
-draft: true
 editor_options:
   chunk_output_type: console
 ---

@@ -13,7 +13,7 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
       unsafe = true
 
 [params]
-    intro = "PhD in computational neuroscience and psychiatry genetics, Data Scientist within anti-money laundering at DNB"
+    intro = "PhD in computational neuroscience and psychiatry genetics, Data Scientist within the Analytics & AI Centre of Excellence team in Storebrand, previously within anti-money laundering at DNB"
 
     favicon = "avatar.png"
 

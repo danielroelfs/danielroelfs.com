@@ -27,6 +27,12 @@ ul li a {
 
 Selection of publications. For a full list see my [Google Scholar profile](https://scholar.google.com/citations?user=QmVQcsAAAAAJ&hl=en)
 
+### 2026
+
+-   T Moberget, D van der Meer, S Bahrami, **D Roelfs**, O Frei, T Kaufmann, S Fernandez-Cabello, M Kim, T Wolfers, J Diedrichsen, OB Smeland, A Shadrin, A Dale, OA Andreassen, LT Westlye [***The genetic architecture of human cerebellar morphology supports a key role for the cerebellum in human evolution and psychopathology***](https://doi.org/10.1038/s42003-026-09664-1). *Communications Biology*. doi: [10.1038/s42003-026-09664-1](https://doi.org/10.1038/s42003-026-09664-1) preprint: [10.1101/2023.02.10.23285704](https://doi.org/10.1101/2023.02.10.23285704)
+
+-   NB Slapø, KN Jørgensen, S Nerland, L Mørch-Johnsen, JH Pettersen, **D Roelfs**, N Parker, M Valstad, A Pentz, CMF Timpe, G Richard, D Beck, MCF Werner, TV Lagerberg, I Melle, I Agartz, LT Westlye, NE Steen, LB Norbom, OA Andreassen, M Moberget, T Elvsåshagen, EG Jönsson [***Relationship between N100 amplitude and T1w/T2w-ratio in the auditory cortex in schizophrenia spectrum disorders***](https://doi.org/10.1038/s41537-025-00715-w). *Schizophrenia*. doi: [10.1038/s41537-025-00715-w](https://doi.org/10.1038/s41537-025-00715-w)
+
 ### 2024
 
 -   **D Roelfs** [***Understanding patterns of mental health and their brain functional correlates through psychiatric genetics***](http://hdl.handle.net/10852/114512) \[Doctoral dissertation\] University of Oslo. ISBN [978-82-348-0524-0](http://hdl.handle.net/10852/114512), digital version: [thesis.danielroelfs.app](https://thesis.danielroelfs.app)

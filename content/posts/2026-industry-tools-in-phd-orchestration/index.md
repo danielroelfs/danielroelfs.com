@@ -1,7 +1,7 @@
 ---
-title: 'Tools I''d take from industry to academia: orchestation tools'
+title: 'Tools I''d take from industry to academia: orchestration tools'
 date: 2026-08-23T00:00:00.000Z
-description: 'Tools I''d take from industry to academia: orchestation tools'
+description: 'Tools I''d take from industry to academia: orchestration tools'
 slug: industry-tools-in-phd-orchestration
 categories:
   - miscellaneous
@@ -19,11 +19,11 @@ editor_options:
 <script  src="index_files/libs/quarto-diagram/mermaid-init.js"></script>
 <link  href="index_files/libs/quarto-diagram/mermaid.css" rel="stylesheet" />
 
-Since I finished my PhD and started working in industry I have been introduced to *a lot* of new tools and ways of working that weren't at all common in academia (as far as I was aware of). Learning certainly did not stop when I got a job in industry, and as I became more familiar with these new tools and methods I found myself wishing I had known these tools during my PhD. Not just because it would have made my transition to industry a bit easier, but mostly because the value these tools provide are incredibly valuable. So in this post I'll go over one of these tools/practices and how I would perhaps have used it during my PhD.
+Since I finished my PhD and started working in industry I have been introduced to *a lot* of new tools and ways of working that weren't at all common in academia{{< sidenote >}}at least not in any research group I was aware of{{< /sidenote >}}. Learning certainly did not stop when I got a job in industry, and as I became more familiar with these new tools and methods I found myself wishing I had known these tools during my PhD. Not just because it would have made my transition to industry a bit easier, but mostly because the functionality these tools provide are incredibly valuable. So in this post I'll go over one of these tools/practices and how I would perhaps have used it during my PhD.
 
-The main tool I would have introduced in my PhD if I were to do it again is relational databases and its querying language SQL. I know the HPC{{< sidenote >}}*High Performance Computing*, we were using the [Sigma2](https://www.sigma2.no/service/sensitive-data-services) infrastructure through the [*Tjenester for Sensitive Data* (TSD)](https://www.uio.no/english/services/it/research/sensitive-data/index.html){{< /sidenote >}} setup we were using offered support for a PostgreSQL database, but not a single group I was aware of was using SQL.
+The main tool I would have introduced in my PhD if I were to do it again is relational databases and its querying language SQL, but I might write a post about how I'd use SQL databases some other time.
 
-But for now I want to focus a bit more on a second type of tools I would like to have had access to: orchestration tools. Orchestration tools help with the data engineering part of any data science/analysis/research project to help write, schedule, run, and maintain predefined workflows. Let's say you have a bunch of scripts that run data extraction, data loading, and transformation (basically (pre)processing, also called [ELT](https://www.getdbt.com/blog/extract-load-transform)) and analysis and testing. These scripts are a combination of Python, bash, R, Julia, MATLAB, or whatever language the tool you're using is implemented in. An (extremely) simplified version of your workflow might look something like this:
+For now I want to focus a bit more on a second type of tools I would like to have had access to: orchestration tools. Orchestration tools help with the data engineering part of any data science/analysis/research project to help write, schedule, run, and maintain predefined workflows. Let's say you have a bunch of scripts that run data extraction, data loading, and transformation (basically (pre)processing, also called [ELT](https://www.getdbt.com/blog/extract-load-transform)) and analysis and testing. These scripts are a combination of Python, bash, R, Julia, MATLAB, or whatever language the tool you're using is implemented in. An (extremely) simplified version of your workflow might look something like this:
 
 <style type="text/css">
 :root { --mermaid-edge-color: #868686; }
@@ -59,6 +59,8 @@ flowchart LR
 Now, I know we all wished the workflow was this easy. Then the steps to rerun the analysis would be fairly simple and efficient. However, (and I speak from experience here), there are typically many scripts in each ELT and analysis step and they are interconnected. Some people are better than others at maintaining some level of organization{{< sidenote >}}I've seen people just dump all scripts (including work in progress or long redundant scripts) into a single project's directory and have a Markdown or Word document with some instructions on which scripts are connected to what next steps{{< /sidenote >}}. Neither me nor any of the other PhDs I knew were organized enough to be able to rerun the entire pipeline without manual intervention.
 
 This organization and automation is what orchestration tools help out with. With orchestration tools you can declare which scripts are dependent on which other scripts, you can organize the essential scripts into workflows, and rerun all steps in your pipeline in sequence where the later scripts only begin after the previous scripts (the dependencies) are finished successfully. It makes rerunning analysis a lot less taxing, more efficient, and it allows you to test analysis quicker and easier by changing parameters for a particular step and rerunning the steps in your workflow affected by that change.
+
+I know the HPC{{< sidenote >}}*High Performance Computing*, we were using the [Sigma2](https://www.sigma2.no/service/sensitive-data-services) infrastructure through the [*Tjenester for Sensitive Data* (TSD)](https://www.uio.no/english/services/it/research/sensitive-data/index.html){{< /sidenote >}} setup we would support building infrastructure for an orchestration tool (if they haven't already). I've been able to run it on my Raspian RaspberryPi and an old Intel Mac Mini, I know it will run on virtual machines on the HPC as well, offering a world of possibility for more efficient workflows.
 
 ## Now which orchestration tools are available?
 
@@ -153,7 +155,7 @@ And then when all issues are resolved, one can rerun the entire pipeline from be
 
 <img src="files/dagster_all_green.png" data-fig-alt="Screenshot of the Dagster UI, showing all assets in the lineage view with green outlines to indicate successful runs" />
 
-And just like that you have reran your entire analysis pipeline using the latest data, reran the (pre)processing and analysis and generated new plots without having to manually trigger anything other than the initial run. It's really quite satisfying and makes the process of rerunning analysis (for example after a new exclusion list{{< sidenote >}}Participants in a research project can at any time revoke their consent, at which point they can no longer be included in the analysis, which should trigger a rerun of all analyses{{< /sidenote >}}).
+And just like that you have reran your entire analysis pipeline using the latest data, reran the (pre)processing and analysis and generated new plots without having to manually trigger anything other than the initial run. It's really quite satisfying and makes the process of rerunning analysis (for example after a new exclusion list{{< sidenote >}}Participants in a research project can at any time revoke their consent, at which point they can no longer be included in the analysis, which should trigger a rerun of all relevant analyses{{< /sidenote >}} is released).
 
 ## Concluding remarks
 

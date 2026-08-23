@@ -9,7 +9,6 @@ tags:
   - Python
   - coding
   - data science
-draft: true
 engine: knitr
 editor_options: 
   chunk_output_type: console

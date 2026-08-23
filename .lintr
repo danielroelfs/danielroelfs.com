@@ -10,6 +10,6 @@ exclusions: list(
     "content/posts/2021-easy-map-norway/save_splmaps_data.R",
     "content/posts/2022-dutch-performance-olympic-speed-skating/index.qmd",
     "content/posts/2023-sunrise-sunset-differences/index.qmd",
-    "content/posts/2026-industry-tools-in-phd-orchestration/index.qmd", # just for the mermaid chunk
+    "content/posts/2026-industry-tools-in-academia-orchestration/index.qmd", # just for the mermaid chunk
     "renv/"
   )

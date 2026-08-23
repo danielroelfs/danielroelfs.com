@@ -2,7 +2,7 @@
 title: 'Tools I''d take from industry to academia: orchestration tools'
 date: 2026-08-23T00:00:00.000Z
 description: 'Tools I''d take from industry to academia: orchestration tools'
-slug: industry-tools-in-phd-orchestration
+slug: industry-tools-in-academia-orchestration
 categories:
   - miscellaneous
 tags:

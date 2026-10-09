@@ -4,7 +4,7 @@ description: About
 ---
 
 
-Hi, I'm Daniel Roelfs.{{< marginnote >}}![avatar](../../avatar.png){{< /marginnote >}}I'm currently working as a Data Scientist at the Norwegian bank DNB. Prior to this I was a PhD candidate working at the Norwegian Centre for Mental Disorders Research (NORMENT) in Oslo. My doctoral research focused on the intersection between neuroimaging and genetics to discover more about the human brain and the biology underlying psychiatric disorders.
+Hi, I'm Daniel Roelfs.{{< marginnote >}}![avatar](../../avatar.png){{< /marginnote >}}I'm currently working as a Data Scientist within AI-driven fraud detection at the Analytics & AI Centre of Excellence team in Storebrand, a Norwegian insurance company and financial institution. Previously I had a similar role in the anti-money laundering at the Norwegian bank DNB. I have a PhD from the University of Oslo, where I worked in a project on computational neuroscience at the Norwegian Centre for Mental Disorders Research (NORMENT) in Oslo. My doctoral research focused on the intersection between neuroimaging and genetics to discover more about the human brain and the biology underlying psychiatric disorders.
 
 Born and raised in the Netherlands, I have also studied in France and Sweden before moving to Norway. In my free time I run, ski, hike, and take photos. This blog serves as a way to share some of the code I write in R and Python for personal and professional interests.
 

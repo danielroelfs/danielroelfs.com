@@ -1,7 +1,7 @@
 ---
-title: Strava Data Analysis using Python and R
+title: Strava data analysis using Python and R
 date: 2024-12-30
-description: "Strava Data Analysis using Python and R"
+description: Strava data analysis using Python and R
 slug: strava-data-analysis-in-python-and-r
 categories:
   - data science

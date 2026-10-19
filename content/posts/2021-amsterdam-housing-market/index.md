@@ -1,7 +1,7 @@
 ---
-title: Visualizing the State of the Amsterdam Housing Market
+title: Visualizing the state of the Amsterdam housing market
 date: 2021-06-20
-description: Visualizing the State of the Amsterdam Housing Market
+description: Visualizing the state of the Amsterdam housing market
 slug: visualizing-the-state-of-the-amsterdam-housing-market
 categories:
   - society

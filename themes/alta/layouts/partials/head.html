@@ -20,6 +20,19 @@
     content="{{ if .IsPage }}{{ .Site.BaseURL }}{{ .Params.thumbnail }}{{ else }}{{ .Site.BaseURL }}{{ .Site.Params.favicon }}{{ end }}"
   />
 
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://use.typekit.net" crossorigin />
+  <link rel="preconnect" href="https://p.typekit.net" crossorigin />
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:ital,wght@0,100..900;1,100..900&display=swap" /> <!-- Geist Mono -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" /> <!-- Crimson Text -->
+  
+  <link rel="stylesheet" href="https://use.typekit.net/coq1ltf.css" /> <!-- source-serif-pro -->
+  <link rel="stylesheet" href="https://use.typekit.net/uwd7war.css" /> <!-- source-code-pro -->
+  <link rel="stylesheet" href="https://use.typekit.net/vdr1khv.css" /> <!-- itc-avant-garde-gothic-pro -->
+
   {{ $style := resources.Get "scss/main.scss" | toCSS }}
   <link rel="stylesheet" href="{{ $style.RelPermalink }}" />
 

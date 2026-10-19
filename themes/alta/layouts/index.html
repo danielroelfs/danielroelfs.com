@@ -1,0 +1,54 @@
+{{ define "main" }}
+<div class="address-container">
+  {{- partial "logo.html" . -}}
+  <div class="address-block">
+    <div id="oslo_time"></div>
+    <div id="oslo_tz"></div>
+    <div>Oslo</div>
+    <div>Norge</div>
+  </div>
+</div>
+<div class="index-intro">{{ .Site.Params.intro | safeHTML }}</div>
+<div class="social-list">
+  {{ with .Site.Params.social }}
+    {{ range sort . "weight" }}
+      <a href="{{ .url }}" aria-label='Go to {{ replace .url "https://" ""  }}' {{ .html_attributes | safeHTMLAttr }}>
+        <i class="ti ti-{{ .icon }}"></i>
+      </a>
+    {{ end }}
+  {{ end }}
+</div>
+<hr class="inv" />
+<div class="index-nav-container">{{- partial "nav.html" . -}}</div>
+<script>
+  // Time block functions
+  var oslo_time_parts = function (locale, opts) {
+    return Object.fromEntries(
+      new Intl.DateTimeFormat(locale, { timeZone: "Europe/Oslo", ...opts })
+        .formatToParts(new Date())
+        .map(function (p) {
+          return [p.type, p.value];
+        }),
+    );
+  };
+
+  var render_oslo_time = function () {
+    var oslo_time = oslo_time_parts("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZoneName: "short",
+    });
+    var oslo_offset = oslo_time_parts("en-US", { timeZoneName: "short" });
+
+    document.getElementById("oslo_time").textContent =
+      oslo_time.hour + ":" + oslo_time.minute;
+    document.getElementById("oslo_tz").textContent =
+      oslo_time.timeZoneName +
+      "/" +
+      oslo_offset.timeZoneName.replace("GMT", "UTC ");
+  };
+
+  render_oslo_time();
+  setInterval(render_oslo_time, 1000);
+</script>
+{{ end }}

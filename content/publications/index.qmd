@@ -4,7 +4,10 @@ description: Publications
 engine: knitr
 ---
 
-```{css, label="style", echo=FALSE}
+```{css}
+/*| label: style */
+/*| echo: false */
+
 ul li:before {
   content: "";
   margin: 0;

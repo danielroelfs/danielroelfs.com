@@ -1,0 +1,9 @@
+<figure>
+  {{ if .IsNamedParams }}
+  <img src="{{ .Get `src` }}" alt="{{ .Get `alt` }}" />
+  <figcaption>{{ .Get "caption" | markdownify }}</figcaption>
+  {{ else }}
+  <img src="{{ .Get 0 }}" alt="{{ .Get 1 }}" />
+  <figcaption>{{ .Get 2 | markdownify }}</figcaption>
+  {{ end }}
+</figure>

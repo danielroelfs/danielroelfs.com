@@ -1,0 +1,1 @@
+# Alta, a Hugo theme

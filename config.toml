@@ -1,6 +1,6 @@
 baseurl = "/"
 title = "Daniel Roelfs"
-theme = "trysil"
+theme = "alta"
 
 ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
     "_cache$", "index\\.html", "about\\.html", "static/blog/\\*_files/", "README.md",
@@ -13,7 +13,7 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
       unsafe = true
 
 [params]
-    intro = "PhD in computational neuroscience and psychiatry genetics, Data Scientist within the Analytics & AI Centre of Excellence team in Storebrand, previously within anti-money laundering at DNB"
+    intro = "My name is <span class='accent-color'>Daniel Roelfs</span>, Data Scientist at the Analytics & AI Centre of Excellence in Storebrand, previously working within academia and anti-money laundering at DNB"
 
     favicon = "avatar.png"
 

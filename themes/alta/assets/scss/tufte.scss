@@ -1,0 +1,502 @@
+// Tufte inspired style sheet
+// Adapted from https://github.com/edwardtufte/tufte-css/blob/gh-pages/tufte.css
+
+@import "variables";
+
+// Main blocks
+
+html {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+body {
+  width: $main-width;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: $main-family;
+  background-color: $background-color;
+  color: $foreground-color;
+  max-width: 1050px;
+  counter-reset: sidenote-counter;
+}
+
+@media (max-width: 768px) {
+  body {
+    width: 88%;
+    padding-left: 6%;
+    padding-right: 6%;
+  }
+}
+
+$bars: 6;
+$bar-pitch: 0.8rem;
+$fade-height: $bars * $bar-pitch;
+
+@mixin thickening-bars($color) {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: -100vmax;
+  right: -100vmax;
+  height: $fade-height;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  $sizes: ();
+  $positions: ();
+  $images: ();
+  @for $i from 1 through $bars {
+    $thickness: $bar-pitch * $i / ($bars + 1);
+    $y: $i * $bar-pitch - $thickness;
+    $images: append($images, linear-gradient($color, $color), comma);
+    $positions: append($positions, 0 $y, comma);
+    $sizes: append($sizes, 100% $thickness, comma);
+  }
+  background-image: $images;
+  background-position: $positions;
+  background-size: $sizes;
+}
+
+article.post {
+  position: relative;
+  background-color: $article-background-color;
+  color: $article-foreground-color;
+  padding: 0.25rem 0 1rem + $fade-height 0;
+  box-shadow: 0 0 0 100vmax $article-background-color;
+  clip-path: inset(0 -100vmax);
+
+  &::after {
+    @include thickening-bars($background-color);
+  }
+}
+
+.article-header {
+  padding: 5rem 0 1rem;
+
+  &.fade {
+    position: relative;
+    padding-bottom: $fade-height;
+    clip-path: inset(0 -100vmax);
+
+    &::after {
+      @include thickening-bars($article-background-color);
+    }
+  }
+}
+
+section {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+p,
+dl,
+ol,
+ul {
+  font-size: 1.4rem;
+  line-height: 2rem;
+}
+
+p {
+  margin-top: 1.4rem;
+  margin-bottom: 1.4rem;
+  padding-right: 0;
+  vertical-align: baseline;
+  &.subtitle {
+    font-style: italic;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    display: block;
+    line-height: 1;
+  }
+}
+
+p,
+footer,
+table {
+  width: $p-width;
+}
+
+@media (max-width: 768px) {
+  p,
+  footer,
+  table {
+    width: 100%;
+  }
+}
+
+// 50 + 5 == 55, to be the same width as paragraph
+dl,
+ol,
+ul {
+  width: 90%;
+  -webkit-padding-start: 2%;
+}
+
+@media (max-width: 768px) {
+  dl,
+  ol,
+  ul {
+    width: 90%;
+  }
+}
+
+// Headers
+
+h1,
+h2,
+h3 {
+  font-weight: 400;
+  line-height: 1;
+}
+
+h1 {
+  font-size: 3.2rem;
+  margin-top: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+h2 {
+  font-size: 2.2rem;
+  font-style: italic;
+  margin-top: 2.1rem;
+  margin-bottom: 1.4rem;
+}
+
+h3 {
+  font-size: 1.7rem;
+  font-style: italic;
+  margin-top: 2rem;
+  margin-bottom: 1.4rem;
+}
+
+h1 > code,
+h2 > code,
+h3 > code {
+  font-size: 0.8em;
+}
+
+// Misc
+
+a {
+  &:link,
+  &:visited {
+    color: inherit;
+    text-underline-offset: 0.1em;
+    text-decoration-thickness: 0.05em;
+  }
+  &.crossref {
+    font-family: $mono-family;
+    text-decoration-style: dashed;
+  }
+}
+
+.sans {
+  font-family: $sans-family;
+  letter-spacing: 0.03em;
+  & > code {
+    font-size: 1.2rem;
+  }
+}
+
+.mono {
+  font-family: $mono-family;
+}
+
+span.fullwidth {
+  max-width: 90%;
+  clear: both;
+}
+
+div.fullwidth,
+table.fullwidth {
+  width: 100%;
+}
+
+div.table-wrapper {
+  overflow-x: auto;
+  font-family: "Trebuchet MS", "Gill Sans", "Gill Sans MT", sans-serif;
+}
+
+@media (max-width: 768px) {
+  div.table-wrapper,
+  table {
+    width: 85%;
+  }
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px dashed $foreground-color;
+  margin: 1em 0;
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  hr {
+    width: 100%;
+  }
+}
+
+.danger {
+  color: red;
+}
+
+blockquote {
+  & p {
+    width: $p-width;
+    margin-right: 40px;
+  }
+  & footer {
+    width: 100%;
+    font-size: 1.1rem;
+    text-align: right;
+  }
+}
+
+@media (max-width: 768px) {
+  blockquote {
+    margin-left: 1.5em;
+    margin-right: 0em;
+    & p,
+    & footer {
+      width: 100%;
+    }
+  }
+}
+
+dt:not(:first-child),
+li:not(:first-child) {
+  margin-top: initial;
+}
+
+.iframe-wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  padding-top: 25px;
+  height: 0;
+  & iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// Figures and images
+img {
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  img {
+    width: 100%;
+  }
+}
+
+figure {
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  max-width: $p-width;
+  -webkit-margin-start: 0;
+  -webkit-margin-end: 0;
+  margin: 0 0 3em 0;
+  &.fullwidth figcaption {
+    margin-right: 24%;
+  }
+}
+
+@media (max-width: 768px) {
+  figure {
+    max-width: 100%;
+  }
+}
+
+figcaption {
+  float: right;
+  clear: right;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  vertical-align: baseline;
+  position: relative;
+  max-width: 40%;
+}
+
+@media (max-width: 768px) {
+  figcaption,
+  figure.fullwidth figcaption {
+    margin-right: 0%;
+    max-width: none;
+  }
+}
+
+// Code blocks
+
+pre {
+  width: 100%;
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  background: none !important;
+}
+
+code,
+pre > code {
+  font-family: $mono-family;
+  font-size: 1rem;
+  line-height: 1.42;
+  -webkit-text-size-adjust: 100%; /* Prevent adjustments of font size after orientation changes in iOS. See https://github.com/edwardtufte/tufte-css/issues/81#issuecomment-261953409 */
+}
+
+pre > code {
+  font-size: 0.9rem;
+  width: 100%;
+  box-sizing: border-box;
+  margin-left: 0;
+  padding-left: 2.5%;
+  overflow-x: auto;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  pre > code {
+    width: 100%;
+  }
+}
+
+// Side- and margin notes
+
+.sidenote,
+.marginnote {
+  float: right;
+  clear: right;
+  margin-right: $sidenote-margin;
+  width: $sidenote-width;
+  margin-top: 0.3rem;
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  line-height: 1.3;
+  vertical-align: baseline;
+  position: relative;
+  & > code,
+  & > code {
+    font-size: 1rem;
+  }
+}
+
+.sidenote:before {
+  content: counter(sidenote-counter) " ";
+  font-size: 0.8rem;
+  top: -0.5rem;
+}
+
+.sidenote-number {
+  counter-increment: sidenote-counter;
+  &:after {
+    content: counter(sidenote-counter);
+    font-size: 0.8rem;
+    top: -0.5rem;
+    left: 0.1rem;
+  }
+}
+
+.sidenote-number:after,
+.sidenote:before {
+  position: relative;
+  vertical-align: baseline;
+}
+
+blockquote .sidenote,
+blockquote .marginnote {
+  margin-right: -82%;
+  min-width: 59%;
+  text-align: left;
+}
+
+input.margin-toggle {
+  display: none;
+}
+
+label.sidenote-number {
+  display: inline-block;
+  max-height: 2rem; /* should be less than or equal to paragraph line-height */
+}
+
+label.margin-toggle:not(.sidenote-number) {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  label.margin-toggle:not(.sidenote-number) {
+    display: inline;
+  }
+
+  .sidenote,
+  .marginnote {
+    display: none;
+  }
+
+  .margin-toggle:checked + .sidenote,
+  .margin-toggle:checked + .marginnote {
+    display: block;
+    float: left;
+    left: 1rem;
+    clear: both;
+    width: 95%;
+    margin: 1rem 2.5%;
+    //vertical-align: baseline;
+    position: relative;
+  }
+
+  label {
+    cursor: pointer;
+  }
+}
+
+// Chapter epigraphs
+
+div.epigraph {
+  margin: 5em 0;
+  & > blockquote {
+    margin-top: 3em;
+    margin-bottom: 3em;
+    font-style: italic;
+    & > p {
+      font-style: italic;
+    }
+    & > footer {
+      width: $p-width;
+      font-style: normal;
+      & > span > p {
+        font-size: 1.1rem;
+      }
+      & > cite {
+        font-style: italic;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  div.epigraph {
+    & > blockquote {
+      & > footer {
+        width: 100%;
+      }
+    }
+  }
+}

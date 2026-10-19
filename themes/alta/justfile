@@ -1,0 +1,5 @@
+test:
+    hugo version
+
+preview:
+    hugo server --port 1314 --disableFastRender --ignoreCache -w --source exampleSite --themesDir ../..

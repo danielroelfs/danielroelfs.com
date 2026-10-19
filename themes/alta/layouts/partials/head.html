@@ -1,0 +1,52 @@
+<head>
+  <meta
+    name="description"
+    content="{{ if .IsPage }}{{ .Site.BaseURL }}{{ else }}{{ .Site.Params.description }}{{ end }}"
+  />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="{{ .Permalink }}" />
+  <meta property="og:site_name" content="{{ .Site.Title }}" />
+  <meta property="og:title" content="{{ block "og-title" . }}{{ .Site.Title }}{{
+  end }}">
+  <meta
+    property="og:description"
+    content="{{ if .IsPage }}{{ .Params.description }}{{ else }}{{ .Site.Params.description }}{{ end }}"
+  />
+  <meta
+    property="og:image"
+    content="{{ if .IsPage }}{{ .Site.BaseURL }}{{ .Params.thumbnail }}{{ else }}{{ .Site.BaseURL }}{{ .Site.Params.favicon }}{{ end }}"
+  />
+
+  {{ $style := resources.Get "scss/main.scss" | toCSS }}
+  <link rel="stylesheet" href="{{ $style.RelPermalink }}" />
+
+  <!-- Custom css -->
+  {{ range .Site.Params.customcss }}
+    {{ $style := resources.Get . | toCSS }}
+    <link
+      rel="stylesheet"
+      href="{{ $style.RelPermalink }}"
+      integrity="{{ $style.Data.Integrity }}"
+    />
+  {{ end }}
+
+  <!-- Umami -->
+  {{ if and .Site.Params.umami (not hugo.IsServer) }}
+    <script async src="{{ .Site.Params.umamilink }}" data-website-id="{{ .Site.Params.umamiid }}"></script>
+  {{ end }}
+
+  <!-- Favicon -->
+  {{ if .Site.Params.favicon }}
+    {{ with .Site.Params.favicon }}
+      <link rel="shortcut icon" href="{{ . | relURL }}" />
+    {{ end }}
+  {{ end }}
+
+  <!-- Title -->
+  {{ $title := print .Title " | " .Site.Title }} {{ if .IsHome }}{{ $title =
+  .Site.Title }}{{ end }}
+  <title>{{ $title }}</title>
+</head>

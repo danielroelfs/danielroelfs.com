@@ -1,7 +1,9 @@
 // Tufte inspired style sheet
 // Adapted from https://github.com/edwardtufte/tufte-css/blob/gh-pages/tufte.css
 
-@import "variables";
+@use "sass:math";
+@use "sass:list";
+@use "variables" as *;
 
 // Main blocks
 
@@ -51,11 +53,11 @@ $fade-height: $bars * $bar-pitch;
   $positions: ();
   $images: ();
   @for $i from 1 through $bars {
-    $thickness: $bar-pitch * $i / ($bars + 1);
+    $thickness: math.div($bar-pitch * $i, $bars + 1);
     $y: $i * $bar-pitch - $thickness;
-    $images: append($images, linear-gradient($color, $color), comma);
-    $positions: append($positions, 0 $y, comma);
-    $sizes: append($sizes, 100% $thickness, comma);
+    $images: list.append($images, linear-gradient($color, $color), comma);
+    $positions: list.append($positions, 0 $y, comma);
+    $sizes: list.append($sizes, 100% $thickness, comma);
   }
   background-image: $images;
   background-position: $positions;

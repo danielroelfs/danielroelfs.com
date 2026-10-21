@@ -31,12 +31,15 @@
   
   <link rel="stylesheet" href="https://use.typekit.net/brv0fla.css"> <!-- source-serif-pro, source-code-pro, itc-avant-garde-gothic-pro -->
 
-  {{ $style := resources.Get "scss/main.scss" | toCSS }}
+  {{ $opts := dict 
+    "transpiler" "dartsass"
+  }}
+  {{ $style := resources.Get "scss/main.scss" | css.Sass $opts }}
   <link rel="stylesheet" href="{{ $style.RelPermalink }}" />
 
   <!-- Custom css -->
   {{ range .Site.Params.customcss }}
-    {{ $style := resources.Get . | toCSS }}
+    {{ $style := resources.Get . | css.Sass $opts }}
     <link
       rel="stylesheet"
       href="{{ $style.RelPermalink }}"

@@ -4,7 +4,7 @@ theme = "alta"
 
 ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
     "_cache$", "index\\.html", "about\\.html", "static/blog/\\*_files/", "README.md",
-    ".venv/", "data/"]
+    ".venv/", "data/", "/renv/"]
 
 [markup]
   defaultMarkdownHandler = "goldmark"

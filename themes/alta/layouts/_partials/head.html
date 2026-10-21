@@ -1,7 +1,7 @@
 <head>
   <meta
     name="description"
-    content="{{ if .IsPage }}{{ .Site.BaseURL }}{{ else }}{{ .Site.Params.description }}{{ end }}"
+    content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}"
   />
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -31,15 +31,13 @@
   
   <link rel="stylesheet" href="https://use.typekit.net/brv0fla.css"> <!-- source-serif-pro, source-code-pro, itc-avant-garde-gothic-pro -->
 
-  {{ $opts := dict 
-    "transpiler" "dartsass"
-  }}
-  {{ $style := resources.Get "scss/main.scss" | css.Sass $opts }}
-  <link rel="stylesheet" href="{{ $style.RelPermalink }}" />
+  {{ $opts := dict "transpiler" "dartsass" }}
+  {{ $style := resources.Get "scss/main.scss" | css.Sass $opts | resources.Minify | resources.Fingerprint }}
+  <link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}" />
 
   <!-- Custom css -->
   {{ range .Site.Params.customcss }}
-    {{ $style := resources.Get . | css.Sass $opts }}
+    {{ $style := resources.Get . | css.Sass $opts | resources.Minify | resources.Fingerprint }}
     <link
       rel="stylesheet"
       href="{{ $style.RelPermalink }}"
@@ -55,7 +53,7 @@
   <!-- Favicon -->
   {{ if .Site.Params.favicon }}
     {{ with .Site.Params.favicon }}
-      <link rel="shortcut icon" href="{{ . | relURL }}" />
+      <link rel="icon" href="{{ . | relURL }}" />
     {{ end }}
   {{ end }}
 

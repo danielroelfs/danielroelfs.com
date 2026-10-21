@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: 🛎 Check out repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           ref: dev
           fetch-depth: 1

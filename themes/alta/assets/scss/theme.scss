@@ -91,6 +91,12 @@ nav {
   }
 }
 
+@media (max-width: 768px) {
+  nav {
+    font-size: 1.2rem;
+  }
+}
+
 .social-list {
   & a {
     font-size: 3rem;

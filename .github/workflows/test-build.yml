@@ -14,7 +14,10 @@ jobs:
         with:
           submodules: recursive
 
-      - run: npm i -g sass postcss postcss-cli autoprefixer
+      - name: 🎨 Install Dart Sass
+        run: sudo snap install dart-sass
+
+      - run: npm i -g postcss postcss-cli autoprefixer
       
       - name: 🤵 Install Hugo
         run: |

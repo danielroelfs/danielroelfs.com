@@ -1,8 +1,9 @@
 // Custom style
 
-$body-family: "source-serif-pro", "Source Serif 4", serif;
-$code-family: "source-code-pro", "Courier", monospace;
-$sans-family: "itc-avant-garde-gothic-pro", "Helvetica", system-ui, sans-serif;
+$body-family:
+  "source-serif-pro", "Crimson Text", Charter, Cambria, Georgia, serif;
+$code-family: "source-code-pro", Courier, monospace;
+$sans-family: "itc-avant-garde-gothic-pro", Helvetica, system-ui, sans-serif;
 
 body {
   font-family: $body-family;

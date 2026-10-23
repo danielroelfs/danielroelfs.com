@@ -1,0 +1,16 @@
+{{ define "main" }}
+{{ if .Site.Params.show_breadcrumbs }}
+  <nav class="breadcrumbs">
+    <a href="{{ .Site.Home.RelPermalink }}">{{ .Site.Params.home_name }}</a>
+  </nav>
+{{ end }}
+<article>
+  <div class="article-header">
+    <h1 class="mono">{{ .Title | markdownify }}</h1>
+  </div>
+  <p class="mono">This page does not exist, sorry :(</p>
+  <div class="index-nav-container">
+    {{- partial "nav.html" . -}}
+  </div>
+</article>
+{{ end }}

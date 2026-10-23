@@ -3,7 +3,9 @@
   {{- partial "head.html" . -}}
   <body>
     {{- partial "header.html" . -}}
-    {{- block "main" . }}{{- end }}
+    <main>
+      {{- block "main" . }}{{- end }}
+    </main>
     {{- partial "script.html" . -}}
     {{- partial "footer.html" . -}}
   </body>

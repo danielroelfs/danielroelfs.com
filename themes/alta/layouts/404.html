@@ -6,9 +6,16 @@
 {{ end }}
 <article>
   <div class="article-header">
-    <h1 class="mono">{{ .Title | markdownify }}</h1>
+    <h1 class="mono">STATUS: 404 (PAGE NOT FOUND)</h1>
   </div>
-  <p class="mono">This page does not exist, sorry :(</p>
+  <p class="mono">
+    > STACK TRACE:</br>
+    > CAUSE: UNKNOWN</br>
+    > LIKELY REASONS:</br>
+    &nbsp;&nbsp;- PAGE DELETED ?</br>
+    &nbsp;&nbsp;- PAGE MOVED ?</br></br>
+    > SORRY :(</br></br>
+  </p>
   <div class="index-nav-container">
     {{- partial "nav.html" . -}}
   </div>

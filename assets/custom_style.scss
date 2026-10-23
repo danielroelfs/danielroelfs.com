@@ -1,44 +1,5 @@
 // Custom style
 
-$body-family:
-  "source-serif-pro", "Crimson Text", Charter, Cambria, Georgia, serif;
-$code-family: "source-code-pro", Courier, monospace;
-$sans-family: "itc-avant-garde-gothic-pro", Helvetica, system-ui, sans-serif;
-
-body {
-  font-family: $body-family;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: $sans-family;
-}
-
-.index-intro {
-  font-family: $sans-family;
-}
-
-pre {
-  background-color: none;
-  & > code {
-    font-family: $code-family;
-    font-size-adjust: none;
-  }
-}
-
-code {
-  font-family: $code-family;
-  font-size-adjust: ex-height 0.5;
-}
-
-ul li:before {
-  content: "→";
-}
-
 .notbyai-wrapper a {
   cursor: pointer;
   &:hover {

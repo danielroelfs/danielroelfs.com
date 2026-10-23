@@ -138,7 +138,7 @@ dl,
 ol,
 ul {
   width: 90%;
-  -webkit-padding-start: 2%;
+  padding-inline-start: 0;
 }
 
 @media (max-width: 768px) {
@@ -282,7 +282,7 @@ li:not(:first-child) {
 
 .iframe-wrapper {
   position: relative;
-  padding-bottom: 56.25%; /* 16:9 */
+  padding-bottom: 56.25%; // 16:9
   padding-top: 25px;
   height: 0;
   & iframe {
@@ -295,6 +295,7 @@ li:not(:first-child) {
 }
 
 // Figures and images
+
 img {
   max-width: 100%;
 }
@@ -361,7 +362,7 @@ pre > code {
   font-family: $code-family;
   font-size: 1rem;
   line-height: 1.42;
-  -webkit-text-size-adjust: 100%; /* Prevent adjustments of font size after orientation changes in iOS. See https://github.com/edwardtufte/tufte-css/issues/81#issuecomment-261953409 */
+  -webkit-text-size-adjust: 100%; // Prevent adjustments of font size after orientation changes in iOS. See https://github.com/edwardtufte/tufte-css/issues/81#issuecomment-261953409
 }
 
 pre > code {
@@ -435,7 +436,7 @@ input.margin-toggle {
 
 label.sidenote-number {
   display: inline-block;
-  max-height: 2rem; /* should be less than or equal to paragraph line-height */
+  max-height: 2rem; // should be less than or equal to paragraph line-height
 }
 
 label.margin-toggle:not(.sidenote-number) {
@@ -460,7 +461,6 @@ label.margin-toggle:not(.sidenote-number) {
     clear: both;
     width: 95%;
     margin: 1rem 2.5%;
-    //vertical-align: baseline;
     position: relative;
   }
 

@@ -1,7 +1,6 @@
 @use "variables" as *;
 
 // Blocks
-
 html {
   font-size: 16px;
   scrollbar-gutter: stable both-edges;
@@ -169,7 +168,21 @@ table.posts-list {
   }
 }
 
-/* Lists */
+// Code
+pre {
+  background-color: none;
+  & > code {
+    font-family: $code-family;
+    font-size-adjust: none;
+  }
+}
+
+code {
+  font-family: $code-family;
+  font-size-adjust: ex-height 0.5;
+}
+
+// Lists
 ol {
   counter-reset: item;
   margin: 0;
@@ -199,7 +212,7 @@ ul li {
 ul li:before {
   display: block;
   float: left;
-  content: "-";
+  content: "→";
   margin-right: 1.15rem;
 }
 

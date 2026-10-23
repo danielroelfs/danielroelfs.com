@@ -208,6 +208,10 @@ ul li:before {
   color: $accent-color;
 }
 
+::selection {
+  background-color: $accent-color;
+}
+
 details summary {
   cursor: pointer;
   font-size: 1.2rem;

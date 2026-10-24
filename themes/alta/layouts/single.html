@@ -9,14 +9,12 @@
   {{ end }}
   <a href="{{ .RelPermalink }}">{{ .Title }}</a>
 </nav>
-{{ end }}
-
-{{ $article_class := cond (eq .Section "posts") "post" "" }}
+{{ end }} {{ $article_class := cond (eq .Section "posts") "post" "" }}
 <div class="article-header{{ if $article_class }} fade{{ end }}">
   <h1 class="article-title">{{ .Title | markdownify }}</h1>
   <div class="article-subheader">
     <span class="article-info">
-      {{ if .Params.date }} {{ if .Params.showdate | default true }}
+      {{ if .Params.date }} {{ if ne .Params.showdate false }}
       <span>{{ .Date.Format "2006.01.02" }}</span>
       {{ end }} {{ end }} {{ if .Params.author }}
       <span>by {{ .Params.author }}</span>
@@ -31,11 +29,4 @@
   <hr />
 </div>
 <article class="{{ $article_class }}">{{ .Content }}</article>
-<nav class="bottom-nav">
-  {{ with .Site.Menus.main }} {{ range sort . "Weight" }}
-  <a class="internal" hyphens="none" href="{{ .URL }}">
-    {{ $text := print .Name | safeHTML }} {{ $text }}
-  </a>
-  {{ end }} {{ end }}
-</nav>
-{{ end }}
+{{- partial "nav.html" . -}} {{ end }}

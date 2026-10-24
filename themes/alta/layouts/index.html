@@ -10,13 +10,19 @@
 </div>
 <div class="index-intro">{{ .Site.Params.intro | safeHTML }}</div>
 <div class="social-list">
-  {{ with .Site.Params.social }}
-    {{ range sort . "weight" }}
-      <a href="{{ .url }}" aria-label='Go to {{ replace .url "https://" ""  }}' {{ .html_attributes | safeHTMLAttr }}>
-        <i class="ti ti-{{ .icon }}"></i>
-      </a>
-    {{ end }}
-  {{ end }}
+  {{ with .Site.Params.social }} {{ range sort . "weight" }}
+  <a
+    href="{{ .url }}"
+    aria-label='Go to {{ replace .url "https://" ""  }}'
+    {{
+    .html_attributes
+    |
+    safeHTMLAttr
+    }}
+  >
+    <i class="ti ti-{{ .icon }}"></i>
+  </a>
+  {{ end }} {{ end }}
 </div>
 <hr class="inv" />
 <div class="index-nav-container">{{- partial "nav.html" . -}}</div>

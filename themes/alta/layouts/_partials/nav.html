@@ -1,7 +1,7 @@
 <nav class="bottom-nav">
   {{ with .Site.Menus.main }} {{ range sort . "Weight" }}
   <a href="{{ .URL }}" aria-label="Go to {{ .URL }}">
-    {{ $text := print .Name | safeHTML }} {{ $text }}
+    {{ .Name | safeHTML }}
   </a>
   {{ end }} {{ end }}
 </nav>

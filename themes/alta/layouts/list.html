@@ -32,11 +32,4 @@
     {{ end }}
   </table>
 </article>
-<nav class="bottom-nav">
-  {{ with .Site.Menus.main }} {{ range sort . "Weight" }}
-  <a class="internal" hyphens="none" href="{{ .URL }}">
-    {{ $text := print .Name | safeHTML }} {{ $text }}
-  </a>
-  {{ end }} {{ end }}
-</nav>
-{{ end }}
+{{- partial "nav.html" . -}} {{ end }}

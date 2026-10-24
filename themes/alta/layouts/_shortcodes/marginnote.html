@@ -1,12 +1,3 @@
-{{- $seed := .Site.Title -}}
-{{- $random := delimit (shuffle (split (md5 $seed) "" )) "" -}}
-<label
-  for="mn-{{ $random }}"
-  class="margin-toggle"
->&#8853;</label>
-<input
-  type="checkbox"
-  id="mn-{{ $random }}"
-  class="margin-toggle"
-/>
+<label for="mn-{{ .Ordinal }}" class="margin-toggle">&#8853;</label>
+<input type="checkbox" id="mn-{{ .Ordinal }}" class="margin-toggle" />
 <span class="marginnote">{{ .Inner | markdownify }}</span>

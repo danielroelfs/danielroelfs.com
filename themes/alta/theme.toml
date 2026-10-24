@@ -1,9 +1,9 @@
 name = "Alta"
 license = "Apache-2.0"
-licenselink = "https://github.com/danielroelfs/hugo-theme-alta/blob/main/LICENSE"
+licenselink = "https://danielroelfs.com/blob/main/LICENSE"
 description = "A simple Hugo theme focused on readability"
-homepage = "https://github.com/danielroelfs/hugo-theme-alta"
-tags = ["clean", "simple", "minimalist", "alta", ]
+homepage = "https://danielroelfs.com/"
+tags = ["clean", "simple", "alta", ]
 features = ["readability", "simple"]
 min_version = "0.120.0"
 

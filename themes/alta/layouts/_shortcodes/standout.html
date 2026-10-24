@@ -1,6 +1,4 @@
-<p class="standout-paragraph" 
-  {{ if or (.Site.Params.accentcol) (.Get "bg") }} 
-    style="background-color: {{ with .Get "bg" }}{{ . }}{{ else }}{{ .Site.Params.accentcol }}{{ end }}"
-  {{ end }}>
+{{- $bg := .Get "bg" -}}
+<p class="standout-paragraph" style="background-color: {{ $bg }}">
   {{ .Inner | markdownify }}
 </p>

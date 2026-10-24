@@ -4,7 +4,7 @@ description: "Here are some styles that are specific to this theme"
 date: 2025-10-04
 ---
 
-See the [source code](https://github.com/danielroelfs/hugo-theme-trysil/blob/main/exampleSite/content/posts/theme-specific-styles.md) for the specific usage of the shortcodes used in this post.
+See the [source code](https://github.com/danielroelfs/danielroelfs/blob/main/themes/alta/) for the specific usage of the shortcodes used in this post.
 
 abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz{{< sidenote >}}Just to indicate the line length of this theme{{< /sidenote>}}
 
@@ -16,7 +16,7 @@ This is a stand-out paragraph
 
 His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table{{< sidenote >}}Samsa was a travelling salesman{{< /sidenote >}} and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame. It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer. Gregor then turned to look out the window at the dull weather.
 
-Drops of rain could be heard hitting the pane, which made him feel quite sad. "How about if I sleep a little bit longer and forget all this nonsense", he thought, but that was something he was unable to do because he was used to sleeping on his right, and in his present state couldn't get into that position{{< marginnote >}}![Cockroach image](https://unsplash.com/photos/GjpvaL4-Sh8/download?ixid=M3wxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNzU5NTY3Nzg0fA&force=true&w=640)A type of vermin perhaps imagined by Samsa when he woke up{{< /marginnote >}}. He always rolled back to where he was{{< sidenote >}}However hard he threw himself onto his right{{< /sidenote >}}. He must have tried it a hundred times, shut his eyes so that he wouldn't have to look at the floundering legs, and only stopped when he began to feel a mild, dull pain there that he had never felt before.
+Drops of rain could be heard hitting the pane, which made him feel quite sad. "How about if I sleep a little bit longer and forget all this nonsense", he thought, but that was something he was unable to do because he was used to sleeping on his right, and in his present state couldn't get into that position{{< marginnote >}}![Cockroach image](/example-margin-image.jpg)A type of vermin perhaps imagined by Samsa when he woke up{{< /marginnote >}}. He always rolled back to where he was{{< sidenote >}}However hard he threw himself onto his right{{< /sidenote >}}. He must have tried it a hundred times, shut his eyes so that he wouldn't have to look at the floundering legs, and only stopped when he began to feel a mild, dull pain there that he had never felt before.
 
 "Oh, God", he thought, "what a strenuous career it is that I've chosen! Travelling day in and day out. Doing business like this takes much more effort than doing your own business at home, and on top of that there's the curse of travelling, worries about making train connections, bad and irregular food, contact with different people all the time so that you can never get to know anyone or become friendly with them. It can all go to Hell!
 
@@ -24,7 +24,7 @@ Drops of rain could be heard hitting the pane, which made him feel quite sad. "H
 
 For instance, whenever I go back to the guest house during the morning to copy out the contract, these gentlemen are always still sitting there eating their breakfasts{{< marginnote >}}I ought to just try that with my boss; I'd get kicked out on the spot{{< /marginnote >}}. But who knows, maybe that would be the best thing for me. If I didn't have my parents to think about I'd have given in my notice a long time ago, I'd have gone up to the boss and told him just what I think, tell him everything I would, let him know just what I feel. He'd fall right off his desk!
 
-{{< figure src="https://unsplash.com/photos/aDxmYZtYj7g/download?ixid=M3wxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNzU5NTY2MzU0fA&force=true&w=1920" caption="View across the bridge in Prague, Czechia" >}}
+{{< figure src="/example-image.jpg" caption="View across the bridge in Prague, Czechia" >}}
 
 And it's a funny sort of business to be sitting up there at your desk, talking down at your subordinates from up there, especially when you have to go right up close because the boss is hard of hearing. Well, there's still some hope; once I've got the money together to pay off my parents' debt to him - another five or six years I suppose - that's definitely what I'll do. That's when I'll make the big change. First of all though, I've got to get up, my train leaves at five. " And he looked over at the alarm clock, ticking on the chest of drawers. "God in Heaven! " he thought. It was half past six and the hands were quietly moving forwards, it was even later than half past, more like quarter to seven. Had the alarm clock not rung?
 

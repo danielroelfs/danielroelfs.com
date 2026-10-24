@@ -25,6 +25,8 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
     description = "Daniel Roelfs' personal website"
     keywords    = "blog, personal, coding"
 
+    reading_speed = 260
+
     customcss   = ["custom_style.scss"]
 
     iconsource  = "tabler"

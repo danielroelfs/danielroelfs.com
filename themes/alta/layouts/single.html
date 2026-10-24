@@ -17,8 +17,12 @@
       {{ if .Params.date }} {{ if ne .Params.showdate false }}
       <span>{{ .Date.Format "2006.01.02" }}</span>
       {{ end }} {{ end }} {{ if .Params.author }}
-      <span>by {{ .Params.author }}</span>
-      {{ end }}
+      <span>written by {{ .Params.author }}</span>
+      {{ end }} {{ if $article_class }} {{ if .Params.show_readingtime }} {{
+      $readingTime := div (float .WordCount) .Site.Params.reading_speed }} {{
+      $readingTime = math.Ceil $readingTime }}
+      <span>reading time: {{ $readingTime }} min</span>
+      {{ end }} {{ end }}
     </span>
     {{ if .Site.Params.show_subheader_nav }}
     <span class="subheader-nav">

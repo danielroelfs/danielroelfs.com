@@ -109,6 +109,10 @@ nav {
   font-family: $mono-family;
 }
 
+.article-info span:not(:last-child)::after {
+  content: ";";
+}
+
 // Posts lists
 table.posts-list {
   width: 100%;

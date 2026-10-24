@@ -14,7 +14,7 @@ ul li:before {
 }
 
 ul li p {
-  margin-left: 0;
+  margin-left: 2rem;
 }
 
 ul li p, .sidenote {

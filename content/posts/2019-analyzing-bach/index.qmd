@@ -13,8 +13,8 @@ editor_options:
 ---
 
 ```{css}
-#| label: style
-#| echo: false
+/* label: style */
+/* echo: false */
 
 @import url('https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400;1,700&family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&display=swap');
 

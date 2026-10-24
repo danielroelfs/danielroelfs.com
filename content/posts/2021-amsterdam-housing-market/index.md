@@ -1,7 +1,7 @@
 ---
-title: Visualizing the State of the Amsterdam Housing Market
+title: Visualizing the state of the Amsterdam housing market
 date: 2021-06-20
-description: Visualizing the State of the Amsterdam Housing Market
+description: Visualizing the state of the Amsterdam housing market
 slug: visualizing-the-state-of-the-amsterdam-housing-market
 categories:
   - society
@@ -19,8 +19,48 @@ editor_options:
 ---
 
 <style type="text/css">
-body {
+article.post {
+  position: relative;
   background-color: #EBEBEB;
+  color: black;
+  padding: 0.25rem 0 5.8rem 0;
+  box-shadow: 0 0 0 100vmax #EBEBEB;
+  clip-path: inset(0 -100vmax);
+}
+article.post::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: -100vmax;
+  right: -100vmax;
+  height: 4.8rem;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-image: linear-gradient(#1d39f5, #1d39f5), linear-gradient(#1d39f5, #1d39f5), linear-gradient(#1d39f5, #1d39f5), linear-gradient(#1d39f5, #1d39f5), linear-gradient(#1d39f5, #1d39f5), linear-gradient(#1d39f5, #1d39f5);
+  background-position: 0 0.6857142857rem, 0 1.3714285714rem, 0 2.0571428571rem, 0 2.7428571429rem, 0 3.4285714286rem, 0 4.1142857143rem;
+  background-size: 100% 0.1142857143rem, 100% 0.2285714286rem, 100% 0.3428571429rem, 100% 0.4571428571rem, 100% 0.5714285714rem, 100% 0.6857142857rem;
+}
+
+.article-header {
+  padding: 5rem 0 1rem;
+}
+.article-header.fade {
+  position: relative;
+  padding-bottom: 4.8rem;
+  clip-path: inset(0 -100vmax);
+}
+.article-header.fade::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: -100vmax;
+  right: -100vmax;
+  height: 4.8rem;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-image: linear-gradient(#EBEBEB, #EBEBEB), linear-gradient(#EBEBEB, #EBEBEB), linear-gradient(#EBEBEB, #EBEBEB), linear-gradient(#EBEBEB, #EBEBEB), linear-gradient(#EBEBEB, #EBEBEB), linear-gradient(#EBEBEB, #EBEBEB);
+  background-position: 0 0.6857142857rem, 0 1.3714285714rem, 0 2.0571428571rem, 0 2.7428571429rem, 0 3.4285714286rem, 0 4.1142857143rem;
+  background-size: 100% 0.1142857143rem, 100% 0.2285714286rem, 100% 0.3428571429rem, 100% 0.4571428571rem, 100% 0.5714285714rem, 100% 0.6857142857rem;
 }
 
 table {

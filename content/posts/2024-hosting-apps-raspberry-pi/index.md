@@ -1,7 +1,7 @@
 ---
-title: How I Host Apps from my Raspberry Pi
+title: How I host apps from my Raspberry Pi
 date: 2024-04-06T00:00:00.000Z
-description: How I Host Apps from my Raspberry Pi
+description: How I host apps from my Raspberry Pi
 slug: how-i-host-apps-from-my-raspberry-pi
 categories:
   - miscellaneous

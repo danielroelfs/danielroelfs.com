@@ -5,7 +5,8 @@ engine: knitr
 ---
 
 ```{css}
-#| echo: false
+/*| label: style */
+/*| echo: false */
 
 ul {
   margin-top: 0.5rem;
@@ -62,13 +63,13 @@ h3 {
 }
 
 .progress {
-  font-family: 'Cooper Hewitt', sans-serif;
-  font-weight: 711;
+  font-family: "itc-avant-garde-gothic-pro", "Helvetica", system-ui, sans-serif;
+  font-weight: 700;
   width: 45%;
   height: 1.6rem;
   padding: 1px;
   margin: 0.15rem 0;
-  background: rgba(0, 0, 0, 0.1);
+  background: #5964b08f;
 }
 
 @media (max-width: 760px) {
@@ -87,7 +88,7 @@ h3 {
 .progress > .progress-bar {
   padding-left: 5px;
   font-variant-caps: all-small-caps;
-  background-color: #555;
+  background-color: #041162;
 }
 ```
 
@@ -189,15 +190,15 @@ In addition, I’m familiar with common data science and data engineering framew
 
 {{{< gap "1.5rem" >}}}
 
-{{{< progress-bar perc="99" >}}} Dutch (native) {{{< /progress-bar >}}}
+{{{< progress-bar perc="99" >}}}Dutch (native){{{< /progress-bar >}}}
 
-{{{< progress-bar perc="99" >}}} English (C2) {{{< /progress-bar >}}}
+{{{< progress-bar perc="99" >}}}English (C2){{{< /progress-bar >}}}
 
-{{{< progress-bar perc="99" >}}} Norwegian (C2) {{{< /progress-bar >}}}
+{{{< progress-bar perc="99" >}}}Norwegian (C2){{{< /progress-bar >}}}
 
-{{{< progress-bar perc="55" >}}} French (C1) {{{< /progress-bar >}}}
+{{{< progress-bar perc="55" >}}}French (C1){{{< /progress-bar >}}}
 
-{{{< progress-bar perc="45" >}}} German (A2) {{{< /progress-bar >}}}
+{{{< progress-bar perc="45" >}}}German (A2){{{< /progress-bar >}}}
 
 ---
 

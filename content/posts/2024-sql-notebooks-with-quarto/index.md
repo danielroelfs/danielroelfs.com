@@ -1,7 +1,7 @@
 ---
-title: SQL Notebooks with Quarto
+title: SQL notebooks with Quarto
 date: 2024-06-19T00:00:00.000Z
-description: SQL Notebooks with Quarto
+description: SQL notebooks with Quarto
 slug: sql-notebooks-with-quarto
 categories:
   - miscellaneous

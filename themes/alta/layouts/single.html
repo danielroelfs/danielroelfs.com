@@ -1,0 +1,32 @@
+{{ define "main" }} {{ if .Site.Params.show_breadcrumbs }}
+<nav class="breadcrumbs">
+  {{ range .Ancestors.Reverse }}
+  <a href="{{ .RelPermalink }}"
+    >{{ if .IsHome }}{{ .Site.Params.home_name }}{{ else }}{{ .Title }}{{ end
+    }}</a
+  >
+  <span>/</span>
+  {{ end }}
+  <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+</nav>
+{{ end }} {{ $article_class := cond (eq .Section "posts") "post" "" }}
+<div class="article-header{{ if $article_class }} fade{{ end }}">
+  <h1 class="article-title">{{ .Title | markdownify }}</h1>
+  <div class="article-subheader">
+    <span class="article-info">
+      {{ if .Params.date }} {{ if ne .Params.showdate false }}
+      <span>{{ .Date.Format "2006.01.02" }}</span>
+      {{ end }} {{ end }} {{ if .Params.author }}
+      <span>by {{ .Params.author }}</span>
+      {{ end }}
+    </span>
+    {{ if .Site.Params.show_subheader_nav }}
+    <span class="subheader-nav">
+      <a href="../">back to previous page</a>
+    </span>
+    {{ end }}
+  </div>
+  <hr />
+</div>
+<article class="{{ $article_class }}">{{ .Content }}</article>
+{{- partial "nav.html" . -}} {{ end }}

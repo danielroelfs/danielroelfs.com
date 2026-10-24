@@ -1,0 +1,42 @@
+name: Test build
+
+on:
+  push:
+    branches:    
+      - dev
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    env:
+      HUGO_VERSION: 0.168.0
+
+    steps:
+      - name: 🛎 Check out repo
+        uses: actions/checkout@v7
+        with:
+          ref: dev
+          fetch-depth: 1
+      - run: npm i -g postcss postcss-cli autoprefixer
+      - name: 🎨 Install Dart Sass
+        run: sudo snap install dart-sass
+      - name: 🤵 Install Hugo
+        run: |
+          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb \
+          && sudo dpkg -i ${{ runner.temp }}/hugo.deb
+      - name: 🧹 Clean site
+        run: |
+          if [ -d "docs" ]; then
+            rm -rf docs/*
+          fi
+      - name: 🍳 Build site
+        run: |
+          cd exampleSite
+          hugo --themesDir ../.. -d ../docs/ --logLevel info -b ./
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-build
+          path: ./docs

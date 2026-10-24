@@ -1,7 +1,7 @@
 ---
-title: The Money in Scientific Publishing
+title: The money in scientific publishing
 date: 2024-05-09T00:00:00.000Z
-description: The Money in Scientific Publishing
+description: The money in scientific publishing
 slug: the-money-in-scientific-publishing
 categories:
   - miscellaneous
@@ -227,46 +227,59 @@ Yahoo Finance doesn't break down the financials for RELX' distinct business area
 
 ``` python
 def _clean_column_names(df):
-  """
-  Clean data frame column names
-  """
+    """
+    Clean data frame column names
+    """
 
-  df.columns = df.columns.str.lower().str.replace("\'", "")
-  df.columns = df.columns.str.lower().str.replace(" ", "_")
-  df.columns = df.columns.str.lower().str.replace("-", "_")
-  
-  return df
+    df.columns = df.columns.str.lower().str.replace("'", "")
+    df.columns = df.columns.str.lower().str.replace(" ", "_")
+    df.columns = df.columns.str.lower().str.replace("-", "_")
+
+    return df
+
 
 def get_income_stats(tickers):
-  """
-  Get the income statements
-  """
+    """
+    Get the income statements
+    """
 
-  df_collected = pd.DataFrame()
-  for i in tickers:
-    df_company = openbb.stocks.search(i).reset_index()
-    company_cols = ["symbol", "name", "country"]
-    df_company_small = df_company.loc[df_company["symbol"] == i, company_cols]
-    
-    df_inc_raw = openbb.stocks.fa.income(i)
-    df_inc = _clean_column_names(df_inc_raw.transpose())
-    df_inc = df_inc.reset_index().rename(columns={"index": "year"})
-    df_inc["ticker"] = i
-    df_inc["profit_margin"] = (df_inc["net_income"]) / df_inc["total_revenue"]
-    fin_cols = ["ticker", "year", "total_revenue", "net_income", "gross_profit", "profit_margin"]
-    df_inc_clean = df_inc.loc[df_inc["year"] != "ttm", fin_cols]
-    df_inc_clean["year"] = pd.to_datetime(df_inc_clean["year"]).dt.year
-    if df_inc_clean["year"].max() == pd.to_datetime("now").year:
-      df_inc_clean["year"] = df_inc_clean["year"] - 1
-    df_info = df_inc_clean.merge(df_company_small, left_on="ticker", right_on="symbol")
-    df_collected = pd.concat([df_collected, df_info])
+    df_collected = pd.DataFrame()
+    for i in tickers:
+        df_company = openbb.stocks.search(i).reset_index()
+        company_cols = ["symbol", "name", "country"]
+        df_company_small = df_company.loc[df_company["symbol"] == i, company_cols]
 
-    df_out = df_collected.reset_index(drop=True)
-    df_out = df_out[company_cols + fin_cols]
+        df_inc_raw = openbb.stocks.fa.income(i)
+        df_inc = _clean_column_names(df_inc_raw.transpose())
+        df_inc = df_inc.reset_index().rename(columns={"index": "year"})
+        df_inc["ticker"] = i
+        df_inc["profit_margin"] = (df_inc["net_income"]) / df_inc["total_revenue"]
+        fin_cols = [
+            "ticker",
+            "year",
+            "total_revenue",
+            "net_income",
+            "gross_profit",
+            "profit_margin",
+        ]
+        df_inc_clean = df_inc.loc[df_inc["year"] != "ttm", fin_cols]
+        df_inc_clean["year"] = pd.to_datetime(df_inc_clean["year"]).dt.year
+        if df_inc_clean["year"].max() == pd.to_datetime("now").year:
+            df_inc_clean["year"] = df_inc_clean["year"] - 1
+        df_info = df_inc_clean.merge(
+            df_company_small, left_on="ticker", right_on="symbol"
+        )
+        df_collected = pd.concat([df_collected, df_info])
 
-  return df_out
+        df_out = df_collected.reset_index(drop=True)
+        df_out = df_out[company_cols + fin_cols]
 
-df_income = get_income_stats(["RELX", "PSO", "WLY", "AAPL", "META", "GOOGL", "AMZN", "KO", "IBM", "MSFT"])
+    return df_out
+
+
+df_income = get_income_stats(
+    ["RELX", "PSO", "WLY", "AAPL", "META", "GOOGL", "AMZN", "KO", "IBM", "MSFT"]
+)
 
 df_income.to_csv("./data/income_data.csv", index=False)
 ```

@@ -1,10 +1,10 @@
-baseurl = "/"
+baseURL = "/"
 title = "Daniel Roelfs"
-theme = "trysil"
+theme = "alta"
 
 ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
     "_cache$", "index\\.html", "about\\.html", "static/blog/\\*_files/", "README.md",
-    ".venv/", "data/"]
+    ".venv/", "data/", "/renv/"]
 
 [markup]
   defaultMarkdownHandler = "goldmark"
@@ -13,22 +13,21 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
       unsafe = true
 
 [params]
-    intro = "PhD in computational neuroscience and psychiatry genetics, Data Scientist within the Analytics & AI Centre of Excellence team in Storebrand, previously within anti-money laundering at DNB"
+    intro = "My name is <span class='accent-color'>Daniel Roelfs</span>, Data Scientist at the Analytics & AI Centre of Excellence in Storebrand, previously working within academia and anti-money laundering at DNB"
 
     favicon = "avatar.png"
 
-    highlightstyle_light = "routeros"
-    highlightstyle_dark = "rainbow"
+    highlightstyle = "routeros"
 
     home_name = "Home"
     show_breadcrumbs = true
-
-    iconsource  = "tabler"
 
     description = "Daniel Roelfs' personal website"
     keywords    = "blog, personal, coding"
 
     customcss   = ["custom_style.scss"]
+
+    iconsource  = "tabler"
 
     umami       = true
     umamilink   = "https://web-analytics.danielroelfs.app/script.js"
@@ -72,24 +71,24 @@ ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
         url = "https://danielroelfs.app"
 
 # Menu links
-[menu]
-    [[menu.main]]
+[menus]
+    [[menus.main]]
         name = "Home"
-        url  = "/"
+        pageRef = "/"
         weight = 1
-    [[menu.main]]
+    [[menus.main]]
         name = "Posts"
-        url  = "/posts"
+        pageRef = "/posts"
         weight = 2
-    [[menu.main]]
+    [[menus.main]]
         name = "Publications"
-        url = "/publications"
+        pageRef = "/publications"
         weight = 3
-    [[menu.main]]
+    [[menus.main]]
         name = "CV"
-        url = "/cv"
+        pageRef = "/cv"
         weight = 4
-    [[menu.main]]
+    [[menus.main]]
         name = "About"
-        url = "/about"
+        pageRef = "/about"
         weight = 5

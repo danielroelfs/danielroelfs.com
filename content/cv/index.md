@@ -61,13 +61,13 @@ h3 {
 }
 
 .progress {
-  font-family: 'Cooper Hewitt', sans-serif;
-  font-weight: 711;
+  font-family: "itc-avant-garde-gothic-pro", "Helvetica", system-ui, sans-serif;
+  font-weight: 700;
   width: 45%;
   height: 1.6rem;
   padding: 1px;
   margin: 0.15rem 0;
-  background: rgba(0, 0, 0, 0.1);
+  background: #5964b08f;
 }
 
 @media (max-width: 760px) {
@@ -86,7 +86,7 @@ h3 {
 .progress > .progress-bar {
   padding-left: 5px;
   font-variant-caps: all-small-caps;
-  background-color: #555;
+  background-color: #041162;
 }
 </style>
 
@@ -100,49 +100,49 @@ For a downloadable version of this CV, go to [cv.danielroelfs.com](https://cv.da
 
 *Data Scientist*
 
--   Data science projects across various departments in the group
+- Data science projects across various departments in the group
 
--   Implementing robust machine learning and (generative) AI models for various use cases
+- Implementing robust machine learning and (generative) AI models for various use cases
 
--   Using (among others) Databricks, Snowflake, Dagster, and accompanying best practices
+- Using (among others) Databricks, Snowflake, Dagster, and accompanying best practices
 
 ### DNB - Group Security - Group AML {{< cv-date >}}aug 2022 - jan 2026{{< /cv-date >}}
 
 *Data Scientist*
 
--   Data scientist in the Anti-Money Laundering Group at DNB
+- Data scientist in the Anti-Money Laundering Group at DNB
 
--   Creating machine learning models using Python, R, and AWS cloud services and putting models in production
+- Creating machine learning models using Python, R, and AWS cloud services and putting models in production
 
--   Application of responsible data science practices in both development and deployment
+- Application of responsible data science practices in both development and deployment
 
 ### University of Oslo - NORMENT - Multimodal Imaging Group {{< cv-date >}}mar 2019 - jul 2022{{< /cv-date >}}
 
 *Doctoral Research Fellow*
 
--   PhD position on neuroimaging and genetics
+- PhD position on neuroimaging and genetics
 
--   Running a study from conception through writing the final manuscript
+- Running a study from conception through writing the final manuscript
 
--   Writing scripts and pipelines in R, Python, and MATLAB{{< marginnote >}}all code is available on [GitHub](https://github.com/norment/open-science){{< /marginnote >}}
+- Writing scripts and pipelines in R, Python, and MATLAB{{< marginnote >}}all code is available on [GitHub](https://github.com/norment/open-science){{< /marginnote >}}
 
 ### University of Oslo - NORMENT - EEG Group {{< cv-date >}}may 2018 - feb 2019{{< /cv-date >}}
 
 *Research Assistant*
 
--   Managing EEG data, data preprocessing and analysis, training new EEG testers, performing EEG experiments
+- Managing EEG data, data preprocessing and analysis, training new EEG testers, performing EEG experiments
 
--   Maintaining and adapting preprocessing pipelines for EEG data
+- Maintaining and adapting preprocessing pipelines for EEG data
 
 ### Rikshospitalet - Department of Medical Physics {{< cv-date >}}may 2018 - feb 2019{{< /cv-date >}}
 
 *Research Assistant*
 
--   Data collection, managment, and processing in an MRI study on sleep deprivation
+- Data collection, managment, and processing in an MRI study on sleep deprivation
 
--   Preprocessing and analyzing the imaging data and preparing datasets for collaborators
+- Preprocessing and analyzing the imaging data and preparing datasets for collaborators
 
--   Processing and analyzing of data from the video camera
+- Processing and analyzing of data from the video camera
 
 ------------------------------------------------------------------------
 
@@ -152,27 +152,27 @@ For a downloadable version of this CV, go to [cv.danielroelfs.com](https://cv.da
 
 *PhD, Doctoral Education*
 
--   Doctoral education at the Institute of Clinical Medicine at the University of Oslo{{< marginnote >}}thesis available online [here](https://thesis.danielroelfs.app){{< /marginnote >}}
+- Doctoral education at the Institute of Clinical Medicine at the University of Oslo{{< marginnote >}}thesis available online [here](https://thesis.danielroelfs.app){{< /marginnote >}}
 
--   Courses relevant to neurobiology, advanced statistics, and other academic and non-academic skills
+- Courses relevant to neurobiology, advanced statistics, and other academic and non-academic skills
 
 ### Lund University - Faculty of Medicine {{< cv-date >}}sep 2016 - may 2018{{< /cv-date >}}
 
 *MSc, Biomedicine*
 
--   Master's program in Biomedicine at the Faculty of Medicine
+- Master's program in Biomedicine at the Faculty of Medicine
 
--   Focus on molecular biology and neuroscience
+- Focus on molecular biology and neuroscience
 
 ### Utrecht University - University College Roosevelt {{< cv-date >}}sep 2012 - may 2015{{< /cv-date >}}
 
 *BSc, pre-medical track*
 
--   Major in the pre-medical science track, minor in philosophy
+- Major in the pre-medical science track, minor in philosophy
 
--   Liberal Arts & Science program
+- Liberal Arts & Science program
 
--   Honors College
+- Honors College
 
 ------------------------------------------------------------------------
 
@@ -188,15 +188,15 @@ In addition, I'm familiar with common data science and data engineering framewor
 
 {{< gap \"1.5rem\" >}}
 
-{{< progress-bar perc=\"99\" >}} Dutch (native) {{< /progress-bar >}}
+{{< progress-bar perc=\"99\" >}}Dutch (native){{< /progress-bar >}}
 
-{{< progress-bar perc=\"99\" >}} English (C2) {{< /progress-bar >}}
+{{< progress-bar perc=\"99\" >}}English (C2){{< /progress-bar >}}
 
-{{< progress-bar perc=\"99\" >}} Norwegian (C2) {{< /progress-bar >}}
+{{< progress-bar perc=\"99\" >}}Norwegian (C2){{< /progress-bar >}}
 
-{{< progress-bar perc=\"55\" >}} French (C1) {{< /progress-bar >}}
+{{< progress-bar perc=\"55\" >}}French (C1){{< /progress-bar >}}
 
-{{< progress-bar perc=\"45\" >}} German (A2) {{< /progress-bar >}}
+{{< progress-bar perc=\"45\" >}}German (A2){{< /progress-bar >}}
 
 ------------------------------------------------------------------------
 
@@ -206,19 +206,19 @@ In addition, I'm familiar with common data science and data engineering framewor
 
 *World Congress of Psychiatry Genetics*
 
--   {{< p >}}Awarded to promising oral presentations from early-career researchers{{< /p >}}
+- {{< p >}}Awarded to promising oral presentations from early-career researchers{{< /p >}}
 
 ### International Training Grant {{< cv-date >}} 2019 {{< /cv-date >}}
 
 *Norwegian Research School in Neuroscience*
 
--   {{< p >}}Grant awarded to scientists to receive training abroad that'll benefit their research in Norway{{< /p >}}
+- {{< p >}}Grant awarded to scientists to receive training abroad that'll benefit their research in Norway{{< /p >}}
 
 ### Sparbanken Skåne Master Prize {{< cv-date >}} 2019 {{< /cv-date >}}
 
 *Sparbanksstiftelsen Färs & Frosta, Lund University*
 
--   {{< p >}}Awarded to the best master theses in the field of neuroscience{{< /p >}}
+- {{< p >}}Awarded to the best master theses in the field of neuroscience{{< /p >}}
 
 ------------------------------------------------------------------------
 
@@ -232,7 +232,7 @@ In addition, I'm familiar with common data science and data engineering framewor
 
 *Committee Member*
 
--   {{< p >}}Organization of the national conference for neuroscience PhD candidates{{< /p >}}
+- {{< p >}}Organization of the national conference for neuroscience PhD candidates{{< /p >}}
 
 ### The Netherlands Red Cross Student Desk Zeeland {{< cv-date >}}jan 2014 - may 2015{{< /cv-date >}}
 

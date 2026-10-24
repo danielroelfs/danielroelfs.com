@@ -1,0 +1,82 @@
+<head>
+  <meta
+    name="description"
+    content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}"
+  />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="{{ .Permalink }}" />
+  <meta property="og:site_name" content="{{ .Site.Title }}" />
+  <meta
+    property="og:title"
+    content="{{ block `og-title` . }}{{ .Site.Title }}{{end }}"
+  />
+  <meta
+    property="og:description"
+    content="{{ if .IsPage }}{{ .Params.description }}{{ else }}{{ .Site.Params.description }}{{ end }}"
+  />
+  <meta
+    property="og:image"
+    content="{{ if .IsPage }}{{ .Site.BaseURL }}{{ .Params.thumbnail }}{{ else }}{{ .Site.BaseURL }}{{ .Site.Params.favicon }}{{ end }}"
+  />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://use.typekit.net" crossorigin />
+  <link rel="preconnect" href="https://p.typekit.net" crossorigin />
+
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Geist+Mono:ital,wght@0,100..900;1,100..900&display=swap"
+  />
+  <!-- Geist Mono -->
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap"
+  />
+  <!-- Crimson Text -->
+
+  <link rel="stylesheet" href="https://use.typekit.net/brv0fla.css" />
+  <!-- source-serif-pro, source-code-pro, itc-avant-garde-gothic-pro -->
+
+  {{ $opts := dict "transpiler" "dartsass" }} {{ $style := resources.Get
+  "scss/main.scss" | css.Sass $opts | resources.Minify | resources.Fingerprint
+  }}
+  <link
+    rel="stylesheet"
+    href="{{ $style.RelPermalink }}"
+    integrity="{{ $style.Data.Integrity }}"
+  />
+
+  <!-- Custom css -->
+  {{ range .Site.Params.customcss }} {{ $style := resources.Get . | css.Sass
+  $opts | resources.Minify | resources.Fingerprint }}
+  <link
+    rel="stylesheet"
+    href="{{ $style.RelPermalink }}"
+    integrity="{{ $style.Data.Integrity }}"
+  />
+  {{ end }}
+
+  <!-- Umami -->
+  {{ if and .Site.Params.umami (not hugo.IsServer) }}
+  <script
+    async
+    src="{{ .Site.Params.umamilink }}"
+    data-website-id="{{ .Site.Params.umamiid }}"
+  ></script>
+  {{ end }}
+
+  <!-- Favicon -->
+  {{ with .Site.Params.favicon }}
+  <link rel="icon" href="{{ . | relURL }}" />
+  {{ end }}
+
+  <!-- Title -->
+  {{ $title := print .Title " | " .Site.Title }} {{ if .IsHome }}{{ $title =
+  .Site.Title }}{{ end }}
+  <title>{{ $title }}</title>
+</head>

@@ -131,7 +131,19 @@ table.posts-list {
   }
 }
 
-// Index text
+// Index
+a.index-logo {
+  & svg {
+    transition: color 0.2s;
+  }
+  &:hover {
+    opacity: 1;
+    & svg {
+      color: $accent-color;
+    }
+  }
+}
+
 .index-intro {
   font-family: $sans-family;
   text-transform: lowercase;

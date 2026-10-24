@@ -1,12 +1,5 @@
 // Custom style
 
-.notbyai-wrapper a {
-  cursor: pointer;
-  &:hover {
-    opacity: 80%;
-  }
-}
-
 @media (max-width: 760px) {
   img.notbyai {
     max-width: 33%;

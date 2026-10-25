@@ -235,15 +235,12 @@ div.table-wrapper {
 
 hr {
   display: block;
-  height: 1px;
   border: 0;
   border-top: 1px dashed $foreground-color;
   margin: 1em 0;
-  padding: 0;
-}
-
-article.post hr {
-  border-top: 1px dashed $article-foreground-color;
+  article.post & {
+    border-top: 1px dashed $article-foreground-color;
+  }
 }
 
 @media (max-width: 768px) {

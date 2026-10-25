@@ -242,6 +242,10 @@ hr {
   padding: 0;
 }
 
+article.post hr {
+  border-top: 1px dashed $article-foreground-color;
+}
+
 @media (max-width: 768px) {
   hr {
     width: 100%;

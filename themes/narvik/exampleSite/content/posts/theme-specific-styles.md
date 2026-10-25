@@ -4,7 +4,7 @@ description: "Here are some styles that are specific to this theme"
 date: 2025-10-04
 ---
 
-See the [source code](https://github.com/danielroelfs/danielroelfs/blob/main/themes/alta/) for the specific usage of the shortcodes used in this post.
+See the [source code](https://github.com/danielroelfs/danielroelfs/blob/main/themes/narvik/) for the specific usage of the shortcodes used in this post.
 
 abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz{{< sidenote >}}Just to indicate the line length of this theme{{< /sidenote>}}
 

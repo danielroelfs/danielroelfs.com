@@ -1,6 +1,6 @@
 baseURL = "/"
 title = "Daniel Roelfs"
-theme = "alta"
+theme = "narvik"
 
 ignoreFiles = ["\\.qmd$", "\\.ipynb$", "\\.Rmd$", "\\.Rmarkdown$",
     "_cache$", "index\\.html", "about\\.html", "static/blog/\\*_files/", "README.md",

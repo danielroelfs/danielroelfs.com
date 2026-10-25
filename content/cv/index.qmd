@@ -98,7 +98,7 @@ For a downloadable version of this CV, go to [cv.danielroelfs.com](https://cv.da
 
 ## Work Experience
 
-### Storebrand - Digital - Analytics & AI {{{< cv-date >}}}feb 2026 - current{{{< /cv-date >}}}
+### Storebrand - Digital - Analytics & AI Centre of Excellence {{{< cv-date >}}}feb 2026 - current{{{< /cv-date >}}}
 
 _Data Scientist_
 

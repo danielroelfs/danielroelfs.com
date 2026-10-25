@@ -1,0 +1,37 @@
+<!-- Syntax highlighting -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/{{ site.Params.highlightstyle | default `routeros` }}.min.css"
+/>
+<script>
+  hljs.highlightAll();
+</script>
+
+<!-- Math syntax -->
+<script>
+  MathJax = {
+    output: {
+      displayOverflow: "linebreak",
+      linebreaks: {
+        inline: true,
+        width: "100%",
+        lineleading: 0.75,
+      },
+    },
+    tex: {
+      inlineMath: [["$", "$"]],
+    },
+  };
+</script>
+<script
+  defer
+  id="MathJax"
+  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-svg.js"
+></script>
+
+<!-- Icons -->
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
+/>

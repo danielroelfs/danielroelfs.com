@@ -1,0 +1,13 @@
+name = "Narvik"
+license = "Apache-2.0"
+licenselink = "https://danielroelfs.com/blob/main/LICENSE"
+description = "A simple Hugo theme focused on readability"
+homepage = "https://danielroelfs.com/"
+tags = ["clean", "simple", "narvik", ]
+features = ["readability", "simple"]
+min_version = "0.120.0"
+
+[author]
+  name = "Daniel Roelfs"
+  homepage = "https://danielroelfs.com"
+

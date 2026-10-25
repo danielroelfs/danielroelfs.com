@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 🛎 Check out repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           submodules: recursive
 

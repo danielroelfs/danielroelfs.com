@@ -1,0 +1,2 @@
+{{- $title := .Get "title" | markdownify -}}
+<abbr title="{{ $title }}">{{ .Inner | markdownify }}</abbr>

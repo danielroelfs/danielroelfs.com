@@ -1,7 +1,7 @@
 ---
-title: Running an ICA on Questionnaires
+title: Running an ICA on questionnaires
 date: 2020-10-24T00:00:00.000Z
-description: Running an ICA on Questionnaires
+description: Running an ICA on questionnaires
 slug: running-an-ica-on-questionnaires
 categories:
   - coding

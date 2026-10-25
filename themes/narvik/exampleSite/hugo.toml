@@ -1,0 +1,30 @@
+baseURL = "http://localhost:1314/"
+languageCode = 'en-us'
+title = 'Narvik'
+theme = "narvik"
+
+[menu]
+  [[menu.main]]
+    name = "Home"
+    url  = "/"
+    weight = 1
+  [[menu.main]]
+    name = "Posts"
+    url  = "/posts"
+    weight = 2
+  [[menu.main]]
+    name = "About"
+    url = "/about"
+    weight = 3
+  [[menu.main]]
+    name = "Contact"
+    url = "/contact"
+    weight = 4
+
+[params]
+  intro = "A simple and minimalist <span class='accent-color'>Hugo theme</span> that focuses on typography and legibility. Please explore this demo to see the design elements and features included."   # short introduction on the home page
+
+  description = "A long-form content oriented Hugo theme"
+  show_subheader_nav = false
+  show_breadcrumbs = true
+  home_name = "Home"

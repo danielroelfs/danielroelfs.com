@@ -1,0 +1,4 @@
+{{- $bg := .Get "bg" -}}
+<p class="standout-paragraph" style="background-color: {{ $bg }}">
+  {{ .Inner | markdownify }}
+</p>

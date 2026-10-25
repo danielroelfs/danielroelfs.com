@@ -1,7 +1,7 @@
 ---
-title: Strava Data Analysis using Python and R
+title: Strava data analysis using Python and R
 date: 2024-12-30T00:00:00.000Z
-description: Strava Data Analysis using Python and R
+description: Strava data analysis using Python and R
 slug: strava-data-analysis-in-python-and-r
 categories:
   - data science
@@ -164,7 +164,7 @@ def _parse_gpx(filepath, year, quiet=False):
     activity_duration = str(dt.timedelta(seconds=activity_duration))
 
     doi_begin = dt.datetime.date(dt.datetime.strptime(f"{year}-01-01", "%Y-%m-%d"))
-    doi_end = dt.datetime.date(dt.datetime.strptime(f"{year+1}-01-01", "%Y-%m-%d"))
+    doi_end = dt.datetime.date(dt.datetime.strptime(f"{year + 1}-01-01", "%Y-%m-%d"))
 
     if (gpx_date >= doi_begin) & (gpx_date < doi_end):
         if not quiet:
@@ -230,7 +230,7 @@ def collect_activities(directory, year, convert_files=True, quiet=False):
     df_collected = pd.DataFrame()
     for i, f in enumerate(list_of_files):
         if not quiet:
-            print(f"Parsing year {year}: {f} ({i/len(list_of_files):.2%})")
+            print(f"Parsing year {year}: {f} ({i / len(list_of_files):.2%})")
         df = _parse_gpx(filepath=os.path.join(directory, f), year=year, quiet=quiet)
         df_collected = _combine_activities(df_collected, df)
 
@@ -244,7 +244,7 @@ def write_to_file(df, outpath, quiet=False):
 
     if not quiet:
         print(
-            f'\nWriting {df["activity_id"].nunique()} activities to file: {outpath}\n'
+            f"\nWriting {df['activity_id'].nunique()} activities to file: {outpath}\n"
         )
 
     df.to_parquet(outpath, index=False)

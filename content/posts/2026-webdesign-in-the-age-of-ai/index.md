@@ -1,7 +1,7 @@
 ---
-title: How far should I stay away from AI design quirks?
-date: 2026-11-08
-description: How far should I stay away from AI design quirks?
+title: How do I stay away from AI design quirks?
+date: 2026-11-10
+description: How do I stay away from AI design quirks?
 slug: webdesign-in-the-age-of-ai
 categories:
   - miscellaneous
@@ -29,7 +29,7 @@ So AI generated code and design is spreading across the internet. [Cloudflare es
 
 My strategy has been to _show the process_ rather than just the result&ast;. But that only works if there's a natural possibility to show the process alongside the design like it is in these kinds of personal websites. Otherwise one could possibly be a bit more vocal about sharing where one gets inspiration from on social media so there's some degree of provenance in the designs. In addition, it's a nice way to support other creators by giving them a shoutout when you can.
 
-An alternative strategy is to make something so outside of the established design norms that it can only come from the chaos that is the human mind, rather than a mathematical model like LLMs. The concept of [Anti-Design](https://blog.artsper.com/en/a-closer-look/art-movements-en/anti-design-italian-movement/) is decades old, but it has made a [revival](https://twosstudio.com/articles/what-is-anti-design-and-why-its-coming-back-in-the-age-of-ai) in the age of AI. The appeal seems to be growing due to a desire to be distinctively human. No AI would make design choices this deliberately counter-conventional. I think it is in this desire to stand out as explicitly human by making unusual and unpredictable choices that the design for the website in its current form{{< sidenote >}}At time of writing: 2026-11-08{{< /sidenote >}} materialized.
+An alternative strategy is to make something so outside of the established design norms that it can only come from the chaos that is the human mind, rather than a mathematical model like LLMs. The concept of [Anti-Design](https://blog.artsper.com/en/a-closer-look/art-movements-en/anti-design-italian-movement/) is decades old, but it has made a [revival](https://twosstudio.com/articles/what-is-anti-design-and-why-its-coming-back-in-the-age-of-ai) in the age of AI. The appeal seems to be growing due to a desire to be distinctively human. No AI would make design choices this deliberately counter-conventional. I think it is in this desire to stand out as explicitly human by making unusual and unpredictable choices that the design for the website in its current form{{< sidenote >}}At time of writing: 2026-11-10{{< /sidenote >}} materialized.
 
 So am I proud of the somewhat jarring, odd, and possibly charmingly ugly design of this website? Yes, because I can call it my own. The design is my own, the bugs that I probably introduced are my own, the lack of responsivity to adjust to the screen of the 2016 iPad Pro with the 9.7 inch screen is because I didn't think to create a separate [media query](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Media_queries/Using) for it is also my own fault. I know that I could have easily asked Claude to help me solve some of these issues is, but the choice not to is also my own. This website is my own little corner on the internet, and it doesn't need to be AI-perfect. I just want it to be explicitly human. I won't ask anyone to put effort into reading something I didn't put effort into writing myself.
 

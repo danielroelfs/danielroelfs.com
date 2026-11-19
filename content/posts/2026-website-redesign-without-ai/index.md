@@ -2,7 +2,7 @@
 title: Redesigning my website without AI
 date: 2026-11-19
 description: Redesigning my website without AI
-slug: webdesign-in-the-age-of-ai
+slug: website-redesign-without-ai
 categories:
   - miscellaneous
 show_readingtime: true

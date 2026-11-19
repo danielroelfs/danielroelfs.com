@@ -1,7 +1,7 @@
 ---
-title: How do I stay away from AI design quirks?
+title: Redesigning my website without AI
 date: 2026-11-19
-description: How do I stay away from AI design quirks?
+description: Redesigning my website without AI
 slug: webdesign-in-the-age-of-ai
 categories:
   - miscellaneous
